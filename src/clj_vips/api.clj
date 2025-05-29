@@ -80,3 +80,18 @@
 (defcfn vips-thread-shutdown
   "Clear the cache for the current thread."
   "vips_thread_shutdown" [] ::mem/void)
+(defcfn image-new-memory
+  "vips_image_new_memory() creates a new VipsImage which, when written to, will create a memory image."
+  "vips_image_new_memory" [] ::mem/pointer)
+
+(defcfn image-new-from-file
+  "Load an image from a file. Returns VipsImage pointer or null on error."
+  "vips_image_new_from_file" [::mem/c-string ::mem/pointer] ::mem/pointer)
+
+(defcfn image-write-to-file
+  "Write an image to a file. Returns 0 on success."
+  "vips_image_write_to_file" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/int)
+
+(defcfn g_object_unref
+  "Unref n object"
+  "g_object_unref" [::mem/pointer] ::mem/void)
