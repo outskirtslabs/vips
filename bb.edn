@@ -1,7 +1,7 @@
 {:tasks {:requires ([babashka.tasks :refer [shell]])
          repl      {:override-builtin true
                     :doc              "Run the dev REPL"
-                    :task             (shell "clojure -M:repl/cider:dev")}
+                    :task             (shell "clojure -M:repl/cider:dev --port 7888")}
          fmt       (shell "cljfmt check")
          fmt:fix   (shell "cljfmt fix .")
          lint      (shell (str "clj-kondo" " --fail-level error"
@@ -18,7 +18,7 @@
          test      {:doc  "Run JVM Clojure tests with kaocha"
                     :task (do (apply clojure {:extra-env {"TEST_SCI" "true"}}
                                      "-M:kaocha" *command-line-args*)
-                              (clojure "-M -e \"(set! *warn-on-reflection* true) (require '[clj-vips.core] :reload)\""))}
+                              (clojure "-M -e \"(set! *warn-on-reflection* true) (require '[clj-vips.core] :reload) \""))}
 
          publish {:doc     "Publish the clojure sdk libs to clojars"
                   :depends [jar]

@@ -40,7 +40,7 @@
       devShells = forEachSupportedSystem (
         { pkgs }:
         let
-  libraries = [pkgs.vips];
+          libraries = [ pkgs.vips ];
         in
         {
           default = pkgs.mkShell {
@@ -54,6 +54,7 @@
             ];
             buildInputs = libraries;
             inputsFrom = libraries;
+            nativeBuildInputs = [ pkgs.pkg-config ];
             env.LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath libraries;
           };
         }
