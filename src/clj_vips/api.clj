@@ -12,6 +12,13 @@
       (throw (ex-info (str "Architecture not supported: " arch)
                       {:arch arch})))))
 
+#_(def g-value-layout
+    (MemoryLayout/structLayout
+     (.withName ValueLayout/JAVA_LONG "g_type")              ; 8 bytes
+     (.withName
+      (MemoryLayout/sequenceLayout 2 ValueLayout/JAVA_LONG)  ; 16 bytes
+      "data")))
+
 (defcfn vips-init
   "Initialize libvips. Returns 0 on success."
   "vips_init" [::mem/c-string] ::mem/int)
@@ -80,6 +87,7 @@
 (defcfn vips-thread-shutdown
   "Clear the cache for the current thread."
   "vips_thread_shutdown" [] ::mem/void)
+
 (defcfn image-new-memory
   "vips_image_new_memory() creates a new VipsImage which, when written to, will create a memory image."
   "vips_image_new_memory" [] ::mem/pointer)
@@ -92,6 +100,38 @@
   "Write an image to a file. Returns 0 on success."
   "vips_image_write_to_file" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/int)
 
-(defcfn g_object_unref
+(defcfn g-object-unref
   "Unref n object"
   "g_object_unref" [::mem/pointer] ::mem/void)
+
+(defcfn vips-operation-new
+  "Return a new VipsOperation with the specified nickname. Useful for language bindings.
+You'll need to set any arguments and build the operation before you can use it. See vips_call() for a higher-level way to make new operations."
+  "vips_operation_new"
+  [::mem/c-string] ::mem/pointer)
+
+(defcfn vips-image-get-type
+  "vips_image_get_type" [] ::mem/int)
+
+(defcfn g-value-init
+  "Initializes value with the default value of type"
+  "g_value_init"
+  [::mem/pointer ::mem/int] ::mem/pointer)
+
+;; Filename and loader helper functions
+(defcfn vips-filename-get-filename
+  "Extract the main filename part from a vips filename."
+  "vips_filename_get_filename" [::mem/pointer ::mem/c-string] ::mem/c-string)
+
+(defcfn vips-filename-get-options
+  "Extract the options part from a vips filename."
+  "vips_filename_get_options" [::mem/pointer ::mem/c-string] ::mem/c-string)
+
+(defcfn vips-foreign-find-load
+  "Find a loader for a filename."
+  "vips_foreign_find_load" [::mem/pointer ::mem/c-string] ::mem/c-string)
+
+;; Operation calling functions
+(defcfn vips-call
+  "Call a vips operation by name with variable arguments."
+  "vips_call" [::mem/c-string ::mem/pointer] ::mem/int)

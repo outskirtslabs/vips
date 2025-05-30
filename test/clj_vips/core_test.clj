@@ -7,7 +7,8 @@
 (deftest init-shutdown-test
   (testing "Can initialize and shutdown with default config"
     (core/init)
-    (core/shutdown)))
+    (core/shutdown)
+    (is true "we did not crash during init/shutdown")))
 
 (deftest init-with-config-test
   (testing "Can initialize with custom configuration"
@@ -23,4 +24,13 @@
     (core/init)
     (core/clear-cache)
     (core/shutdown-thread)
-    (core/shutdown)))
+    (core/shutdown)
+    (is true "we did not crash during cache operations")))
+
+(deftest new-image-from-file-test
+  (testing "new-image-from-file throws exception for non-existent file"
+    (core/init)
+    (try
+      (is (thrown? Exception (core/new-image-from-file "/non/existent/file.jpg")))
+      (finally
+        (core/shutdown)))))

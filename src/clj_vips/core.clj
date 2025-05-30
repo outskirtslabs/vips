@@ -1,6 +1,8 @@
 (ns clj-vips.core
   (:require
-   [clj-vips.api :as api]))
+   [clj-vips.api :as api]
+   [clj-vips.invoker :as invoker]
+   [coffi.mem :as mem]))
 
 ;; Default configuration values from govips
 (def default-concurrency-level 1)
@@ -26,6 +28,7 @@
   ([config]
    ;; Initialize libvips
    (let [result (api/vips-init "clj-vips")]
+     #_{:clj-kondo/ignore [:type-mismatch]}
      (when-not (zero? result)
        (throw (ex-info "Failed to initialize libvips"
                        {:error-code    result
@@ -63,3 +66,27 @@
    Call this when a thread using vips exits."
   []
   (api/vips-thread-shutdown))
+
+;; Image I/O functions
+
+(defn new-image-from-file
+  ([file-path]
+   (api/image-new-from-file file-path nil)))
+
+(defn write-to-file
+  "Write an image to a file.
+   
+   Args:
+     image-ptr - VipsImage pointer
+     file-path - Path to write the image to
+     
+   Returns:
+     nil on success, throws exception on error"
+  [image-ptr file-path]
+  (let [result (api/image-write-to-file image-ptr file-path nil)]
+    #_{:clj-kondo/ignore [:type-mismatch]}
+    (when-not (zero? result)
+      (throw (ex-info "Failed to write image to file"
+                      {:file-path     file-path
+                       :error-code    result
+                       :error-message (api/vips-error-buffer)})))))

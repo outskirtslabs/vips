@@ -10,6 +10,7 @@
 
 (defn vips-fixture [f]
   (api/vips-init "clj-vips-test")
+  (api/vips-leak-set 1)
   (f)
   (api/vips-shutdown))
 
@@ -64,7 +65,7 @@
     (let [im (api/image-new-memory)]
       (try
         (api/image-write-to-file im "test.png" nil)
-        (api/g_object_unref im)
+        (api/g-object-unref im)
         (is (.exists (io/file "test.png")))
         (finally
           (io/delete-file (io/file "test.png"))))))
@@ -80,8 +81,15 @@
             im        (api/image-new-from-file orig-path nil)]
         (is (not (mem/null? im)))
         (api/image-write-to-file im copy-path nil)
-        (api/g_object_unref im)
+        (api/g-object-unref im)
         (is (= (.length (io/file orig-path))
                (.length (io/file copy-path)))))
       (finally
         (io/delete-file (io/file "test/clj_vips/fixtures/clojure_copy.png"))))))
+
+(deftest operation
+  (let [im (api/image-new-from-file "test/clj_vips/fixtures/clojure.png" nil)
+        op (api/vips-operation-new "invert")
+        _  (api/g-value-init 1 (api/vips-image-get-type))]
+
+    (api/g-object-unref im)))
