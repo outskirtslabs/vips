@@ -1,11 +1,12 @@
 {:paths   ["src" "resources"]
  :deps    {org.clojure/clojure {:mvn/version "1.12.0"}
-           org.suskalo/coffi   {:mvn/version "1.0.615"}}
+           org.suskalo/coffi   {:git/url "https://github.com/IGJoshua/coffi"
+                                :git/sha "ff202294a89070762fcaf50b52119096d44df1fa"}}
  :aliases {:dev    {:extra-paths ["dev"]
                     :jvm-opts    ["--enable-native-access=ALL-UNNAMED"
                                   "-Duser.timezone=UTC"
                                   "-XX:+UseZGC"
-                                  "-XX:+ZGenerational"]}
+                                  #_"-XX:+ZGenerational"]}
            :runner {:main-opts ["-m" "user"]}
            :build  {:deps       {io.github.clojure/tools.build {:git/tag "v0.10.9"
                                                                 :git/sha "e405aac"}
@@ -16,6 +17,6 @@
                     :jvm-opts   ["--enable-native-access=ALL-UNNAMED"
                                  "-Duser.timezone=UTC"
                                  "-XX:+UseZGC"
-                                 "-XX:+ZGenerational"]}
+                                 #_"-XX:+ZGenerational"]}
            :neil   {:project {:name    com.outskirtslabs/clj-vips
                               :version "0.1.0"}}}}

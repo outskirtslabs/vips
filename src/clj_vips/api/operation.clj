@@ -10,68 +10,36 @@
    [clj-vips.api :as api]
    [coffi.mem :as mem]))
 
-;; -----------------------------------------------------------------------------
-;; Type System and GValue Management
-
-(defn g-param-spec-value-type
-  "Get the GType from a GParamSpec - detect different types based on argument name.
-   This is a workaround until we can properly read GParamSpec memory structure."
-  [pspec]
-  (let [arg-name (api/g-param-spec-get-name pspec)]
-    ;; For now, provide type hints based on common argument names
-    (cond
-      (or (= arg-name "scale") (= arg-name "vscale") (= arg-name "hscale"))
-      (api/g-type-from-name "gdouble")
-
-      (or (= arg-name "width") (= arg-name "height") (= arg-name "size"))
-      (api/g-type-from-name "gint")
-
-      (or (= arg-name "filename") (= arg-name "nickname") (= arg-name "description")
-          (= arg-name "import-profile") (= arg-name "export-profile"))
-      (api/g-type-from-name "gchararray")
-
-      (or (= arg-name "no-rotate") (= arg-name "linear") (= arg-name "auto-rotate"))
-      (api/g-type-from-name "gboolean")
-
-      (= arg-name "crop")
-      (api/g-type-from-name "GEnum")
-
-      (or (= arg-name "in") (= arg-name "out"))
-      (api/g-type-from-name "GObject")
-
-      :else
-      (api/g-type-from-name "GObject")))) ; Default to object type
-
 (defn gtype->setter
   "Map a GType to the appropriate g_value_set_* function"
   [gtype]
   (cond
-    (= gtype api/*g-type-object*) api/g-value-set-object
-    (= gtype api/*g-type-string*) api/g-value-set-string
-    (= gtype api/*g-type-boolean*) api/g-value-set-boolean
-    (= gtype api/*g-type-int*) api/g-value-set-int
-    (= gtype api/*g-type-uint*) api/g-value-set-uint
-    (= gtype api/*g-type-long*) api/g-value-set-long
-    (= gtype api/*g-type-int64*) api/g-value-set-int64
-    (= gtype api/*g-type-uint64*) api/g-value-set-uint64
-    (= gtype api/*g-type-double*) api/g-value-set-double
-    ;; Check if it's an enum type by comparing the fundamental type
+    (= gtype api/*g-type-object*)                        api/g-value-set-object
+    (= gtype api/*g-type-string*)                        api/g-value-set-string
+    (= gtype api/*g-type-boolean*)                       api/g-value-set-boolean
+    (= gtype api/*g-type-int*)                           api/g-value-set-int
+    (= gtype api/*g-type-uint*)                          api/g-value-set-uint
+    (= gtype api/*g-type-long*)                          api/g-value-set-long
+    (= gtype api/*g-type-int64*)                         api/g-value-set-int64
+    (= gtype api/*g-type-uint64*)                        api/g-value-set-uint64
+    (= gtype api/*g-type-double*)                        api/g-value-set-double
     (= (api/g-type-fundamental gtype) api/*g-type-enum*) api/g-value-set-enum
+
     :else
     (throw (ex-info "Unsupported GType" {:gtype gtype}))))
 
- ;; -----------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 ;; Enum Handling
 
 (def ^:private enum-keyword-mappings
   "Mapping of namespaced keywords to enum values"
-  {:interesting/none 0
-   :interesting/centre 1
-   :interesting/entropy 2
+  {:interesting/none      0
+   :interesting/centre    1
+   :interesting/entropy   2
    :interesting/attention 3
-   :interesting/low 4
-   :interesting/high 5
-   :interesting/all 6})
+   :interesting/low       4
+   :interesting/high      5
+   :interesting/all       6})
 
 (defn keyword->enum-value
   "Convert a namespaced keyword to its corresponding enum integer value"
@@ -134,15 +102,13 @@
 
 (defn arg-discovery-callback
   "Callback for vips_argument_map to discover operation arguments"
-  [args-volatile object pspec arg-class arg-instance user-data _]
-  (let [arg-name (api/g-param-spec-get-name pspec)
-        flags (api/object-get-argument-flags object arg-name)
-        gtype (g-param-spec-value-type pspec)
-        arg-info {:name arg-name
-                  :flags flags
-                  :gtype gtype
-                  :input? (not= 0 (bit-and flags 16))
-                  :output? (not= 0 (bit-and flags 32))
+  [args-volatile object {:keys [name value-type flags]} arg-class arg-instance user-data _]
+  (let [gtype    value-type
+        arg-info {:name      name
+                  :flags     flags
+                  :gtype     gtype
+                  :input?    (not= 0 (bit-and flags 16))
+                  :output?   (not= 0 (bit-and flags 32))
                   :required? (not= 0 (bit-and flags 1))}]
     (vswap! args-volatile conj arg-info))
   mem/null)

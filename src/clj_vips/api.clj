@@ -11,6 +11,33 @@
    [coffi.mem :as mem :refer [defalias]]
    [coffi.ffi :as ffi :refer [defcfn]]))
 
+(defn with-c-layout
+  "Forces a struct specification to C layout rules.
+
+  This will add padding fields between fields to match C alignment
+  requirements."
+  [struct-spec]
+  (let [aligned-fields
+        (loop [offset         0
+               aligned-fields []
+               fields         (nth struct-spec 1)]
+          (if (seq fields)
+            (let [[[_ type :as field] & fields] fields
+                  size                          (mem/size-of type)
+                  align                         (mem/align-of type)
+                  r                             (rem offset align)]
+              (recur (cond-> (+ offset size)
+                       (pos? r) (+ (- align r)))
+                     (cond-> aligned-fields
+                       (pos? r) (conj [:coffi.layout/padding [:coffi.mem/padding (- align r)]])
+                       :always  (conj field))
+                     fields))
+            (let [strongest-alignment (reduce max (map (comp mem/align-of second) (nth struct-spec 1)))
+                  r                   (rem offset strongest-alignment)]
+              (cond-> aligned-fields
+                (pos? r) (conj [:coffi.layout/padding [:coffi.mem/padding (- strongest-alignment r)]])))))]
+    (assoc struct-spec 1 aligned-fields)))
+
 (let [arch (System/getProperty "os.arch")]
   (try
     (ffi/load-system-library "vips")
@@ -35,6 +62,33 @@
   (def gvalue-align
     "Alignment of GValue struct"
     (mem/align-of struct-def)))
+
+#_(mem/defstruct GParamSpec
+    [g-type-instance ::mem/pointer
+     name ::mem/pointer
+     flags ::mem/int
+     value-type ::mem/long
+     owner-type ::mem/long
+     nick ::mem/pointer
+     blurb ::mem/pointer
+     qdata ::mem/pointer
+     ref-count ::mem/int
+     param-id ::mem/int])
+(defalias ::GParamSpec
+  (with-c-layout
+    [::mem/struct
+     [[:g-type-instance [::mem/struct [[:g-class ::mem/pointer]]]]
+      [:name ::mem/pointer]
+      [:flags ::mem/int]
+      [:value-type ::mem/long]
+      [:owner-type ::mem/long]
+      [:nick ::mem/pointer]
+      [:blurb ::mem/pointer]
+      [:qdata ::mem/pointer]
+      [:ref-count ::mem/int]
+      [:param-id ::mem/int]]]))
+
+(assert (= 72 (mem/size-of ::GParamSpec)))
 
 ;; GType constants - resolved at runtime using g_type_from_name
 ;; These are initialized when vips is loaded
@@ -301,10 +355,27 @@ You'll need to set any arguments and build the operation before you can use it. 
   "vips_object_get_argument_flags"
   [::mem/pointer ::mem/c-string] ::mem/int)
 
+(defalias ::GParamSpec
+  (with-c-layout
+    [::mem/struct
+     [;; [:g-type-instance [::mem/struct [[:g-class ::mem/pointer]]]] ; GTypeInstance - 8 bytes
+      [:g-type-instance ::mem/pointer] ; or just this since I dont care about this field
+      [:name ::mem/c-string]            ; const gchar *name - 8 bytes
+      [:flags ::mem/int]               ; GParamFlags flags - 4 bytes
+      [:value-type ::mem/long]         ; GType value_type - 8 bytes
+      [:owner-type ::mem/long]         ; GType owner_type - 8 bytes
+      [:nick ::mem/pointer]            ; gchar *_nick - 8 bytes
+      [:blurb ::mem/c-string]           ; gchar *_blurb - 8 bytes
+      [:qdata ::mem/c-string]           ; GData *qdata - 8 bytes
+      [:ref-count ::mem/int]           ; guint ref_count - 4 bytes
+      [:param-id ::mem/int]]]))
+
 (defcfn argument-map
   "vips_argument_map"
   [::mem/pointer
-   [::ffi/fn [::mem/pointer ::mem/pointer ::mem/pointer ::mem/pointer ::mem/pointer ::mem/pointer] ::mem/pointer]
+   [::ffi/fn [::mem/pointer
+              [::mem/pointer ::GParamSpec]
+              ::mem/pointer ::mem/pointer ::mem/pointer ::mem/pointer] ::mem/pointer]
    ::mem/pointer
    ::mem/pointer] ::mem/pointer)
 

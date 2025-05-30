@@ -114,7 +114,7 @@
 
 (deftest call-operation-test
   (testing "Can call invert operation"
-    (let [input-path "test/clj_vips/fixtures/clojure.png"
+    (let [input-path  "test/clj_vips/fixtures/clojure.png"
           input-image (api/image-new-from-file input-path nil)]
       (try
         (let [inverted (op/call-operation "invert" {:in input-image})]
@@ -130,7 +130,7 @@
           (api/g-object-unref input-image)))))
 
   (testing "Can call resize operation with scale parameters"
-    (let [input-path "test/clj_vips/fixtures/clojure.png"
+    (let [input-path  "test/clj_vips/fixtures/clojure.png"
           input-image (api/image-new-from-file input-path nil)]
       (try
         (let [resized (op/call-operation "resize" {:in input-image :scale 2.0 :vscale 3.0})]
@@ -147,9 +147,9 @@
 
   (testing "Can call thumbnail operation with enum keyword"
     (let [input-path "test/clj_vips/fixtures/puppies.jpg"
-          thumbnail (op/call-operation "thumbnail" {:filename input-path
-                                                    :crop :interesting/attention
-                                                    :width 100})]
+          thumbnail  (op/call-operation "thumbnail" {:filename input-path
+                                                     :crop     :interesting/attention
+                                                     :width    100})]
       (is (not (mem/null? thumbnail)) "Thumbnail should return non-null image")
       (let [output-path "test-thumbnail-enum.png"]
         (try
@@ -180,3 +180,18 @@
   (testing "Unknown enum keyword throws error"
     (is (thrown-with-msg? Exception #"Unknown enum keyword"
                           (op/keyword->enum-value :invalid/keyword)))))
+
+(deftest enum-test
+  (testing "Can call thumbnail operation with enum keyword"
+    (let [input-path "test/clj_vips/fixtures/puppies.jpg"
+          thumbnail  (op/call-operation "thumbnail" {:filename input-path
+                                                     :crop     :interesting/attention
+                                                     :width    100})]
+      (is (not (mem/null? thumbnail)) "Thumbnail should return non-null image")
+      (let [output-path "test-thumbnail-enum.png"]
+        (try
+          (api/image-write-to-file thumbnail output-path mem/null)
+          (is (.exists (io/file output-path)) "Output file should be created")
+          (finally
+            (io/delete-file (io/file output-path) true)))
+        (api/g-object-unref thumbnail)))))
