@@ -20,6 +20,7 @@
                                      "-M:kaocha" *command-line-args*)
                               (clojure "-M -e \"(set! *warn-on-reflection* true) (require '[clj-vips.core] :reload) \""))}
 
+         runner  (clojure "-M:dev:runner")
          publish {:doc     "Publish the clojure sdk libs to clojars"
                   :depends [jar]
                   :task    (doseq [dir sdk-lib-dirs]

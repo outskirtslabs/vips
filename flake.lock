@@ -14,9 +14,27 @@
         "url": "https://flakehub.com/f/NixOS/nixpkgs/0.1"
       }
     },
+    "nixpkgs-mine": {
+      "locked": {
+        "lastModified": 1748586198,
+        "narHash": "sha256-T7pBbf/jWJCkGQ9Pysj6z7k4L/ZoLqvqOVv4X8tML9o=",
+        "ref": "consolidated",
+        "rev": "9221ae07c3535728bf991787a78b7e55a75a1dd3",
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/ramblurr/nixpkgs"
+      },
+      "original": {
+        "ref": "consolidated",
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/ramblurr/nixpkgs"
+      }
+    },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-mine": "nixpkgs-mine"
       }
     }
   },

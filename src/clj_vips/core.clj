@@ -1,7 +1,6 @@
 (ns clj-vips.core
   (:require
    [clj-vips.api :as api]
-   [clj-vips.invoker :as invoker]
    [coffi.mem :as mem]))
 
 ;; Default configuration values from govips
@@ -31,18 +30,18 @@
      #_{:clj-kondo/ignore [:type-mismatch]}
      (when-not (zero? result)
        (throw (ex-info "Failed to initialize libvips"
-                       {:error-code    result
+                       {:error-code result
                         :error-message (api/vips-error-buffer)}))))
 
    ;; Apply configuration
    (let [{:keys [concurrency-level max-cache-files max-cache-mem max-cache-size
                  report-leaks? cache-trace?]
-          :or   {concurrency-level default-concurrency-level
-                 max-cache-files   default-max-cache-files
-                 max-cache-mem     default-max-cache-mem
-                 max-cache-size    default-max-cache-size
-                 report-leaks?     false
-                 cache-trace?      false}} config]
+          :or {concurrency-level default-concurrency-level
+               max-cache-files default-max-cache-files
+               max-cache-mem default-max-cache-mem
+               max-cache-size default-max-cache-size
+               report-leaks? false
+               cache-trace? false}} config]
 
      (api/vips-leak-set (bool->int report-leaks?))
      (api/vips-concurrency-set concurrency-level)
@@ -70,8 +69,23 @@
 ;; Image I/O functions
 
 (defn new-image-from-file
+  "Load an image from a file.
+   
+   Args:
+     file-path - Path to the image file to load
+     
+   Returns:
+     VipsImage pointer on success
+     
+   Throws:
+     Exception if the file cannot be loaded"
   ([file-path]
-   (api/image-new-from-file file-path nil)))
+   (let [result (api/image-new-from-file file-path nil)]
+     (when (mem/null? result)
+       (throw (ex-info "Failed to load image from file"
+                       {:file-path file-path
+                        :error-message (api/vips-error-buffer)})))
+     result)))
 
 (defn write-to-file
   "Write an image to a file.
@@ -87,6 +101,6 @@
     #_{:clj-kondo/ignore [:type-mismatch]}
     (when-not (zero? result)
       (throw (ex-info "Failed to write image to file"
-                      {:file-path     file-path
-                       :error-code    result
+                      {:file-path file-path
+                       :error-code result
                        :error-message (api/vips-error-buffer)})))))
