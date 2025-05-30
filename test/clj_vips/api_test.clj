@@ -145,6 +145,20 @@
         (finally
           (api/g-object-unref input-image)))))
 
+  (testing "Can call thumbnail operation with enum keyword"
+    (let [input-path "test/clj_vips/fixtures/puppies.jpg"
+          thumbnail (op/call-operation "thumbnail" {:filename input-path
+                                                    :crop :interesting/attention
+                                                    :width 100})]
+      (is (not (mem/null? thumbnail)) "Thumbnail should return non-null image")
+      (let [output-path "test-thumbnail-enum.png"]
+        (try
+          (api/image-write-to-file thumbnail output-path mem/null)
+          (is (.exists (io/file output-path)) "Output file should be created")
+          (finally
+            (io/delete-file (io/file output-path) true)))
+        (api/g-object-unref thumbnail))))
+
   (testing "Throws error for unknown operation"
     (is (thrown-with-msg? Exception #"Unknown argument"
                           (op/call-operation "invert" {:nonexistent-arg "value"}))))
@@ -152,3 +166,17 @@
   (testing "Throws error for invalid operation name"
     (is (thrown? Exception
                  (op/call-operation "nonexistent-operation" {})))))
+
+(deftest enum-keyword-test
+  (testing "Keyword to enum value conversion"
+    (is (= 0 (op/keyword->enum-value :interesting/none)))
+    (is (= 1 (op/keyword->enum-value :interesting/centre)))
+    (is (= 2 (op/keyword->enum-value :interesting/entropy)))
+    (is (= 3 (op/keyword->enum-value :interesting/attention)))
+    (is (= 4 (op/keyword->enum-value :interesting/low)))
+    (is (= 5 (op/keyword->enum-value :interesting/high)))
+    (is (= 6 (op/keyword->enum-value :interesting/all))))
+
+  (testing "Unknown enum keyword throws error"
+    (is (thrown-with-msg? Exception #"Unknown enum keyword"
+                          (op/keyword->enum-value :invalid/keyword)))))

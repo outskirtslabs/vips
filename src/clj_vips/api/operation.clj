@@ -23,10 +23,20 @@
       (or (= arg-name "scale") (= arg-name "vscale") (= arg-name "hscale"))
       (api/g-type-from-name "gdouble")
 
-      (= arg-name "in")
-      (api/g-type-from-name "GObject")
+      (or (= arg-name "width") (= arg-name "height") (= arg-name "size"))
+      (api/g-type-from-name "gint")
 
-      (= arg-name "out")
+      (or (= arg-name "filename") (= arg-name "nickname") (= arg-name "description")
+          (= arg-name "import-profile") (= arg-name "export-profile"))
+      (api/g-type-from-name "gchararray")
+
+      (or (= arg-name "no-rotate") (= arg-name "linear") (= arg-name "auto-rotate"))
+      (api/g-type-from-name "gboolean")
+
+      (= arg-name "crop")
+      (api/g-type-from-name "GEnum")
+
+      (or (= arg-name "in") (= arg-name "out"))
       (api/g-type-from-name "GObject")
 
       :else
@@ -45,8 +55,30 @@
     (= gtype api/*g-type-int64*) api/g-value-set-int64
     (= gtype api/*g-type-uint64*) api/g-value-set-uint64
     (= gtype api/*g-type-double*) api/g-value-set-double
+    ;; Check if it's an enum type by comparing the fundamental type
+    (= (api/g-type-fundamental gtype) api/*g-type-enum*) api/g-value-set-enum
     :else
     (throw (ex-info "Unsupported GType" {:gtype gtype}))))
+
+ ;; -----------------------------------------------------------------------------
+;; Enum Handling
+
+(def ^:private enum-keyword-mappings
+  "Mapping of namespaced keywords to enum values"
+  {:interesting/none 0
+   :interesting/centre 1
+   :interesting/entropy 2
+   :interesting/attention 3
+   :interesting/low 4
+   :interesting/high 5
+   :interesting/all 6})
+
+(defn keyword->enum-value
+  "Convert a namespaced keyword to its corresponding enum integer value"
+  [keyword]
+  (if-let [value (get enum-keyword-mappings keyword)]
+    value
+    (throw (ex-info "Unknown enum keyword" {:keyword keyword}))))
 
 (defn set-gvalue
   "Set a GValue with the appropriate setter function and value conversion"
@@ -60,6 +92,12 @@
 
     (= setter-fn api/g-value-set-boolean)
     (setter-fn g-value (if value 1 0)) ; GLib booleans are ints
+
+    (= setter-fn api/g-value-set-enum)
+    (let [enum-value (if (keyword? value)
+                       (keyword->enum-value value)
+                       value)]
+      (setter-fn g-value enum-value))
 
     :else
     (setter-fn g-value value)))

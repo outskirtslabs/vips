@@ -48,6 +48,8 @@
 (def ^:dynamic *g-type-int64* nil)
 (def ^:dynamic *g-type-uint64* nil)
 
+(def ^:dynamic *g-type-enum* nil)
+
 (defn make-gvalue
   "Create a new GValue in the given arena (default: auto-arena)"
   ([] (make-gvalue (mem/auto-arena)))
@@ -270,7 +272,8 @@ You'll need to set any arguments and build the operation before you can use it. 
   (alter-var-root #'*g-type-object* (constantly (g-type-from-name "GObject")))
   (alter-var-root #'*g-type-uint* (constantly (g-type-from-name "guint")))
   (alter-var-root #'*g-type-int64* (constantly (g-type-from-name "gint64")))
-  (alter-var-root #'*g-type-uint64* (constantly (g-type-from-name "guint64"))))
+  (alter-var-root #'*g-type-uint64* (constantly (g-type-from-name "guint64")))
+  (alter-var-root #'*g-type-enum* (constantly (g-type-from-name "GEnum"))))
 
 ;; -----------------------------------------------------------------------------
 ;; Operation and Introspection Functions
