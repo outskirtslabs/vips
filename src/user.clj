@@ -52,7 +52,7 @@
   "vips_operation_new"
   [::mem/c-string] ::mem/pointer)
 
-(defcfn  g-value-set-object
+(defcfn g-value-set-object
   "g_value_set_object"
   [::mem/pointer ::mem/pointer] ::mem/void)
 
@@ -95,14 +95,34 @@
 (defcfn error-exit
   "vips_error_exit" [::mem/c-string] ::mem/void)
 
+(defcfn argument-map
+  "vips_argument_map"
+  [::mem/pointer
+   [::ffi/fn [::mem/pointer ::mem/pointer ::mem/pointer ::mem/pointer ::mem/pointer ::mem/pointer] ::mem/pointer]
+   ::mem/pointer
+   ::mem/pointer] ::mem/pointer)
+
+(defcfn g-param-spec-get-name
+  "g_param_spec_get_name"
+  [::mem/pointer] ::mem/c-string)
+
+(defcfn object-get-argument-flags
+  "vips_object_get_argument_flags"
+  [::mem/pointer ::mem/c-string] ::mem/int)
+
+;; Commenting out for now - function might not exist
+#_(defcfn g-param-spec-get-value-type
+    "g_param_spec_get_value_type"
+    [::mem/pointer] ::GType)
+
 (comment
   (clojure.repl.deps/sync-deps)
   ;;
   )
 
 (defn autorotate [path]
-  (let [im      (api/image-new-from-file path nil)
-        op      (operation-new "invert")
+  (let [im (api/image-new-from-file path nil)
+        op (operation-new "invert")
         g-value (make-gvalue)]
     (g-value-init g-value (image-get-type))
     (g-value-set-object g-value im)
@@ -127,6 +147,27 @@
           (error-exit mem/null))
         (api/g-object-unref out)))))
 
+(defn set-image-argument
+  "Set an image argument on an operation"
+  [operation arg-name image]
+  (let [g-value (make-gvalue)]
+    (g-value-init g-value (image-get-type))
+    (g-value-set-object g-value image)
+    (g-object-set-property operation arg-name g-value)
+    (g-value-unset g-value)))
+
+(defn get-image-result
+  "Get an image result from an operation"
+  [operation arg-name]
+  (let [g-value (make-gvalue)]
+    (g-value-init g-value (image-get-type))
+    (g-object-get-property operation arg-name g-value)
+    (let [result (g-value-get-object g-value)]
+      (when-not (mem/null? result)
+        (g-object-ref result))
+      (g-value-unset g-value)
+      result)))
+
 (defn call-operation
   "Call a vips operation with given  arguments and options.
 
@@ -140,8 +181,48 @@
     ;; ... write out to file
   )"
   [operation-name args opts]
-  ;; TODO implement
-  )
+  ;; Simple implementation for image-to-image operations like invert
+  (let [op (operation-new operation-name)
+        input-image (first args)]
+    (try
+      ;; Set the input image
+      (set-image-argument op "in" input-image)
+
+      ;; Build the operation  
+      (let [built-op (cache-operation-build op)]
+        (when (mem/null? built-op)
+          (api/g-object-unref op)
+          (throw (ex-info "Operation build failed" {:operation operation-name})))
+
+        (api/g-object-unref op)
+
+        ;; Get the output image
+        (let [result (get-image-result built-op "out")]
+          (object-unref-outputs built-op)
+          (api/g-object-unref built-op)
+          result))
+
+      (catch Exception e
+        (api/g-object-unref op)
+        (throw e)))))
+
+(defn arg-discovery-callback
+  "Callback for vips_argument_map to discover operation arguments"
+  [object pspec arg-class arg-instance user-data _]
+  (let [arg-name (g-param-spec-get-name pspec)
+        flags (object-get-argument-flags object arg-name)]
+    (printf "Argument: %-12s flags=0x%02x input=%s output=%s required=%s%n"
+            arg-name
+            flags
+            (not= 0 (bit-and flags 16)) ; VIPS_ARGUMENT_INPUT = 16
+            (not= 0 (bit-and flags 32)) ; VIPS_ARGUMENT_OUTPUT = 32  
+            (not= 0 (bit-and flags 1)))) ; VIPS_ARGUMENT_REQUIRED = 1
+  mem/null)
+
+(defn discover-operation-arguments
+  "Discover all arguments for a given operation"
+  [operation]
+  (argument-map operation arg-discovery-callback mem/null mem/null))
 
 (defn op-list-callback [a g-type-int user-data]
   ;; Extract the operation name and add it to our collection
@@ -153,7 +234,7 @@
 
 (defn operation-list []
   (let [callback op-list-callback
-        data     (volatile! [])]
+        data (volatile! [])]
     (type-map-all (operation-get-type)
                   (partial callback data)
                   mem/null)
@@ -175,4 +256,11 @@
         (vips-shutdown)))))
 
 (defn -main [& args]
-  (try-autorotate))
+  (try
+    (vips-init "clj-vips")
+    (let [resize-op (operation-new "resize")]
+      (println "Discovering arguments for 'resize' operation:")
+      (discover-operation-arguments resize-op)
+      (api/g-object-unref resize-op))
+    (finally
+      (vips-shutdown))))
