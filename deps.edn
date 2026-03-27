@@ -1,10 +1,12 @@
 {:paths   ["src"]
- :deps    {}
+ :deps    {app.photofox.vips-ffm/vips-ffm-core {:mvn/version "1.9.6"}}
  :aliases {:kaocha {:extra-paths ["test"]
                     :extra-deps  {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
                     :main-opts   ["-m" "kaocha.runner"]}
-           :dev    {:extra-paths ["dev"]
-                    :extra-deps  {dev.weavejester/hashp                    {:mvn/version "0.5.1"}
+           :dev    {:extra-paths ["dev" "examples"]
+                    :jvm-opts    ["--enable-native-access=ALL-UNNAMED"]
+                    :extra-deps  {babashka/fs                              {:mvn/version "0.5.27"}
+                                  dev.weavejester/hashp                    {:mvn/version "0.5.1"}
                                   io.github.tonsky/clj-reload              {:mvn/version "1.0.0"}
                                   djblue/portal                            {:mvn/version "0.63.0"}
                                   com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.7.0"}}}

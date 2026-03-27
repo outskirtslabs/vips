@@ -9,7 +9,7 @@
                             [ol.bb-tasks.publish-clojars :as publish-clojars])
 
          :init
-         (do (def paths ["src" "test"]))
+         (do (def paths ["src" "test" "examples"]))
 
          dev
          {:doc  "Start a local development server"
