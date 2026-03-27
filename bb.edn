@@ -1,27 +1,67 @@
-{:tasks {:requires ([babashka.tasks :refer [shell]])
-         repl      {:override-builtin true
-                    :doc              "Run the dev REPL"
-                    :task             (shell "clojure -M:repl/cider:dev --port 7888")}
-         fmt       (shell "cljfmt check")
-         fmt:fix   (shell "cljfmt fix .")
-         lint      (shell (str "clj-kondo" " --fail-level error"
-                               (if (seq *command-line-args*)
-                                 (str " --lint " (first *command-line-args*))
-                                 " --lint src --lint test")))
-         clean     {:override-builtin true
-                    :doc              "Clean build artifacts"
-                    :task             (shell "clojure -T:build clean")}
-         jar       {:override-builtin true
-                    :depends          [clean]
-                    :doc              "Build an jar"
-                    :task             (shell "clojure -T:build jar")}
-         test      {:doc  "Run JVM Clojure tests with kaocha"
-                    :task (do (apply clojure {:extra-env {"TEST_SCI" "true"}}
-                                     "-M:kaocha" *command-line-args*)
-                              (clojure "-M -e \"(set! *warn-on-reflection* true) (require '[clj-vips.core] :reload) \""))}
+{:deps  {outskirtslabs/bb-tasks
+         {:git/url "https://github.com/outskirtslabs/bb-tasks"
+          :git/sha "b224881d5f6d4ae72c514faede9a5eb0b5f627a8"}}
+ :paths []
+ :tasks {:requires
+         ([clojure.string :as str]
+                            [clojure.pprint :refer [print-table]]
+                            [babashka.tasks :refer [shell]]
+                            [ol.bb-tasks.publish-clojars :as publish-clojars])
 
-         runner  (clojure "-M:dev:runner")
+         :init
+         (do (def paths ["src" "test"]))
+
+         dev
+         {:doc  "Start a local development server"
+          :task (apply clojure "-M:repl/dev:dev" *command-line-args*)}
+
+         test
+         {:doc  "Run all tests or specific test suites"
+          :task (apply clojure "-M:dev:kaocha" *command-line-args*)}
+
+         fmt
+         {:doc  "Format code with cljfmt"
+          :task (apply shell "cljfmt --quiet -v fix" (if (seq *command-line-args*) *command-line-args* paths))}
+
+         fmt:check
+         {:doc  "Check code formatting without making changes"
+          :task (apply shell "cljfmt check " paths)}
+
+         prep
+         {:doc  "Prepare Clojure dependencies"
+          :task (apply clojure "-X:deps prep :aliases '[:dev :kaocha]'")}
+
+         deps-tree
+         {:doc  "Show dependency tree"
+          :task (clojure "-X:deps tree :aliases '[:dev]'")}
+
+         lint:copy-configs
+         {:doc  "Copy clj-kondo configs from dependencies"
+          :task (shell "clj-kondo" "--lint" (-> (shell {:out :string} "clojure -Spath -M:test:dev") :out str/trim) "--dependencies" "--copy-configs" "--skip-lint")}
+
+         lint
+         {:doc  "Lint code with clj-kondo"
+          :task (if (seq *command-line-args*)
+                  (apply shell "clj-kondo" "--lint" *command-line-args*)
+                  (apply shell "clj-kondo --lint" paths))}
+
+         qa
+         {:doc     "Run full quality assurance: format, lint, and test"
+          :depends [fmt lint test]}
+
+         ci
+         {:doc     "Run CI checks: test, format check, and lint"
+          :depends [test fmt:check lint]}
+
+         jar     {:override-builtin true
+                  :depends          [clean]
+                  :doc              "Build an jar"
+                  :task             (shell "clojure -T:build jar")}
+
+         clean   {:override-builtin true
+                  :doc              "Clean build artifacts"
+                  :task             (shell "clojure -T:build clean")}
+
          publish {:doc     "Publish the clojure sdk libs to clojars"
                   :depends [jar]
-                  :task    (doseq [dir sdk-lib-dirs]
-                             (clojure {:dir dir} "-T:build deploy"))}}}
+                  :task    (publish-clojars/publish!)}}}

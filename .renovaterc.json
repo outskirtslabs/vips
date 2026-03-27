@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "config:recommended",
+    "github>ramblurr/renovate-preset-deps-edn-gitlibs"
+  ]
+}

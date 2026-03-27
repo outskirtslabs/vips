@@ -1,22 +1,18 @@
-{:paths   ["src" "resources"]
- :deps    {org.clojure/clojure {:mvn/version "1.12.0"}
-           org.suskalo/coffi   {:git/url "https://github.com/IGJoshua/coffi"
-                                :git/sha "ff202294a89070762fcaf50b52119096d44df1fa"}}
- :aliases {:dev    {:extra-paths ["dev"]
-                    :jvm-opts    ["--enable-native-access=ALL-UNNAMED"
-                                  "-Duser.timezone=UTC"
-                                  "-XX:+UseZGC"
-                                  #_"-XX:+ZGenerational"]}
-           :runner {:main-opts ["-m" "user"]}
-           :build  {:deps       {io.github.clojure/tools.build {:git/tag "v0.10.9"
-                                                                :git/sha "e405aac"}
+{:paths   ["src"]
+ :deps    {}
+ :aliases {:kaocha {:extra-paths ["test"]
+                    :extra-deps  {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
+                    :main-opts   ["-m" "kaocha.runner"]}
+           :dev    {:extra-paths ["dev"]
+                    :extra-deps  {dev.weavejester/hashp                    {:mvn/version "0.5.1"}
+                                  io.github.tonsky/clj-reload              {:mvn/version "1.0.0"}
+                                  djblue/portal                            {:mvn/version "0.63.0"}
+                                  com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.7.0"}}}
+           :build  {:deps       {io.github.clojure/tools.build {:mvn/version "0.10.13"}
                                  slipset/deps-deploy           {:mvn/version "0.2.2"}}
                     :ns-default build}
-           :kaocha {:extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
-                    :main-opts  ["-m" "kaocha.runner"]
-                    :jvm-opts   ["--enable-native-access=ALL-UNNAMED"
-                                 "-Duser.timezone=UTC"
-                                 "-XX:+UseZGC"
-                                 #_"-XX:+ZGenerational"]}
-           :neil   {:project {:name    com.outskirtslabs/clj-vips
-                              :version "0.1.0"}}}}
+           :neil   {:project {:name        com.outskirtslabs/TODO
+                              :url         "https://example.com/TODO"
+                              :license     {:id "TODO"}
+                              :description ""
+                              :version     "0.0.TODO"}}}}

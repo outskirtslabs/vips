@@ -1,0 +1,11 @@
+{:vips-version "8.17.3",
+ :arch :x86-64,
+ :source-url
+ "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz",
+ :libc :musl,
+ :sharp-version "1.2.4",
+ :library-files ["lib/libvips-cpp.so.8.17.3"],
+ :os :linux,
+ :platform-id :linux-x86-64-musl,
+ :artifact-name "com.outskirtslabs/vips-native-linux-x86-64-musl",
+ :sharp-package "@img/sharp-libvips-linuxmusl-x64"}

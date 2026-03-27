@@ -1,0 +1,26 @@
+---
+name: Update flake inputs
+on:
+  schedule:
+    - cron: "0 06 ? * MON"
+  workflow_dispatch:
+
+jobs:
+  update-inputs:
+    name: Update inputs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/determinate-nix-action@v3
+      - uses: DeterminateSystems/flakehub-cache-action@v3
+      - uses: DeterminateSystems/update-flake-lock@main
+        with:
+          pr-title: "Update Nix flake inputs"
+          pr-labels: |
+            dependencies
+            automated

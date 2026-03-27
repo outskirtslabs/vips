@@ -1,1 +1,11 @@
-#kaocha/v1 {}
+#kaocha/v1
+ {:bindings {kaocha.stacktrace/*stacktrace-stop-list* ["kaocha.runner"
+                                                       "kaocha.plugin.capture_output"
+                                                       "kaocha.testable"]}
+  :plugins [:kaocha.plugin.alpha/info
+            :kaocha.plugin/randomize
+            :kaocha.plugin/filter
+            :kaocha.plugin/capture-output]
+
+  :kaocha/reporter
+  [kaocha.report/documentation]}

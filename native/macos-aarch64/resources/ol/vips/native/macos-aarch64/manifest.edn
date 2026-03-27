@@ -1,0 +1,11 @@
+{:vips-version "8.17.3",
+ :arch :aarch64,
+ :source-url
+ "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.2.4.tgz",
+ :libc nil,
+ :sharp-version "1.2.4",
+ :library-files ["lib/libvips-cpp.8.17.3.dylib"],
+ :os :macos,
+ :platform-id :macos-aarch64,
+ :artifact-name "com.outskirtslabs/vips-native-macos-aarch64",
+ :sharp-package "@img/sharp-libvips-darwin-arm64"}
