@@ -24,13 +24,13 @@
                                   org.clojure/data.json         {:mvn/version "2.5.1"}
                                   slipset/deps-deploy           {:mvn/version "0.2.2"}}
                     :ns-default  build}
-           :neil   {:project {:name         com.outskirtslabs/vips
-                              :url          "https://github.com/outskirtslabs/vips"
-                              :license      {:id "EUPL-1.2"}
-                              :created      "2025-05-29"
-                              :platforms    [:clj]
-                              :status       :experimental
+           :neil   {:project {:name                    com.outskirtslabs/vips
+                              :url                     "https://github.com/outskirtslabs/vips"
+                              :license                 {:id "EUPL-1.2"}
+                              :created                 "2025-05-29"
+                              :platforms               [:clj]
+                              :status                  :experimental
                               :description             "High-perf image processing for Clojure built with libvips."
                               :sharp-vips-version      "1.2.4"
-                              :native-version-revision 0
+                              :native-version-revision 1
                               :version                 "0.0.1"}}}}
