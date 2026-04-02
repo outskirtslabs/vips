@@ -7,12 +7,18 @@
                     :main-opts   ["-m" "kaocha.runner"]}
            :dev    {:extra-paths ["dev" "examples"]
                     :jvm-opts    ["--enable-native-access=ALL-UNNAMED"]
-                    :extra-deps  {babashka/fs                                    {:mvn/version "0.5.27"}
-                                  dev.weavejester/hashp                          {:mvn/version "0.5.1"}
-                                  io.github.tonsky/clj-reload                    {:mvn/version "1.0.0"}
-                                  djblue/portal                                  {:mvn/version "0.63.0"}
-                                  com.clojure-goes-fast/clj-async-profiler       {:mvn/version "1.7.0"}
-                                  com.outskirtslabs/vips-native-linux-x86-64-gnu {:local/root "./native/linux-x86-64-gnu"}}}
+                    :extra-deps  {com.outskirtslabs/vips-native-linux-aarch64-gnu  {:local/root "./native/linux-aarch64-gnu"}
+                                  com.outskirtslabs/vips-native-linux-aarch64-musl {:local/root "./native/linux-aarch64-musl"}
+                                  com.outskirtslabs/vips-native-linux-x86-64-gnu   {:local/root "./native/linux-x86-64-gnu"}
+                                  com.outskirtslabs/vips-native-linux-x86-64-musl  {:local/root "./native/linux-x86-64-musl"}
+                                  com.outskirtslabs/vips-native-macos-aarch64      {:local/root "./native/macos-aarch64"}
+                                  com.outskirtslabs/vips-native-macos-x86-64       {:local/root "./native/macos-x86-64"}
+                                  com.outskirtslabs/vips-native-win32-x86-64       {:local/root "./native/win32-x86-64"}
+                                  babashka/fs                                      {:mvn/version "0.5.27"}
+                                  dev.weavejester/hashp                            {:mvn/version "0.5.1"}
+                                  io.github.tonsky/clj-reload                      {:mvn/version "1.0.0"}
+                                  djblue/portal                                    {:mvn/version "0.63.0"}
+                                  com.clojure-goes-fast/clj-async-profiler         {:mvn/version "1.7.0"}}}
            :build  {:extra-paths ["src"]
                     :deps        {io.github.clojure/tools.build {:mvn/version "0.10.13"}
                                   org.clojure/data.json         {:mvn/version "2.5.1"}

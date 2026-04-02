@@ -97,7 +97,6 @@
           clojureLocker.commandLocker ''
             export HOME="$tmp/home"
             unset CLJ_CACHE CLJ_CONFIG XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME
-
             ${clojure}/bin/clojure -Srepro -X:deps prep
             ${clojure}/bin/clojure -Srepro -P -M:kaocha
             ${clojure}/bin/clojure -Srepro -P -T:build jar
@@ -117,13 +116,16 @@
           env = [
             {
               name = "LD_LIBRARY_PATH";
-              value = pkgs.lib.makeLibraryPath [ pkgs.glib pkgs.vips ];
+              value = pkgs.lib.makeLibraryPath [
+                pkgs.stdenv.cc.cc.lib
+                #pkgs.glib pkgs.vips
+              ];
             }
           ];
           packages = [
-            pkgs.vips
-            pkgs.glib
-            pkgs.gobject-introspection
+            #pkgs.vips
+            #pkgs.glib
+            #pkgs.gobject-introspection
             (if self ? packages then self.packages.${pkgs.system}.locker else pkgs.deps-lock)
             # pkgs.foobar
           ];
