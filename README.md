@@ -66,6 +66,31 @@ The top-level `ol.vips` namespace provides the image loading, saving, metadata, 
   (v/write-to-buffer image ".png" {:compression 9}))
 ```
 
+### Autorotate And Inspect Outputs
+
+`autorot` returns a closeable result map. You can inspect `:angle` and `:flip`, and still use the same value anywhere an image is expected.
+
+```clojure
+(with-open [image   (v/from-file "dev/rabbit.jpg")
+            autorot (ops/autorot image)]
+  {:angle (:angle autorot)
+   :flip  (:flip autorot)
+   :info  (v/info autorot)})
+;; => {:angle :d0, :flip false, :info {:width 2490, :height 3084, :bands 3, :has-alpha? false}}
+```
+
+### Resize And Crop
+
+```clojure
+(with-open [image   (v/from-file "dev/rabbit.jpg")
+            resized (ops/resize image 0.5)
+            cropped (ops/extract-area resized 100 100 500 500)]
+  (v/write-to-file resized "rabbit-resized.jpg")
+  (v/write-to-file cropped "rabbit-cropped.jpg")
+  {:resized (v/info resized)
+   :cropped (v/info cropped)})
+```
+
 ### Transforming Images
 
 ```clojure
@@ -74,6 +99,18 @@ The top-level `ol.vips` namespace provides the image loading, saving, metadata, 
             flipped (ops/flip rotated :horizontal)
             bw      (ops/colourspace flipped :b-w)]
   (v/write-to-file bw "rabbit-bw.jpg"))
+```
+
+### Filters And Effects
+
+```clojure
+(with-open [image   (v/from-file "dev/rabbit.jpg")
+            blurred (ops/gaussblur image 3.0)
+            sharp   (ops/sharpen image {:sigma 1.0})]
+  (v/write-to-file blurred "rabbit-blur.jpg")
+  (v/write-to-file sharp "rabbit-sharp.jpg")
+  {:blurred (v/info blurred)
+   :sharp   (v/info sharp)})
 ```
 
 ### Composing Images
@@ -89,6 +126,19 @@ The top-level `ol.vips` namespace provides the image loading, saving, metadata, 
                                    :valign :centre})]
   (v/write-to-file joined "rabbit-joined.jpg")
   (v/write-to-file grid "rabbit-grid.jpg"))
+```
+
+### Web Optimization
+
+```clojure
+(with-open [image (v/from-file "dev/rabbit.jpg")]
+  (v/write-to-file image "rabbit-progressive.jpg"
+                   {:interlace true
+                    :strip true
+                    :Q 85})
+  (v/write-to-file image "rabbit.webp"
+                   {:Q 80
+                    :effort 4}))
 ```
 
 ### Calling Raw Operations
