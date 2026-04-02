@@ -13,8 +13,11 @@
            :build  {:deps       {io.github.clojure/tools.build {:mvn/version "0.10.13"}
                                  slipset/deps-deploy           {:mvn/version "0.2.2"}}
                     :ns-default build}
-           :neil   {:project {:name        com.outskirtslabs/TODO
-                              :url         "https://example.com/TODO"
-                              :license     {:id "TODO"}
+           :neil   {:project {:name        com.outskirtslabs/vips
+                              :url         "https://github.com/outskirtslabs/vips"
+                              :license     {:id "EUPL-1.2"}
+                              :created     "2025-05-29"
+                              :platforms   [:clj]
+                              :status      :experimental
                               :description ""
                               :version     "0.0.TODO"}}}}
