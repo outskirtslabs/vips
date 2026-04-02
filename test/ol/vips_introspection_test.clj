@@ -69,8 +69,8 @@
 (deftest generic-image-operation-call
   (testing "generic operation calls can drive simple image transforms"
     (with-open [image   (runtime/open-image common/fixture-path)
-                rotated (:out (introspect/call-operation "rotate" {:in image :angle 90.0}))
-                flipped (:out (introspect/call-operation "flip" {:in image :direction :horizontal}))]
+                rotated (introspect/call-operation "rotate" {:in image :angle 90.0})
+                flipped (introspect/call-operation "flip" {:in image :direction :horizontal})]
       (is (= {:width 3084 :height 2490 :has-alpha? false}
              (select-keys (runtime/image-info rotated) [:width :height :has-alpha?])))
       (is (= {:width 2490 :height 3084 :has-alpha? false}

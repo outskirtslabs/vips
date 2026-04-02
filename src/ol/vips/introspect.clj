@@ -224,7 +224,13 @@
 (defn- array-image?
   [value]
   (and (sequential? value)
-       (every? #(satisfies? runtime/PointerBacked %) value)))
+       (every? (fn [image]
+                 (try
+                   (runtime/image-handle image)
+                   true
+                   (catch Throwable _
+                     false)))
+               value)))
 
 (defn- encode-array-image
   [native images gvalue]
@@ -234,7 +240,9 @@
     (with-open [arena (mem/confined-arena)]
       (let [image-ptrs (mem/alloc (* (count images) pointer-size) pointer-align arena)]
         (doseq [[index image] (map-indexed vector images)]
-          (mem/write-address image-ptrs (* index pointer-size) (runtime/pointer image)))
+          (mem/write-address image-ptrs
+                             (* index pointer-size)
+                             (runtime/pointer (runtime/image-handle image))))
         (let [boxed ((:array-image-new native) image-ptrs (count images))]
           (when (mem/null? boxed)
             (throw (ex-info "Failed to encode boxed image array"
@@ -264,7 +272,7 @@
 (defn- encode-value
   [native {:keys [kind value-type]} value gvalue]
   (case kind
-    :object ((:g-value-set-object native) gvalue (runtime/pointer value))
+    :object ((:g-value-set-object native) gvalue (runtime/pointer (runtime/image-handle value)))
     :boxed (encode-boxed-value native value-type value gvalue)
     :string ((:g-value-set-string native) gvalue (str value))
     :boolean ((:g-value-set-boolean native) gvalue (if value 1 0))
@@ -330,14 +338,15 @@
           ((runtime/bindings :g-object-unref) operation)
           (vreset! open-op mem/null)
           (try
-            (into {}
-                  (for [arg   args
-                        :when (:output? arg)]
-                    [(keyword (:name arg))
-                     (runtime/with-gvalue (:gtype arg)
-                       (fn [gvalue]
-                         ((runtime/bindings :g-object-get-property) built (:name arg) gvalue)
-                         (decode-value (runtime/bindings) arg gvalue)))]))
+            (runtime/operation-result
+             (into {}
+                   (for [arg   args
+                         :when (:output? arg)]
+                     [(keyword (:name arg))
+                      (runtime/with-gvalue (:gtype arg)
+                        (fn [gvalue]
+                          ((runtime/bindings :g-object-get-property) built (:name arg) gvalue)
+                          (decode-value (runtime/bindings) arg gvalue)))])))
             (finally
               ((runtime/bindings :object-unref-outputs) built)
               ((runtime/bindings :g-object-unref) built)))))

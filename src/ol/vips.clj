@@ -125,6 +125,6 @@
   ([image width]
    (thumbnail image width {}))
   ([image width opts]
-   (:out (call! "thumbnail_image" (merge {:in    image
-                                          :width width}
-                                         opts)))))
+   (call! "thumbnail_image" (merge {:in    image
+                                    :width width}
+                                   opts))))

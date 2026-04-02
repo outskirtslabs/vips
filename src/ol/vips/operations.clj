@@ -244,7 +244,7 @@
   
   Operation name: `abs`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -262,7 +262,7 @@
   
   Operation name: `add`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -281,7 +281,7 @@
   
   Operation name: `addalpha`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -299,7 +299,7 @@
   
   Operation name: `arrayjoin`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (seqable of image): Array of input images
@@ -323,7 +323,7 @@
   
   Operation name: `autorot`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -343,7 +343,7 @@
   
   Operation name: `avg`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -361,7 +361,7 @@
   
   Operation name: `bandbool`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -380,7 +380,7 @@
   
   Operation name: `bandfold`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -399,7 +399,7 @@
   
   Operation name: `bandjoin`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (seqable of image): Array of input images
@@ -417,7 +417,7 @@
   
   Operation name: `bandmean`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -435,7 +435,7 @@
   
   Operation name: `bandrank`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (seqable of image): Array of input images
@@ -454,7 +454,7 @@
   
   Operation name: `bandunfold`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -473,7 +473,7 @@
   
   Operation name: `black`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -493,7 +493,7 @@
   
   Operation name: `boolean`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -513,7 +513,7 @@
   
   Operation name: `buildlut`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Matrix of XY coordinates
@@ -531,7 +531,7 @@
   
   Operation name: `byteswap`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -549,7 +549,7 @@
   
   Operation name: `cache`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -570,7 +570,7 @@
   
   Operation name: `canny`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -590,7 +590,7 @@
   
   Operation name: `case`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `index` -> `:index` (image): Index image
@@ -609,7 +609,7 @@
   
   Operation name: `cast`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -629,7 +629,7 @@
   
   Operation name: `clamp`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -649,7 +649,7 @@
   
   Operation name: `CMC2LCh`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -667,7 +667,7 @@
   
   Operation name: `CMYK2XYZ`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -685,7 +685,7 @@
   
   Operation name: `colourspace`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -705,7 +705,7 @@
   
   Operation name: `compass`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -730,7 +730,7 @@
   
   Operation name: `complex`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -749,7 +749,7 @@
   
   Operation name: `complex2`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -769,7 +769,7 @@
   
   Operation name: `complexform`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -788,7 +788,7 @@
   
   Operation name: `complexget`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -807,7 +807,7 @@
   
   Operation name: `composite2`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `base` -> `:base` (image): Base image
@@ -831,7 +831,7 @@
   
   Operation name: `conv`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -853,7 +853,7 @@
   
   Operation name: `conva`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -874,7 +874,7 @@
   
   Operation name: `convasep`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -894,7 +894,7 @@
   
   Operation name: `convf`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -913,7 +913,7 @@
   
   Operation name: `convi`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -932,7 +932,7 @@
   
   Operation name: `convsep`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -954,7 +954,7 @@
   
   Operation name: `copy`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -983,7 +983,7 @@
   
   Operation name: `countlines`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -1002,7 +1002,7 @@
   
   Operation name: `csvload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -1032,7 +1032,7 @@
   
   Operation name: `csvsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -1056,7 +1056,7 @@
   
   Operation name: `dE00`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand input image
@@ -1075,7 +1075,7 @@
   
   Operation name: `dE76`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand input image
@@ -1094,7 +1094,7 @@
   
   Operation name: `dECMC`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand input image
@@ -1113,7 +1113,7 @@
   
   Operation name: `deviate`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1131,7 +1131,7 @@
   
   Operation name: `divide`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -1150,7 +1150,7 @@
   
   Operation name: `draw_image`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
@@ -1172,7 +1172,7 @@
   
   Operation name: `draw_smudge`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
@@ -1194,7 +1194,7 @@
   
   Operation name: `dzsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -1237,7 +1237,7 @@
   
   Operation name: `embed`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1260,7 +1260,7 @@
   
   Operation name: `extract_area`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:input` (image): Input image
@@ -1282,7 +1282,7 @@
   
   Operation name: `extract_band`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1302,7 +1302,7 @@
   
   Operation name: `eye`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -1323,7 +1323,7 @@
   
   Operation name: `falsecolour`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1341,7 +1341,7 @@
   
   Operation name: `fastcor`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -1360,7 +1360,7 @@
   
   Operation name: `fill_nearest`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -1379,7 +1379,7 @@
   
   Operation name: `find_trim`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to find_trim
@@ -1402,7 +1402,7 @@
   
   Operation name: `flatten`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1421,7 +1421,7 @@
   
   Operation name: `flip`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1440,7 +1440,7 @@
   
   Operation name: `float2rad`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1458,7 +1458,7 @@
   
   Operation name: `fractsurf`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -1478,7 +1478,7 @@
   
   Operation name: `freqmult`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1497,7 +1497,7 @@
   
   Operation name: `gamma`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1516,7 +1516,7 @@
   
   Operation name: `gaussblur`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1537,7 +1537,7 @@
   
   Operation name: `gaussmat`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `sigma` -> `:sigma` (float): Sigma of Gaussian
@@ -1559,7 +1559,7 @@
   
   Operation name: `gaussnoise`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -1581,7 +1581,7 @@
   
   Operation name: `gifload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -1609,7 +1609,7 @@
   
   Operation name: `gifsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -1641,7 +1641,7 @@
   
   Operation name: `globalbalance`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1661,7 +1661,7 @@
   
   Operation name: `gravity`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1683,7 +1683,7 @@
   
   Operation name: `grey`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -1703,7 +1703,7 @@
   
   Operation name: `grid`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1724,7 +1724,7 @@
   
   Operation name: `heifload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -1755,7 +1755,7 @@
   
   Operation name: `heifsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -1786,7 +1786,7 @@
   
   Operation name: `hist_cum`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1804,7 +1804,7 @@
   
   Operation name: `hist_entropy`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `input` -> `:in` (image): Input histogram image
@@ -1822,7 +1822,7 @@
   
   Operation name: `hist_equal`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1841,7 +1841,7 @@
   
   Operation name: `hist_find`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1860,7 +1860,7 @@
   
   Operation name: `hist_find_indexed`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1880,7 +1880,7 @@
   
   Operation name: `hist_find_ndim`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1899,7 +1899,7 @@
   
   Operation name: `hist_ismonotonic`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Input histogram image
@@ -1917,7 +1917,7 @@
   
   Operation name: `hist_local`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1938,7 +1938,7 @@
   
   Operation name: `hist_match`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input histogram
@@ -1957,7 +1957,7 @@
   
   Operation name: `hist_norm`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1975,7 +1975,7 @@
   
   Operation name: `hist_plot`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -1993,7 +1993,7 @@
   
   Operation name: `hough_circle`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2014,7 +2014,7 @@
   
   Operation name: `hough_line`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2034,7 +2034,7 @@
   
   Operation name: `HSV2sRGB`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2052,7 +2052,7 @@
   
   Operation name: `icc_export`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2075,7 +2075,7 @@
   
   Operation name: `icc_import`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2098,7 +2098,7 @@
   
   Operation name: `icc_transform`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2123,7 +2123,7 @@
   
   Operation name: `identity`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - none
@@ -2144,7 +2144,7 @@
   
   Operation name: `ifthenelse`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `cond` -> `:cond` (image): Condition input image
@@ -2165,7 +2165,7 @@
   
   Operation name: `insert`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `main` -> `:main` (image): Main input image
@@ -2187,7 +2187,7 @@
   
   Operation name: `invert`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2205,7 +2205,7 @@
   
   Operation name: `invertlut`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Matrix of XY coordinates
@@ -2224,7 +2224,7 @@
   
   Operation name: `join`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `in1` -> `:in1` (image): First input image
@@ -2247,7 +2247,7 @@
   
   Operation name: `jpegload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -2276,7 +2276,7 @@
   
   Operation name: `jpegsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -2309,7 +2309,7 @@
   
   Operation name: `jpegsave_mime`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -2341,7 +2341,7 @@
   
   Operation name: `LabQ2Lab`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2359,7 +2359,7 @@
   
   Operation name: `LabQ2LabS`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2377,7 +2377,7 @@
   
   Operation name: `LabQ2sRGB`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2395,7 +2395,7 @@
   
   Operation name: `LabS2Lab`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2413,7 +2413,7 @@
   
   Operation name: `LabS2LabQ`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2431,7 +2431,7 @@
   
   Operation name: `Lab2LabQ`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2449,7 +2449,7 @@
   
   Operation name: `Lab2LabS`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2467,7 +2467,7 @@
   
   Operation name: `Lab2LCh`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2485,7 +2485,7 @@
   
   Operation name: `Lab2XYZ`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2503,7 +2503,7 @@
   
   Operation name: `labelregions`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -2522,7 +2522,7 @@
   
   Operation name: `LCh2CMC`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2540,7 +2540,7 @@
   
   Operation name: `LCh2Lab`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2558,7 +2558,7 @@
   
   Operation name: `linecache`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2580,7 +2580,7 @@
   
   Operation name: `logmat`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `sigma` -> `:sigma` (float): Radius of Gaussian
@@ -2602,7 +2602,7 @@
   
   Operation name: `mapim`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -2623,7 +2623,7 @@
   
   Operation name: `maplut`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2643,7 +2643,7 @@
   
   Operation name: `mask_butterworth`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2669,7 +2669,7 @@
   
   Operation name: `mask_butterworth_band`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2697,7 +2697,7 @@
   
   Operation name: `mask_butterworth_ring`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2724,7 +2724,7 @@
   
   Operation name: `mask_fractal`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2748,7 +2748,7 @@
   
   Operation name: `mask_gaussian`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2773,7 +2773,7 @@
   
   Operation name: `mask_gaussian_band`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2800,7 +2800,7 @@
   
   Operation name: `mask_gaussian_ring`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2826,7 +2826,7 @@
   
   Operation name: `mask_ideal`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2850,7 +2850,7 @@
   
   Operation name: `mask_ideal_band`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2876,7 +2876,7 @@
   
   Operation name: `mask_ideal_ring`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -2901,7 +2901,7 @@
   
   Operation name: `match`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `ref` -> `:ref` (image): Reference image
@@ -2931,7 +2931,7 @@
   
   Operation name: `math`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -2950,7 +2950,7 @@
   
   Operation name: `math2`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -2970,7 +2970,7 @@
   
   Operation name: `matrixinvert`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): An square matrix
@@ -2988,7 +2988,7 @@
   
   Operation name: `matrixload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -3014,7 +3014,7 @@
   
   Operation name: `matrixmultiply`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): First matrix to multiply
@@ -3033,7 +3033,7 @@
   
   Operation name: `matrixprint`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -3055,7 +3055,7 @@
   
   Operation name: `matrixsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -3078,7 +3078,7 @@
   
   Operation name: `maxpair`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -3097,7 +3097,7 @@
   
   Operation name: `measure`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Image to measure
@@ -3121,7 +3121,7 @@
   
   Operation name: `merge`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `ref` -> `:ref` (image): Reference image
@@ -3144,7 +3144,7 @@
   
   Operation name: `minpair`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -3163,7 +3163,7 @@
   
   Operation name: `morph`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3183,7 +3183,7 @@
   
   Operation name: `mosaic`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `ref` -> `:ref` (image): Reference image
@@ -3217,7 +3217,7 @@
   
   Operation name: `mosaic1`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `ref` -> `:ref` (image): Reference image
@@ -3250,7 +3250,7 @@
   
   Operation name: `msb`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3269,7 +3269,7 @@
   
   Operation name: `multiply`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -3288,7 +3288,7 @@
   
   Operation name: `percent`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3307,7 +3307,7 @@
   
   Operation name: `perlin`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -3329,7 +3329,7 @@
   
   Operation name: `phasecor`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3348,7 +3348,7 @@
   
   Operation name: `pngload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -3375,7 +3375,7 @@
   
   Operation name: `pngsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -3407,7 +3407,7 @@
   
   Operation name: `premultiply`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3426,7 +3426,7 @@
   
   Operation name: `prewitt`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3444,7 +3444,7 @@
   
   Operation name: `profile`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3463,7 +3463,7 @@
   
   Operation name: `project`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3482,7 +3482,7 @@
   
   Operation name: `quadratic`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3501,7 +3501,7 @@
   
   Operation name: `rad2float`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3519,7 +3519,7 @@
   
   Operation name: `rank`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3540,7 +3540,7 @@
   
   Operation name: `rawload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -3572,7 +3572,7 @@
   
   Operation name: `rawsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -3595,7 +3595,7 @@
   
   Operation name: `recomb`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3614,7 +3614,7 @@
   
   Operation name: `reduce`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3639,7 +3639,7 @@
   
   Operation name: `reduceh`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3662,7 +3662,7 @@
   
   Operation name: `reducev`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3685,7 +3685,7 @@
   
   Operation name: `relational`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -3705,7 +3705,7 @@
   
   Operation name: `remainder`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -3724,7 +3724,7 @@
   
   Operation name: `remosaic`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3744,7 +3744,7 @@
   
   Operation name: `replicate`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3764,7 +3764,7 @@
   
   Operation name: `resize`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3789,7 +3789,7 @@
   
   Operation name: `rot`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3808,7 +3808,7 @@
   
   Operation name: `rot45`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3827,7 +3827,7 @@
   
   Operation name: `rotate`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -3850,7 +3850,7 @@
   
   Operation name: `round`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3869,7 +3869,7 @@
   
   Operation name: `sRGB2HSV`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3887,7 +3887,7 @@
   
   Operation name: `sRGB2scRGB`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3905,7 +3905,7 @@
   
   Operation name: `scRGB2BW`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3924,7 +3924,7 @@
   
   Operation name: `scRGB2XYZ`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3942,7 +3942,7 @@
   
   Operation name: `scRGB2sRGB`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3961,7 +3961,7 @@
   
   Operation name: `scale`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3981,7 +3981,7 @@
   
   Operation name: `scharr`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -3999,7 +3999,7 @@
   
   Operation name: `sdf`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -4020,7 +4020,7 @@
   
   Operation name: `sequential`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4041,7 +4041,7 @@
   
   Operation name: `sharpen`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4066,7 +4066,7 @@
   
   Operation name: `shrink`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -4089,7 +4089,7 @@
   
   Operation name: `shrinkh`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -4110,7 +4110,7 @@
   
   Operation name: `shrinkv`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -4131,7 +4131,7 @@
   
   Operation name: `sign`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4149,7 +4149,7 @@
   
   Operation name: `similarity`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -4173,7 +4173,7 @@
   
   Operation name: `sines`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -4195,7 +4195,7 @@
   
   Operation name: `smartcrop`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `input` -> `:input` (image): Input image
@@ -4219,7 +4219,7 @@
   
   Operation name: `sobel`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4237,7 +4237,7 @@
   
   Operation name: `spcor`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -4256,7 +4256,7 @@
   
   Operation name: `spectrum`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4274,7 +4274,7 @@
   
   Operation name: `stats`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4292,7 +4292,7 @@
   
   Operation name: `stdif`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4316,7 +4316,7 @@
   
   Operation name: `subsample`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:input` (image): Input image
@@ -4337,7 +4337,7 @@
   
   Operation name: `subtract`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
@@ -4356,7 +4356,7 @@
   
   Operation name: `sum`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (seqable of image): Array of input images
@@ -4374,7 +4374,7 @@
   
   Operation name: `svgload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -4405,7 +4405,7 @@
   
   Operation name: `switch`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `tests` -> `:tests` (seqable of image): Table of images to test
@@ -4423,7 +4423,7 @@
   
   Operation name: `system`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `cmd-format` -> `:cmd-format` (string): Command to run
@@ -4445,7 +4445,7 @@
   
   Operation name: `text`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `text` -> `:text` (string): Text to render
@@ -4474,7 +4474,7 @@
   
   Operation name: `thumbnail`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to read from
@@ -4505,7 +4505,7 @@
   
   Operation name: `thumbnail_image`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image argument
@@ -4536,7 +4536,7 @@
   
   Operation name: `tiffload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -4567,7 +4567,7 @@
   
   Operation name: `tiffsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -4612,7 +4612,7 @@
   
   Operation name: `tilecache`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4636,7 +4636,7 @@
   
   Operation name: `tonelut`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - none
@@ -4664,7 +4664,7 @@
   
   Operation name: `transpose3d`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4683,7 +4683,7 @@
   
   Operation name: `unpremultiply`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4703,7 +4703,7 @@
   
   Operation name: `vipsload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -4729,7 +4729,7 @@
   
   Operation name: `vipssave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -4752,7 +4752,7 @@
   
   Operation name: `webpload`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
   
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
@@ -4782,7 +4782,7 @@
   
   Operation name: `webpsave`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -4820,7 +4820,7 @@
   
   Operation name: `webpsave_mime`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns a result map.
   
   Required inputs:
   - `input` -> `:in` (image): Image to save
@@ -4857,7 +4857,7 @@
   
   Operation name: `worley`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -4878,7 +4878,7 @@
   
   Operation name: `wrap`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4898,7 +4898,7 @@
   
   Operation name: `xyz`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -4920,7 +4920,7 @@
   
   Operation name: `XYZ2CMYK`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4938,7 +4938,7 @@
   
   Operation name: `XYZ2Lab`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4956,7 +4956,7 @@
   
   Operation name: `XYZ2Yxy`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4974,7 +4974,7 @@
   
   Operation name: `XYZ2scRGB`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -4992,7 +4992,7 @@
   
   Operation name: `Yxy2XYZ`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:in` (image): Input image
@@ -5010,7 +5010,7 @@
   
   Operation name: `zone`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
@@ -5030,7 +5030,7 @@
   
   Operation name: `zoom`.
   
-  Returns the full output map from `ol.vips/call!`.
+  Returns an image handle.
   
   Required inputs:
   - `input` -> `:input` (image): Input image

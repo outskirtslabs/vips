@@ -113,25 +113,37 @@
 
 (defn- operation-docstring
   [{:keys [operation-name description required-inputs optional-inputs outputs]}]
-  (indent-docstring
-   (str description
-        "\n\n"
-        "Operation name: `" operation-name "`.\n\n"
-        "Returns the full output map from `ol.vips/call!`.\n\n"
-        "Required inputs:\n"
-        (if (seq required-inputs)
-          (str/join "\n" (map arg-doc-line required-inputs))
-          "- none")
-        "\n\n"
-        "Optional inputs:\n"
-        (if (seq optional-inputs)
-          (str/join "\n" (map arg-doc-line optional-inputs))
-          "- none")
-        "\n\n"
-        "Outputs:\n"
-        (if (seq outputs)
-          (str/join "\n" (map arg-doc-line outputs))
-          "- none"))))
+  (let [returns-line
+        (cond
+          (and (= 1 (count outputs))
+               (= "out" (:name (first outputs)))
+               (= :image (get-in (first outputs) [:type :kind])))
+          "Returns an image handle.\n\n"
+
+          (contains? (set (map :name outputs)) "out")
+          "Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.\n\n"
+
+          :else
+          "Returns a result map.\n\n")]
+    (indent-docstring
+     (str description
+          "\n\n"
+          "Operation name: `" operation-name "`.\n\n"
+          returns-line
+          "Required inputs:\n"
+          (if (seq required-inputs)
+            (str/join "\n" (map arg-doc-line required-inputs))
+            "- none")
+          "\n\n"
+          "Optional inputs:\n"
+          (if (seq optional-inputs)
+            (str/join "\n" (map arg-doc-line optional-inputs))
+            "- none")
+          "\n\n"
+          "Outputs:\n"
+          (if (seq outputs)
+            (str/join "\n" (map arg-doc-line outputs))
+            "- none")))))
 
 (defn- operation-source
   [{:keys [id] :as spec}]

@@ -27,6 +27,62 @@
 (defprotocol PointerBacked
   (pointer ^java.lang.foreign.MemorySegment [this]))
 
+(declare image-handle)
+
+(deftype OperationResult [result-map ^AtomicBoolean closed?]
+  clojure.lang.ILookup
+  (valAt [_ key]
+    (get result-map key))
+  (valAt [_ key not-found]
+    (get result-map key not-found))
+
+  clojure.lang.Associative
+  (assoc [_ key value]
+    (assoc result-map key value))
+  (containsKey [_ key]
+    (contains? result-map key))
+  (entryAt [_ key]
+    (find result-map key))
+
+  clojure.lang.IPersistentMap
+  (without [_ key]
+    (dissoc result-map key))
+
+  clojure.lang.Seqable
+  (seq [_]
+    (seq result-map))
+
+  clojure.lang.Counted
+  (count [_]
+    (count result-map))
+
+  clojure.lang.IPersistentCollection
+  (cons [_ entry]
+    (cons entry result-map))
+  (empty [_]
+    {})
+  (equiv [_ other]
+    (= result-map other))
+
+  java.lang.Iterable
+  (iterator [_]
+    (.iterator ^Iterable result-map))
+
+  java.lang.AutoCloseable
+  (close [_]
+    (when (.compareAndSet closed? false true)
+      (doseq [value (vals result-map)]
+        (when (instance? java.lang.AutoCloseable value)
+          (.close ^java.lang.AutoCloseable value)))))
+
+  Object
+  (equals [_ other]
+    (= result-map other))
+  (hashCode [_]
+    (hash result-map))
+  (toString [_]
+    (str result-map)))
+
 (deftype ImageHandle [ptr ^AtomicBoolean closed?]
   PointerBacked
   (pointer [_] ptr)
@@ -221,6 +277,36 @@
   [ptr]
   (wrap-image ptr))
 
+(defn operation-result
+  [result-map]
+  (cond
+    (and (= #{:out} (set (keys result-map)))
+         (satisfies? PointerBacked (:out result-map)))
+    (:out result-map)
+
+    (contains? result-map :out)
+    (OperationResult. result-map (AtomicBoolean. false))
+
+    :else
+    result-map))
+
+(defn image-handle
+  [value]
+  (cond
+    (satisfies? PointerBacked value)
+    value
+
+    (and (map? value) (contains? value :out))
+    (let [image (:out value)]
+      (if (satisfies? PointerBacked image)
+        image
+        (throw (ex-info "Operation result map does not contain an image at :out"
+                        {:value value}))))
+
+    :else
+    (throw (ex-info "Expected an image handle or operation result map"
+                    {:value value}))))
+
 (defn ensure-initialized!
   []
   (or @state*
@@ -327,7 +413,7 @@
 (defn write-image!
   [image sink]
   (let [path (str sink)
-        code ((bindings :image-write-to-file) (pointer image) path nil)]
+        code ((bindings :image-write-to-file) (pointer (image-handle image)) path nil)]
     (when-not (zero? code)
       (throw-vips-error (bindings)
                         "Failed to write image"
@@ -340,7 +426,7 @@
     (let [buffer-ptr (mem/alloc-instance ::mem/pointer arena)
           size-ptr   (mem/alloc-instance ::size-t arena)
           code       ((bindings :image-write-to-buffer)
-                      (pointer image)
+                      (pointer (image-handle image))
                       (str suffix)
                       buffer-ptr
                       size-ptr
@@ -358,19 +444,19 @@
 
 (defn image-width
   [image]
-  ((bindings :image-get-width) (pointer image)))
+  ((bindings :image-get-width) (pointer (image-handle image))))
 
 (defn image-height
   [image]
-  ((bindings :image-get-height) (pointer image)))
+  ((bindings :image-get-height) (pointer (image-handle image))))
 
 (defn image-bands
   [image]
-  ((bindings :image-get-bands) (pointer image)))
+  ((bindings :image-get-bands) (pointer (image-handle image))))
 
 (defn image-has-alpha?
   [image]
-  (not (zero? ((bindings :image-has-alpha) (pointer image)))))
+  (not (zero? ((bindings :image-has-alpha) (pointer (image-handle image))))))
 
 (defn image-info
   [image]

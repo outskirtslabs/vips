@@ -136,12 +136,38 @@
       (is (= {:width 323 :height 400 :bands 3 :has-alpha? false}
              (select-keys (v/info thumbnail) [:width :height :bands :has-alpha?]))))))
 
+(deftest image-result-maps-work-as-image-inputs
+  (testing "public image helpers accept operation result maps with :out"
+    (with-open [image (v/from-file common/fixture-path)]
+      (with-open [autorot (v/call! "autorot" {:in image})]
+        (let [thumb (v/thumbnail autorot 400)
+              png   (v/write-to-buffer autorot ".png")]
+          (with-open [thumb thumb]
+            (is (= {:width 323 :height 400 :bands 3 :has-alpha? false}
+                   (select-keys (v/info thumb) [:width :height :bands :has-alpha?])))
+            (is (pos? (alength ^bytes png))))))))
+  (testing "raw operation calls accept operation result maps for image inputs"
+    (with-open [image (v/from-file common/fixture-path)]
+      (with-open [autorot (v/call! "autorot" {:in image})
+                  flipped (v/call! "flip" {:in autorot :direction :horizontal})]
+        (is (= {:width 2490 :height 3084 :has-alpha? false}
+               (select-keys (v/image-info flipped) [:width :height :has-alpha?])))))))
+
+(deftest single-image-operations-return-image-handles
+  (testing "single-image operation results can be used directly in with-open"
+    (with-open [image   (v/from-file common/fixture-path)
+                rotated (v/call! "rotate" {:in image :angle 90.0})
+                flipped (v/call! "flip" {:in rotated :direction :horizontal})
+                bw      (v/call! "colourspace" {:in flipped :space :b-w})]
+      (is (= {:width 3084 :height 2490 :bands 1 :has-alpha? false}
+             (select-keys (v/info bw) [:width :height :bands :has-alpha?]))))))
+
 (deftest transforms
   (testing "rotate, colourspace, and flip compose through call!"
     (with-open [image   (v/image-from-file common/fixture-path)
-                rotated (:out (v/call! "rotate" {:in image :angle 90.0}))
-                bw      (:out (v/call! "colourspace" {:in image :space :b-w}))
-                flipped (:out (v/call! "flip" {:in image :direction :horizontal}))]
+                rotated (v/call! "rotate" {:in image :angle 90.0})
+                bw      (v/call! "colourspace" {:in image :space :b-w})
+                flipped (v/call! "flip" {:in image :direction :horizontal})]
       (is (= {:width 3084 :height 2490 :has-alpha? false}
              (select-keys (v/image-info rotated) [:width :height :has-alpha?])))
       (is (= {:width 2490 :height 3084 :has-alpha? false}
@@ -161,9 +187,9 @@
   (testing "join composes two images through the raw operation contract"
     (with-open [left   (v/image-from-file common/fixture-path)
                 right  (v/image-from-file common/fixture-path)
-                joined (:out (v/call! "join" {:in1       left
-                                              :in2       right
-                                              :direction :horizontal}))]
+                joined (v/call! "join" {:in1       left
+                                        :in2       right
+                                        :direction :horizontal})]
       (is (= {:width 4980 :height 3084 :has-alpha? false}
              (select-keys (v/image-info joined) [:width :height :has-alpha?])))))
   (testing "arrayjoin accepts a collection of images plus layout options"
@@ -171,10 +197,10 @@
                 b    (v/image-from-file common/fixture-path)
                 c    (v/image-from-file common/fixture-path)
                 d    (v/image-from-file common/fixture-path)
-                grid (:out (v/call! "arrayjoin" {:in     [a b c d]
-                                                 :across 2
-                                                 :shim   10
-                                                 :halign :centre
-                                                 :valign :centre}))]
+                grid (v/call! "arrayjoin" {:in     [a b c d]
+                                           :across 2
+                                           :shim   10
+                                           :halign :centre
+                                           :valign :centre})]
       (is (= {:width 4990 :height 6178 :has-alpha? false}
              (select-keys (v/image-info grid) [:width :height :has-alpha?]))))))
