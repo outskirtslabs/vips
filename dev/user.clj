@@ -20,3 +20,14 @@
   (clojure.repl.deps/sync-deps)
   ;;;
   )
+
+(comment
+  (require '[ol.vips.runtime :as rt]
+           '[ol.vips.introspect :as introspect])
+
+  (rt/ensure-initialized!)
+
+  (count (introspect/list-operations))
+  (take 25 (introspect/list-operations))
+  ;;
+  )

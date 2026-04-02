@@ -5,10 +5,12 @@
    [clojure.string :as str]
    [ol.vips.native.platforms :as platforms])
   (:import
-   [java.io File InputStream PushbackReader RandomAccessFile]
+   [java.io InputStream PushbackReader RandomAccessFile]
    [java.net URL]
-   [java.nio.file Files Path Paths StandardCopyOption]
+   [java.nio.file CopyOption Files Path Paths StandardCopyOption]
    [java.nio.file.attribute FileAttribute]))
+
+(set! *warn-on-reflection* true)
 
 (defn- path-of
   ^Path [first-segment & more-segments]
@@ -44,7 +46,9 @@
 (defn- copy!
   [^InputStream in ^Path target]
   (mkdirs! (.getParent target))
-  (Files/copy in target (into-array StandardCopyOption [StandardCopyOption/REPLACE_EXISTING]))
+  (let [^"[Ljava.nio.file.CopyOption;" copy-options
+        (into-array CopyOption [StandardCopyOption/REPLACE_EXISTING])]
+    (Files/copy in target copy-options))
   target)
 
 (defn- resource-path
@@ -190,24 +194,6 @@
       :library-paths   (extracted-library-paths cache-root manifest)
       :resource-root   (format "ol/vips/native/%s/" (name (:platform-id manifest)))})))
 
-(defn- preload-library-paths
-  []
-  (let [value (property-value "ol.vips.native.preload")]
-    (if value
-      (->> (str/split value (re-pattern (java.util.regex.Pattern/quote File/pathSeparator)))
-           (map str/trim)
-           (remove str/blank?)
-           vec)
-      [])))
-
-(defn load-libraries!
-  [library-paths]
-  (doseq [preload-path (preload-library-paths)]
-    (System/load (path-string preload-path)))
-  (doseq [library-path library-paths]
-    (System/load (path-string library-path)))
-  (vec (map path-string library-paths)))
-
 (defn expose-paths!
   [{:keys [platform-id cache-root extraction-root library-paths] :as state}]
   (System/setProperty "ol.vips.native.platform-id" (name platform-id))
@@ -217,13 +203,3 @@
   (when-let [primary-library-path (first library-paths)]
     (System/setProperty "ol.vips.native.primary-library-path" primary-library-path))
   state)
-
-(defn load!
-  ([] (load! (default-cache-root)))
-  ([cache-root]
-   (let [platform  (detect-host-platform)
-         manifest  (read-manifest (:platform-id platform))
-         extracted (extract-libraries! cache-root manifest)
-         loaded    (assoc extracted :library-paths (load-libraries! (:library-paths extracted)))
-         exposed   (expose-paths! loaded)]
-     exposed)))
