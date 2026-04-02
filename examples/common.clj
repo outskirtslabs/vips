@@ -29,7 +29,7 @@
   (Arrays/equals ^bytes left ^bytes right))
 
 (defn image-info [path]
-  (v/with-image [image path]
+  (with-open [image (v/from-file path)]
     (select-keys (v/image-info image) [:width :height :has-alpha?])))
 
 (defn ensure! [pred message data]

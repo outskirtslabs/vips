@@ -59,6 +59,52 @@
         (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
                (select-keys (v/info roundtrip) [:width :height :bands :has-alpha?])))))))
 
+(deftest stream-io-helpers
+  (testing "from-stream reads images from an input stream"
+    (let [fixture-bytes (java.nio.file.Files/readAllBytes
+                         (java.nio.file.Path/of common/fixture-path (make-array String 0)))]
+      (with-open [source      (java.io.ByteArrayInputStream. fixture-bytes)
+                  from-stream (v/from-stream source)]
+        (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+               (select-keys (v/info from-stream) [:width :height :bands :has-alpha?]))))))
+  (testing "from-stream does not rely on InputStream.readAllBytes"
+    (let [fixture-bytes (java.nio.file.Files/readAllBytes
+                         (java.nio.file.Path/of common/fixture-path (make-array String 0)))
+          delegate      (java.io.ByteArrayInputStream. fixture-bytes)]
+      (with-open [source      (proxy [java.io.InputStream] []
+                                (read
+                                  ([] (.read delegate))
+                                  ([buffer offset length]
+                                   (.read delegate buffer offset length)))
+                                (readAllBytes []
+                                  (throw (ex-info "readAllBytes should not be called" {})))
+                                (close []
+                                  (.close delegate)))
+                  from-stream (v/from-stream source)]
+        (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+               (select-keys (v/info from-stream) [:width :height :bands :has-alpha?]))))))
+  (testing "from-enum reads images from chunked binary data"
+    (let [fixture-bytes (java.nio.file.Files/readAllBytes
+                         (java.nio.file.Path/of common/fixture-path (make-array String 0)))
+          chunks        (partition-all 4096 fixture-bytes)]
+      (with-open [from-enum (v/from-enum chunks)]
+        (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+               (select-keys (v/info from-enum) [:width :height :bands :has-alpha?]))))))
+  (testing "write-to-stream returns chunked binary output that can be read back"
+    (with-open [image     (v/from-file common/fixture-path)
+                roundtrip (v/from-enum (v/write-to-stream image ".png"))]
+      (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+             (select-keys (v/info roundtrip) [:width :height :bands :has-alpha?])))))
+  (testing "write-to-stream supports save options and chunk sizing"
+    (with-open [image (v/from-file common/puppies-path)]
+      (let [bin1 (->> (v/write-to-stream image ".png" {:compression 0 :chunk-size 2048})
+                      (map #(alength ^bytes %))
+                      (reduce + 0))
+            bin2 (->> (v/write-to-stream image ".png" {:compression 9 :chunk-size 2048})
+                      (map #(alength ^bytes %))
+                      (reduce + 0))]
+        (is (> bin1 bin2))))))
+
 (deftest load-save-options
   (testing "from-file supports option maps and suffix options"
     (with-open [img1 (v/from-file common/puppies-path)

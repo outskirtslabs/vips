@@ -2,9 +2,9 @@
 
 > High-perf image processing for Clojure built with [libvips][upstream]. 
 
-This package wraps the core functionality of [libvips][upstream] image processing library by exposing all native image operations as data and functions to Clojure programs.
+This package wraps the core functionality of the native [libvips][upstream] image processing library by exposing all native image operations as data and functions to Clojure programs.
 
-We use [coffi][coffi] along with Java 22+ FFM (aka Project Panama) is used to provide speed and efficient native bridging.
+We use [coffi][coffi] with Java 22+ FFM (Project Panama) for efficient native bridging.
 
 ## Installation
 
@@ -13,7 +13,7 @@ Install the main library plus exactly one native jar that matches your target pl
 ```clojure
 ;; deps.edn
 {:deps {com.outskirtslabs/vips {:mvn/version "0.0.1"}
-        com.outskirtslabs/vips-native-linux-x86_64-gnu  {:mvn/version "1.2.4-0"}}}
+        com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.2.4-0"}}}
 ```
 
 Choose one native artifact:
@@ -91,6 +91,17 @@ The top-level `ol.vips` namespace provides the image loading, saving, metadata, 
    :cropped (v/info cropped)})
 ```
 
+### Smart Thumbnailing
+
+```clojure
+(with-open [thumb (ops/thumbnail "dev/rabbit.jpg" 300
+                                 {:height 300
+                                  :size :down
+                                  :crop :attention})]
+  (v/write-to-file thumb "rabbit-smart-thumb.jpg")
+  (v/info thumb))
+```
+
 ### Transforming Images
 
 ```clojure
@@ -150,6 +161,35 @@ The top-level `ol.vips` namespace provides the image loading, saving, metadata, 
 ```
 
 Use `v/operations` to list available libvips operations and `v/operation-info` to inspect their inputs and outputs.
+
+## Advanced Usage
+
+### Chunked Input And Output
+
+`from-enum` reads an image from a sequence of binary chunks. `write-to-stream` returns a sequence of encoded chunks you can write anywhere.
+
+```clojure
+(let [source-bytes (java.nio.file.Files/readAllBytes
+                    (java.nio.file.Path/of "dev/rabbit.jpg" (make-array String 0)))
+      chunks       (partition-all 4096 source-bytes)]
+  (with-open [image   (v/from-enum chunks)
+              thumb   (v/thumbnail image 200)
+              roundtripped (v/from-enum (v/write-to-stream thumb ".png" {:chunk-size 4096}))]
+    (v/write-to-file roundtripped "rabbit-streamed.png")
+    (v/info roundtripped)))
+```
+
+### Text Overlay
+
+```clojure
+(with-open [image  (v/from-file "dev/rabbit.jpg")
+            label  (ops/text "ol.vips"
+                             {:font "Sans Bold 48"
+                              :rgba true})
+            poster (ops/composite2 image label :over {:x 40 :y 40})]
+  (v/write-to-file poster "rabbit-poster.png")
+  (v/info poster))
+```
 
 ## Why libvips?
 
