@@ -12,6 +12,7 @@
          :init
          (do
            (def paths ["src" "test" "examples" "native"])
+           (def lint-paths ["src" "test" "native"])
            (defn native-dirs []
              (->> (fs/list-dir "native")
                   (filter fs/directory?)
@@ -84,7 +85,7 @@
          {:doc  "Lint code with clj-kondo"
           :task (if (seq *command-line-args*)
                   (apply shell "clj-kondo" "--lint" *command-line-args*)
-                  (apply shell "clj-kondo --lint" paths))}
+                  (apply shell "clj-kondo --lint" lint-paths))}
 
          native:update
          {:doc  "Download and stage native resources for the selected platforms"

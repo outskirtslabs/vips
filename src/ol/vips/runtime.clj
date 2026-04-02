@@ -112,6 +112,7 @@
    :operation-new           ["vips_operation_new" [::mem/c-string] ::mem/pointer]
    :array-image-get-type    ["vips_array_image_get_type" [] ::g-type]
    :array-image-new         ["vips_array_image_new" [::mem/pointer ::mem/int] ::mem/pointer]
+   :area-unref              ["vips_area_unref" [::mem/pointer] ::mem/void]
    :object-get-description  ["vips_object_get_description" [::mem/pointer] ::mem/c-string]
    :object-get-arg-flags    ["vips_object_get_argument_flags" [::mem/pointer ::mem/c-string] ::mem/int]
    :object-get-arg-priority ["vips_object_get_argument_priority" [::mem/pointer ::mem/c-string] ::mem/int]

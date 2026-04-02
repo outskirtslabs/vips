@@ -225,10 +225,51 @@
                       {:enum-type enum-type-name
                        :value     value}))))
 
+(defn- array-image?
+  [value]
+  (and (sequential? value)
+       (every? #(satisfies? runtime/PointerBacked %) value)))
+
+(defn- encode-array-image
+  [bindings images gvalue]
+  (let [images        (vec images)
+        pointer-size  (mem/size-of ::mem/pointer)
+        pointer-align (mem/align-of ::mem/pointer)]
+    (with-open [arena (mem/confined-arena)]
+      (let [image-ptrs (mem/alloc (* (count images) pointer-size) pointer-align arena)]
+        (doseq [[index image] (map-indexed vector images)]
+          (mem/write-address image-ptrs (* index pointer-size) (runtime/pointer image)))
+        (let [boxed ((:array-image-new bindings) image-ptrs (count images))]
+          (when (mem/null? boxed)
+            (throw (ex-info "Failed to encode boxed image array"
+                            {:kind       :boxed
+                             :value-type "VipsArrayImage"
+                             :value      images
+                             :error      ((:vips-error-buffer bindings))})))
+          (try
+            ((:g-value-set-boxed bindings) gvalue boxed)
+            (finally
+              ((:area-unref bindings) boxed))))))))
+
+(defn- encode-boxed-value
+  [bindings value-type value gvalue]
+  (case value-type
+    "VipsArrayImage" (if (array-image? value)
+                       (encode-array-image bindings value gvalue)
+                       (throw (ex-info "Expected a sequential collection of image handles"
+                                       {:kind       :boxed
+                                        :value-type value-type
+                                        :value      value})))
+    (throw (ex-info "Unsupported operation argument type"
+                    {:kind       :boxed
+                     :value-type value-type
+                     :value      value}))))
+
 (defn- encode-value
   [bindings {:keys [kind value-type]} value gvalue]
   (case kind
     :object ((:g-value-set-object bindings) gvalue (runtime/pointer value))
+    :boxed (encode-boxed-value bindings value-type value gvalue)
     :string ((:g-value-set-string bindings) gvalue (str value))
     :boolean ((:g-value-set-boolean bindings) gvalue (if value 1 0))
     :int ((:g-value-set-int bindings) gvalue (int value))
