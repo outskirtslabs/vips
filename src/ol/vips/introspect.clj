@@ -81,12 +81,12 @@
   (mem/deserialize (mem/reinterpret ptr (mem/size-of type)) type))
 
 (defn- describe-argument
-  [bindings op name pspec-ptr]
-  (let [flags      ((:object-get-arg-flags bindings) op name)
-        priority   ((:object-get-arg-priority bindings) op name)
+  [native op name pspec-ptr]
+  (let [flags      ((:object-get-arg-flags native) op name)
+        priority   ((:object-get-arg-priority native) op name)
         value-type (:value-type (deserialize-struct pspec-ptr ::g-param-spec-head))]
     {:name       name
-     :blurb      ((:param-spec-get-blurb bindings) pspec-ptr)
+     :blurb      ((:param-spec-get-blurb native) pspec-ptr)
      :flags      flags
      :gtype      value-type
      :kind       (classify-gtype value-type)
@@ -98,7 +98,7 @@
 
 (defn- operation-handle
   [operation-name]
-  (let [op ((:operation-new (runtime/bindings)) operation-name)]
+  (let [op ((runtime/bindings :operation-new) operation-name)]
     (when (mem/null? op)
       (throw (ex-info "Unknown libvips operation"
                       {:operation operation-name})))
@@ -107,35 +107,33 @@
 (defn describe-operation
   [operation-name]
   (runtime/ensure-initialized!)
-  (let [bindings     (runtime/bindings)
-        argument-map (:argument-map bindings)
+  (let [argument-map (runtime/bindings :argument-map)
         op           (operation-handle operation-name)]
     (try
       (let [args (volatile! [])]
         (argument-map op
                       (fn [_object pspec-ptr _arg-class-ptr _instance _user-data _extra]
-                        (let [name ((:param-spec-get-name bindings) pspec-ptr)]
-                          (vswap! args conj (describe-argument bindings op name pspec-ptr)))
+                        (let [name ((runtime/bindings :param-spec-get-name) pspec-ptr)]
+                          (vswap! args conj (describe-argument (runtime/bindings) op name pspec-ptr)))
                         mem/null)
                       mem/null
                       mem/null)
         {:name        operation-name
-         :description ((:object-get-description bindings) op)
+         :description ((runtime/bindings :object-get-description) op)
          :args        (->> @args
                            (sort-by (juxt (complement :required?) :priority))
                            vec)})
       (finally
-        ((:g-object-unref bindings) op)))))
+        ((runtime/bindings :g-object-unref) op)))))
 
 (defn- operation-nicknames
   []
   (or @operation-cache*
-      (let [bindings     (runtime/bindings)
-            type-map-all (:type-map-all bindings)
+      (let [type-map-all (runtime/bindings :type-map-all)
             nicknames    (volatile! [])]
         (type-map-all (:operation (runtime/gtypes))
                       (fn [gtype _]
-                        (when-let [nickname ((:nickname-find bindings) gtype)]
+                        (when-let [nickname ((runtime/bindings :nickname-find) gtype)]
                           (vswap! nicknames conj nickname))
                         mem/null)
                       mem/null)
@@ -145,11 +143,10 @@
 
 (defn- warm-operation-types!
   []
-  (let [bindings (runtime/bindings)]
-    (doseq [nickname (operation-nicknames)]
-      (let [op ((:operation-new bindings) nickname)]
-        (when-not (mem/null? op)
-          ((:g-object-unref bindings) op))))))
+  (doseq [nickname (operation-nicknames)]
+    (let [op ((runtime/bindings :operation-new) nickname)]
+      (when-not (mem/null? op)
+        ((runtime/bindings :g-object-unref) op)))))
 
 (defn list-operations
   []
@@ -160,11 +157,10 @@
   []
   (runtime/ensure-initialized!)
   (warm-operation-types!)
-  (let [bindings  (runtime/bindings)
-        enum-type (:enum (runtime/gtypes))]
+  (let [enum-type (:enum (runtime/gtypes))]
     (with-open [arena (mem/confined-arena)]
       (let [count-ptr (mem/alloc-instance ::mem/int arena)
-            children  ((:g-type-children bindings) enum-type count-ptr)
+            children  ((runtime/bindings :g-type-children) enum-type count-ptr)
             count     (mem/read-int count-ptr)
             slot-size (mem/size-of ::runtime/g-type)
             children* (mem/reinterpret children (* count slot-size))]
@@ -173,7 +169,7 @@
                     :let  [offset     (* index slot-size)
                            child-type (mem/read-long (mem/slice children* offset slot-size))
                            type-name   (runtime/type-name child-type)
-                           class-ptr   ((:g-type-class-ref bindings) child-type)]
+                           class-ptr   ((runtime/bindings :g-type-class-ref) child-type)]
                     :when (and type-name (not (mem/null? class-ptr)))]
                 (try
                   (let [class*     (mem/reinterpret class-ptr (mem/size-of ::g-enum-class))
@@ -194,7 +190,7 @@
                                 :keyword->value entries
                                 :value->keyword (into {} (map (fn [[k v]] [v k]) entries))}])
                   (finally
-                    ((:g-type-class-unref bindings) class-ptr)))))))))
+                    ((runtime/bindings :g-type-class-unref) class-ptr)))))))))
 
 (defn- enum-registry
   []
@@ -231,7 +227,7 @@
        (every? #(satisfies? runtime/PointerBacked %) value)))
 
 (defn- encode-array-image
-  [bindings images gvalue]
+  [native images gvalue]
   (let [images        (vec images)
         pointer-size  (mem/size-of ::mem/pointer)
         pointer-align (mem/align-of ::mem/pointer)]
@@ -239,23 +235,23 @@
       (let [image-ptrs (mem/alloc (* (count images) pointer-size) pointer-align arena)]
         (doseq [[index image] (map-indexed vector images)]
           (mem/write-address image-ptrs (* index pointer-size) (runtime/pointer image)))
-        (let [boxed ((:array-image-new bindings) image-ptrs (count images))]
+        (let [boxed ((:array-image-new native) image-ptrs (count images))]
           (when (mem/null? boxed)
             (throw (ex-info "Failed to encode boxed image array"
                             {:kind       :boxed
                              :value-type "VipsArrayImage"
                              :value      images
-                             :error      ((:vips-error-buffer bindings))})))
+                             :error      ((:vips-error-buffer native))})))
           (try
-            ((:g-value-set-boxed bindings) gvalue boxed)
+            ((:g-value-set-boxed native) gvalue boxed)
             (finally
-              ((:area-unref bindings) boxed))))))))
+              ((:area-unref native) boxed))))))))
 
 (defn- encode-boxed-value
-  [bindings value-type value gvalue]
+  [native value-type value gvalue]
   (case value-type
     "VipsArrayImage" (if (array-image? value)
-                       (encode-array-image bindings value gvalue)
+                       (encode-array-image native value gvalue)
                        (throw (ex-info "Expected a sequential collection of image handles"
                                        {:kind       :boxed
                                         :value-type value-type
@@ -266,42 +262,42 @@
                      :value      value}))))
 
 (defn- encode-value
-  [bindings {:keys [kind value-type]} value gvalue]
+  [native {:keys [kind value-type]} value gvalue]
   (case kind
-    :object ((:g-value-set-object bindings) gvalue (runtime/pointer value))
-    :boxed (encode-boxed-value bindings value-type value gvalue)
-    :string ((:g-value-set-string bindings) gvalue (str value))
-    :boolean ((:g-value-set-boolean bindings) gvalue (if value 1 0))
-    :int ((:g-value-set-int bindings) gvalue (int value))
-    :uint ((:g-value-set-uint bindings) gvalue (int value))
-    :long ((:g-value-set-long bindings) gvalue (long value))
-    :int64 ((:g-value-set-int64 bindings) gvalue (long value))
-    :uint64 ((:g-value-set-uint64 bindings) gvalue (long value))
-    :double ((:g-value-set-double bindings) gvalue (double value))
-    :enum ((:g-value-set-enum bindings) gvalue (int (encode-enum value-type value)))
-    :flags ((:g-value-set-flags bindings) gvalue (int value))
+    :object ((:g-value-set-object native) gvalue (runtime/pointer value))
+    :boxed (encode-boxed-value native value-type value gvalue)
+    :string ((:g-value-set-string native) gvalue (str value))
+    :boolean ((:g-value-set-boolean native) gvalue (if value 1 0))
+    :int ((:g-value-set-int native) gvalue (int value))
+    :uint ((:g-value-set-uint native) gvalue (int value))
+    :long ((:g-value-set-long native) gvalue (long value))
+    :int64 ((:g-value-set-int64 native) gvalue (long value))
+    :uint64 ((:g-value-set-uint64 native) gvalue (long value))
+    :double ((:g-value-set-double native) gvalue (double value))
+    :enum ((:g-value-set-enum native) gvalue (int (encode-enum value-type value)))
+    :flags ((:g-value-set-flags native) gvalue (int value))
     (throw (ex-info "Unsupported operation argument type"
                     {:kind       kind
                      :value-type value-type
                      :value      value}))))
 
 (defn- decode-value
-  [bindings {:keys [kind value-type gtype]} gvalue]
+  [native {:keys [kind value-type gtype]} gvalue]
   (case kind
-    :object (let [ptr ((:g-value-get-object bindings) gvalue)]
+    :object (let [ptr ((:g-value-get-object native) gvalue)]
               (when-not (mem/null? ptr)
-                ((:g-object-ref bindings) ptr)
+                ((:g-object-ref native) ptr)
                 (runtime/adopt-image ptr)))
-    :string ((:g-value-get-string bindings) gvalue)
-    :boolean (not (zero? ((:g-value-get-boolean bindings) gvalue)))
-    :int ((:g-value-get-int bindings) gvalue)
-    :uint ((:g-value-get-uint bindings) gvalue)
-    :long ((:g-value-get-int64 bindings) gvalue)
-    :int64 ((:g-value-get-int64 bindings) gvalue)
-    :uint64 ((:g-value-get-uint64 bindings) gvalue)
-    :double ((:g-value-get-double bindings) gvalue)
-    :enum (decode-enum value-type ((:g-value-get-enum bindings) gvalue))
-    :flags ((:g-value-get-flags bindings) gvalue)
+    :string ((:g-value-get-string native) gvalue)
+    :boolean (not (zero? ((:g-value-get-boolean native) gvalue)))
+    :int ((:g-value-get-int native) gvalue)
+    :uint ((:g-value-get-uint native) gvalue)
+    :long ((:g-value-get-int64 native) gvalue)
+    :int64 ((:g-value-get-int64 native) gvalue)
+    :uint64 ((:g-value-get-uint64 native) gvalue)
+    :double ((:g-value-get-double native) gvalue)
+    :enum (decode-enum value-type ((:g-value-get-enum native) gvalue))
+    :flags ((:g-value-get-flags native) gvalue)
     (throw (ex-info "Unsupported operation output type"
                     {:kind       kind
                      :value-type value-type
@@ -310,8 +306,7 @@
 (defn call-operation
   [operation-name opts]
   (runtime/ensure-initialized!)
-  (let [bindings  (runtime/bindings)
-        operation (operation-handle operation-name)
+  (let [operation (operation-handle operation-name)
         open-op   (volatile! operation)]
     (try
       (let [{:keys [args]} (describe-operation operation-name)
@@ -325,14 +320,14 @@
                                :argument  arg-name})))
             (runtime/with-gvalue (:gtype arg)
               (fn [gvalue]
-                (encode-value bindings arg v gvalue)
-                ((:g-object-set-property bindings) operation arg-name gvalue)))))
-        (let [built ((:cache-operation-build bindings) operation)]
+                (encode-value (runtime/bindings) arg v gvalue)
+                ((runtime/bindings :g-object-set-property) operation arg-name gvalue)))))
+        (let [built ((runtime/bindings :cache-operation-build) operation)]
           (when (mem/null? built)
             (throw (ex-info "Failed to build operation"
                             {:operation operation-name
-                             :error     ((:vips-error-buffer bindings))})))
-          ((:g-object-unref bindings) operation)
+                             :error     ((runtime/bindings :vips-error-buffer))})))
+          ((runtime/bindings :g-object-unref) operation)
           (vreset! open-op mem/null)
           (try
             (into {}
@@ -341,12 +336,12 @@
                     [(keyword (:name arg))
                      (runtime/with-gvalue (:gtype arg)
                        (fn [gvalue]
-                         ((:g-object-get-property bindings) built (:name arg) gvalue)
-                         (decode-value bindings arg gvalue)))]))
+                         ((runtime/bindings :g-object-get-property) built (:name arg) gvalue)
+                         (decode-value (runtime/bindings) arg gvalue)))]))
             (finally
-              ((:object-unref-outputs bindings) built)
-              ((:g-object-unref bindings) built)))))
+              ((runtime/bindings :object-unref-outputs) built)
+              ((runtime/bindings :g-object-unref) built)))))
       (catch Throwable t
         (when-not (mem/null? @open-op)
-          ((:g-object-unref bindings) @open-op))
+          ((runtime/bindings :g-object-unref) @open-op))
         (throw t)))))

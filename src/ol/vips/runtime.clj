@@ -14,6 +14,7 @@
 (set! *warn-on-reflection* true)
 
 (mem/defalias ::g-type ::mem/long)
+(mem/defalias ::size-t ::mem/long)
 
 (mem/defalias ::g-value
   (layout/with-c-layout
@@ -33,14 +34,15 @@
   java.lang.AutoCloseable
   (close [_]
     (when (.compareAndSet closed? false true)
-      ((:g-object-unref (bindings)) ptr)))
+      ((bindings :g-object-unref) ptr)))
 
   Object
   (toString [_]
     (str "#<ol.vips.runtime.ImageHandle " ptr ">")))
 
 (def ^:private native-symbol-specs
-  {:g-object-ref            ["g_object_ref" [::mem/pointer] ::mem/pointer]
+  {:g-free                  ["g_free" [::mem/pointer] ::mem/void]
+   :g-object-ref            ["g_object_ref" [::mem/pointer] ::mem/pointer]
    :g-object-unref          ["g_object_unref" [::mem/pointer] ::mem/void]
    :g-object-get-property   ["g_object_get_property"
                              [::mem/pointer ::mem/c-string ::mem/pointer]
@@ -99,12 +101,19 @@
    :g-value-set-uint64      ["g_value_set_uint64" [::mem/pointer ::mem/long] ::mem/void]
    :g-value-unset           ["g_value_unset" [::mem/pointer] ::mem/void]
    :image-get-height        ["vips_image_get_height" [::mem/pointer] ::mem/int]
+   :image-get-bands         ["vips_image_get_bands" [::mem/pointer] ::mem/int]
    :image-get-type          ["vips_image_get_type" [] ::g-type]
    :image-get-width         ["vips_image_get_width" [::mem/pointer] ::mem/int]
    :image-has-alpha         ["vips_image_hasalpha" [::mem/pointer] ::mem/int]
+   :image-new-from-buffer   ["vips_image_new_from_buffer"
+                             [::mem/pointer ::size-t ::mem/c-string ::mem/pointer]
+                             ::mem/pointer]
    :image-new-from-file     ["vips_image_new_from_file"
                              [::mem/c-string ::mem/pointer]
                              ::mem/pointer]
+   :image-write-to-buffer   ["vips_image_write_to_buffer"
+                             [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer]
+                             ::mem/int]
    :image-write-to-file     ["vips_image_write_to_file"
                              [::mem/pointer ::mem/c-string ::mem/pointer]
                              ::mem/int]
@@ -150,8 +159,8 @@
 (defn- bind-symbols
   [^SymbolLookup lookup]
   (reduce-kv
-   (fn [bindings k [symbol-name arg-types return-type]]
-     (assoc bindings
+   (fn [native k [symbol-name arg-types return-type]]
+     (assoc native
             k
             (ffi/cfn (lookup-symbol lookup symbol-name)
                      arg-types
@@ -160,12 +169,12 @@
    native-symbol-specs))
 
 (defn- last-error-message
-  [bindings]
-  (some-> ((:vips-error-buffer bindings)) not-empty))
+  [native]
+  (some-> ((:vips-error-buffer native)) not-empty))
 
 (defn- clear-error!
-  [bindings]
-  ((:vips-error-clear bindings)))
+  [native]
+  ((:vips-error-clear native)))
 
 (defn- preload-library-paths
   []
@@ -178,30 +187,30 @@
          vec)))
 
 (defn- throw-vips-error
-  [bindings message data]
-  (let [error-message (last-error-message bindings)]
-    (clear-error! bindings)
+  [native message data]
+  (let [error-message (last-error-message native)]
+    (clear-error! native)
     (throw (ex-info message
                     (cond-> data
                       error-message (assoc :vips/error error-message))))))
 
 (defn- build-gtypes
-  [bindings]
-  {:boolean     ((:g-type-from-name bindings) "gboolean")
-   :boxed       ((:g-type-from-name bindings) "GBoxed")
-   :double      ((:g-type-from-name bindings) "gdouble")
-   :enum        ((:g-type-from-name bindings) "GEnum")
-   :flags       ((:g-type-from-name bindings) "GFlags")
-   :image       ((:image-get-type bindings))
-   :int         ((:g-type-from-name bindings) "gint")
-   :int64       ((:g-type-from-name bindings) "gint64")
-   :long        ((:g-type-from-name bindings) "glong")
-   :object      ((:g-type-from-name bindings) "GObject")
-   :operation   ((:operation-get-type bindings))
-   :string      ((:g-type-from-name bindings) "gchararray")
-   :uint        ((:g-type-from-name bindings) "guint")
-   :uint64      ((:g-type-from-name bindings) "guint64")
-   :array-image ((:array-image-get-type bindings))})
+  [native]
+  {:boolean     ((:g-type-from-name native) "gboolean")
+   :boxed       ((:g-type-from-name native) "GBoxed")
+   :double      ((:g-type-from-name native) "gdouble")
+   :enum        ((:g-type-from-name native) "GEnum")
+   :flags       ((:g-type-from-name native) "GFlags")
+   :image       ((:image-get-type native))
+   :int         ((:g-type-from-name native) "gint")
+   :int64       ((:g-type-from-name native) "gint64")
+   :long        ((:g-type-from-name native) "glong")
+   :object      ((:g-type-from-name native) "GObject")
+   :operation   ((:operation-get-type native))
+   :string      ((:g-type-from-name native) "gchararray")
+   :uint        ((:g-type-from-name native) "guint")
+   :uint64      ((:g-type-from-name native) "guint64")
+   :array-image ((:array-image-get-type native))})
 
 (defn- wrap-image
   [ptr]
@@ -224,16 +233,16 @@
                                            (ffi/load-library path))
                   {:keys [arena lookup]} (library-lookup load-paths)
                   exposed                (loader/expose-paths! extracted)
-                  bindings               (bind-symbols lookup)
-                  init-code              ((:vips-init bindings) "ol.vips")
+                  native                 (bind-symbols lookup)
+                  init-code              ((:vips-init native) "ol.vips")
                   _                      (when-not (zero? init-code)
-                                           (throw-vips-error bindings
+                                           (throw-vips-error native
                                                              "Failed to initialize libvips"
                                                              {:exit-code init-code}))
-                  version                ((:vips-version-string bindings))
+                  version                ((:vips-version-string native))
                   state                  (merge exposed
-                                                {:bindings             bindings
-                                                 :gtypes               (build-gtypes bindings)
+                                                {:bindings             native
+                                                 :gtypes               (build-gtypes native)
                                                  :lookup               lookup
                                                  :lookup-arena         arena
                                                  :manifest             manifest
@@ -247,8 +256,9 @@
   (ensure-initialized!))
 
 (defn bindings
-  []
-  (:bindings (ensure-initialized!)))
+  ([] (:bindings (ensure-initialized!)))
+  ([k] (get (bindings) k))
+  ([k not-found] (get (bindings) k not-found)))
 
 (defn gtypes
   []
@@ -260,49 +270,111 @@
 
 (defn type-name
   [gtype]
-  ((:g-type-name (bindings)) gtype))
+  ((bindings :g-type-name) gtype))
 
 (defn type-fundamental
   [gtype]
-  ((:g-type-fundamental (bindings)) gtype))
+  ((bindings :g-type-fundamental) gtype))
 
 (defn with-gvalue
   [gtype f]
-  (let [bindings (bindings)]
-    (with-open [arena (mem/confined-arena)]
-      (let [value (mem/alloc-instance ::g-value arena)]
-        ((:g-value-init bindings) value gtype)
-        (try
-          (f value)
-          (finally
-            ((:g-value-unset bindings) value)))))))
+  (with-open [arena (mem/confined-arena)]
+    (let [value (mem/alloc-instance ::g-value arena)]
+      ((bindings :g-value-init) value gtype)
+      (try
+        (f value)
+        (finally
+          ((bindings :g-value-unset) value))))))
 
 (defn open-image
   [source]
-  (let [bindings (bindings)
-        path     (str source)
-        image    ((:image-new-from-file bindings) path nil)]
+  (let [path  (str source)
+        image ((bindings :image-new-from-file) path nil)]
     (when (mem/null? image)
-      (throw-vips-error bindings
+      (throw-vips-error (bindings)
                         "Failed to open image"
                         {:source path}))
     (wrap-image image)))
 
+(def ^:private byte-array-class
+  (class (byte-array 0)))
+
+(defn- ->byte-array
+  [value]
+  (cond
+    (instance? byte-array-class value) value
+    (sequential? value) (byte-array (map byte value))
+    :else (throw (ex-info "Expected image bytes"
+                          {:value value}))))
+
+(defn open-image-from-buffer
+  ([source]
+   (open-image-from-buffer source ""))
+  ([source option-string]
+   (let [data (->byte-array source)]
+     (with-open [arena (mem/confined-arena)]
+       (let [size   (alength ^bytes data)
+             buffer (mem/alloc size 1 arena)
+             image  (do
+                      (mem/write-bytes buffer size data)
+                      ((bindings :image-new-from-buffer) buffer size option-string nil))]
+         (when (mem/null? image)
+           (throw-vips-error (bindings)
+                             "Failed to open image from buffer"
+                             {:byte-count size}))
+         (wrap-image image))))))
+
 (defn write-image!
   [image sink]
-  (let [bindings (bindings)
-        path     (str sink)
-        code     ((:image-write-to-file bindings) (pointer image) path nil)]
+  (let [path (str sink)
+        code ((bindings :image-write-to-file) (pointer image) path nil)]
     (when-not (zero? code)
-      (throw-vips-error bindings
+      (throw-vips-error (bindings)
                         "Failed to write image"
                         {:sink path}))
     image))
 
+(defn write-image-to-buffer
+  [image suffix]
+  (with-open [arena (mem/confined-arena)]
+    (let [buffer-ptr (mem/alloc-instance ::mem/pointer arena)
+          size-ptr   (mem/alloc-instance ::size-t arena)
+          code       ((bindings :image-write-to-buffer)
+                      (pointer image)
+                      (str suffix)
+                      buffer-ptr
+                      size-ptr
+                      nil)]
+      (when-not (zero? code)
+        (throw-vips-error (bindings)
+                          "Failed to write image to buffer"
+                          {:suffix suffix}))
+      (let [output-ptr  (mem/read-address buffer-ptr)
+            output-size (mem/read-long size-ptr)]
+        (try
+          (mem/read-bytes (mem/reinterpret output-ptr output-size) (int output-size))
+          (finally
+            ((bindings :g-free) output-ptr)))))))
+
+(defn image-width
+  [image]
+  ((bindings :image-get-width) (pointer image)))
+
+(defn image-height
+  [image]
+  ((bindings :image-get-height) (pointer image)))
+
+(defn image-bands
+  [image]
+  ((bindings :image-get-bands) (pointer image)))
+
+(defn image-has-alpha?
+  [image]
+  (not (zero? ((bindings :image-has-alpha) (pointer image)))))
+
 (defn image-info
   [image]
-  (let [bindings (bindings)
-        ptr      (pointer image)]
-    {:width      ((:image-get-width bindings) ptr)
-     :height     ((:image-get-height bindings) ptr)
-     :has-alpha? (not (zero? ((:image-has-alpha bindings) ptr)))}))
+  {:width      (image-width image)
+   :height     (image-height image)
+   :bands      (image-bands image)
+   :has-alpha? (image-has-alpha? image)})

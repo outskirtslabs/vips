@@ -9,6 +9,7 @@
     (let [state common/runtime-state
           ops   (set (v/operations))
           flip  (v/operation-info "flip")]
+      (is (identical? state (v/init!)))
       (is (= "8.17.3" (:version-string state)))
       (is (contains? ops "rotate"))
       (is (contains? ops "arrayjoin"))
@@ -18,14 +19,122 @@
       (is (= "flip" (:name flip))))))
 
 (deftest open-and-image-info
-  (testing "image-from-file accepts path strings and Path values"
-    (with-open [from-string (v/image-from-file common/fixture-path)
-                from-path   (v/image-from-file (java.nio.file.Path/of common/fixture-path
-                                                                      (make-array String 0)))]
-      (is (= {:width 2490 :height 3084 :has-alpha? false}
-             (select-keys (v/image-info from-string) [:width :height :has-alpha?])))
-      (is (= {:width 2490 :height 3084 :has-alpha? false}
-             (select-keys (v/image-info from-path) [:width :height :has-alpha?]))))))
+  (testing "from-file and info accept path strings and Path values"
+    (with-open [from-string (v/from-file common/fixture-path)
+                from-path   (v/from-file (java.nio.file.Path/of common/fixture-path
+                                                                (make-array String 0)))]
+      (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+             (select-keys (v/info from-string) [:width :height :bands :has-alpha?])))
+      (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+             (select-keys (v/info from-path) [:width :height :bands :has-alpha?])))
+      (is (= 2490 (v/width from-string)))
+      (is (= 3084 (v/height from-string)))
+      (is (= 3 (v/bands from-string)))
+      (is (false? (v/has-alpha? from-string)))
+      (is (= [2490 3084 3] (v/shape from-string)))
+      (is (= (v/info from-string)
+             (v/image-info from-string))))))
+
+(deftest file-and-buffer-io-helpers
+  (testing "write-to-file writes an image to a format inferred from the sink path"
+    (let [temp-path (java.nio.file.Files/createTempFile "ol-vips-" ".png"
+                                                        (make-array java.nio.file.attribute.FileAttribute 0))]
+      (try
+        (with-open [image   (v/from-file common/fixture-path)
+                    written (do
+                              (v/write-to-file image temp-path)
+                              (v/from-file temp-path))]
+          (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+                 (select-keys (v/info written) [:width :height :bands :has-alpha?]))))
+        (finally
+          (java.nio.file.Files/deleteIfExists temp-path)))))
+  (testing "from-buffer and write-to-buffer round-trip formatted images"
+    (let [fixture-bytes (java.nio.file.Files/readAllBytes
+                         (java.nio.file.Path/of common/fixture-path (make-array String 0)))]
+      (with-open [from-buffer (v/from-buffer fixture-bytes)]
+        (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+               (select-keys (v/info from-buffer) [:width :height :bands :has-alpha?]))))
+      (with-open [image     (v/from-file common/fixture-path)
+                  roundtrip (v/from-buffer (v/write-to-buffer image ".png"))]
+        (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+               (select-keys (v/info roundtrip) [:width :height :bands :has-alpha?])))))))
+
+(deftest load-save-options
+  (testing "from-file supports option maps and suffix options"
+    (with-open [img1 (v/from-file common/puppies-path)
+                img2 (v/from-file common/puppies-path {:shrink 2})
+                img3 (v/from-file (str common/puppies-path "[shrink=2]"))
+                img4 (v/image-from-file common/puppies-path)]
+      (is (= 518 (v/width img1)))
+      (is (= 389 (v/height img1)))
+      (is (= 3 (v/bands img1)))
+      (is (= (v/info img1) (v/info img4)))
+      (is (= (v/width img1) (* 2 (v/width img2))))
+      (is (= (v/width img2) (v/width img3)))
+      (is (= (v/height img2) (v/height img3)))))
+  (testing "from-buffer supports option maps and rejects invalid input"
+    (let [source-bytes (java.nio.file.Files/readAllBytes
+                        (java.nio.file.Path/of common/puppies-path (make-array String 0)))]
+      (with-open [img1 (v/from-file common/puppies-path)
+                  img2 (v/from-buffer source-bytes {:shrink 2})]
+        (is (= (v/width img1) (* 2 (v/width img2)))))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"Failed to open image from buffer"
+                            (v/from-buffer (byte-array 0))))))
+  (testing "write-to-file supports option maps and suffix options"
+    (let [path1 (java.nio.file.Files/createTempFile "ol-vips-" ".png"
+                                                    (make-array java.nio.file.attribute.FileAttribute 0))
+          path2 (java.nio.file.Files/createTempFile "ol-vips-" ".png"
+                                                    (make-array java.nio.file.attribute.FileAttribute 0))
+          path3 (java.nio.file.Files/createTempFile "ol-vips-" ".png"
+                                                    (make-array java.nio.file.attribute.FileAttribute 0))
+          path4 (java.nio.file.Files/createTempFile "ol-vips-" ".png"
+                                                    (make-array java.nio.file.attribute.FileAttribute 0))]
+      (try
+        (with-open [img (v/from-file common/puppies-path)]
+          (v/write-to-file img path1 {:compression 0})
+          (v/write-to-file img path2 {:compression 9})
+          (v/write-to-file img (str path3 "[compression=0]"))
+          (v/write-to-file img (str path4 "[compression=9]")))
+        (is (> (.size (java.nio.file.Files/readAttributes path1
+                                                          java.nio.file.attribute.BasicFileAttributes
+                                                          (make-array java.nio.file.LinkOption 0)))
+               (.size (java.nio.file.Files/readAttributes path2
+                                                          java.nio.file.attribute.BasicFileAttributes
+                                                          (make-array java.nio.file.LinkOption 0)))))
+        (is (> (.size (java.nio.file.Files/readAttributes path3
+                                                          java.nio.file.attribute.BasicFileAttributes
+                                                          (make-array java.nio.file.LinkOption 0)))
+               (.size (java.nio.file.Files/readAttributes path4
+                                                          java.nio.file.attribute.BasicFileAttributes
+                                                          (make-array java.nio.file.LinkOption 0)))))
+        (finally
+          (doseq [path [path1 path2 path3 path4]]
+            (java.nio.file.Files/deleteIfExists path))))))
+  (testing "write-to-buffer supports option maps and suffix options"
+    (with-open [img (v/from-file common/puppies-path)]
+      (let [bin1 (v/write-to-buffer img ".png" {:compression 0})
+            bin2 (v/write-to-buffer img ".png" {:compression 9})
+            bin3 (v/write-to-buffer img ".png[compression=0]")
+            bin4 (v/write-to-buffer img ".png[compression=9]")]
+        (is (> (alength ^bytes bin1) (alength ^bytes bin2)))
+        (is (> (alength ^bytes bin3) (alength ^bytes bin4)))))))
+
+(deftest alpha-and-shape-helpers
+  (testing "alpha and shape match the public image helpers"
+    (with-open [jpg (v/from-file common/puppies-path)
+                png (v/from-file common/alpha-band-path)]
+      (is (false? (v/has-alpha? jpg)))
+      (is (true? (v/has-alpha? png)))
+      (is (= [518 389 3] (v/shape jpg)))
+      (is (= 4 (v/bands png))))))
+
+(deftest thumbnail-helper
+  (testing "thumbnail returns a derived image handle"
+    (with-open [image     (v/from-file common/fixture-path)
+                thumbnail (v/thumbnail image 400 {:auto-rotate true})]
+      (is (= {:width 323 :height 400 :bands 3 :has-alpha? false}
+             (select-keys (v/info thumbnail) [:width :height :bands :has-alpha?]))))))
 
 (deftest transforms
   (testing "rotate, colourspace, and flip compose through call!"
