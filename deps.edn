@@ -1,8 +1,7 @@
 {:paths   ["src"]
- :deps    {app.photofox.vips-ffm/vips-ffm-core {:mvn/version "1.9.6"}
-           org.suskalo/coffi                   {:git/url    "https://github.com/Ramblurr/coffi.git"
-                                                :git/branch "feat/update-tools-build"
-                                                :git/sha    "9b05e268b915b1992bfd4175cb7c8c7c45d8973a"}}
+ :deps    {org.suskalo/coffi {:git/url    "https://github.com/Ramblurr/coffi.git"
+                              :git/branch "feat/update-tools-build"
+                              :git/sha    "9b05e268b915b1992bfd4175cb7c8c7c45d8973a"}}
  :aliases {:kaocha {:extra-paths ["test"]
                     :extra-deps  {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
                     :main-opts   ["-m" "kaocha.runner"]}
