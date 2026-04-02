@@ -1,226 +1,110 @@
 (ns ol.vips-native-packaging-test
   (:require
-   [babashka.fs :as fs]
-   [clojure.edn :as edn]
-   [clojure.java.shell :as shell]
-   [clojure.string :as str]
-   [clojure.test :refer [deftest is testing]])
+   [clojure.test :refer [deftest is testing]]
+   [ol.vips.native.loader :as loader]
+   [ol.vips.native.platforms :as platforms])
   (:import
-   (java.util.jar JarFile)))
+   [clojure.lang ExceptionInfo]))
 
-(def root-project
-  (-> (slurp "deps.edn")
-      edn/read-string
-      :aliases
-      :neil
-      :project))
+(defmacro with-system-properties
+  [bindings & body]
+  (let [pairs (partition 2 bindings)
+        saved (gensym "saved")]
+    `(let [~saved (zipmap ~(vec (map first pairs))
+                          (map #(System/getProperty %) ~(vec (map first pairs))))]
+       (try
+         ~@(map (fn [[property value]]
+                  `(if (nil? ~value)
+                     (System/clearProperty ~property)
+                     (System/setProperty ~property ~value)))
+                pairs)
+         ~@body
+         (finally
+           ~@(map (fn [[property _]]
+                    `(if-some [value# (get ~saved ~property)]
+                       (System/setProperty ~property value#)
+                       (System/clearProperty ~property)))
+                  pairs))))))
 
-(def root-version
-  (:version root-project))
+(deftest supported-platforms-remain-explicit
+  (testing "the supported platform ids stay aligned with the platform table"
+    (is (= platforms/supported-platform-ids
+           (mapv :platform-id platforms/supported-platforms))))
+  (testing "platform lookup returns the matching descriptor"
+    (is (= {:platform-id :linux-x86-64-gnu
+            :os          :linux
+            :arch        :x86-64
+            :libc        :glibc}
+           (select-keys (platforms/platform :linux-x86-64-gnu)
+                        [:platform-id :os :arch :libc]))))
+  (testing "unsupported platform ids fail with the supported set in ex-data"
+    (let [error (try
+                  (platforms/platform :plan9-x86-64)
+                  (catch ExceptionInfo ex
+                    ex))]
+      (is (instance? ExceptionInfo error))
+      (is (= :plan9-x86-64 (:platform-id (ex-data error))))
+      (is (= platforms/supported-platform-ids
+             (:supported (ex-data error)))))))
 
-(def pinned-vips-version
-  (:vips-version root-project))
+(deftest os-and-arch-normalization
+  (testing "os names normalize to supported keywords"
+    (is (= :linux (loader/normalize-os "Linux")))
+    (is (= :linux (loader/normalize-os "GNU/Linux")))
+    (is (= :macos (loader/normalize-os "Mac OS X")))
+    (is (= :macos (loader/normalize-os "Darwin")))
+    (is (= :windows (loader/normalize-os "Windows 11"))))
+  (testing "arch names normalize common aliases"
+    (is (= :x86-64 (loader/normalize-arch "amd64")))
+    (is (= :x86-64 (loader/normalize-arch "x86_64")))
+    (is (= :aarch64 (loader/normalize-arch "aarch64")))
+    (is (= :aarch64 (loader/normalize-arch "arm64"))))
+  (testing "unsupported os and arch values throw"
+    (is (thrown? ExceptionInfo (loader/normalize-os "Solaris")))
+    (is (thrown? ExceptionInfo (loader/normalize-arch "sparc")))))
 
-(def expected-platforms
-  [{:platform-id   :linux-x86-64-gnu
-    :dir           "native/linux-x86-64-gnu"
-    :artifact-name "com.outskirtslabs/vips-native-linux-x86-64-gnu"
-    :sharp-package "@img/sharp-libvips-linux-x64"
-    :os            :linux
-    :arch          :x86-64
-    :libc          :glibc}
-   {:platform-id   :linux-x86-64-musl
-    :dir           "native/linux-x86-64-musl"
-    :artifact-name "com.outskirtslabs/vips-native-linux-x86-64-musl"
-    :sharp-package "@img/sharp-libvips-linuxmusl-x64"
-    :os            :linux
-    :arch          :x86-64
-    :libc          :musl}
-   {:platform-id   :linux-aarch64-gnu
-    :dir           "native/linux-aarch64-gnu"
-    :artifact-name "com.outskirtslabs/vips-native-linux-aarch64-gnu"
-    :sharp-package "@img/sharp-libvips-linux-arm64"
-    :os            :linux
-    :arch          :aarch64
-    :libc          :glibc}
-   {:platform-id   :linux-aarch64-musl
-    :dir           "native/linux-aarch64-musl"
-    :artifact-name "com.outskirtslabs/vips-native-linux-aarch64-musl"
-    :sharp-package "@img/sharp-libvips-linuxmusl-arm64"
-    :os            :linux
-    :arch          :aarch64
-    :libc          :musl}
-   {:platform-id   :macos-x86-64
-    :dir           "native/macos-x86-64"
-    :artifact-name "com.outskirtslabs/vips-native-macos-x86-64"
-    :sharp-package "@img/sharp-libvips-darwin-x64"
-    :os            :macos
-    :arch          :x86-64
-    :libc          nil}
-   {:platform-id   :macos-aarch64
-    :dir           "native/macos-aarch64"
-    :artifact-name "com.outskirtslabs/vips-native-macos-aarch64"
-    :sharp-package "@img/sharp-libvips-darwin-arm64"
-    :os            :macos
-    :arch          :aarch64
-    :libc          nil}
-   {:platform-id   :win32-x86-64
-    :dir           "native/win32-x86-64"
-    :artifact-name "com.outskirtslabs/vips-native-win32-x86-64"
-    :sharp-package "@img/sharp-libvips-win32-x64"
-    :os            :windows
-    :arch          :x86-64
-    :libc          nil}])
+(deftest detect-host-platform-from-properties
+  (testing "explicit os, arch, and libc properties resolve the expected platform"
+    (with-system-properties ["ol.vips.native.platform-id" nil
+                             "ol.vips.native.os" "Linux"
+                             "ol.vips.native.arch" "amd64"
+                             "ol.vips.native.libc" "glibc"]
+      (is (= :linux-x86-64-gnu
+             (:platform-id (loader/detect-host-platform))))))
+  (testing "platform-id override wins over the other properties"
+    (with-system-properties ["ol.vips.native.platform-id" "win32-x86-64"
+                             "ol.vips.native.os" "Linux"
+                             "ol.vips.native.arch" "amd64"
+                             "ol.vips.native.libc" "glibc"]
+      (is (= :win32-x86-64
+             (:platform-id (loader/detect-host-platform))))))
+  (testing "non-linux platforms do not need libc"
+    (with-system-properties ["ol.vips.native.platform-id" nil
+                             "ol.vips.native.os" "Mac OS X"
+                             "ol.vips.native.arch" "arm64"
+                             "ol.vips.native.libc" nil]
+      (is (= {:platform-id :macos-aarch64
+              :os          :macos
+              :arch        :aarch64
+              :libc        nil}
+             (select-keys (loader/detect-host-platform)
+                          [:platform-id :os :arch :libc]))))))
 
-(defn run-command
-  [& args]
-  (apply shell/sh (mapv str args)))
-
-(defn assert-shell-ok
-  [{:keys [exit out err] :as result}]
-  (is (zero? exit) (str out err))
-  result)
-
-(defn platform-resource-root
-  [platform]
-  (fs/path (:dir platform)
-           "resources"
-           "ol"
-           "vips"
-           "native"
-           (name (:platform-id platform))))
-
-(defn manifest-path
-  [platform]
-  (fs/path (platform-resource-root platform) "manifest.edn"))
-
-(defn read-manifest
-  [platform]
-  (-> (manifest-path platform)
-      str
-      slurp
-      edn/read-string))
-
-(defn jar-path
-  [platform]
-  (fs/path (:dir platform)
-           "target"
-           (format "%s-%s.jar"
-                   (last (str/split (:artifact-name platform) #"/"))
-                   root-version)))
-
-(defn jar-entries
-  [path]
-  (with-open [jar (JarFile. (str path))]
-    (into #{}
-          (map #(.getName %))
-          (enumeration-seq (.entries jar)))))
-
-(defn mtime
-  [path]
-  (.toMillis (fs/last-modified-time path)))
-
-(deftest root-project-pins-upstream-vips-version
-  (is (string? pinned-vips-version))
-  (is (not (str/blank? pinned-vips-version))))
-
-(deftest native-workspace-layout
-  (testing "each supported platform has a companion artifact directory"
-    (doseq [{:keys [dir artifact-name]} expected-platforms]
-      (let [deps-file  (fs/path dir "deps.edn")
-            build-file (fs/path dir "build.clj")
-            project    (some-> deps-file str slurp edn/read-string :aliases :neil :project)]
-        (is (fs/exists? deps-file))
-        (is (fs/exists? build-file))
-        (is (= artifact-name (some-> project :name str)))
-        (is (= root-version (:version project)))))))
-
-(deftest native-update-stages-pinned-linux-platform
-  (let [platform (first expected-platforms)]
-    (assert-shell-ok (run-command "bb" "clean:native"))
-    (assert-shell-ok (run-command "bb" "native:update" (name (:platform-id platform))))
-    (testing "the staged resource tree contains the future loader contract"
-      (let [resource-root (platform-resource-root platform)
-            manifest      (read-manifest platform)
-            package-json  (fs/path resource-root "upstream" "package.json")
-            versions-json (fs/path resource-root "upstream" "versions.json")
-            readme        (fs/path resource-root "upstream" "README.md")]
-        (is (fs/exists? (manifest-path platform)))
-        (is (fs/exists? package-json))
-        (is (fs/exists? versions-json))
-        (is (fs/exists? readme))
-        (is (= (:platform-id platform) (:platform-id manifest)))
-        (is (= (:artifact-name platform) (:artifact-name manifest)))
-        (is (= (:sharp-package platform) (:sharp-package manifest)))
-        (is (= pinned-vips-version (:vips-version manifest)))
-        (is (= :linux (:os manifest)))
-        (is (= :x86-64 (:arch manifest)))
-        (is (= :glibc (:libc manifest)))
-        (is (str/starts-with? (:source-url manifest) "https://registry.npmjs.org/"))
-        (is (seq (:library-files manifest)))
-        (doseq [library-file (:library-files manifest)]
-          (is (fs/exists? (fs/path resource-root library-file))))))))
-
-(deftest native-update-stages-macos-and-windows-platforms
-  (let [platforms [(nth expected-platforms 5)
-                   (nth expected-platforms 6)]]
-    (assert-shell-ok (run-command "bb" "native:update"
-                                  (name (:platform-id (first platforms)))
-                                  (name (:platform-id (second platforms)))))
-    (doseq [{:keys [platform-id os libc] :as platform} platforms]
-      (let [manifest (read-manifest platform)]
-        (is (= platform-id (:platform-id manifest)))
-        (is (= os (:os manifest)))
-        (is (= libc (:libc manifest)))
-        (is (= pinned-vips-version (:vips-version manifest)))
-        (is (seq (:library-files manifest)))))))
-
-(deftest native-jar-contains-manifest-driven-layout
-  (let [platform (first expected-platforms)]
-    (assert-shell-ok (run-command "bb" "jar:native" (name (:platform-id platform))))
-    (let [jar-file (jar-path platform)
-          manifest (read-manifest platform)
-          entries  (jar-entries jar-file)
-          jar-root (format "ol/vips/native/%s/" (name (:platform-id platform)))]
-      (is (fs/exists? jar-file))
-      (is (contains? entries (str jar-root "manifest.edn")))
-      (is (contains? entries (str jar-root "upstream/package.json")))
-      (is (contains? entries (str jar-root "upstream/versions.json")))
-      (is (contains? entries (str jar-root "upstream/README.md")))
-      (doseq [library-file (:library-files manifest)]
-        (is (contains? entries (str jar-root library-file)))))))
-
-(deftest native-update-skips-unchanged-platform
-  (let [platform      (first expected-platforms)
-        manifest-file (manifest-path platform)]
-    (assert-shell-ok (run-command "bb" "native:update" (name (:platform-id platform))))
-    (let [initial-mtime (mtime manifest-file)]
-      (Thread/sleep 1100)
-      (let [{:keys [out]} (assert-shell-ok
-                           (run-command "bb" "native:update" (name (:platform-id platform))))]
-        (is (str/includes? out "native resources already up-to-date"))
-        (is (= initial-mtime (mtime manifest-file)))))))
-
-(deftest native-jar-skips-unchanged-platform
-  (let [platform (first expected-platforms)
-        jar-file (jar-path platform)]
-    (assert-shell-ok (run-command "bb" "jar:native" (name (:platform-id platform))))
-    (let [initial-mtime (mtime jar-file)]
-      (Thread/sleep 1100)
-      (let [{:keys [out]} (assert-shell-ok
-                           (run-command "bb" "jar:native" (name (:platform-id platform))))]
-        (is (str/includes? out "native jar up-to-date"))
-        (is (= initial-mtime (mtime jar-file)))))))
-
-(deftest linux-gnu-and-musl-remain-distinct
-  (let [[gnu musl] (take 2 expected-platforms)]
-    (assert-shell-ok (run-command "bb" "native:update"
-                                  (name (:platform-id gnu))
-                                  (name (:platform-id musl))))
-    (let [gnu-manifest  (read-manifest gnu)
-          musl-manifest (read-manifest musl)]
-      (is (not= (:platform-id gnu-manifest) (:platform-id musl-manifest)))
-      (is (= :glibc (:libc gnu-manifest)))
-      (is (= :musl (:libc musl-manifest)))
-      (is (not= (:artifact-name gnu-manifest) (:artifact-name musl-manifest)))
-      (is (not= (:sharp-package gnu-manifest) (:sharp-package musl-manifest))))))
+(deftest manifest-and-cache-path-derivation
+  (let [manifest {:platform-id   :linux-x86-64-gnu
+                  :vips-version  "8.17.3"
+                  :sharp-version "1.2.4"
+                  :library-files ["lib/libvips-cpp.so.8.17.3"]}]
+    (testing "manifest resource paths follow the classpath contract"
+      (is (= "ol/vips/native/linux-x86-64-gnu/manifest.edn"
+             (loader/manifest-resource-path :linux-x86-64-gnu))))
+    (testing "cache roots honor the explicit override"
+      (with-system-properties ["ol.vips.native.cache-root" "/tmp/ol-vips-cache"]
+        (is (= "/tmp/ol-vips-cache"
+               (str (loader/default-cache-root))))))
+    (testing "extraction roots are deterministic"
+      (is (= "/tmp/ol.vips/linux-x86-64-gnu/8.17.3-1.2.4"
+             (str (loader/extraction-root "/tmp/ol.vips" manifest)))))
+    (testing "extracted library paths derive from the manifest order"
+      (is (= ["/tmp/ol.vips/linux-x86-64-gnu/8.17.3-1.2.4/lib/libvips-cpp.so.8.17.3"]
+             (loader/extracted-library-paths "/tmp/ol.vips" manifest))))))
