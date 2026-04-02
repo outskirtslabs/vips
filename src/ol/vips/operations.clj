@@ -8,227 +8,227 @@
   (:require [ol.vips :as v]))
 
 (def registry
-  {:abs                   {:id :abs, :operation-name "abs", :description "absolute value of an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :add                   {:id :add, :operation-name "add", :description "add two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :addalpha              {:id :addalpha, :operation-name "addalpha", :description "append an alpha channel", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :arrayjoin             {:id :arrayjoin, :operation-name "arrayjoin", :description "join an array of images", :required-inputs [{:name "in", :blurb "Array of input images", :kind :boxed, :value-type "VipsArrayImage"}], :optional-inputs [{:name "across", :blurb "Number of images across grid", :kind :int, :value-type "gint"} {:name "shim", :blurb "Pixels between images", :kind :int, :value-type "gint"} {:name "halign", :blurb "Align on the left, centre or right", :kind :enum, :value-type "VipsAlign"} {:name "valign", :blurb "Align on the top, centre or bottom", :kind :enum, :value-type "VipsAlign"} {:name "hspacing", :blurb "Horizontal spacing between images", :kind :int, :value-type "gint"} {:name "vspacing", :blurb "Vertical spacing between images", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :autorot               {:id :autorot, :operation-name "autorot", :description "autorotate image by exif tag", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "angle", :blurb "Angle image was rotated by", :kind :enum, :value-type "VipsAngle"} {:name "flip", :blurb "Whether the image was flipped or not", :kind :boolean, :value-type "gboolean"}]}
-   :avg                   {:id :avg, :operation-name "avg", :description "find image average", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output value", :kind :double, :value-type "gdouble"}]}
-   :bandbool              {:id :bandbool, :operation-name "bandbool", :description "boolean operation across image bands", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "boolean", :blurb "Boolean to perform", :kind :enum, :value-type "VipsOperationBoolean"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :bandfold              {:id :bandfold, :operation-name "bandfold", :description "fold up x axis into bands", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "factor", :blurb "Fold by this factor", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :bandjoin              {:id :bandjoin, :operation-name "bandjoin", :description "bandwise join a set of images", :required-inputs [{:name "in", :blurb "Array of input images", :kind :boxed, :value-type "VipsArrayImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :bandmean              {:id :bandmean, :operation-name "bandmean", :description "band-wise average", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :bandrank              {:id :bandrank, :operation-name "bandrank", :description "band-wise rank of a set of images", :required-inputs [{:name "in", :blurb "Array of input images", :kind :boxed, :value-type "VipsArrayImage"}], :optional-inputs [{:name "index", :blurb "Select this band element from sorted list", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :bandunfold            {:id :bandunfold, :operation-name "bandunfold", :description "unfold image bands into x axis", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "factor", :blurb "Unfold by this factor", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :black                 {:id :black, :operation-name "black", :description "make a black image", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "bands", :blurb "Number of bands in image", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :boolean               {:id :boolean, :operation-name "boolean", :description "boolean operation on two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"} {:name "boolean", :blurb "Boolean to perform", :kind :enum, :value-type "VipsOperationBoolean"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :buildlut              {:id :buildlut, :operation-name "buildlut", :description "build a look-up table", :required-inputs [{:name "in", :blurb "Matrix of XY coordinates", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :byteswap              {:id :byteswap, :operation-name "byteswap", :description "byteswap an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :cache                 {:id :cache, :operation-name "cache", :description "cache an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "max-tiles", :blurb "Maximum number of tiles to cache", :kind :int, :value-type "gint"} {:name "tile-height", :blurb "Tile height in pixels", :kind :int, :value-type "gint"} {:name "tile-width", :blurb "Tile width in pixels", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :canny                 {:id :canny, :operation-name "canny", :description "Canny edge detector", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "sigma", :blurb "Sigma of Gaussian", :kind :double, :value-type "gdouble"} {:name "precision", :blurb "Convolve with this precision", :kind :enum, :value-type "VipsPrecision"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :case                  {:id :case, :operation-name "case", :description "use pixel values to pick cases from an array of images", :required-inputs [{:name "index", :blurb "Index image", :kind :object, :value-type "VipsImage"} {:name "cases", :blurb "Array of case images", :kind :boxed, :value-type "VipsArrayImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :cast                  {:id :cast, :operation-name "cast", :description "cast an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "format", :blurb "Format to cast to", :kind :enum, :value-type "VipsBandFormat"}], :optional-inputs [{:name "shift", :blurb "Shift integer values up and down", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :clamp                 {:id :clamp, :operation-name "clamp", :description "clamp values of an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "min", :blurb "Minimum value", :kind :double, :value-type "gdouble"} {:name "max", :blurb "Maximum value", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :cmc2-lch              {:id :cmc2-lch, :operation-name "CMC2LCh", :description "transform LCh to CMC", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :cmyk2-xyz             {:id :cmyk2-xyz, :operation-name "CMYK2XYZ", :description "transform CMYK to XYZ", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :colourspace           {:id :colourspace, :operation-name "colourspace", :description "convert to a new colorspace", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "space", :blurb "Destination color space", :kind :enum, :value-type "VipsInterpretation"}], :optional-inputs [{:name "source-space", :blurb "Source color space", :kind :enum, :value-type "VipsInterpretation"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :compass               {:id :compass, :operation-name "compass", :description "convolve with rotating mask", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input matrix image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "times", :blurb "Rotate and convolve this many times", :kind :int, :value-type "gint"} {:name "angle", :blurb "Rotate mask by this much between convolutions", :kind :enum, :value-type "VipsAngle45"} {:name "combine", :blurb "Combine convolution results like this", :kind :enum, :value-type "VipsCombine"} {:name "precision", :blurb "Convolve with this precision", :kind :enum, :value-type "VipsPrecision"} {:name "layers", :blurb "Use this many layers in approximation", :kind :int, :value-type "gint"} {:name "cluster", :blurb "Cluster lines closer than this in approximation", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :complex               {:id :complex, :operation-name "complex", :description "perform a complex operation on an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "cmplx", :blurb "Complex to perform", :kind :enum, :value-type "VipsOperationComplex"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :complex2              {:id :complex2, :operation-name "complex2", :description "complex binary operations on two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"} {:name "cmplx", :blurb "Binary complex operation to perform", :kind :enum, :value-type "VipsOperationComplex2"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :complexform           {:id :complexform, :operation-name "complexform", :description "form a complex image from two real images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :complexget            {:id :complexget, :operation-name "complexget", :description "get a component from a complex image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "get", :blurb "Complex to perform", :kind :enum, :value-type "VipsOperationComplexget"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :composite2            {:id :composite2, :operation-name "composite2", :description "blend a pair of images with a blend mode", :required-inputs [{:name "base", :blurb "Base image", :kind :object, :value-type "VipsImage"} {:name "overlay", :blurb "Overlay image", :kind :object, :value-type "VipsImage"} {:name "mode", :blurb "VipsBlendMode to join with", :kind :enum, :value-type "VipsBlendMode"}], :optional-inputs [{:name "x", :blurb "x position of overlay", :kind :int, :value-type "gint"} {:name "y", :blurb "y position of overlay", :kind :int, :value-type "gint"} {:name "compositing-space", :blurb "Composite images in this colour space", :kind :enum, :value-type "VipsInterpretation"} {:name "premultiplied", :blurb "Images have premultiplied alpha", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :conv                  {:id :conv, :operation-name "conv", :description "convolution operation", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input matrix image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "precision", :blurb "Convolve with this precision", :kind :enum, :value-type "VipsPrecision"} {:name "layers", :blurb "Use this many layers in approximation", :kind :int, :value-type "gint"} {:name "cluster", :blurb "Cluster lines closer than this in approximation", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :conva                 {:id :conva, :operation-name "conva", :description "approximate integer convolution", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input matrix image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "layers", :blurb "Use this many layers in approximation", :kind :int, :value-type "gint"} {:name "cluster", :blurb "Cluster lines closer than this in approximation", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :convasep              {:id :convasep, :operation-name "convasep", :description "approximate separable integer convolution", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input matrix image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "layers", :blurb "Use this many layers in approximation", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :convf                 {:id :convf, :operation-name "convf", :description "float convolution operation", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input matrix image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :convi                 {:id :convi, :operation-name "convi", :description "int convolution operation", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input matrix image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :convsep               {:id :convsep, :operation-name "convsep", :description "separable convolution operation", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input matrix image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "precision", :blurb "Convolve with this precision", :kind :enum, :value-type "VipsPrecision"} {:name "layers", :blurb "Use this many layers in approximation", :kind :int, :value-type "gint"} {:name "cluster", :blurb "Cluster lines closer than this in approximation", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :copy                  {:id :copy, :operation-name "copy", :description "copy an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "swap", :blurb "Swap bytes in image between little and big-endian", :kind :boolean, :value-type "gboolean"} {:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "bands", :blurb "Number of bands in image", :kind :int, :value-type "gint"} {:name "format", :blurb "Pixel format in image", :kind :enum, :value-type "VipsBandFormat"} {:name "coding", :blurb "Pixel coding", :kind :enum, :value-type "VipsCoding"} {:name "interpretation", :blurb "Pixel interpretation", :kind :enum, :value-type "VipsInterpretation"} {:name "xres", :blurb "Horizontal resolution in pixels/mm", :kind :double, :value-type "gdouble"} {:name "yres", :blurb "Vertical resolution in pixels/mm", :kind :double, :value-type "gdouble"} {:name "xoffset", :blurb "Horizontal offset of origin", :kind :int, :value-type "gint"} {:name "yoffset", :blurb "Vertical offset of origin", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :countlines            {:id :countlines, :operation-name "countlines", :description "count lines in an image", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "direction", :blurb "Countlines left-right or up-down", :kind :enum, :value-type "VipsDirection"}], :optional-inputs [], :outputs [{:name "nolines", :blurb "Number of lines", :kind :double, :value-type "gdouble"}]}
-   :csvload               {:id :csvload, :operation-name "csvload", :description "load csv", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "skip", :blurb "Skip this many lines at the start of the file", :kind :int, :value-type "gint"} {:name "lines", :blurb "Read this many lines from the file", :kind :int, :value-type "gint"} {:name "whitespace", :blurb "Set of whitespace characters", :kind :string, :value-type "gchararray"} {:name "separator", :blurb "Set of separator characters", :kind :string, :value-type "gchararray"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :csvsave               {:id :csvsave, :operation-name "csvsave", :description "save image to csv", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "separator", :blurb "Separator characters", :kind :string, :value-type "gchararray"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :d-e00                 {:id :d-e00, :operation-name "dE00", :description "calculate dE00", :required-inputs [{:name "left", :blurb "Left-hand input image", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :d-e76                 {:id :d-e76, :operation-name "dE76", :description "calculate dE76", :required-inputs [{:name "left", :blurb "Left-hand input image", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :d-ecmc                {:id :d-ecmc, :operation-name "dECMC", :description "calculate dECMC", :required-inputs [{:name "left", :blurb "Left-hand input image", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :deviate               {:id :deviate, :operation-name "deviate", :description "find image standard deviation", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output value", :kind :double, :value-type "gdouble"}]}
-   :divide                {:id :divide, :operation-name "divide", :description "divide two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :draw-image            {:id :draw-image, :operation-name "draw_image", :description "paint an image into another image", :required-inputs [{:name "image", :blurb "Image to draw on", :kind :object, :value-type "VipsImage"} {:name "sub", :blurb "Sub-image to insert into main image", :kind :object, :value-type "VipsImage"} {:name "x", :blurb "Draw image here", :kind :int, :value-type "gint"} {:name "y", :blurb "Draw image here", :kind :int, :value-type "gint"}], :optional-inputs [{:name "mode", :blurb "Combining mode", :kind :enum, :value-type "VipsCombineMode"}], :outputs []}
-   :draw-smudge           {:id :draw-smudge, :operation-name "draw_smudge", :description "blur a rectangle on an image", :required-inputs [{:name "image", :blurb "Image to draw on", :kind :object, :value-type "VipsImage"} {:name "left", :blurb "Rect to fill", :kind :int, :value-type "gint"} {:name "top", :blurb "Rect to fill", :kind :int, :value-type "gint"} {:name "width", :blurb "Rect to fill", :kind :int, :value-type "gint"} {:name "height", :blurb "Rect to fill", :kind :int, :value-type "gint"}], :optional-inputs [], :outputs []}
-   :dzsave                {:id :dzsave, :operation-name "dzsave", :description "save image to deepzoom file", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "dirname", :blurb "Directory name to save to", :kind :string, :value-type "gchararray"} {:name "imagename", :blurb "Image name", :kind :string, :value-type "gchararray"} {:name "layout", :blurb "Directory layout", :kind :enum, :value-type "VipsForeignDzLayout"} {:name "suffix", :blurb "Filename suffix for tiles", :kind :string, :value-type "gchararray"} {:name "overlap", :blurb "Tile overlap in pixels", :kind :int, :value-type "gint"} {:name "tile-size", :blurb "Tile size in pixels", :kind :int, :value-type "gint"} {:name "tile-height", :blurb "Tile height in pixels", :kind :int, :value-type "gint"} {:name "tile-width", :blurb "Tile width in pixels", :kind :int, :value-type "gint"} {:name "centre", :blurb "Center image in tile", :kind :boolean, :value-type "gboolean"} {:name "depth", :blurb "Pyramid depth", :kind :enum, :value-type "VipsForeignDzDepth"} {:name "angle", :blurb "Rotate image during save", :kind :enum, :value-type "VipsAngle"} {:name "container", :blurb "Pyramid container type", :kind :enum, :value-type "VipsForeignDzContainer"} {:name "properties", :blurb "Write a properties file to the output directory", :kind :boolean, :value-type "gboolean"} {:name "compression", :blurb "ZIP deflate compression level", :kind :int, :value-type "gint"} {:name "region-shrink", :blurb "Method to shrink regions", :kind :enum, :value-type "VipsRegionShrink"} {:name "skip-blanks", :blurb "Skip tiles which are nearly equal to the background", :kind :int, :value-type "gint"} {:name "id", :blurb "Resource ID", :kind :string, :value-type "gchararray"} {:name "Q", :blurb "Q factor", :kind :int, :value-type "gint"} {:name "no-strip", :blurb "Don't strip tile metadata", :kind :boolean, :value-type "gboolean"} {:name "basename", :blurb "Base name to save to", :kind :string, :value-type "gchararray"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :embed                 {:id :embed, :operation-name "embed", :description "embed an image in a larger image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "x", :blurb "Left edge of input in output", :kind :int, :value-type "gint"} {:name "y", :blurb "Top edge of input in output", :kind :int, :value-type "gint"} {:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "extend", :blurb "How to generate the extra pixels", :kind :enum, :value-type "VipsExtend"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :extract-area          {:id :extract-area, :operation-name "extract_area", :description "extract an area from an image", :required-inputs [{:name "input", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "left", :blurb "Left edge of extract area", :kind :int, :value-type "gint"} {:name "top", :blurb "Top edge of extract area", :kind :int, :value-type "gint"} {:name "width", :blurb "Width of extract area", :kind :int, :value-type "gint"} {:name "height", :blurb "Height of extract area", :kind :int, :value-type "gint"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :extract-band          {:id :extract-band, :operation-name "extract_band", :description "extract band from an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "band", :blurb "Band to extract", :kind :int, :value-type "gint"}], :optional-inputs [{:name "n", :blurb "Number of bands to extract", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :eye                   {:id :eye, :operation-name "eye", :description "make an image showing the eye's spatial response", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "factor", :blurb "Maximum spatial frequency", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :falsecolour           {:id :falsecolour, :operation-name "falsecolour", :description "false-color an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :fastcor               {:id :fastcor, :operation-name "fastcor", :description "fast correlation", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "ref", :blurb "Input reference image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :fill-nearest          {:id :fill-nearest, :operation-name "fill_nearest", :description "fill image zeros with nearest non-zero pixel", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Value of nearest non-zero pixel", :kind :object, :value-type "VipsImage"} {:name "distance", :blurb "Distance to nearest non-zero pixel", :kind :object, :value-type "VipsImage"}]}
-   :find-trim             {:id :find-trim, :operation-name "find_trim", :description "search an image for non-edge areas", :required-inputs [{:name "in", :blurb "Image to find_trim", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "threshold", :blurb "Object threshold", :kind :double, :value-type "gdouble"} {:name "line-art", :blurb "Enable line art mode", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "left", :blurb "Left edge of image", :kind :int, :value-type "gint"} {:name "top", :blurb "Top edge of extract area", :kind :int, :value-type "gint"} {:name "width", :blurb "Width of extract area", :kind :int, :value-type "gint"} {:name "height", :blurb "Height of extract area", :kind :int, :value-type "gint"}]}
-   :flatten               {:id :flatten, :operation-name "flatten", :description "flatten alpha out of an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "max-alpha", :blurb "Maximum value of alpha channel", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :flip                  {:id :flip, :operation-name "flip", :description "flip an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "direction", :blurb "Direction to flip image", :kind :enum, :value-type "VipsDirection"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :float2rad             {:id :float2rad, :operation-name "float2rad", :description "transform float RGB to Radiance coding", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :fractsurf             {:id :fractsurf, :operation-name "fractsurf", :description "make a fractal surface", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "fractal-dimension", :blurb "Fractal dimension", :kind :double, :value-type "gdouble"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :freqmult              {:id :freqmult, :operation-name "freqmult", :description "frequency-domain filtering", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input mask image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :gamma                 {:id :gamma, :operation-name "gamma", :description "gamma an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "exponent", :blurb "Gamma factor", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :gaussblur             {:id :gaussblur, :operation-name "gaussblur", :description "gaussian blur", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "sigma", :blurb "Sigma of Gaussian", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "min-ampl", :blurb "Minimum amplitude of Gaussian", :kind :double, :value-type "gdouble"} {:name "precision", :blurb "Convolve with this precision", :kind :enum, :value-type "VipsPrecision"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :gaussmat              {:id :gaussmat, :operation-name "gaussmat", :description "make a gaussian image", :required-inputs [{:name "sigma", :blurb "Sigma of Gaussian", :kind :double, :value-type "gdouble"} {:name "min-ampl", :blurb "Minimum amplitude of Gaussian", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "separable", :blurb "Generate separable Gaussian", :kind :boolean, :value-type "gboolean"} {:name "integer", :blurb "Generate integer Gaussian", :kind :boolean, :value-type "gboolean"} {:name "precision", :blurb "Generate with this precision", :kind :enum, :value-type "VipsPrecision"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :gaussnoise            {:id :gaussnoise, :operation-name "gaussnoise", :description "make a gaussnoise image", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "sigma", :blurb "Standard deviation of pixels in generated image", :kind :double, :value-type "gdouble"} {:name "mean", :blurb "Mean of pixels in generated image", :kind :double, :value-type "gdouble"} {:name "seed", :blurb "Random number seed", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :gifload               {:id :gifload, :operation-name "gifload", :description "load GIF with libnsgif", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "n", :blurb "Number of pages to load, -1 for all", :kind :int, :value-type "gint"} {:name "page", :blurb "First page to load", :kind :int, :value-type "gint"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :gifsave               {:id :gifsave, :operation-name "gifsave", :description "save as gif", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "dither", :blurb "Amount of dithering", :kind :double, :value-type "gdouble"} {:name "effort", :blurb "Quantisation effort", :kind :int, :value-type "gint"} {:name "bitdepth", :blurb "Number of bits per pixel", :kind :int, :value-type "gint"} {:name "interframe-maxerror", :blurb "Maximum inter-frame error for transparency", :kind :double, :value-type "gdouble"} {:name "reuse", :blurb "Reuse palette from input", :kind :boolean, :value-type "gboolean"} {:name "interpalette-maxerror", :blurb "Maximum inter-palette error for palette reusage", :kind :double, :value-type "gdouble"} {:name "interlace", :blurb "Generate an interlaced (progressive) GIF", :kind :boolean, :value-type "gboolean"} {:name "reoptimise", :blurb "Reoptimise colour palettes", :kind :boolean, :value-type "gboolean"} {:name "keep-duplicate-frames", :blurb "Keep duplicate frames in the output instead of combining them", :kind :boolean, :value-type "gboolean"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :globalbalance         {:id :globalbalance, :operation-name "globalbalance", :description "global balance an image mosaic", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "gamma", :blurb "Image gamma", :kind :double, :value-type "gdouble"} {:name "int-output", :blurb "Integer output", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :gravity               {:id :gravity, :operation-name "gravity", :description "place an image within a larger image with a certain gravity", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "direction", :blurb "Direction to place image within width/height", :kind :enum, :value-type "VipsCompassDirection"} {:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "extend", :blurb "How to generate the extra pixels", :kind :enum, :value-type "VipsExtend"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :grey                  {:id :grey, :operation-name "grey", :description "make a grey ramp image", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :grid                  {:id :grid, :operation-name "grid", :description "grid an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "tile-height", :blurb "Chop into tiles this high", :kind :int, :value-type "gint"} {:name "across", :blurb "Number of tiles across", :kind :int, :value-type "gint"} {:name "down", :blurb "Number of tiles down", :kind :int, :value-type "gint"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :heifload              {:id :heifload, :operation-name "heifload", :description "load a HEIF image", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "page", :blurb "First page to load", :kind :int, :value-type "gint"} {:name "n", :blurb "Number of pages to load, -1 for all", :kind :int, :value-type "gint"} {:name "thumbnail", :blurb "Fetch thumbnail image", :kind :boolean, :value-type "gboolean"} {:name "autorotate", :blurb "Rotate image using exif orientation", :kind :boolean, :value-type "gboolean"} {:name "unlimited", :blurb "Remove all denial of service limits", :kind :boolean, :value-type "gboolean"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :heifsave              {:id :heifsave, :operation-name "heifsave", :description "save image in HEIF format", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "Q", :blurb "Q factor", :kind :int, :value-type "gint"} {:name "bitdepth", :blurb "Number of bits per pixel", :kind :int, :value-type "gint"} {:name "lossless", :blurb "Enable lossless compression", :kind :boolean, :value-type "gboolean"} {:name "compression", :blurb "Compression format", :kind :enum, :value-type "VipsForeignHeifCompression"} {:name "effort", :blurb "CPU effort", :kind :int, :value-type "gint"} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :kind :enum, :value-type "VipsForeignSubsample"} {:name "speed", :blurb "CPU effort", :kind :int, :value-type "gint"} {:name "encoder", :blurb "Select encoder to use", :kind :enum, :value-type "VipsForeignHeifEncoder"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :hist-cum              {:id :hist-cum, :operation-name "hist_cum", :description "form cumulative histogram", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :hist-entropy          {:id :hist-entropy, :operation-name "hist_entropy", :description "estimate image entropy", :required-inputs [{:name "in", :blurb "Input histogram image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output value", :kind :double, :value-type "gdouble"}]}
-   :hist-equal            {:id :hist-equal, :operation-name "hist_equal", :description "histogram equalisation", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "band", :blurb "Equalise with this band", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :hist-find             {:id :hist-find, :operation-name "hist_find", :description "find image histogram", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "band", :blurb "Find histogram of band", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output histogram", :kind :object, :value-type "VipsImage"}]}
-   :hist-find-indexed     {:id :hist-find-indexed, :operation-name "hist_find_indexed", :description "find indexed image histogram", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "index", :blurb "Index image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "combine", :blurb "Combine bins like this", :kind :enum, :value-type "VipsCombine"}], :outputs [{:name "out", :blurb "Output histogram", :kind :object, :value-type "VipsImage"}]}
-   :hist-find-ndim        {:id :hist-find-ndim, :operation-name "hist_find_ndim", :description "find n-dimensional image histogram", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "bins", :blurb "Number of bins in each dimension", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output histogram", :kind :object, :value-type "VipsImage"}]}
-   :hist-ismonotonic      {:id :hist-ismonotonic, :operation-name "hist_ismonotonic", :description "test for monotonicity", :required-inputs [{:name "in", :blurb "Input histogram image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "monotonic", :blurb "true if in is monotonic", :kind :boolean, :value-type "gboolean"}]}
-   :hist-local            {:id :hist-local, :operation-name "hist_local", :description "local histogram equalisation", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "width", :blurb "Window width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Window height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "max-slope", :blurb "Maximum slope (CLAHE)", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :hist-match            {:id :hist-match, :operation-name "hist_match", :description "match two histograms", :required-inputs [{:name "in", :blurb "Input histogram", :kind :object, :value-type "VipsImage"} {:name "ref", :blurb "Reference histogram", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :hist-norm             {:id :hist-norm, :operation-name "hist_norm", :description "normalise histogram", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :hist-plot             {:id :hist-plot, :operation-name "hist_plot", :description "plot histogram", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :hough-circle          {:id :hough-circle, :operation-name "hough_circle", :description "find hough circle transform", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "scale", :blurb "Scale down dimensions by this factor", :kind :int, :value-type "gint"} {:name "min-radius", :blurb "Smallest radius to search for", :kind :int, :value-type "gint"} {:name "max-radius", :blurb "Largest radius to search for", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :hough-line            {:id :hough-line, :operation-name "hough_line", :description "find hough line transform", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "width", :blurb "Horizontal size of parameter space", :kind :int, :value-type "gint"} {:name "height", :blurb "Vertical size of parameter space", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :hsv2s-rgb             {:id :hsv2s-rgb, :operation-name "HSV2sRGB", :description "transform HSV to sRGB", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :icc-export            {:id :icc-export, :operation-name "icc_export", :description "output to device with ICC profile", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "pcs", :blurb "Set Profile Connection Space", :kind :enum, :value-type "VipsPCS"} {:name "intent", :blurb "Rendering intent", :kind :enum, :value-type "VipsIntent"} {:name "black-point-compensation", :blurb "Enable black point compensation", :kind :boolean, :value-type "gboolean"} {:name "output-profile", :blurb "Filename to load output profile from", :kind :string, :value-type "gchararray"} {:name "depth", :blurb "Output device space depth in bits", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :icc-import            {:id :icc-import, :operation-name "icc_import", :description "import from device with ICC profile", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "pcs", :blurb "Set Profile Connection Space", :kind :enum, :value-type "VipsPCS"} {:name "intent", :blurb "Rendering intent", :kind :enum, :value-type "VipsIntent"} {:name "black-point-compensation", :blurb "Enable black point compensation", :kind :boolean, :value-type "gboolean"} {:name "embedded", :blurb "Use embedded input profile, if available", :kind :boolean, :value-type "gboolean"} {:name "input-profile", :blurb "Filename to load input profile from", :kind :string, :value-type "gchararray"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :icc-transform         {:id :icc-transform, :operation-name "icc_transform", :description "transform between devices with ICC profiles", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "output-profile", :blurb "Filename to load output profile from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "pcs", :blurb "Set Profile Connection Space", :kind :enum, :value-type "VipsPCS"} {:name "intent", :blurb "Rendering intent", :kind :enum, :value-type "VipsIntent"} {:name "black-point-compensation", :blurb "Enable black point compensation", :kind :boolean, :value-type "gboolean"} {:name "embedded", :blurb "Use embedded input profile, if available", :kind :boolean, :value-type "gboolean"} {:name "input-profile", :blurb "Filename to load input profile from", :kind :string, :value-type "gchararray"} {:name "depth", :blurb "Output device space depth in bits", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :identity              {:id :identity, :operation-name "identity", :description "make a 1D image where pixel values are indexes", :required-inputs [], :optional-inputs [{:name "bands", :blurb "Number of bands in LUT", :kind :int, :value-type "gint"} {:name "ushort", :blurb "Create a 16-bit LUT", :kind :boolean, :value-type "gboolean"} {:name "size", :blurb "Size of 16-bit LUT", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :ifthenelse            {:id :ifthenelse, :operation-name "ifthenelse", :description "ifthenelse an image", :required-inputs [{:name "cond", :blurb "Condition input image", :kind :object, :value-type "VipsImage"} {:name "in1", :blurb "Source for TRUE pixels", :kind :object, :value-type "VipsImage"} {:name "in2", :blurb "Source for FALSE pixels", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "blend", :blurb "Blend smoothly between then and else parts", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :insert                {:id :insert, :operation-name "insert", :description "insert image @sub into @main at @x, @y", :required-inputs [{:name "main", :blurb "Main input image", :kind :object, :value-type "VipsImage"} {:name "sub", :blurb "Sub-image to insert into main image", :kind :object, :value-type "VipsImage"} {:name "x", :blurb "Left edge of sub in main", :kind :int, :value-type "gint"} {:name "y", :blurb "Top edge of sub in main", :kind :int, :value-type "gint"}], :optional-inputs [{:name "expand", :blurb "Expand output to hold all of both inputs", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :invert                {:id :invert, :operation-name "invert", :description "invert an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :invertlut             {:id :invertlut, :operation-name "invertlut", :description "build an inverted look-up table", :required-inputs [{:name "in", :blurb "Matrix of XY coordinates", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "size", :blurb "LUT size to generate", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :join                  {:id :join, :operation-name "join", :description "join a pair of images", :required-inputs [{:name "in1", :blurb "First input image", :kind :object, :value-type "VipsImage"} {:name "in2", :blurb "Second input image", :kind :object, :value-type "VipsImage"} {:name "direction", :blurb "Join left-right or up-down", :kind :enum, :value-type "VipsDirection"}], :optional-inputs [{:name "expand", :blurb "Expand output to hold all of both inputs", :kind :boolean, :value-type "gboolean"} {:name "shim", :blurb "Pixels between images", :kind :int, :value-type "gint"} {:name "align", :blurb "Align on the low, centre or high coordinate edge", :kind :enum, :value-type "VipsAlign"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :jpegload              {:id :jpegload, :operation-name "jpegload", :description "load jpeg from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "shrink", :blurb "Shrink factor on load", :kind :int, :value-type "gint"} {:name "autorotate", :blurb "Rotate image using exif orientation", :kind :boolean, :value-type "gboolean"} {:name "unlimited", :blurb "Remove all denial of service limits", :kind :boolean, :value-type "gboolean"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :jpegsave              {:id :jpegsave, :operation-name "jpegsave", :description "save image to jpeg file", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "Q", :blurb "Q factor", :kind :int, :value-type "gint"} {:name "optimize-coding", :blurb "Compute optimal Huffman coding tables", :kind :boolean, :value-type "gboolean"} {:name "interlace", :blurb "Generate an interlaced (progressive) jpeg", :kind :boolean, :value-type "gboolean"} {:name "no-subsample", :blurb "Disable chroma subsample", :kind :boolean, :value-type "gboolean"} {:name "trellis-quant", :blurb "Apply trellis quantisation to each 8x8 block", :kind :boolean, :value-type "gboolean"} {:name "overshoot-deringing", :blurb "Apply overshooting to samples with extreme values", :kind :boolean, :value-type "gboolean"} {:name "optimize-scans", :blurb "Split spectrum of DCT coefficients into separate scans", :kind :boolean, :value-type "gboolean"} {:name "quant-table", :blurb "Use predefined quantization table with given index", :kind :int, :value-type "gint"} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :kind :enum, :value-type "VipsForeignSubsample"} {:name "restart-interval", :blurb "Add restart markers every specified number of mcu", :kind :int, :value-type "gint"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :jpegsave-mime         {:id :jpegsave-mime, :operation-name "jpegsave_mime", :description "save image to jpeg mime", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "Q", :blurb "Q factor", :kind :int, :value-type "gint"} {:name "optimize-coding", :blurb "Compute optimal Huffman coding tables", :kind :boolean, :value-type "gboolean"} {:name "interlace", :blurb "Generate an interlaced (progressive) jpeg", :kind :boolean, :value-type "gboolean"} {:name "no-subsample", :blurb "Disable chroma subsample", :kind :boolean, :value-type "gboolean"} {:name "trellis-quant", :blurb "Apply trellis quantisation to each 8x8 block", :kind :boolean, :value-type "gboolean"} {:name "overshoot-deringing", :blurb "Apply overshooting to samples with extreme values", :kind :boolean, :value-type "gboolean"} {:name "optimize-scans", :blurb "Split spectrum of DCT coefficients into separate scans", :kind :boolean, :value-type "gboolean"} {:name "quant-table", :blurb "Use predefined quantization table with given index", :kind :int, :value-type "gint"} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :kind :enum, :value-type "VipsForeignSubsample"} {:name "restart-interval", :blurb "Add restart markers every specified number of mcu", :kind :int, :value-type "gint"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :lab-q2-lab            {:id :lab-q2-lab, :operation-name "LabQ2Lab", :description "unpack a LabQ image to float Lab", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lab-q2-lab-s          {:id :lab-q2-lab-s, :operation-name "LabQ2LabS", :description "unpack a LabQ image to short Lab", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lab-q2s-rgb           {:id :lab-q2s-rgb, :operation-name "LabQ2sRGB", :description "convert a LabQ image to sRGB", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lab-s2-lab            {:id :lab-s2-lab, :operation-name "LabS2Lab", :description "transform signed short Lab to float", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lab-s2-lab-q          {:id :lab-s2-lab-q, :operation-name "LabS2LabQ", :description "transform short Lab to LabQ coding", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lab2-lab-q            {:id :lab2-lab-q, :operation-name "Lab2LabQ", :description "transform float Lab to LabQ coding", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lab2-lab-s            {:id :lab2-lab-s, :operation-name "Lab2LabS", :description "transform float Lab to signed short", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lab2-lch              {:id :lab2-lch, :operation-name "Lab2LCh", :description "transform Lab to LCh", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lab2-xyz              {:id :lab2-xyz, :operation-name "Lab2XYZ", :description "transform CIELAB to XYZ", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :labelregions          {:id :labelregions, :operation-name "labelregions", :description "label regions in an image", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "mask", :blurb "Mask of region labels", :kind :object, :value-type "VipsImage"} {:name "segments", :blurb "Number of discrete contiguous regions", :kind :int, :value-type "gint"}]}
-   :lch2-cmc              {:id :lch2-cmc, :operation-name "LCh2CMC", :description "transform LCh to CMC", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :lch2-lab              {:id :lch2-lab, :operation-name "LCh2Lab", :description "transform LCh to Lab", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :linecache             {:id :linecache, :operation-name "linecache", :description "cache an image as a set of lines", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "tile-height", :blurb "Tile height in pixels", :kind :int, :value-type "gint"} {:name "access", :blurb "Expected access pattern", :kind :enum, :value-type "VipsAccess"} {:name "threaded", :blurb "Allow threaded access", :kind :boolean, :value-type "gboolean"} {:name "persistent", :blurb "Keep cache between evaluations", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :logmat                {:id :logmat, :operation-name "logmat", :description "make a Laplacian of Gaussian image", :required-inputs [{:name "sigma", :blurb "Radius of Gaussian", :kind :double, :value-type "gdouble"} {:name "min-ampl", :blurb "Minimum amplitude of Gaussian", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "separable", :blurb "Generate separable Gaussian", :kind :boolean, :value-type "gboolean"} {:name "integer", :blurb "Generate integer Gaussian", :kind :boolean, :value-type "gboolean"} {:name "precision", :blurb "Generate with this precision", :kind :enum, :value-type "VipsPrecision"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mapim                 {:id :mapim, :operation-name "mapim", :description "resample with a map image", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "index", :blurb "Index pixels with this", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "premultiplied", :blurb "Images have premultiplied alpha", :kind :boolean, :value-type "gboolean"} {:name "extend", :blurb "How to generate the extra pixels", :kind :enum, :value-type "VipsExtend"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :maplut                {:id :maplut, :operation-name "maplut", :description "map an image though a lut", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "lut", :blurb "Look-up table image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "band", :blurb "Apply one-band lut to this band of in", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-butterworth      {:id :mask-butterworth, :operation-name "mask_butterworth", :description "make a butterworth filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "order", :blurb "Filter order", :kind :double, :value-type "gdouble"} {:name "frequency-cutoff", :blurb "Frequency cutoff", :kind :double, :value-type "gdouble"} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-butterworth-band {:id :mask-butterworth-band, :operation-name "mask_butterworth_band", :description "make a butterworth_band filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "order", :blurb "Filter order", :kind :double, :value-type "gdouble"} {:name "frequency-cutoff-x", :blurb "Frequency cutoff x", :kind :double, :value-type "gdouble"} {:name "frequency-cutoff-y", :blurb "Frequency cutoff y", :kind :double, :value-type "gdouble"} {:name "radius", :blurb "Radius of circle", :kind :double, :value-type "gdouble"} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-butterworth-ring {:id :mask-butterworth-ring, :operation-name "mask_butterworth_ring", :description "make a butterworth ring filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "order", :blurb "Filter order", :kind :double, :value-type "gdouble"} {:name "frequency-cutoff", :blurb "Frequency cutoff", :kind :double, :value-type "gdouble"} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :kind :double, :value-type "gdouble"} {:name "ringwidth", :blurb "Ringwidth", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-fractal          {:id :mask-fractal, :operation-name "mask_fractal", :description "make fractal filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "fractal-dimension", :blurb "Fractal dimension", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-gaussian         {:id :mask-gaussian, :operation-name "mask_gaussian", :description "make a gaussian filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "frequency-cutoff", :blurb "Frequency cutoff", :kind :double, :value-type "gdouble"} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-gaussian-band    {:id :mask-gaussian-band, :operation-name "mask_gaussian_band", :description "make a gaussian filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "frequency-cutoff-x", :blurb "Frequency cutoff x", :kind :double, :value-type "gdouble"} {:name "frequency-cutoff-y", :blurb "Frequency cutoff y", :kind :double, :value-type "gdouble"} {:name "radius", :blurb "Radius of circle", :kind :double, :value-type "gdouble"} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-gaussian-ring    {:id :mask-gaussian-ring, :operation-name "mask_gaussian_ring", :description "make a gaussian ring filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "frequency-cutoff", :blurb "Frequency cutoff", :kind :double, :value-type "gdouble"} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :kind :double, :value-type "gdouble"} {:name "ringwidth", :blurb "Ringwidth", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-ideal            {:id :mask-ideal, :operation-name "mask_ideal", :description "make an ideal filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "frequency-cutoff", :blurb "Frequency cutoff", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-ideal-band       {:id :mask-ideal-band, :operation-name "mask_ideal_band", :description "make an ideal band filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "frequency-cutoff-x", :blurb "Frequency cutoff x", :kind :double, :value-type "gdouble"} {:name "frequency-cutoff-y", :blurb "Frequency cutoff y", :kind :double, :value-type "gdouble"} {:name "radius", :blurb "Radius of circle", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mask-ideal-ring       {:id :mask-ideal-ring, :operation-name "mask_ideal_ring", :description "make an ideal ring filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "frequency-cutoff", :blurb "Frequency cutoff", :kind :double, :value-type "gdouble"} {:name "ringwidth", :blurb "Ringwidth", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "nodc", :blurb "Remove DC component", :kind :boolean, :value-type "gboolean"} {:name "reject", :blurb "Invert the sense of the filter", :kind :boolean, :value-type "gboolean"} {:name "optical", :blurb "Rotate quadrants to optical space", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :match                 {:id :match, :operation-name "match", :description "first-order match of two images", :required-inputs [{:name "ref", :blurb "Reference image", :kind :object, :value-type "VipsImage"} {:name "sec", :blurb "Secondary image", :kind :object, :value-type "VipsImage"} {:name "xr1", :blurb "Position of first reference tie-point", :kind :int, :value-type "gint"} {:name "yr1", :blurb "Position of first reference tie-point", :kind :int, :value-type "gint"} {:name "xs1", :blurb "Position of first secondary tie-point", :kind :int, :value-type "gint"} {:name "ys1", :blurb "Position of first secondary tie-point", :kind :int, :value-type "gint"} {:name "xr2", :blurb "Position of second reference tie-point", :kind :int, :value-type "gint"} {:name "yr2", :blurb "Position of second reference tie-point", :kind :int, :value-type "gint"} {:name "xs2", :blurb "Position of second secondary tie-point", :kind :int, :value-type "gint"} {:name "ys2", :blurb "Position of second secondary tie-point", :kind :int, :value-type "gint"}], :optional-inputs [{:name "hwindow", :blurb "Half window size", :kind :int, :value-type "gint"} {:name "harea", :blurb "Half area size", :kind :int, :value-type "gint"} {:name "search", :blurb "Search to improve tie-points", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :math                  {:id :math, :operation-name "math", :description "apply a math operation to an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "math", :blurb "Math to perform", :kind :enum, :value-type "VipsOperationMath"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :math2                 {:id :math2, :operation-name "math2", :description "binary math operations", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"} {:name "math2", :blurb "Math to perform", :kind :enum, :value-type "VipsOperationMath2"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :matrixinvert          {:id :matrixinvert, :operation-name "matrixinvert", :description "invert a matrix", :required-inputs [{:name "in", :blurb "An square matrix", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output matrix", :kind :object, :value-type "VipsImage"}]}
-   :matrixload            {:id :matrixload, :operation-name "matrixload", :description "load matrix", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :matrixmultiply        {:id :matrixmultiply, :operation-name "matrixmultiply", :description "multiply two matrices", :required-inputs [{:name "left", :blurb "First matrix to multiply", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Second matrix to multiply", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output matrix", :kind :object, :value-type "VipsImage"}]}
-   :matrixprint           {:id :matrixprint, :operation-name "matrixprint", :description "print matrix", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :matrixsave            {:id :matrixsave, :operation-name "matrixsave", :description "save image to matrix", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :maxpair               {:id :maxpair, :operation-name "maxpair", :description "maximum of a pair of images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :measure               {:id :measure, :operation-name "measure", :description "measure a set of patches on a color chart", :required-inputs [{:name "in", :blurb "Image to measure", :kind :object, :value-type "VipsImage"} {:name "h", :blurb "Number of patches across chart", :kind :int, :value-type "gint"} {:name "v", :blurb "Number of patches down chart", :kind :int, :value-type "gint"}], :optional-inputs [{:name "left", :blurb "Left edge of extract area", :kind :int, :value-type "gint"} {:name "top", :blurb "Top edge of extract area", :kind :int, :value-type "gint"} {:name "width", :blurb "Width of extract area", :kind :int, :value-type "gint"} {:name "height", :blurb "Height of extract area", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output array of statistics", :kind :object, :value-type "VipsImage"}]}
-   :merge                 {:id :merge, :operation-name "merge", :description "merge two images", :required-inputs [{:name "ref", :blurb "Reference image", :kind :object, :value-type "VipsImage"} {:name "sec", :blurb "Secondary image", :kind :object, :value-type "VipsImage"} {:name "direction", :blurb "Horizontal or vertical merge", :kind :enum, :value-type "VipsDirection"} {:name "dx", :blurb "Horizontal displacement from sec to ref", :kind :int, :value-type "gint"} {:name "dy", :blurb "Vertical displacement from sec to ref", :kind :int, :value-type "gint"}], :optional-inputs [{:name "mblend", :blurb "Maximum blend size", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :minpair               {:id :minpair, :operation-name "minpair", :description "minimum of a pair of images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :morph                 {:id :morph, :operation-name "morph", :description "morphology operation", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "mask", :blurb "Input matrix image", :kind :object, :value-type "VipsImage"} {:name "morph", :blurb "Morphological operation to perform", :kind :enum, :value-type "VipsOperationMorphology"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :mosaic                {:id :mosaic, :operation-name "mosaic", :description "mosaic two images", :required-inputs [{:name "ref", :blurb "Reference image", :kind :object, :value-type "VipsImage"} {:name "sec", :blurb "Secondary image", :kind :object, :value-type "VipsImage"} {:name "direction", :blurb "Horizontal or vertical mosaic", :kind :enum, :value-type "VipsDirection"} {:name "xref", :blurb "Position of reference tie-point", :kind :int, :value-type "gint"} {:name "yref", :blurb "Position of reference tie-point", :kind :int, :value-type "gint"} {:name "xsec", :blurb "Position of secondary tie-point", :kind :int, :value-type "gint"} {:name "ysec", :blurb "Position of secondary tie-point", :kind :int, :value-type "gint"}], :optional-inputs [{:name "hwindow", :blurb "Half window size", :kind :int, :value-type "gint"} {:name "harea", :blurb "Half area size", :kind :int, :value-type "gint"} {:name "mblend", :blurb "Maximum blend size", :kind :int, :value-type "gint"} {:name "bandno", :blurb "Band to search for features on", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "dx0", :blurb "Detected integer offset", :kind :int, :value-type "gint"} {:name "dy0", :blurb "Detected integer offset", :kind :int, :value-type "gint"} {:name "scale1", :blurb "Detected scale", :kind :double, :value-type "gdouble"} {:name "angle1", :blurb "Detected rotation", :kind :double, :value-type "gdouble"} {:name "dy1", :blurb "Detected first-order displacement", :kind :double, :value-type "gdouble"} {:name "dx1", :blurb "Detected first-order displacement", :kind :double, :value-type "gdouble"}]}
-   :mosaic1               {:id :mosaic1, :operation-name "mosaic1", :description "first-order mosaic of two images", :required-inputs [{:name "ref", :blurb "Reference image", :kind :object, :value-type "VipsImage"} {:name "sec", :blurb "Secondary image", :kind :object, :value-type "VipsImage"} {:name "direction", :blurb "Horizontal or vertical mosaic", :kind :enum, :value-type "VipsDirection"} {:name "xr1", :blurb "Position of first reference tie-point", :kind :int, :value-type "gint"} {:name "yr1", :blurb "Position of first reference tie-point", :kind :int, :value-type "gint"} {:name "xs1", :blurb "Position of first secondary tie-point", :kind :int, :value-type "gint"} {:name "ys1", :blurb "Position of first secondary tie-point", :kind :int, :value-type "gint"} {:name "xr2", :blurb "Position of second reference tie-point", :kind :int, :value-type "gint"} {:name "yr2", :blurb "Position of second reference tie-point", :kind :int, :value-type "gint"} {:name "xs2", :blurb "Position of second secondary tie-point", :kind :int, :value-type "gint"} {:name "ys2", :blurb "Position of second secondary tie-point", :kind :int, :value-type "gint"}], :optional-inputs [{:name "hwindow", :blurb "Half window size", :kind :int, :value-type "gint"} {:name "harea", :blurb "Half area size", :kind :int, :value-type "gint"} {:name "search", :blurb "Search to improve tie-points", :kind :boolean, :value-type "gboolean"} {:name "mblend", :blurb "Maximum blend size", :kind :int, :value-type "gint"} {:name "bandno", :blurb "Band to search for features on", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :msb                   {:id :msb, :operation-name "msb", :description "pick most-significant byte from an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "band", :blurb "Band to msb", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :multiply              {:id :multiply, :operation-name "multiply", :description "multiply two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :percent               {:id :percent, :operation-name "percent", :description "find threshold for percent of pixels", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "percent", :blurb "Percent of pixels", :kind :double, :value-type "gdouble"}], :optional-inputs [], :outputs [{:name "threshold", :blurb "Threshold above which lie percent of pixels", :kind :int, :value-type "gint"}]}
-   :perlin                {:id :perlin, :operation-name "perlin", :description "make a perlin noise image", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "cell-size", :blurb "Size of Perlin cells", :kind :int, :value-type "gint"} {:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "seed", :blurb "Random number seed", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :phasecor              {:id :phasecor, :operation-name "phasecor", :description "calculate phase correlation", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "in2", :blurb "Second input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :pngload               {:id :pngload, :operation-name "pngload", :description "load png from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "unlimited", :blurb "Remove all denial of service limits", :kind :boolean, :value-type "gboolean"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :pngsave               {:id :pngsave, :operation-name "pngsave", :description "save image to file as PNG", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "compression", :blurb "Compression factor", :kind :int, :value-type "gint"} {:name "interlace", :blurb "Interlace image", :kind :boolean, :value-type "gboolean"} {:name "filter", :blurb "libspng row filter flag(s)", :kind :flags, :value-type "VipsForeignPngFilter"} {:name "palette", :blurb "Quantise to 8bpp palette", :kind :boolean, :value-type "gboolean"} {:name "colours", :blurb "Max number of palette colours", :kind :int, :value-type "gint"} {:name "Q", :blurb "Quantisation quality", :kind :int, :value-type "gint"} {:name "dither", :blurb "Amount of dithering", :kind :double, :value-type "gdouble"} {:name "bitdepth", :blurb "Write as a 1, 2, 4, 8 or 16 bit image", :kind :int, :value-type "gint"} {:name "effort", :blurb "Quantisation CPU effort", :kind :int, :value-type "gint"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :premultiply           {:id :premultiply, :operation-name "premultiply", :description "premultiply image alpha", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "max-alpha", :blurb "Maximum value of alpha channel", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :prewitt               {:id :prewitt, :operation-name "prewitt", :description "Prewitt edge detector", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :profile               {:id :profile, :operation-name "profile", :description "find image profiles", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "columns", :blurb "First non-zero pixel in column", :kind :object, :value-type "VipsImage"} {:name "rows", :blurb "First non-zero pixel in row", :kind :object, :value-type "VipsImage"}]}
-   :project               {:id :project, :operation-name "project", :description "find image projections", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "columns", :blurb "Sums of columns", :kind :object, :value-type "VipsImage"} {:name "rows", :blurb "Sums of rows", :kind :object, :value-type "VipsImage"}]}
-   :quadratic             {:id :quadratic, :operation-name "quadratic", :description "resample an image with a quadratic transform", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "coeff", :blurb "Coefficient matrix", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :rad2float             {:id :rad2float, :operation-name "rad2float", :description "unpack Radiance coding to float RGB", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :rank                  {:id :rank, :operation-name "rank", :description "rank filter", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "width", :blurb "Window width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Window height in pixels", :kind :int, :value-type "gint"} {:name "index", :blurb "Select pixel at index", :kind :int, :value-type "gint"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :rawload               {:id :rawload, :operation-name "rawload", :description "load raw data from a file", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"} {:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "bands", :blurb "Number of bands in image", :kind :int, :value-type "gint"}], :optional-inputs [{:name "offset", :blurb "Offset in bytes from start of file", :kind :uint64, :value-type "guint64"} {:name "format", :blurb "Pixel format in image", :kind :enum, :value-type "VipsBandFormat"} {:name "interpretation", :blurb "Pixel interpretation", :kind :enum, :value-type "VipsInterpretation"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :rawsave               {:id :rawsave, :operation-name "rawsave", :description "save image to raw file", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :recomb                {:id :recomb, :operation-name "recomb", :description "linear recombination with matrix", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "m", :blurb "Matrix of coefficients", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :reduce                {:id :reduce, :operation-name "reduce", :description "reduce an image", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "xshrink", :blurb "Horizontal shrink factor", :kind :double, :value-type "gdouble"} {:name "hshrink", :blurb "Horizontal shrink factor", :kind :double, :value-type "gdouble"} {:name "yshrink", :blurb "Vertical shrink factor", :kind :double, :value-type "gdouble"} {:name "vshrink", :blurb "Vertical shrink factor", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "kernel", :blurb "Resampling kernel", :kind :enum, :value-type "VipsKernel"} {:name "gap", :blurb "Reducing gap", :kind :double, :value-type "gdouble"} {:name "centre", :blurb "Use centre sampling convention", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :reduceh               {:id :reduceh, :operation-name "reduceh", :description "shrink an image horizontally", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "xshrink", :blurb "Horizontal shrink factor", :kind :double, :value-type "gdouble"} {:name "hshrink", :blurb "Horizontal shrink factor", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "kernel", :blurb "Resampling kernel", :kind :enum, :value-type "VipsKernel"} {:name "gap", :blurb "Reducing gap", :kind :double, :value-type "gdouble"} {:name "centre", :blurb "Use centre sampling convention", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :reducev               {:id :reducev, :operation-name "reducev", :description "shrink an image vertically", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "yshrink", :blurb "Vertical shrink factor", :kind :double, :value-type "gdouble"} {:name "vshrink", :blurb "Vertical shrink factor", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "kernel", :blurb "Resampling kernel", :kind :enum, :value-type "VipsKernel"} {:name "gap", :blurb "Reducing gap", :kind :double, :value-type "gdouble"} {:name "centre", :blurb "Use centre sampling convention", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :relational            {:id :relational, :operation-name "relational", :description "relational operation on two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"} {:name "relational", :blurb "Relational to perform", :kind :enum, :value-type "VipsOperationRelational"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :remainder             {:id :remainder, :operation-name "remainder", :description "remainder after integer division of two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :remosaic              {:id :remosaic, :operation-name "remosaic", :description "rebuild an mosaiced image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "old-str", :blurb "Search for this string", :kind :string, :value-type "gchararray"} {:name "new-str", :blurb "And swap for this string", :kind :string, :value-type "gchararray"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :replicate             {:id :replicate, :operation-name "replicate", :description "replicate an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "across", :blurb "Repeat this many times horizontally", :kind :int, :value-type "gint"} {:name "down", :blurb "Repeat this many times vertically", :kind :int, :value-type "gint"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :resize                {:id :resize, :operation-name "resize", :description "resize an image", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "scale", :blurb "Scale image by this factor", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "kernel", :blurb "Resampling kernel", :kind :enum, :value-type "VipsKernel"} {:name "gap", :blurb "Reducing gap", :kind :double, :value-type "gdouble"} {:name "centre", :blurb "Use centre sampling convention", :kind :boolean, :value-type "gboolean"} {:name "vscale", :blurb "Vertical scale image by this factor", :kind :double, :value-type "gdouble"} {:name "idx", :blurb "Horizontal input displacement", :kind :double, :value-type "gdouble"} {:name "idy", :blurb "Vertical input displacement", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :rot                   {:id :rot, :operation-name "rot", :description "rotate an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "angle", :blurb "Angle to rotate image", :kind :enum, :value-type "VipsAngle"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :rot45                 {:id :rot45, :operation-name "rot45", :description "rotate an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "angle", :blurb "Angle to rotate image", :kind :enum, :value-type "VipsAngle45"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :rotate                {:id :rotate, :operation-name "rotate", :description "rotate an image by a number of degrees", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "angle", :blurb "Rotate clockwise by this many degrees", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "odx", :blurb "Horizontal output displacement", :kind :double, :value-type "gdouble"} {:name "ody", :blurb "Vertical output displacement", :kind :double, :value-type "gdouble"} {:name "idx", :blurb "Horizontal input displacement", :kind :double, :value-type "gdouble"} {:name "idy", :blurb "Vertical input displacement", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :round                 {:id :round, :operation-name "round", :description "perform a round function on an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "round", :blurb "Rounding operation to perform", :kind :enum, :value-type "VipsOperationRound"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :s-rgb2-hsv            {:id :s-rgb2-hsv, :operation-name "sRGB2HSV", :description "transform sRGB to HSV", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :s-rgb2sc-rgb          {:id :s-rgb2sc-rgb, :operation-name "sRGB2scRGB", :description "convert an sRGB image to scRGB", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sc-rgb2-bw            {:id :sc-rgb2-bw, :operation-name "scRGB2BW", :description "convert scRGB to BW", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "depth", :blurb "Output device space depth in bits", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sc-rgb2-xyz           {:id :sc-rgb2-xyz, :operation-name "scRGB2XYZ", :description "transform scRGB to XYZ", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sc-rgb2s-rgb          {:id :sc-rgb2s-rgb, :operation-name "scRGB2sRGB", :description "convert scRGB to sRGB", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "depth", :blurb "Output device space depth in bits", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :scale                 {:id :scale, :operation-name "scale", :description "scale an image to uchar", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "exp", :blurb "Exponent for log scale", :kind :double, :value-type "gdouble"} {:name "log", :blurb "Log scale", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :scharr                {:id :scharr, :operation-name "scharr", :description "Scharr edge detector", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sdf                   {:id :sdf, :operation-name "sdf", :description "create an SDF image", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"} {:name "shape", :blurb "SDF shape to create", :kind :enum, :value-type "VipsSdfShape"}], :optional-inputs [{:name "r", :blurb "Radius", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sequential            {:id :sequential, :operation-name "sequential", :description "check sequential access", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "trace", :blurb "Trace pixel requests", :kind :boolean, :value-type "gboolean"} {:name "tile-height", :blurb "Tile height in pixels", :kind :int, :value-type "gint"} {:name "access", :blurb "Expected access pattern", :kind :enum, :value-type "VipsAccess"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sharpen               {:id :sharpen, :operation-name "sharpen", :description "unsharp masking for print", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "radius", :blurb "Radius of Gaussian", :kind :int, :value-type "gint"} {:name "sigma", :blurb "Sigma of Gaussian", :kind :double, :value-type "gdouble"} {:name "x1", :blurb "Flat/jaggy threshold", :kind :double, :value-type "gdouble"} {:name "y2", :blurb "Maximum brightening", :kind :double, :value-type "gdouble"} {:name "y3", :blurb "Maximum darkening", :kind :double, :value-type "gdouble"} {:name "m1", :blurb "Slope for flat areas", :kind :double, :value-type "gdouble"} {:name "m2", :blurb "Slope for jaggy areas", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :shrink                {:id :shrink, :operation-name "shrink", :description "shrink an image", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "xshrink", :blurb "Horizontal shrink factor", :kind :double, :value-type "gdouble"} {:name "hshrink", :blurb "Horizontal shrink factor", :kind :double, :value-type "gdouble"} {:name "yshrink", :blurb "Vertical shrink factor", :kind :double, :value-type "gdouble"} {:name "vshrink", :blurb "Vertical shrink factor", :kind :double, :value-type "gdouble"}], :optional-inputs [{:name "ceil", :blurb "Round-up output dimensions", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :shrinkh               {:id :shrinkh, :operation-name "shrinkh", :description "shrink an image horizontally", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "xshrink", :blurb "Horizontal shrink factor", :kind :int, :value-type "gint"} {:name "hshrink", :blurb "Horizontal shrink factor", :kind :int, :value-type "gint"}], :optional-inputs [{:name "ceil", :blurb "Round-up output dimensions", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :shrinkv               {:id :shrinkv, :operation-name "shrinkv", :description "shrink an image vertically", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "yshrink", :blurb "Vertical shrink factor", :kind :int, :value-type "gint"} {:name "vshrink", :blurb "Vertical shrink factor", :kind :int, :value-type "gint"}], :optional-inputs [{:name "ceil", :blurb "Round-up output dimensions", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sign                  {:id :sign, :operation-name "sign", :description "unit vector of pixel", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :similarity            {:id :similarity, :operation-name "similarity", :description "similarity transform of an image", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "scale", :blurb "Scale by this factor", :kind :double, :value-type "gdouble"} {:name "angle", :blurb "Rotate clockwise by this many degrees", :kind :double, :value-type "gdouble"} {:name "odx", :blurb "Horizontal output displacement", :kind :double, :value-type "gdouble"} {:name "ody", :blurb "Vertical output displacement", :kind :double, :value-type "gdouble"} {:name "idx", :blurb "Horizontal input displacement", :kind :double, :value-type "gdouble"} {:name "idy", :blurb "Vertical input displacement", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sines                 {:id :sines, :operation-name "sines", :description "make a 2D sine wave", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"} {:name "hfreq", :blurb "Horizontal spatial frequency", :kind :double, :value-type "gdouble"} {:name "vfreq", :blurb "Vertical spatial frequency", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :smartcrop             {:id :smartcrop, :operation-name "smartcrop", :description "extract an area from an image", :required-inputs [{:name "input", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "width", :blurb "Width of extract area", :kind :int, :value-type "gint"} {:name "height", :blurb "Height of extract area", :kind :int, :value-type "gint"}], :optional-inputs [{:name "interesting", :blurb "How to measure interestingness", :kind :enum, :value-type "VipsInteresting"} {:name "premultiplied", :blurb "Input image already has premultiplied alpha", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "attention-x", :blurb "Horizontal position of attention centre", :kind :int, :value-type "gint"} {:name "attention-y", :blurb "Vertical position of attention centre", :kind :int, :value-type "gint"}]}
-   :sobel                 {:id :sobel, :operation-name "sobel", :description "Sobel edge detector", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :spcor                 {:id :spcor, :operation-name "spcor", :description "spatial correlation", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "ref", :blurb "Input reference image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :spectrum              {:id :spectrum, :operation-name "spectrum", :description "make displayable power spectrum", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :stats                 {:id :stats, :operation-name "stats", :description "find many image stats", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output array of statistics", :kind :object, :value-type "VipsImage"}]}
-   :stdif                 {:id :stdif, :operation-name "stdif", :description "statistical difference", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "width", :blurb "Window width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Window height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "s0", :blurb "New deviation", :kind :double, :value-type "gdouble"} {:name "b", :blurb "Weight of new deviation", :kind :double, :value-type "gdouble"} {:name "m0", :blurb "New mean", :kind :double, :value-type "gdouble"} {:name "a", :blurb "Weight of new mean", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :subsample             {:id :subsample, :operation-name "subsample", :description "subsample an image", :required-inputs [{:name "input", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "xfac", :blurb "Horizontal subsample factor", :kind :int, :value-type "gint"} {:name "yfac", :blurb "Vertical subsample factor", :kind :int, :value-type "gint"}], :optional-inputs [{:name "point", :blurb "Point sample", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :subtract              {:id :subtract, :operation-name "subtract", :description "subtract two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :kind :object, :value-type "VipsImage"} {:name "right", :blurb "Right-hand image argument", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :sum                   {:id :sum, :operation-name "sum", :description "sum an array of images", :required-inputs [{:name "in", :blurb "Array of input images", :kind :boxed, :value-type "VipsArrayImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :svgload               {:id :svgload, :operation-name "svgload", :description "load SVG with rsvg", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "dpi", :blurb "Render at this DPI", :kind :double, :value-type "gdouble"} {:name "scale", :blurb "Scale output by this factor", :kind :double, :value-type "gdouble"} {:name "unlimited", :blurb "Allow SVG of any size", :kind :boolean, :value-type "gboolean"} {:name "stylesheet", :blurb "Custom CSS", :kind :string, :value-type "gchararray"} {:name "high-bitdepth", :blurb "Enable scRGB 128-bit output (32-bit per channel)", :kind :boolean, :value-type "gboolean"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :switch                {:id :switch, :operation-name "switch", :description "find the index of the first non-zero pixel in tests", :required-inputs [{:name "tests", :blurb "Table of images to test", :kind :boxed, :value-type "VipsArrayImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :system                {:id :system, :operation-name "system", :description "run an external command", :required-inputs [{:name "cmd-format", :blurb "Command to run", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "in", :blurb "Array of input images", :kind :boxed, :value-type "VipsArrayImage"} {:name "out-format", :blurb "Format for output filename", :kind :string, :value-type "gchararray"} {:name "in-format", :blurb "Format for input filename", :kind :string, :value-type "gchararray"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "log", :blurb "Command log", :kind :string, :value-type "gchararray"}]}
-   :text                  {:id :text, :operation-name "text", :description "make a text image", :required-inputs [{:name "text", :blurb "Text to render", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "font", :blurb "Font to render with", :kind :string, :value-type "gchararray"} {:name "width", :blurb "Maximum image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Maximum image height in pixels", :kind :int, :value-type "gint"} {:name "align", :blurb "Align on the low, centre or high edge", :kind :enum, :value-type "VipsAlign"} {:name "justify", :blurb "Justify lines", :kind :boolean, :value-type "gboolean"} {:name "dpi", :blurb "DPI to render at", :kind :int, :value-type "gint"} {:name "spacing", :blurb "Line spacing", :kind :int, :value-type "gint"} {:name "fontfile", :blurb "Load this font file", :kind :string, :value-type "gchararray"} {:name "rgba", :blurb "Enable RGBA output", :kind :boolean, :value-type "gboolean"} {:name "wrap", :blurb "Wrap lines on word or character boundaries", :kind :enum, :value-type "VipsTextWrap"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "autofit-dpi", :blurb "DPI selected by autofit", :kind :int, :value-type "gint"}]}
-   :thumbnail             {:id :thumbnail, :operation-name "thumbnail", :description "generate thumbnail from file", :required-inputs [{:name "filename", :blurb "Filename to read from", :kind :string, :value-type "gchararray"} {:name "width", :blurb "Size to this width", :kind :int, :value-type "gint"}], :optional-inputs [{:name "height", :blurb "Size to this height", :kind :int, :value-type "gint"} {:name "size", :blurb "Only upsize, only downsize, or both", :kind :enum, :value-type "VipsSize"} {:name "no-rotate", :blurb "Don't use orientation tags to rotate image upright", :kind :boolean, :value-type "gboolean"} {:name "crop", :blurb "Reduce to fill target rectangle, then crop", :kind :enum, :value-type "VipsInteresting"} {:name "linear", :blurb "Reduce in linear light", :kind :boolean, :value-type "gboolean"} {:name "input-profile", :blurb "Fallback input profile", :kind :string, :value-type "gchararray"} {:name "output-profile", :blurb "Fallback output profile", :kind :string, :value-type "gchararray"} {:name "intent", :blurb "Rendering intent", :kind :enum, :value-type "VipsIntent"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "auto-rotate", :blurb "Use orientation tags to rotate image upright", :kind :boolean, :value-type "gboolean"} {:name "import-profile", :blurb "Fallback import profile", :kind :string, :value-type "gchararray"} {:name "export-profile", :blurb "Fallback export profile", :kind :string, :value-type "gchararray"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :thumbnail-image       {:id :thumbnail-image, :operation-name "thumbnail_image", :description "generate thumbnail from image", :required-inputs [{:name "in", :blurb "Input image argument", :kind :object, :value-type "VipsImage"} {:name "width", :blurb "Size to this width", :kind :int, :value-type "gint"}], :optional-inputs [{:name "height", :blurb "Size to this height", :kind :int, :value-type "gint"} {:name "size", :blurb "Only upsize, only downsize, or both", :kind :enum, :value-type "VipsSize"} {:name "no-rotate", :blurb "Don't use orientation tags to rotate image upright", :kind :boolean, :value-type "gboolean"} {:name "crop", :blurb "Reduce to fill target rectangle, then crop", :kind :enum, :value-type "VipsInteresting"} {:name "linear", :blurb "Reduce in linear light", :kind :boolean, :value-type "gboolean"} {:name "input-profile", :blurb "Fallback input profile", :kind :string, :value-type "gchararray"} {:name "output-profile", :blurb "Fallback output profile", :kind :string, :value-type "gchararray"} {:name "intent", :blurb "Rendering intent", :kind :enum, :value-type "VipsIntent"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "auto-rotate", :blurb "Use orientation tags to rotate image upright", :kind :boolean, :value-type "gboolean"} {:name "import-profile", :blurb "Fallback import profile", :kind :string, :value-type "gchararray"} {:name "export-profile", :blurb "Fallback export profile", :kind :string, :value-type "gchararray"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :tiffload              {:id :tiffload, :operation-name "tiffload", :description "load tiff from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "page", :blurb "First page to load", :kind :int, :value-type "gint"} {:name "n", :blurb "Number of pages to load, -1 for all", :kind :int, :value-type "gint"} {:name "autorotate", :blurb "Rotate image using orientation tag", :kind :boolean, :value-type "gboolean"} {:name "subifd", :blurb "Subifd index", :kind :int, :value-type "gint"} {:name "unlimited", :blurb "Remove all denial of service limits", :kind :boolean, :value-type "gboolean"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :tiffsave              {:id :tiffsave, :operation-name "tiffsave", :description "save image to tiff file", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "compression", :blurb "Compression for this file", :kind :enum, :value-type "VipsForeignTiffCompression"} {:name "Q", :blurb "Q factor", :kind :int, :value-type "gint"} {:name "predictor", :blurb "Compression prediction", :kind :enum, :value-type "VipsForeignTiffPredictor"} {:name "tile", :blurb "Write a tiled tiff", :kind :boolean, :value-type "gboolean"} {:name "tile-width", :blurb "Tile width in pixels", :kind :int, :value-type "gint"} {:name "tile-height", :blurb "Tile height in pixels", :kind :int, :value-type "gint"} {:name "pyramid", :blurb "Write a pyramidal tiff", :kind :boolean, :value-type "gboolean"} {:name "miniswhite", :blurb "Use 0 for white in 1-bit images", :kind :boolean, :value-type "gboolean"} {:name "bitdepth", :blurb "Write as a 1, 2, 4 or 8 bit image", :kind :int, :value-type "gint"} {:name "resunit", :blurb "Resolution unit", :kind :enum, :value-type "VipsForeignTiffResunit"} {:name "xres", :blurb "Horizontal resolution in pixels/mm", :kind :double, :value-type "gdouble"} {:name "yres", :blurb "Vertical resolution in pixels/mm", :kind :double, :value-type "gdouble"} {:name "bigtiff", :blurb "Write a bigtiff image", :kind :boolean, :value-type "gboolean"} {:name "properties", :blurb "Write a properties document to IMAGEDESCRIPTION", :kind :boolean, :value-type "gboolean"} {:name "region-shrink", :blurb "Method to shrink regions", :kind :enum, :value-type "VipsRegionShrink"} {:name "level", :blurb "Deflate (1-9, default 6) or ZSTD (1-22, default 9) compression level", :kind :int, :value-type "gint"} {:name "lossless", :blurb "Enable WEBP lossless mode", :kind :boolean, :value-type "gboolean"} {:name "depth", :blurb "Pyramid depth", :kind :enum, :value-type "VipsForeignDzDepth"} {:name "subifd", :blurb "Save pyr layers as sub-IFDs", :kind :boolean, :value-type "gboolean"} {:name "premultiply", :blurb "Save with premultiplied alpha", :kind :boolean, :value-type "gboolean"} {:name "rgbjpeg", :blurb "Output RGB JPEG rather than YCbCr", :kind :boolean, :value-type "gboolean"} {:name "squash", :blurb "Squash images down to 1 bit", :kind :boolean, :value-type "gboolean"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :tilecache             {:id :tilecache, :operation-name "tilecache", :description "cache an image as a set of tiles", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "tile-width", :blurb "Tile width in pixels", :kind :int, :value-type "gint"} {:name "tile-height", :blurb "Tile height in pixels", :kind :int, :value-type "gint"} {:name "max-tiles", :blurb "Maximum number of tiles to cache", :kind :int, :value-type "gint"} {:name "access", :blurb "Expected access pattern", :kind :enum, :value-type "VipsAccess"} {:name "threaded", :blurb "Allow threaded access", :kind :boolean, :value-type "gboolean"} {:name "persistent", :blurb "Keep cache between evaluations", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :tonelut               {:id :tonelut, :operation-name "tonelut", :description "build a look-up table", :required-inputs [], :optional-inputs [{:name "in-max", :blurb "Size of LUT to build", :kind :int, :value-type "gint"} {:name "out-max", :blurb "Maximum value in output LUT", :kind :int, :value-type "gint"} {:name "Lb", :blurb "Lowest value in output", :kind :double, :value-type "gdouble"} {:name "Lw", :blurb "Highest value in output", :kind :double, :value-type "gdouble"} {:name "Ps", :blurb "Position of shadow", :kind :double, :value-type "gdouble"} {:name "Pm", :blurb "Position of mid-tones", :kind :double, :value-type "gdouble"} {:name "Ph", :blurb "Position of highlights", :kind :double, :value-type "gdouble"} {:name "S", :blurb "Adjust shadows by this much", :kind :double, :value-type "gdouble"} {:name "M", :blurb "Adjust mid-tones by this much", :kind :double, :value-type "gdouble"} {:name "H", :blurb "Adjust highlights by this much", :kind :double, :value-type "gdouble"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :transpose3d           {:id :transpose3d, :operation-name "transpose3d", :description "transpose3d an image", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "page-height", :blurb "Height of each input page", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :unpremultiply         {:id :unpremultiply, :operation-name "unpremultiply", :description "unpremultiply image alpha", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "max-alpha", :blurb "Maximum value of alpha channel", :kind :double, :value-type "gdouble"} {:name "alpha-band", :blurb "Unpremultiply with this alpha", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :vipsload              {:id :vipsload, :operation-name "vipsload", :description "load vips from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :vipssave              {:id :vipssave, :operation-name "vipssave", :description "save image to file in vips format", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :webpload              {:id :webpload, :operation-name "webpload", :description "load webp from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "page", :blurb "First page to load", :kind :int, :value-type "gint"} {:name "n", :blurb "Number of pages to load, -1 for all", :kind :int, :value-type "gint"} {:name "scale", :blurb "Factor to scale by", :kind :double, :value-type "gdouble"} {:name "shrink", :blurb "Shrink factor on load", :kind :int, :value-type "gint"} {:name "memory", :blurb "Force open via memory", :kind :boolean, :value-type "gboolean"} {:name "access", :blurb "Required access pattern for this file", :kind :enum, :value-type "VipsAccess"} {:name "fail-on", :blurb "Error level to fail on", :kind :enum, :value-type "VipsFailOn"} {:name "revalidate", :blurb "Don't use a cached result for this operation", :kind :boolean, :value-type "gboolean"} {:name "sequential", :blurb "Sequential read only", :kind :boolean, :value-type "gboolean"} {:name "fail", :blurb "Fail on first warning", :kind :boolean, :value-type "gboolean"} {:name "disc", :blurb "Open to disc", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"} {:name "flags", :blurb "Flags for this file", :kind :flags, :value-type "VipsForeignFlags"}]}
-   :webpsave              {:id :webpsave, :operation-name "webpsave", :description "save as WebP", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"} {:name "filename", :blurb "Filename to save to", :kind :string, :value-type "gchararray"}], :optional-inputs [{:name "Q", :blurb "Q factor", :kind :int, :value-type "gint"} {:name "lossless", :blurb "Enable lossless compression", :kind :boolean, :value-type "gboolean"} {:name "preset", :blurb "Preset for lossy compression", :kind :enum, :value-type "VipsForeignWebpPreset"} {:name "smart-subsample", :blurb "Enable high quality chroma subsampling", :kind :boolean, :value-type "gboolean"} {:name "near-lossless", :blurb "Enable preprocessing in lossless mode (uses Q)", :kind :boolean, :value-type "gboolean"} {:name "alpha-q", :blurb "Change alpha plane fidelity for lossy compression", :kind :int, :value-type "gint"} {:name "min-size", :blurb "Optimise for minimum size", :kind :boolean, :value-type "gboolean"} {:name "kmin", :blurb "Minimum number of frames between key frames", :kind :int, :value-type "gint"} {:name "kmax", :blurb "Maximum number of frames between key frames", :kind :int, :value-type "gint"} {:name "effort", :blurb "Level of CPU effort to reduce file size", :kind :int, :value-type "gint"} {:name "target-size", :blurb "Desired target size in bytes", :kind :int, :value-type "gint"} {:name "reduction-effort", :blurb "Level of CPU effort to reduce file size", :kind :int, :value-type "gint"} {:name "mixed", :blurb "Allow mixed encoding (might reduce file size)", :kind :boolean, :value-type "gboolean"} {:name "smart-deblock", :blurb "Enable auto-adjusting of the deblocking filter", :kind :boolean, :value-type "gboolean"} {:name "passes", :blurb "Number of entropy-analysis passes (in [1..10])", :kind :int, :value-type "gint"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :webpsave-mime         {:id :webpsave-mime, :operation-name "webpsave_mime", :description "save image to webp mime", :required-inputs [{:name "in", :blurb "Image to save", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "Q", :blurb "Q factor", :kind :int, :value-type "gint"} {:name "lossless", :blurb "Enable lossless compression", :kind :boolean, :value-type "gboolean"} {:name "preset", :blurb "Preset for lossy compression", :kind :enum, :value-type "VipsForeignWebpPreset"} {:name "smart-subsample", :blurb "Enable high quality chroma subsampling", :kind :boolean, :value-type "gboolean"} {:name "near-lossless", :blurb "Enable preprocessing in lossless mode (uses Q)", :kind :boolean, :value-type "gboolean"} {:name "alpha-q", :blurb "Change alpha plane fidelity for lossy compression", :kind :int, :value-type "gint"} {:name "min-size", :blurb "Optimise for minimum size", :kind :boolean, :value-type "gboolean"} {:name "kmin", :blurb "Minimum number of frames between key frames", :kind :int, :value-type "gint"} {:name "kmax", :blurb "Maximum number of frames between key frames", :kind :int, :value-type "gint"} {:name "effort", :blurb "Level of CPU effort to reduce file size", :kind :int, :value-type "gint"} {:name "target-size", :blurb "Desired target size in bytes", :kind :int, :value-type "gint"} {:name "reduction-effort", :blurb "Level of CPU effort to reduce file size", :kind :int, :value-type "gint"} {:name "mixed", :blurb "Allow mixed encoding (might reduce file size)", :kind :boolean, :value-type "gboolean"} {:name "smart-deblock", :blurb "Enable auto-adjusting of the deblocking filter", :kind :boolean, :value-type "gboolean"} {:name "passes", :blurb "Number of entropy-analysis passes (in [1..10])", :kind :int, :value-type "gint"} {:name "keep", :blurb "Which metadata to retain", :kind :flags, :value-type "VipsForeignKeep"} {:name "page-height", :blurb "Set page height for multipage save", :kind :int, :value-type "gint"} {:name "profile", :blurb "Filename of ICC profile to embed", :kind :string, :value-type "gchararray"} {:name "strip", :blurb "Strip all metadata from image", :kind :boolean, :value-type "gboolean"}], :outputs []}
-   :worley                {:id :worley, :operation-name "worley", :description "make a worley noise image", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "cell-size", :blurb "Size of Worley cells", :kind :int, :value-type "gint"} {:name "seed", :blurb "Random number seed", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :wrap                  {:id :wrap, :operation-name "wrap", :description "wrap image origin", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [{:name "x", :blurb "Left edge of input in output", :kind :int, :value-type "gint"} {:name "y", :blurb "Top edge of input in output", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :xyz                   {:id :xyz, :operation-name "xyz", :description "make an image where pixel values are coordinates", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "csize", :blurb "Size of third dimension", :kind :int, :value-type "gint"} {:name "dsize", :blurb "Size of fourth dimension", :kind :int, :value-type "gint"} {:name "esize", :blurb "Size of fifth dimension", :kind :int, :value-type "gint"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :xyz2-cmyk             {:id :xyz2-cmyk, :operation-name "XYZ2CMYK", :description "transform XYZ to CMYK", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :xyz2-lab              {:id :xyz2-lab, :operation-name "XYZ2Lab", :description "transform XYZ to Lab", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :xyz2-yxy              {:id :xyz2-yxy, :operation-name "XYZ2Yxy", :description "transform XYZ to Yxy", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :xyz2sc-rgb            {:id :xyz2sc-rgb, :operation-name "XYZ2scRGB", :description "transform XYZ to scRGB", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :yxy2-xyz              {:id :yxy2-xyz, :operation-name "Yxy2XYZ", :description "transform Yxy to XYZ", :required-inputs [{:name "in", :blurb "Input image", :kind :object, :value-type "VipsImage"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :zone                  {:id :zone, :operation-name "zone", :description "make a zone plate", :required-inputs [{:name "width", :blurb "Image width in pixels", :kind :int, :value-type "gint"} {:name "height", :blurb "Image height in pixels", :kind :int, :value-type "gint"}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :kind :boolean, :value-type "gboolean"}], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}
-   :zoom                  {:id :zoom, :operation-name "zoom", :description "zoom an image", :required-inputs [{:name "input", :blurb "Input image", :kind :object, :value-type "VipsImage"} {:name "xfac", :blurb "Horizontal zoom factor", :kind :int, :value-type "gint"} {:name "yfac", :blurb "Vertical zoom factor", :kind :int, :value-type "gint"}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :kind :object, :value-type "VipsImage"}]}})
+  {:abs                   {:id :abs, :operation-name "abs", :description "absolute value of an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :add                   {:id :add, :operation-name "add", :description "add two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :addalpha              {:id :addalpha, :operation-name "addalpha", :description "append an alpha channel", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :arrayjoin             {:id :arrayjoin, :operation-name "arrayjoin", :description "join an array of images", :required-inputs [{:name "in", :blurb "Array of input images", :type {:kind :image-seq, :label "seqable of image"}}], :optional-inputs [{:name "across", :blurb "Number of images across grid", :type {:kind :integer, :label "integer"}} {:name "shim", :blurb "Pixels between images", :type {:kind :integer, :label "integer"}} {:name "halign", :blurb "Align on the left, centre or right", :type {:kind :enum, :label "keyword", :enum-id :align, :reference "ol.vips.enums/align"}} {:name "valign", :blurb "Align on the top, centre or bottom", :type {:kind :enum, :label "keyword", :enum-id :align, :reference "ol.vips.enums/align"}} {:name "hspacing", :blurb "Horizontal spacing between images", :type {:kind :integer, :label "integer"}} {:name "vspacing", :blurb "Vertical spacing between images", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :autorot               {:id :autorot, :operation-name "autorot", :description "autorotate image by exif tag", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "angle", :blurb "Angle image was rotated by", :type {:kind :enum, :label "keyword", :enum-id :angle, :reference "ol.vips.enums/angle"}} {:name "flip", :blurb "Whether the image was flipped or not", :type {:kind :boolean, :label "boolean"}}]}
+   :avg                   {:id :avg, :operation-name "avg", :description "find image average", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output value", :type {:kind :float, :label "float"}}]}
+   :bandbool              {:id :bandbool, :operation-name "bandbool", :description "boolean operation across image bands", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "boolean", :blurb "Boolean to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-boolean, :reference "ol.vips.enums/operation-boolean"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :bandfold              {:id :bandfold, :operation-name "bandfold", :description "fold up x axis into bands", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "factor", :blurb "Fold by this factor", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :bandjoin              {:id :bandjoin, :operation-name "bandjoin", :description "bandwise join a set of images", :required-inputs [{:name "in", :blurb "Array of input images", :type {:kind :image-seq, :label "seqable of image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :bandmean              {:id :bandmean, :operation-name "bandmean", :description "band-wise average", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :bandrank              {:id :bandrank, :operation-name "bandrank", :description "band-wise rank of a set of images", :required-inputs [{:name "in", :blurb "Array of input images", :type {:kind :image-seq, :label "seqable of image"}}], :optional-inputs [{:name "index", :blurb "Select this band element from sorted list", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :bandunfold            {:id :bandunfold, :operation-name "bandunfold", :description "unfold image bands into x axis", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "factor", :blurb "Unfold by this factor", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :black                 {:id :black, :operation-name "black", :description "make a black image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "bands", :blurb "Number of bands in image", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :boolean               {:id :boolean, :operation-name "boolean", :description "boolean operation on two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}} {:name "boolean", :blurb "Boolean to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-boolean, :reference "ol.vips.enums/operation-boolean"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :buildlut              {:id :buildlut, :operation-name "buildlut", :description "build a look-up table", :required-inputs [{:name "in", :blurb "Matrix of XY coordinates", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :byteswap              {:id :byteswap, :operation-name "byteswap", :description "byteswap an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :cache                 {:id :cache, :operation-name "cache", :description "cache an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "max-tiles", :blurb "Maximum number of tiles to cache", :type {:kind :integer, :label "integer"}} {:name "tile-height", :blurb "Tile height in pixels", :type {:kind :integer, :label "integer"}} {:name "tile-width", :blurb "Tile width in pixels", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :canny                 {:id :canny, :operation-name "canny", :description "Canny edge detector", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "sigma", :blurb "Sigma of Gaussian", :type {:kind :float, :label "float"}} {:name "precision", :blurb "Convolve with this precision", :type {:kind :enum, :label "keyword", :enum-id :precision, :reference "ol.vips.enums/precision"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :case                  {:id :case, :operation-name "case", :description "use pixel values to pick cases from an array of images", :required-inputs [{:name "index", :blurb "Index image", :type {:kind :image, :label "image"}} {:name "cases", :blurb "Array of case images", :type {:kind :image-seq, :label "seqable of image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :cast                  {:id :cast, :operation-name "cast", :description "cast an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "format", :blurb "Format to cast to", :type {:kind :enum, :label "keyword", :enum-id :band-format, :reference "ol.vips.enums/band-format"}}], :optional-inputs [{:name "shift", :blurb "Shift integer values up and down", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :clamp                 {:id :clamp, :operation-name "clamp", :description "clamp values of an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "min", :blurb "Minimum value", :type {:kind :float, :label "float"}} {:name "max", :blurb "Maximum value", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :cmc2-lch              {:id :cmc2-lch, :operation-name "CMC2LCh", :description "transform LCh to CMC", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :cmyk2-xyz             {:id :cmyk2-xyz, :operation-name "CMYK2XYZ", :description "transform CMYK to XYZ", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :colourspace           {:id :colourspace, :operation-name "colourspace", :description "convert to a new colorspace", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "space", :blurb "Destination color space", :type {:kind :enum, :label "keyword", :enum-id :interpretation, :reference "ol.vips.enums/interpretation"}}], :optional-inputs [{:name "source-space", :blurb "Source color space", :type {:kind :enum, :label "keyword", :enum-id :interpretation, :reference "ol.vips.enums/interpretation"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :compass               {:id :compass, :operation-name "compass", :description "convolve with rotating mask", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input matrix image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "times", :blurb "Rotate and convolve this many times", :type {:kind :integer, :label "integer"}} {:name "angle", :blurb "Rotate mask by this much between convolutions", :type {:kind :enum, :label "keyword", :enum-id :angle45, :reference "ol.vips.enums/angle45"}} {:name "combine", :blurb "Combine convolution results like this", :type {:kind :enum, :label "keyword", :enum-id :combine, :reference "ol.vips.enums/combine"}} {:name "precision", :blurb "Convolve with this precision", :type {:kind :enum, :label "keyword", :enum-id :precision, :reference "ol.vips.enums/precision"}} {:name "layers", :blurb "Use this many layers in approximation", :type {:kind :integer, :label "integer"}} {:name "cluster", :blurb "Cluster lines closer than this in approximation", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :complex               {:id :complex, :operation-name "complex", :description "perform a complex operation on an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "cmplx", :blurb "Complex to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-complex, :reference "ol.vips.enums/operation-complex"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :complex2              {:id :complex2, :operation-name "complex2", :description "complex binary operations on two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}} {:name "cmplx", :blurb "Binary complex operation to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-complex2, :reference "ol.vips.enums/operation-complex2"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :complexform           {:id :complexform, :operation-name "complexform", :description "form a complex image from two real images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :complexget            {:id :complexget, :operation-name "complexget", :description "get a component from a complex image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "get", :blurb "Complex to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-complexget, :reference "ol.vips.enums/operation-complexget"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :composite2            {:id :composite2, :operation-name "composite2", :description "blend a pair of images with a blend mode", :required-inputs [{:name "base", :blurb "Base image", :type {:kind :image, :label "image"}} {:name "overlay", :blurb "Overlay image", :type {:kind :image, :label "image"}} {:name "mode", :blurb "VipsBlendMode to join with", :type {:kind :enum, :label "keyword", :enum-id :blend-mode, :reference "ol.vips.enums/blend-mode"}}], :optional-inputs [{:name "x", :blurb "x position of overlay", :type {:kind :integer, :label "integer"}} {:name "y", :blurb "y position of overlay", :type {:kind :integer, :label "integer"}} {:name "compositing-space", :blurb "Composite images in this colour space", :type {:kind :enum, :label "keyword", :enum-id :interpretation, :reference "ol.vips.enums/interpretation"}} {:name "premultiplied", :blurb "Images have premultiplied alpha", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :conv                  {:id :conv, :operation-name "conv", :description "convolution operation", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input matrix image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "precision", :blurb "Convolve with this precision", :type {:kind :enum, :label "keyword", :enum-id :precision, :reference "ol.vips.enums/precision"}} {:name "layers", :blurb "Use this many layers in approximation", :type {:kind :integer, :label "integer"}} {:name "cluster", :blurb "Cluster lines closer than this in approximation", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :conva                 {:id :conva, :operation-name "conva", :description "approximate integer convolution", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input matrix image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "layers", :blurb "Use this many layers in approximation", :type {:kind :integer, :label "integer"}} {:name "cluster", :blurb "Cluster lines closer than this in approximation", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :convasep              {:id :convasep, :operation-name "convasep", :description "approximate separable integer convolution", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input matrix image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "layers", :blurb "Use this many layers in approximation", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :convf                 {:id :convf, :operation-name "convf", :description "float convolution operation", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input matrix image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :convi                 {:id :convi, :operation-name "convi", :description "int convolution operation", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input matrix image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :convsep               {:id :convsep, :operation-name "convsep", :description "separable convolution operation", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input matrix image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "precision", :blurb "Convolve with this precision", :type {:kind :enum, :label "keyword", :enum-id :precision, :reference "ol.vips.enums/precision"}} {:name "layers", :blurb "Use this many layers in approximation", :type {:kind :integer, :label "integer"}} {:name "cluster", :blurb "Cluster lines closer than this in approximation", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :copy                  {:id :copy, :operation-name "copy", :description "copy an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "swap", :blurb "Swap bytes in image between little and big-endian", :type {:kind :boolean, :label "boolean"}} {:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "bands", :blurb "Number of bands in image", :type {:kind :integer, :label "integer"}} {:name "format", :blurb "Pixel format in image", :type {:kind :enum, :label "keyword", :enum-id :band-format, :reference "ol.vips.enums/band-format"}} {:name "coding", :blurb "Pixel coding", :type {:kind :enum, :label "keyword", :enum-id :coding, :reference "ol.vips.enums/coding"}} {:name "interpretation", :blurb "Pixel interpretation", :type {:kind :enum, :label "keyword", :enum-id :interpretation, :reference "ol.vips.enums/interpretation"}} {:name "xres", :blurb "Horizontal resolution in pixels/mm", :type {:kind :float, :label "float"}} {:name "yres", :blurb "Vertical resolution in pixels/mm", :type {:kind :float, :label "float"}} {:name "xoffset", :blurb "Horizontal offset of origin", :type {:kind :integer, :label "integer"}} {:name "yoffset", :blurb "Vertical offset of origin", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :countlines            {:id :countlines, :operation-name "countlines", :description "count lines in an image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Countlines left-right or up-down", :type {:kind :enum, :label "keyword", :enum-id :direction, :reference "ol.vips.enums/direction"}}], :optional-inputs [], :outputs [{:name "nolines", :blurb "Number of lines", :type {:kind :float, :label "float"}}]}
+   :csvload               {:id :csvload, :operation-name "csvload", :description "load csv", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "skip", :blurb "Skip this many lines at the start of the file", :type {:kind :integer, :label "integer"}} {:name "lines", :blurb "Read this many lines from the file", :type {:kind :integer, :label "integer"}} {:name "whitespace", :blurb "Set of whitespace characters", :type {:kind :string, :label "string"}} {:name "separator", :blurb "Set of separator characters", :type {:kind :string, :label "string"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :csvsave               {:id :csvsave, :operation-name "csvsave", :description "save image to csv", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "separator", :blurb "Separator characters", :type {:kind :string, :label "string"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :d-e00                 {:id :d-e00, :operation-name "dE00", :description "calculate dE00", :required-inputs [{:name "left", :blurb "Left-hand input image", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :d-e76                 {:id :d-e76, :operation-name "dE76", :description "calculate dE76", :required-inputs [{:name "left", :blurb "Left-hand input image", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :d-ecmc                {:id :d-ecmc, :operation-name "dECMC", :description "calculate dECMC", :required-inputs [{:name "left", :blurb "Left-hand input image", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :deviate               {:id :deviate, :operation-name "deviate", :description "find image standard deviation", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output value", :type {:kind :float, :label "float"}}]}
+   :divide                {:id :divide, :operation-name "divide", :description "divide two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :draw-image            {:id :draw-image, :operation-name "draw_image", :description "paint an image into another image", :required-inputs [{:name "image", :blurb "Image to draw on", :type {:kind :image, :label "image"}} {:name "sub", :blurb "Sub-image to insert into main image", :type {:kind :image, :label "image"}} {:name "x", :blurb "Draw image here", :type {:kind :integer, :label "integer"}} {:name "y", :blurb "Draw image here", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "mode", :blurb "Combining mode", :type {:kind :enum, :label "keyword", :enum-id :combine-mode, :reference "ol.vips.enums/combine-mode"}}], :outputs []}
+   :draw-smudge           {:id :draw-smudge, :operation-name "draw_smudge", :description "blur a rectangle on an image", :required-inputs [{:name "image", :blurb "Image to draw on", :type {:kind :image, :label "image"}} {:name "left", :blurb "Rect to fill", :type {:kind :integer, :label "integer"}} {:name "top", :blurb "Rect to fill", :type {:kind :integer, :label "integer"}} {:name "width", :blurb "Rect to fill", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Rect to fill", :type {:kind :integer, :label "integer"}}], :optional-inputs [], :outputs []}
+   :dzsave                {:id :dzsave, :operation-name "dzsave", :description "save image to deepzoom file", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "dirname", :blurb "Directory name to save to", :type {:kind :string, :label "string"}} {:name "imagename", :blurb "Image name", :type {:kind :string, :label "string"}} {:name "layout", :blurb "Directory layout", :type {:kind :enum, :label "keyword", :enum-id :foreign-dz-layout, :reference "ol.vips.enums/foreign-dz-layout"}} {:name "suffix", :blurb "Filename suffix for tiles", :type {:kind :string, :label "string"}} {:name "overlap", :blurb "Tile overlap in pixels", :type {:kind :integer, :label "integer"}} {:name "tile-size", :blurb "Tile size in pixels", :type {:kind :integer, :label "integer"}} {:name "tile-height", :blurb "Tile height in pixels", :type {:kind :integer, :label "integer"}} {:name "tile-width", :blurb "Tile width in pixels", :type {:kind :integer, :label "integer"}} {:name "centre", :blurb "Center image in tile", :type {:kind :boolean, :label "boolean"}} {:name "depth", :blurb "Pyramid depth", :type {:kind :enum, :label "keyword", :enum-id :foreign-dz-depth, :reference "ol.vips.enums/foreign-dz-depth"}} {:name "angle", :blurb "Rotate image during save", :type {:kind :enum, :label "keyword", :enum-id :angle, :reference "ol.vips.enums/angle"}} {:name "container", :blurb "Pyramid container type", :type {:kind :enum, :label "keyword", :enum-id :foreign-dz-container, :reference "ol.vips.enums/foreign-dz-container"}} {:name "properties", :blurb "Write a properties file to the output directory", :type {:kind :boolean, :label "boolean"}} {:name "compression", :blurb "ZIP deflate compression level", :type {:kind :integer, :label "integer"}} {:name "region-shrink", :blurb "Method to shrink regions", :type {:kind :enum, :label "keyword", :enum-id :region-shrink, :reference "ol.vips.enums/region-shrink"}} {:name "skip-blanks", :blurb "Skip tiles which are nearly equal to the background", :type {:kind :integer, :label "integer"}} {:name "id", :blurb "Resource ID", :type {:kind :string, :label "string"}} {:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "no-strip", :blurb "Don't strip tile metadata", :type {:kind :boolean, :label "boolean"}} {:name "basename", :blurb "Base name to save to", :type {:kind :string, :label "string"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :embed                 {:id :embed, :operation-name "embed", :description "embed an image in a larger image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "x", :blurb "Left edge of input in output", :type {:kind :integer, :label "integer"}} {:name "y", :blurb "Top edge of input in output", :type {:kind :integer, :label "integer"}} {:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "extend", :blurb "How to generate the extra pixels", :type {:kind :enum, :label "keyword", :enum-id :extend, :reference "ol.vips.enums/extend"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :extract-area          {:id :extract-area, :operation-name "extract_area", :description "extract an area from an image", :required-inputs [{:name "input", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "left", :blurb "Left edge of extract area", :type {:kind :integer, :label "integer"}} {:name "top", :blurb "Top edge of extract area", :type {:kind :integer, :label "integer"}} {:name "width", :blurb "Width of extract area", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Height of extract area", :type {:kind :integer, :label "integer"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :extract-band          {:id :extract-band, :operation-name "extract_band", :description "extract band from an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "band", :blurb "Band to extract", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "n", :blurb "Number of bands to extract", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :eye                   {:id :eye, :operation-name "eye", :description "make an image showing the eye's spatial response", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "factor", :blurb "Maximum spatial frequency", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :falsecolour           {:id :falsecolour, :operation-name "falsecolour", :description "false-color an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :fastcor               {:id :fastcor, :operation-name "fastcor", :description "fast correlation", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "ref", :blurb "Input reference image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :fill-nearest          {:id :fill-nearest, :operation-name "fill_nearest", :description "fill image zeros with nearest non-zero pixel", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Value of nearest non-zero pixel", :type {:kind :image, :label "image"}} {:name "distance", :blurb "Distance to nearest non-zero pixel", :type {:kind :image, :label "image"}}]}
+   :find-trim             {:id :find-trim, :operation-name "find_trim", :description "search an image for non-edge areas", :required-inputs [{:name "in", :blurb "Image to find_trim", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "threshold", :blurb "Object threshold", :type {:kind :float, :label "float"}} {:name "line-art", :blurb "Enable line art mode", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "left", :blurb "Left edge of image", :type {:kind :integer, :label "integer"}} {:name "top", :blurb "Top edge of extract area", :type {:kind :integer, :label "integer"}} {:name "width", :blurb "Width of extract area", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Height of extract area", :type {:kind :integer, :label "integer"}}]}
+   :flatten               {:id :flatten, :operation-name "flatten", :description "flatten alpha out of an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "max-alpha", :blurb "Maximum value of alpha channel", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :flip                  {:id :flip, :operation-name "flip", :description "flip an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Direction to flip image", :type {:kind :enum, :label "keyword", :enum-id :direction, :reference "ol.vips.enums/direction"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :float2rad             {:id :float2rad, :operation-name "float2rad", :description "transform float RGB to Radiance coding", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :fractsurf             {:id :fractsurf, :operation-name "fractsurf", :description "make a fractal surface", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "fractal-dimension", :blurb "Fractal dimension", :type {:kind :float, :label "float"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :freqmult              {:id :freqmult, :operation-name "freqmult", :description "frequency-domain filtering", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input mask image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :gamma                 {:id :gamma, :operation-name "gamma", :description "gamma an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "exponent", :blurb "Gamma factor", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :gaussblur             {:id :gaussblur, :operation-name "gaussblur", :description "gaussian blur", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "sigma", :blurb "Sigma of Gaussian", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "min-ampl", :blurb "Minimum amplitude of Gaussian", :type {:kind :float, :label "float"}} {:name "precision", :blurb "Convolve with this precision", :type {:kind :enum, :label "keyword", :enum-id :precision, :reference "ol.vips.enums/precision"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :gaussmat              {:id :gaussmat, :operation-name "gaussmat", :description "make a gaussian image", :required-inputs [{:name "sigma", :blurb "Sigma of Gaussian", :type {:kind :float, :label "float"}} {:name "min-ampl", :blurb "Minimum amplitude of Gaussian", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "separable", :blurb "Generate separable Gaussian", :type {:kind :boolean, :label "boolean"}} {:name "integer", :blurb "Generate integer Gaussian", :type {:kind :boolean, :label "boolean"}} {:name "precision", :blurb "Generate with this precision", :type {:kind :enum, :label "keyword", :enum-id :precision, :reference "ol.vips.enums/precision"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :gaussnoise            {:id :gaussnoise, :operation-name "gaussnoise", :description "make a gaussnoise image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "sigma", :blurb "Standard deviation of pixels in generated image", :type {:kind :float, :label "float"}} {:name "mean", :blurb "Mean of pixels in generated image", :type {:kind :float, :label "float"}} {:name "seed", :blurb "Random number seed", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :gifload               {:id :gifload, :operation-name "gifload", :description "load GIF with libnsgif", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "n", :blurb "Number of pages to load, -1 for all", :type {:kind :integer, :label "integer"}} {:name "page", :blurb "First page to load", :type {:kind :integer, :label "integer"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :gifsave               {:id :gifsave, :operation-name "gifsave", :description "save as gif", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "dither", :blurb "Amount of dithering", :type {:kind :float, :label "float"}} {:name "effort", :blurb "Quantisation effort", :type {:kind :integer, :label "integer"}} {:name "bitdepth", :blurb "Number of bits per pixel", :type {:kind :integer, :label "integer"}} {:name "interframe-maxerror", :blurb "Maximum inter-frame error for transparency", :type {:kind :float, :label "float"}} {:name "reuse", :blurb "Reuse palette from input", :type {:kind :boolean, :label "boolean"}} {:name "interpalette-maxerror", :blurb "Maximum inter-palette error for palette reusage", :type {:kind :float, :label "float"}} {:name "interlace", :blurb "Generate an interlaced (progressive) GIF", :type {:kind :boolean, :label "boolean"}} {:name "reoptimise", :blurb "Reoptimise colour palettes", :type {:kind :boolean, :label "boolean"}} {:name "keep-duplicate-frames", :blurb "Keep duplicate frames in the output instead of combining them", :type {:kind :boolean, :label "boolean"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :globalbalance         {:id :globalbalance, :operation-name "globalbalance", :description "global balance an image mosaic", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "gamma", :blurb "Image gamma", :type {:kind :float, :label "float"}} {:name "int-output", :blurb "Integer output", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :gravity               {:id :gravity, :operation-name "gravity", :description "place an image within a larger image with a certain gravity", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Direction to place image within width/height", :type {:kind :enum, :label "keyword", :enum-id :compass-direction, :reference "ol.vips.enums/compass-direction"}} {:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "extend", :blurb "How to generate the extra pixels", :type {:kind :enum, :label "keyword", :enum-id :extend, :reference "ol.vips.enums/extend"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :grey                  {:id :grey, :operation-name "grey", :description "make a grey ramp image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :grid                  {:id :grid, :operation-name "grid", :description "grid an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "tile-height", :blurb "Chop into tiles this high", :type {:kind :integer, :label "integer"}} {:name "across", :blurb "Number of tiles across", :type {:kind :integer, :label "integer"}} {:name "down", :blurb "Number of tiles down", :type {:kind :integer, :label "integer"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :heifload              {:id :heifload, :operation-name "heifload", :description "load a HEIF image", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "page", :blurb "First page to load", :type {:kind :integer, :label "integer"}} {:name "n", :blurb "Number of pages to load, -1 for all", :type {:kind :integer, :label "integer"}} {:name "thumbnail", :blurb "Fetch thumbnail image", :type {:kind :boolean, :label "boolean"}} {:name "autorotate", :blurb "Rotate image using exif orientation", :type {:kind :boolean, :label "boolean"}} {:name "unlimited", :blurb "Remove all denial of service limits", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :heifsave              {:id :heifsave, :operation-name "heifsave", :description "save image in HEIF format", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "bitdepth", :blurb "Number of bits per pixel", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "compression", :blurb "Compression format", :type {:kind :enum, :label "keyword", :enum-id :foreign-heif-compression, :reference "ol.vips.enums/foreign-heif-compression"}} {:name "effort", :blurb "CPU effort", :type {:kind :integer, :label "integer"}} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :type {:kind :enum, :label "keyword", :enum-id :foreign-subsample, :reference "ol.vips.enums/foreign-subsample"}} {:name "speed", :blurb "CPU effort", :type {:kind :integer, :label "integer"}} {:name "encoder", :blurb "Select encoder to use", :type {:kind :enum, :label "keyword", :enum-id :foreign-heif-encoder, :reference "ol.vips.enums/foreign-heif-encoder"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :hist-cum              {:id :hist-cum, :operation-name "hist_cum", :description "form cumulative histogram", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :hist-entropy          {:id :hist-entropy, :operation-name "hist_entropy", :description "estimate image entropy", :required-inputs [{:name "in", :blurb "Input histogram image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output value", :type {:kind :float, :label "float"}}]}
+   :hist-equal            {:id :hist-equal, :operation-name "hist_equal", :description "histogram equalisation", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "band", :blurb "Equalise with this band", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :hist-find             {:id :hist-find, :operation-name "hist_find", :description "find image histogram", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "band", :blurb "Find histogram of band", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output histogram", :type {:kind :image, :label "image"}}]}
+   :hist-find-indexed     {:id :hist-find-indexed, :operation-name "hist_find_indexed", :description "find indexed image histogram", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "index", :blurb "Index image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "combine", :blurb "Combine bins like this", :type {:kind :enum, :label "keyword", :enum-id :combine, :reference "ol.vips.enums/combine"}}], :outputs [{:name "out", :blurb "Output histogram", :type {:kind :image, :label "image"}}]}
+   :hist-find-ndim        {:id :hist-find-ndim, :operation-name "hist_find_ndim", :description "find n-dimensional image histogram", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "bins", :blurb "Number of bins in each dimension", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output histogram", :type {:kind :image, :label "image"}}]}
+   :hist-ismonotonic      {:id :hist-ismonotonic, :operation-name "hist_ismonotonic", :description "test for monotonicity", :required-inputs [{:name "in", :blurb "Input histogram image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "monotonic", :blurb "true if in is monotonic", :type {:kind :boolean, :label "boolean"}}]}
+   :hist-local            {:id :hist-local, :operation-name "hist_local", :description "local histogram equalisation", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "width", :blurb "Window width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Window height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "max-slope", :blurb "Maximum slope (CLAHE)", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :hist-match            {:id :hist-match, :operation-name "hist_match", :description "match two histograms", :required-inputs [{:name "in", :blurb "Input histogram", :type {:kind :image, :label "image"}} {:name "ref", :blurb "Reference histogram", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :hist-norm             {:id :hist-norm, :operation-name "hist_norm", :description "normalise histogram", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :hist-plot             {:id :hist-plot, :operation-name "hist_plot", :description "plot histogram", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :hough-circle          {:id :hough-circle, :operation-name "hough_circle", :description "find hough circle transform", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "scale", :blurb "Scale down dimensions by this factor", :type {:kind :integer, :label "integer"}} {:name "min-radius", :blurb "Smallest radius to search for", :type {:kind :integer, :label "integer"}} {:name "max-radius", :blurb "Largest radius to search for", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :hough-line            {:id :hough-line, :operation-name "hough_line", :description "find hough line transform", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "width", :blurb "Horizontal size of parameter space", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Vertical size of parameter space", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :hsv2s-rgb             {:id :hsv2s-rgb, :operation-name "HSV2sRGB", :description "transform HSV to sRGB", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :icc-export            {:id :icc-export, :operation-name "icc_export", :description "output to device with ICC profile", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "pcs", :blurb "Set Profile Connection Space", :type {:kind :enum, :label "keyword", :enum-id :pcs, :reference "ol.vips.enums/pcs"}} {:name "intent", :blurb "Rendering intent", :type {:kind :enum, :label "keyword", :enum-id :intent, :reference "ol.vips.enums/intent"}} {:name "black-point-compensation", :blurb "Enable black point compensation", :type {:kind :boolean, :label "boolean"}} {:name "output-profile", :blurb "Filename to load output profile from", :type {:kind :string, :label "string"}} {:name "depth", :blurb "Output device space depth in bits", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :icc-import            {:id :icc-import, :operation-name "icc_import", :description "import from device with ICC profile", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "pcs", :blurb "Set Profile Connection Space", :type {:kind :enum, :label "keyword", :enum-id :pcs, :reference "ol.vips.enums/pcs"}} {:name "intent", :blurb "Rendering intent", :type {:kind :enum, :label "keyword", :enum-id :intent, :reference "ol.vips.enums/intent"}} {:name "black-point-compensation", :blurb "Enable black point compensation", :type {:kind :boolean, :label "boolean"}} {:name "embedded", :blurb "Use embedded input profile, if available", :type {:kind :boolean, :label "boolean"}} {:name "input-profile", :blurb "Filename to load input profile from", :type {:kind :string, :label "string"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :icc-transform         {:id :icc-transform, :operation-name "icc_transform", :description "transform between devices with ICC profiles", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "output-profile", :blurb "Filename to load output profile from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "pcs", :blurb "Set Profile Connection Space", :type {:kind :enum, :label "keyword", :enum-id :pcs, :reference "ol.vips.enums/pcs"}} {:name "intent", :blurb "Rendering intent", :type {:kind :enum, :label "keyword", :enum-id :intent, :reference "ol.vips.enums/intent"}} {:name "black-point-compensation", :blurb "Enable black point compensation", :type {:kind :boolean, :label "boolean"}} {:name "embedded", :blurb "Use embedded input profile, if available", :type {:kind :boolean, :label "boolean"}} {:name "input-profile", :blurb "Filename to load input profile from", :type {:kind :string, :label "string"}} {:name "depth", :blurb "Output device space depth in bits", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :identity              {:id :identity, :operation-name "identity", :description "make a 1D image where pixel values are indexes", :required-inputs [], :optional-inputs [{:name "bands", :blurb "Number of bands in LUT", :type {:kind :integer, :label "integer"}} {:name "ushort", :blurb "Create a 16-bit LUT", :type {:kind :boolean, :label "boolean"}} {:name "size", :blurb "Size of 16-bit LUT", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :ifthenelse            {:id :ifthenelse, :operation-name "ifthenelse", :description "ifthenelse an image", :required-inputs [{:name "cond", :blurb "Condition input image", :type {:kind :image, :label "image"}} {:name "in1", :blurb "Source for TRUE pixels", :type {:kind :image, :label "image"}} {:name "in2", :blurb "Source for FALSE pixels", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "blend", :blurb "Blend smoothly between then and else parts", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :insert                {:id :insert, :operation-name "insert", :description "insert image @sub into @main at @x, @y", :required-inputs [{:name "main", :blurb "Main input image", :type {:kind :image, :label "image"}} {:name "sub", :blurb "Sub-image to insert into main image", :type {:kind :image, :label "image"}} {:name "x", :blurb "Left edge of sub in main", :type {:kind :integer, :label "integer"}} {:name "y", :blurb "Top edge of sub in main", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "expand", :blurb "Expand output to hold all of both inputs", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :invert                {:id :invert, :operation-name "invert", :description "invert an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :invertlut             {:id :invertlut, :operation-name "invertlut", :description "build an inverted look-up table", :required-inputs [{:name "in", :blurb "Matrix of XY coordinates", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "size", :blurb "LUT size to generate", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :join                  {:id :join, :operation-name "join", :description "join a pair of images", :required-inputs [{:name "in1", :blurb "First input image", :type {:kind :image, :label "image"}} {:name "in2", :blurb "Second input image", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Join left-right or up-down", :type {:kind :enum, :label "keyword", :enum-id :direction, :reference "ol.vips.enums/direction"}}], :optional-inputs [{:name "expand", :blurb "Expand output to hold all of both inputs", :type {:kind :boolean, :label "boolean"}} {:name "shim", :blurb "Pixels between images", :type {:kind :integer, :label "integer"}} {:name "align", :blurb "Align on the low, centre or high coordinate edge", :type {:kind :enum, :label "keyword", :enum-id :align, :reference "ol.vips.enums/align"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :jpegload              {:id :jpegload, :operation-name "jpegload", :description "load jpeg from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "shrink", :blurb "Shrink factor on load", :type {:kind :integer, :label "integer"}} {:name "autorotate", :blurb "Rotate image using exif orientation", :type {:kind :boolean, :label "boolean"}} {:name "unlimited", :blurb "Remove all denial of service limits", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :jpegsave              {:id :jpegsave, :operation-name "jpegsave", :description "save image to jpeg file", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "optimize-coding", :blurb "Compute optimal Huffman coding tables", :type {:kind :boolean, :label "boolean"}} {:name "interlace", :blurb "Generate an interlaced (progressive) jpeg", :type {:kind :boolean, :label "boolean"}} {:name "no-subsample", :blurb "Disable chroma subsample", :type {:kind :boolean, :label "boolean"}} {:name "trellis-quant", :blurb "Apply trellis quantisation to each 8x8 block", :type {:kind :boolean, :label "boolean"}} {:name "overshoot-deringing", :blurb "Apply overshooting to samples with extreme values", :type {:kind :boolean, :label "boolean"}} {:name "optimize-scans", :blurb "Split spectrum of DCT coefficients into separate scans", :type {:kind :boolean, :label "boolean"}} {:name "quant-table", :blurb "Use predefined quantization table with given index", :type {:kind :integer, :label "integer"}} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :type {:kind :enum, :label "keyword", :enum-id :foreign-subsample, :reference "ol.vips.enums/foreign-subsample"}} {:name "restart-interval", :blurb "Add restart markers every specified number of mcu", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :jpegsave-mime         {:id :jpegsave-mime, :operation-name "jpegsave_mime", :description "save image to jpeg mime", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "optimize-coding", :blurb "Compute optimal Huffman coding tables", :type {:kind :boolean, :label "boolean"}} {:name "interlace", :blurb "Generate an interlaced (progressive) jpeg", :type {:kind :boolean, :label "boolean"}} {:name "no-subsample", :blurb "Disable chroma subsample", :type {:kind :boolean, :label "boolean"}} {:name "trellis-quant", :blurb "Apply trellis quantisation to each 8x8 block", :type {:kind :boolean, :label "boolean"}} {:name "overshoot-deringing", :blurb "Apply overshooting to samples with extreme values", :type {:kind :boolean, :label "boolean"}} {:name "optimize-scans", :blurb "Split spectrum of DCT coefficients into separate scans", :type {:kind :boolean, :label "boolean"}} {:name "quant-table", :blurb "Use predefined quantization table with given index", :type {:kind :integer, :label "integer"}} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :type {:kind :enum, :label "keyword", :enum-id :foreign-subsample, :reference "ol.vips.enums/foreign-subsample"}} {:name "restart-interval", :blurb "Add restart markers every specified number of mcu", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :lab-q2-lab            {:id :lab-q2-lab, :operation-name "LabQ2Lab", :description "unpack a LabQ image to float Lab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lab-q2-lab-s          {:id :lab-q2-lab-s, :operation-name "LabQ2LabS", :description "unpack a LabQ image to short Lab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lab-q2s-rgb           {:id :lab-q2s-rgb, :operation-name "LabQ2sRGB", :description "convert a LabQ image to sRGB", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lab-s2-lab            {:id :lab-s2-lab, :operation-name "LabS2Lab", :description "transform signed short Lab to float", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lab-s2-lab-q          {:id :lab-s2-lab-q, :operation-name "LabS2LabQ", :description "transform short Lab to LabQ coding", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lab2-lab-q            {:id :lab2-lab-q, :operation-name "Lab2LabQ", :description "transform float Lab to LabQ coding", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lab2-lab-s            {:id :lab2-lab-s, :operation-name "Lab2LabS", :description "transform float Lab to signed short", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lab2-lch              {:id :lab2-lch, :operation-name "Lab2LCh", :description "transform Lab to LCh", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lab2-xyz              {:id :lab2-xyz, :operation-name "Lab2XYZ", :description "transform CIELAB to XYZ", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :labelregions          {:id :labelregions, :operation-name "labelregions", :description "label regions in an image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "mask", :blurb "Mask of region labels", :type {:kind :image, :label "image"}} {:name "segments", :blurb "Number of discrete contiguous regions", :type {:kind :integer, :label "integer"}}]}
+   :lch2-cmc              {:id :lch2-cmc, :operation-name "LCh2CMC", :description "transform LCh to CMC", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :lch2-lab              {:id :lch2-lab, :operation-name "LCh2Lab", :description "transform LCh to Lab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :linecache             {:id :linecache, :operation-name "linecache", :description "cache an image as a set of lines", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "tile-height", :blurb "Tile height in pixels", :type {:kind :integer, :label "integer"}} {:name "access", :blurb "Expected access pattern", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "threaded", :blurb "Allow threaded access", :type {:kind :boolean, :label "boolean"}} {:name "persistent", :blurb "Keep cache between evaluations", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :logmat                {:id :logmat, :operation-name "logmat", :description "make a Laplacian of Gaussian image", :required-inputs [{:name "sigma", :blurb "Radius of Gaussian", :type {:kind :float, :label "float"}} {:name "min-ampl", :blurb "Minimum amplitude of Gaussian", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "separable", :blurb "Generate separable Gaussian", :type {:kind :boolean, :label "boolean"}} {:name "integer", :blurb "Generate integer Gaussian", :type {:kind :boolean, :label "boolean"}} {:name "precision", :blurb "Generate with this precision", :type {:kind :enum, :label "keyword", :enum-id :precision, :reference "ol.vips.enums/precision"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mapim                 {:id :mapim, :operation-name "mapim", :description "resample with a map image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "index", :blurb "Index pixels with this", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "premultiplied", :blurb "Images have premultiplied alpha", :type {:kind :boolean, :label "boolean"}} {:name "extend", :blurb "How to generate the extra pixels", :type {:kind :enum, :label "keyword", :enum-id :extend, :reference "ol.vips.enums/extend"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :maplut                {:id :maplut, :operation-name "maplut", :description "map an image though a lut", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "lut", :blurb "Look-up table image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "band", :blurb "Apply one-band lut to this band of in", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-butterworth      {:id :mask-butterworth, :operation-name "mask_butterworth", :description "make a butterworth filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "order", :blurb "Filter order", :type {:kind :float, :label "float"}} {:name "frequency-cutoff", :blurb "Frequency cutoff", :type {:kind :float, :label "float"}} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-butterworth-band {:id :mask-butterworth-band, :operation-name "mask_butterworth_band", :description "make a butterworth_band filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "order", :blurb "Filter order", :type {:kind :float, :label "float"}} {:name "frequency-cutoff-x", :blurb "Frequency cutoff x", :type {:kind :float, :label "float"}} {:name "frequency-cutoff-y", :blurb "Frequency cutoff y", :type {:kind :float, :label "float"}} {:name "radius", :blurb "Radius of circle", :type {:kind :float, :label "float"}} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-butterworth-ring {:id :mask-butterworth-ring, :operation-name "mask_butterworth_ring", :description "make a butterworth ring filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "order", :blurb "Filter order", :type {:kind :float, :label "float"}} {:name "frequency-cutoff", :blurb "Frequency cutoff", :type {:kind :float, :label "float"}} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :type {:kind :float, :label "float"}} {:name "ringwidth", :blurb "Ringwidth", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-fractal          {:id :mask-fractal, :operation-name "mask_fractal", :description "make fractal filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "fractal-dimension", :blurb "Fractal dimension", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-gaussian         {:id :mask-gaussian, :operation-name "mask_gaussian", :description "make a gaussian filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "frequency-cutoff", :blurb "Frequency cutoff", :type {:kind :float, :label "float"}} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-gaussian-band    {:id :mask-gaussian-band, :operation-name "mask_gaussian_band", :description "make a gaussian filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "frequency-cutoff-x", :blurb "Frequency cutoff x", :type {:kind :float, :label "float"}} {:name "frequency-cutoff-y", :blurb "Frequency cutoff y", :type {:kind :float, :label "float"}} {:name "radius", :blurb "Radius of circle", :type {:kind :float, :label "float"}} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-gaussian-ring    {:id :mask-gaussian-ring, :operation-name "mask_gaussian_ring", :description "make a gaussian ring filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "frequency-cutoff", :blurb "Frequency cutoff", :type {:kind :float, :label "float"}} {:name "amplitude-cutoff", :blurb "Amplitude cutoff", :type {:kind :float, :label "float"}} {:name "ringwidth", :blurb "Ringwidth", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-ideal            {:id :mask-ideal, :operation-name "mask_ideal", :description "make an ideal filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "frequency-cutoff", :blurb "Frequency cutoff", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-ideal-band       {:id :mask-ideal-band, :operation-name "mask_ideal_band", :description "make an ideal band filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "frequency-cutoff-x", :blurb "Frequency cutoff x", :type {:kind :float, :label "float"}} {:name "frequency-cutoff-y", :blurb "Frequency cutoff y", :type {:kind :float, :label "float"}} {:name "radius", :blurb "Radius of circle", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mask-ideal-ring       {:id :mask-ideal-ring, :operation-name "mask_ideal_ring", :description "make an ideal ring filter", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "frequency-cutoff", :blurb "Frequency cutoff", :type {:kind :float, :label "float"}} {:name "ringwidth", :blurb "Ringwidth", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "nodc", :blurb "Remove DC component", :type {:kind :boolean, :label "boolean"}} {:name "reject", :blurb "Invert the sense of the filter", :type {:kind :boolean, :label "boolean"}} {:name "optical", :blurb "Rotate quadrants to optical space", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :match                 {:id :match, :operation-name "match", :description "first-order match of two images", :required-inputs [{:name "ref", :blurb "Reference image", :type {:kind :image, :label "image"}} {:name "sec", :blurb "Secondary image", :type {:kind :image, :label "image"}} {:name "xr1", :blurb "Position of first reference tie-point", :type {:kind :integer, :label "integer"}} {:name "yr1", :blurb "Position of first reference tie-point", :type {:kind :integer, :label "integer"}} {:name "xs1", :blurb "Position of first secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "ys1", :blurb "Position of first secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "xr2", :blurb "Position of second reference tie-point", :type {:kind :integer, :label "integer"}} {:name "yr2", :blurb "Position of second reference tie-point", :type {:kind :integer, :label "integer"}} {:name "xs2", :blurb "Position of second secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "ys2", :blurb "Position of second secondary tie-point", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "hwindow", :blurb "Half window size", :type {:kind :integer, :label "integer"}} {:name "harea", :blurb "Half area size", :type {:kind :integer, :label "integer"}} {:name "search", :blurb "Search to improve tie-points", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :math                  {:id :math, :operation-name "math", :description "apply a math operation to an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "math", :blurb "Math to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-math, :reference "ol.vips.enums/operation-math"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :math2                 {:id :math2, :operation-name "math2", :description "binary math operations", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}} {:name "math2", :blurb "Math to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-math2, :reference "ol.vips.enums/operation-math2"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :matrixinvert          {:id :matrixinvert, :operation-name "matrixinvert", :description "invert a matrix", :required-inputs [{:name "in", :blurb "An square matrix", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output matrix", :type {:kind :image, :label "image"}}]}
+   :matrixload            {:id :matrixload, :operation-name "matrixload", :description "load matrix", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :matrixmultiply        {:id :matrixmultiply, :operation-name "matrixmultiply", :description "multiply two matrices", :required-inputs [{:name "left", :blurb "First matrix to multiply", :type {:kind :image, :label "image"}} {:name "right", :blurb "Second matrix to multiply", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output matrix", :type {:kind :image, :label "image"}}]}
+   :matrixprint           {:id :matrixprint, :operation-name "matrixprint", :description "print matrix", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :matrixsave            {:id :matrixsave, :operation-name "matrixsave", :description "save image to matrix", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :maxpair               {:id :maxpair, :operation-name "maxpair", :description "maximum of a pair of images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :measure               {:id :measure, :operation-name "measure", :description "measure a set of patches on a color chart", :required-inputs [{:name "in", :blurb "Image to measure", :type {:kind :image, :label "image"}} {:name "h", :blurb "Number of patches across chart", :type {:kind :integer, :label "integer"}} {:name "v", :blurb "Number of patches down chart", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "left", :blurb "Left edge of extract area", :type {:kind :integer, :label "integer"}} {:name "top", :blurb "Top edge of extract area", :type {:kind :integer, :label "integer"}} {:name "width", :blurb "Width of extract area", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Height of extract area", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output array of statistics", :type {:kind :image, :label "image"}}]}
+   :merge                 {:id :merge, :operation-name "merge", :description "merge two images", :required-inputs [{:name "ref", :blurb "Reference image", :type {:kind :image, :label "image"}} {:name "sec", :blurb "Secondary image", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Horizontal or vertical merge", :type {:kind :enum, :label "keyword", :enum-id :direction, :reference "ol.vips.enums/direction"}} {:name "dx", :blurb "Horizontal displacement from sec to ref", :type {:kind :integer, :label "integer"}} {:name "dy", :blurb "Vertical displacement from sec to ref", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "mblend", :blurb "Maximum blend size", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :minpair               {:id :minpair, :operation-name "minpair", :description "minimum of a pair of images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :morph                 {:id :morph, :operation-name "morph", :description "morphology operation", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "mask", :blurb "Input matrix image", :type {:kind :image, :label "image"}} {:name "morph", :blurb "Morphological operation to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-morphology, :reference "ol.vips.enums/operation-morphology"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :mosaic                {:id :mosaic, :operation-name "mosaic", :description "mosaic two images", :required-inputs [{:name "ref", :blurb "Reference image", :type {:kind :image, :label "image"}} {:name "sec", :blurb "Secondary image", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Horizontal or vertical mosaic", :type {:kind :enum, :label "keyword", :enum-id :direction, :reference "ol.vips.enums/direction"}} {:name "xref", :blurb "Position of reference tie-point", :type {:kind :integer, :label "integer"}} {:name "yref", :blurb "Position of reference tie-point", :type {:kind :integer, :label "integer"}} {:name "xsec", :blurb "Position of secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "ysec", :blurb "Position of secondary tie-point", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "hwindow", :blurb "Half window size", :type {:kind :integer, :label "integer"}} {:name "harea", :blurb "Half area size", :type {:kind :integer, :label "integer"}} {:name "mblend", :blurb "Maximum blend size", :type {:kind :integer, :label "integer"}} {:name "bandno", :blurb "Band to search for features on", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "dx0", :blurb "Detected integer offset", :type {:kind :integer, :label "integer"}} {:name "dy0", :blurb "Detected integer offset", :type {:kind :integer, :label "integer"}} {:name "scale1", :blurb "Detected scale", :type {:kind :float, :label "float"}} {:name "angle1", :blurb "Detected rotation", :type {:kind :float, :label "float"}} {:name "dy1", :blurb "Detected first-order displacement", :type {:kind :float, :label "float"}} {:name "dx1", :blurb "Detected first-order displacement", :type {:kind :float, :label "float"}}]}
+   :mosaic1               {:id :mosaic1, :operation-name "mosaic1", :description "first-order mosaic of two images", :required-inputs [{:name "ref", :blurb "Reference image", :type {:kind :image, :label "image"}} {:name "sec", :blurb "Secondary image", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Horizontal or vertical mosaic", :type {:kind :enum, :label "keyword", :enum-id :direction, :reference "ol.vips.enums/direction"}} {:name "xr1", :blurb "Position of first reference tie-point", :type {:kind :integer, :label "integer"}} {:name "yr1", :blurb "Position of first reference tie-point", :type {:kind :integer, :label "integer"}} {:name "xs1", :blurb "Position of first secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "ys1", :blurb "Position of first secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "xr2", :blurb "Position of second reference tie-point", :type {:kind :integer, :label "integer"}} {:name "yr2", :blurb "Position of second reference tie-point", :type {:kind :integer, :label "integer"}} {:name "xs2", :blurb "Position of second secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "ys2", :blurb "Position of second secondary tie-point", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "hwindow", :blurb "Half window size", :type {:kind :integer, :label "integer"}} {:name "harea", :blurb "Half area size", :type {:kind :integer, :label "integer"}} {:name "search", :blurb "Search to improve tie-points", :type {:kind :boolean, :label "boolean"}} {:name "mblend", :blurb "Maximum blend size", :type {:kind :integer, :label "integer"}} {:name "bandno", :blurb "Band to search for features on", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :msb                   {:id :msb, :operation-name "msb", :description "pick most-significant byte from an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "band", :blurb "Band to msb", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :multiply              {:id :multiply, :operation-name "multiply", :description "multiply two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :percent               {:id :percent, :operation-name "percent", :description "find threshold for percent of pixels", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "percent", :blurb "Percent of pixels", :type {:kind :float, :label "float"}}], :optional-inputs [], :outputs [{:name "threshold", :blurb "Threshold above which lie percent of pixels", :type {:kind :integer, :label "integer"}}]}
+   :perlin                {:id :perlin, :operation-name "perlin", :description "make a perlin noise image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "cell-size", :blurb "Size of Perlin cells", :type {:kind :integer, :label "integer"}} {:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "seed", :blurb "Random number seed", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :phasecor              {:id :phasecor, :operation-name "phasecor", :description "calculate phase correlation", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "in2", :blurb "Second input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :pngload               {:id :pngload, :operation-name "pngload", :description "load png from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "unlimited", :blurb "Remove all denial of service limits", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :pngsave               {:id :pngsave, :operation-name "pngsave", :description "save image to file as PNG", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "compression", :blurb "Compression factor", :type {:kind :integer, :label "integer"}} {:name "interlace", :blurb "Interlace image", :type {:kind :boolean, :label "boolean"}} {:name "filter", :blurb "libspng row filter flag(s)", :type {:kind :flags, :label "integer flags"}} {:name "palette", :blurb "Quantise to 8bpp palette", :type {:kind :boolean, :label "boolean"}} {:name "colours", :blurb "Max number of palette colours", :type {:kind :integer, :label "integer"}} {:name "Q", :blurb "Quantisation quality", :type {:kind :integer, :label "integer"}} {:name "dither", :blurb "Amount of dithering", :type {:kind :float, :label "float"}} {:name "bitdepth", :blurb "Write as a 1, 2, 4, 8 or 16 bit image", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Quantisation CPU effort", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :premultiply           {:id :premultiply, :operation-name "premultiply", :description "premultiply image alpha", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "max-alpha", :blurb "Maximum value of alpha channel", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :prewitt               {:id :prewitt, :operation-name "prewitt", :description "Prewitt edge detector", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :profile               {:id :profile, :operation-name "profile", :description "find image profiles", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "columns", :blurb "First non-zero pixel in column", :type {:kind :image, :label "image"}} {:name "rows", :blurb "First non-zero pixel in row", :type {:kind :image, :label "image"}}]}
+   :project               {:id :project, :operation-name "project", :description "find image projections", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "columns", :blurb "Sums of columns", :type {:kind :image, :label "image"}} {:name "rows", :blurb "Sums of rows", :type {:kind :image, :label "image"}}]}
+   :quadratic             {:id :quadratic, :operation-name "quadratic", :description "resample an image with a quadratic transform", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "coeff", :blurb "Coefficient matrix", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :rad2float             {:id :rad2float, :operation-name "rad2float", :description "unpack Radiance coding to float RGB", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :rank                  {:id :rank, :operation-name "rank", :description "rank filter", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "width", :blurb "Window width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Window height in pixels", :type {:kind :integer, :label "integer"}} {:name "index", :blurb "Select pixel at index", :type {:kind :integer, :label "integer"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :rawload               {:id :rawload, :operation-name "rawload", :description "load raw data from a file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}} {:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "bands", :blurb "Number of bands in image", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "offset", :blurb "Offset in bytes from start of file", :type {:kind :integer, :label "integer"}} {:name "format", :blurb "Pixel format in image", :type {:kind :enum, :label "keyword", :enum-id :band-format, :reference "ol.vips.enums/band-format"}} {:name "interpretation", :blurb "Pixel interpretation", :type {:kind :enum, :label "keyword", :enum-id :interpretation, :reference "ol.vips.enums/interpretation"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :rawsave               {:id :rawsave, :operation-name "rawsave", :description "save image to raw file", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :recomb                {:id :recomb, :operation-name "recomb", :description "linear recombination with matrix", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "m", :blurb "Matrix of coefficients", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :reduce                {:id :reduce, :operation-name "reduce", :description "reduce an image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "xshrink", :blurb "Horizontal shrink factor", :type {:kind :float, :label "float"}} {:name "hshrink", :blurb "Horizontal shrink factor", :type {:kind :float, :label "float"}} {:name "yshrink", :blurb "Vertical shrink factor", :type {:kind :float, :label "float"}} {:name "vshrink", :blurb "Vertical shrink factor", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "kernel", :blurb "Resampling kernel", :type {:kind :enum, :label "keyword", :enum-id :kernel, :reference "ol.vips.enums/kernel"}} {:name "gap", :blurb "Reducing gap", :type {:kind :float, :label "float"}} {:name "centre", :blurb "Use centre sampling convention", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :reduceh               {:id :reduceh, :operation-name "reduceh", :description "shrink an image horizontally", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "xshrink", :blurb "Horizontal shrink factor", :type {:kind :float, :label "float"}} {:name "hshrink", :blurb "Horizontal shrink factor", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "kernel", :blurb "Resampling kernel", :type {:kind :enum, :label "keyword", :enum-id :kernel, :reference "ol.vips.enums/kernel"}} {:name "gap", :blurb "Reducing gap", :type {:kind :float, :label "float"}} {:name "centre", :blurb "Use centre sampling convention", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :reducev               {:id :reducev, :operation-name "reducev", :description "shrink an image vertically", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "yshrink", :blurb "Vertical shrink factor", :type {:kind :float, :label "float"}} {:name "vshrink", :blurb "Vertical shrink factor", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "kernel", :blurb "Resampling kernel", :type {:kind :enum, :label "keyword", :enum-id :kernel, :reference "ol.vips.enums/kernel"}} {:name "gap", :blurb "Reducing gap", :type {:kind :float, :label "float"}} {:name "centre", :blurb "Use centre sampling convention", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :relational            {:id :relational, :operation-name "relational", :description "relational operation on two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}} {:name "relational", :blurb "Relational to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-relational, :reference "ol.vips.enums/operation-relational"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :remainder             {:id :remainder, :operation-name "remainder", :description "remainder after integer division of two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :remosaic              {:id :remosaic, :operation-name "remosaic", :description "rebuild an mosaiced image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "old-str", :blurb "Search for this string", :type {:kind :string, :label "string"}} {:name "new-str", :blurb "And swap for this string", :type {:kind :string, :label "string"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :replicate             {:id :replicate, :operation-name "replicate", :description "replicate an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "across", :blurb "Repeat this many times horizontally", :type {:kind :integer, :label "integer"}} {:name "down", :blurb "Repeat this many times vertically", :type {:kind :integer, :label "integer"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :resize                {:id :resize, :operation-name "resize", :description "resize an image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "scale", :blurb "Scale image by this factor", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "kernel", :blurb "Resampling kernel", :type {:kind :enum, :label "keyword", :enum-id :kernel, :reference "ol.vips.enums/kernel"}} {:name "gap", :blurb "Reducing gap", :type {:kind :float, :label "float"}} {:name "centre", :blurb "Use centre sampling convention", :type {:kind :boolean, :label "boolean"}} {:name "vscale", :blurb "Vertical scale image by this factor", :type {:kind :float, :label "float"}} {:name "idx", :blurb "Horizontal input displacement", :type {:kind :float, :label "float"}} {:name "idy", :blurb "Vertical input displacement", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :rot                   {:id :rot, :operation-name "rot", :description "rotate an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "angle", :blurb "Angle to rotate image", :type {:kind :enum, :label "keyword", :enum-id :angle, :reference "ol.vips.enums/angle"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :rot45                 {:id :rot45, :operation-name "rot45", :description "rotate an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "angle", :blurb "Angle to rotate image", :type {:kind :enum, :label "keyword", :enum-id :angle45, :reference "ol.vips.enums/angle45"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :rotate                {:id :rotate, :operation-name "rotate", :description "rotate an image by a number of degrees", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "angle", :blurb "Rotate clockwise by this many degrees", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "odx", :blurb "Horizontal output displacement", :type {:kind :float, :label "float"}} {:name "ody", :blurb "Vertical output displacement", :type {:kind :float, :label "float"}} {:name "idx", :blurb "Horizontal input displacement", :type {:kind :float, :label "float"}} {:name "idy", :blurb "Vertical input displacement", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :round                 {:id :round, :operation-name "round", :description "perform a round function on an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "round", :blurb "Rounding operation to perform", :type {:kind :enum, :label "keyword", :enum-id :operation-round, :reference "ol.vips.enums/operation-round"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :s-rgb2-hsv            {:id :s-rgb2-hsv, :operation-name "sRGB2HSV", :description "transform sRGB to HSV", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :s-rgb2sc-rgb          {:id :s-rgb2sc-rgb, :operation-name "sRGB2scRGB", :description "convert an sRGB image to scRGB", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sc-rgb2-bw            {:id :sc-rgb2-bw, :operation-name "scRGB2BW", :description "convert scRGB to BW", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "depth", :blurb "Output device space depth in bits", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sc-rgb2-xyz           {:id :sc-rgb2-xyz, :operation-name "scRGB2XYZ", :description "transform scRGB to XYZ", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sc-rgb2s-rgb          {:id :sc-rgb2s-rgb, :operation-name "scRGB2sRGB", :description "convert scRGB to sRGB", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "depth", :blurb "Output device space depth in bits", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :scale                 {:id :scale, :operation-name "scale", :description "scale an image to uchar", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "exp", :blurb "Exponent for log scale", :type {:kind :float, :label "float"}} {:name "log", :blurb "Log scale", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :scharr                {:id :scharr, :operation-name "scharr", :description "Scharr edge detector", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sdf                   {:id :sdf, :operation-name "sdf", :description "create an SDF image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}} {:name "shape", :blurb "SDF shape to create", :type {:kind :enum, :label "keyword", :enum-id :sdf-shape, :reference "ol.vips.enums/sdf-shape"}}], :optional-inputs [{:name "r", :blurb "Radius", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sequential            {:id :sequential, :operation-name "sequential", :description "check sequential access", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "trace", :blurb "Trace pixel requests", :type {:kind :boolean, :label "boolean"}} {:name "tile-height", :blurb "Tile height in pixels", :type {:kind :integer, :label "integer"}} {:name "access", :blurb "Expected access pattern", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sharpen               {:id :sharpen, :operation-name "sharpen", :description "unsharp masking for print", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "radius", :blurb "Radius of Gaussian", :type {:kind :integer, :label "integer"}} {:name "sigma", :blurb "Sigma of Gaussian", :type {:kind :float, :label "float"}} {:name "x1", :blurb "Flat/jaggy threshold", :type {:kind :float, :label "float"}} {:name "y2", :blurb "Maximum brightening", :type {:kind :float, :label "float"}} {:name "y3", :blurb "Maximum darkening", :type {:kind :float, :label "float"}} {:name "m1", :blurb "Slope for flat areas", :type {:kind :float, :label "float"}} {:name "m2", :blurb "Slope for jaggy areas", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :shrink                {:id :shrink, :operation-name "shrink", :description "shrink an image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "xshrink", :blurb "Horizontal shrink factor", :type {:kind :float, :label "float"}} {:name "hshrink", :blurb "Horizontal shrink factor", :type {:kind :float, :label "float"}} {:name "yshrink", :blurb "Vertical shrink factor", :type {:kind :float, :label "float"}} {:name "vshrink", :blurb "Vertical shrink factor", :type {:kind :float, :label "float"}}], :optional-inputs [{:name "ceil", :blurb "Round-up output dimensions", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :shrinkh               {:id :shrinkh, :operation-name "shrinkh", :description "shrink an image horizontally", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "xshrink", :blurb "Horizontal shrink factor", :type {:kind :integer, :label "integer"}} {:name "hshrink", :blurb "Horizontal shrink factor", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "ceil", :blurb "Round-up output dimensions", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :shrinkv               {:id :shrinkv, :operation-name "shrinkv", :description "shrink an image vertically", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "yshrink", :blurb "Vertical shrink factor", :type {:kind :integer, :label "integer"}} {:name "vshrink", :blurb "Vertical shrink factor", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "ceil", :blurb "Round-up output dimensions", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sign                  {:id :sign, :operation-name "sign", :description "unit vector of pixel", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :similarity            {:id :similarity, :operation-name "similarity", :description "similarity transform of an image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "scale", :blurb "Scale by this factor", :type {:kind :float, :label "float"}} {:name "angle", :blurb "Rotate clockwise by this many degrees", :type {:kind :float, :label "float"}} {:name "odx", :blurb "Horizontal output displacement", :type {:kind :float, :label "float"}} {:name "ody", :blurb "Vertical output displacement", :type {:kind :float, :label "float"}} {:name "idx", :blurb "Horizontal input displacement", :type {:kind :float, :label "float"}} {:name "idy", :blurb "Vertical input displacement", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sines                 {:id :sines, :operation-name "sines", :description "make a 2D sine wave", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "hfreq", :blurb "Horizontal spatial frequency", :type {:kind :float, :label "float"}} {:name "vfreq", :blurb "Vertical spatial frequency", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :smartcrop             {:id :smartcrop, :operation-name "smartcrop", :description "extract an area from an image", :required-inputs [{:name "input", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "width", :blurb "Width of extract area", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Height of extract area", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "interesting", :blurb "How to measure interestingness", :type {:kind :enum, :label "keyword", :enum-id :interesting, :reference "ol.vips.enums/interesting"}} {:name "premultiplied", :blurb "Input image already has premultiplied alpha", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "attention-x", :blurb "Horizontal position of attention centre", :type {:kind :integer, :label "integer"}} {:name "attention-y", :blurb "Vertical position of attention centre", :type {:kind :integer, :label "integer"}}]}
+   :sobel                 {:id :sobel, :operation-name "sobel", :description "Sobel edge detector", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :spcor                 {:id :spcor, :operation-name "spcor", :description "spatial correlation", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "ref", :blurb "Input reference image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :spectrum              {:id :spectrum, :operation-name "spectrum", :description "make displayable power spectrum", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :stats                 {:id :stats, :operation-name "stats", :description "find many image stats", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output array of statistics", :type {:kind :image, :label "image"}}]}
+   :stdif                 {:id :stdif, :operation-name "stdif", :description "statistical difference", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "width", :blurb "Window width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Window height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "s0", :blurb "New deviation", :type {:kind :float, :label "float"}} {:name "b", :blurb "Weight of new deviation", :type {:kind :float, :label "float"}} {:name "m0", :blurb "New mean", :type {:kind :float, :label "float"}} {:name "a", :blurb "Weight of new mean", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :subsample             {:id :subsample, :operation-name "subsample", :description "subsample an image", :required-inputs [{:name "input", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "xfac", :blurb "Horizontal subsample factor", :type {:kind :integer, :label "integer"}} {:name "yfac", :blurb "Vertical subsample factor", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "point", :blurb "Point sample", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :subtract              {:id :subtract, :operation-name "subtract", :description "subtract two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :sum                   {:id :sum, :operation-name "sum", :description "sum an array of images", :required-inputs [{:name "in", :blurb "Array of input images", :type {:kind :image-seq, :label "seqable of image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :svgload               {:id :svgload, :operation-name "svgload", :description "load SVG with rsvg", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "dpi", :blurb "Render at this DPI", :type {:kind :float, :label "float"}} {:name "scale", :blurb "Scale output by this factor", :type {:kind :float, :label "float"}} {:name "unlimited", :blurb "Allow SVG of any size", :type {:kind :boolean, :label "boolean"}} {:name "stylesheet", :blurb "Custom CSS", :type {:kind :string, :label "string"}} {:name "high-bitdepth", :blurb "Enable scRGB 128-bit output (32-bit per channel)", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :switch                {:id :switch, :operation-name "switch", :description "find the index of the first non-zero pixel in tests", :required-inputs [{:name "tests", :blurb "Table of images to test", :type {:kind :image-seq, :label "seqable of image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :system                {:id :system, :operation-name "system", :description "run an external command", :required-inputs [{:name "cmd-format", :blurb "Command to run", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "in", :blurb "Array of input images", :type {:kind :image-seq, :label "seqable of image"}} {:name "out-format", :blurb "Format for output filename", :type {:kind :string, :label "string"}} {:name "in-format", :blurb "Format for input filename", :type {:kind :string, :label "string"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "log", :blurb "Command log", :type {:kind :string, :label "string"}}]}
+   :text                  {:id :text, :operation-name "text", :description "make a text image", :required-inputs [{:name "text", :blurb "Text to render", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "font", :blurb "Font to render with", :type {:kind :string, :label "string"}} {:name "width", :blurb "Maximum image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Maximum image height in pixels", :type {:kind :integer, :label "integer"}} {:name "align", :blurb "Align on the low, centre or high edge", :type {:kind :enum, :label "keyword", :enum-id :align, :reference "ol.vips.enums/align"}} {:name "justify", :blurb "Justify lines", :type {:kind :boolean, :label "boolean"}} {:name "dpi", :blurb "DPI to render at", :type {:kind :integer, :label "integer"}} {:name "spacing", :blurb "Line spacing", :type {:kind :integer, :label "integer"}} {:name "fontfile", :blurb "Load this font file", :type {:kind :string, :label "string"}} {:name "rgba", :blurb "Enable RGBA output", :type {:kind :boolean, :label "boolean"}} {:name "wrap", :blurb "Wrap lines on word or character boundaries", :type {:kind :enum, :label "keyword", :enum-id :text-wrap, :reference "ol.vips.enums/text-wrap"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "autofit-dpi", :blurb "DPI selected by autofit", :type {:kind :integer, :label "integer"}}]}
+   :thumbnail             {:id :thumbnail, :operation-name "thumbnail", :description "generate thumbnail from file", :required-inputs [{:name "filename", :blurb "Filename to read from", :type {:kind :string, :label "string"}} {:name "width", :blurb "Size to this width", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "height", :blurb "Size to this height", :type {:kind :integer, :label "integer"}} {:name "size", :blurb "Only upsize, only downsize, or both", :type {:kind :enum, :label "keyword", :enum-id :size, :reference "ol.vips.enums/size"}} {:name "no-rotate", :blurb "Don't use orientation tags to rotate image upright", :type {:kind :boolean, :label "boolean"}} {:name "crop", :blurb "Reduce to fill target rectangle, then crop", :type {:kind :enum, :label "keyword", :enum-id :interesting, :reference "ol.vips.enums/interesting"}} {:name "linear", :blurb "Reduce in linear light", :type {:kind :boolean, :label "boolean"}} {:name "input-profile", :blurb "Fallback input profile", :type {:kind :string, :label "string"}} {:name "output-profile", :blurb "Fallback output profile", :type {:kind :string, :label "string"}} {:name "intent", :blurb "Rendering intent", :type {:kind :enum, :label "keyword", :enum-id :intent, :reference "ol.vips.enums/intent"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "auto-rotate", :blurb "Use orientation tags to rotate image upright", :type {:kind :boolean, :label "boolean"}} {:name "import-profile", :blurb "Fallback import profile", :type {:kind :string, :label "string"}} {:name "export-profile", :blurb "Fallback export profile", :type {:kind :string, :label "string"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :thumbnail-image       {:id :thumbnail-image, :operation-name "thumbnail_image", :description "generate thumbnail from image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "width", :blurb "Size to this width", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "height", :blurb "Size to this height", :type {:kind :integer, :label "integer"}} {:name "size", :blurb "Only upsize, only downsize, or both", :type {:kind :enum, :label "keyword", :enum-id :size, :reference "ol.vips.enums/size"}} {:name "no-rotate", :blurb "Don't use orientation tags to rotate image upright", :type {:kind :boolean, :label "boolean"}} {:name "crop", :blurb "Reduce to fill target rectangle, then crop", :type {:kind :enum, :label "keyword", :enum-id :interesting, :reference "ol.vips.enums/interesting"}} {:name "linear", :blurb "Reduce in linear light", :type {:kind :boolean, :label "boolean"}} {:name "input-profile", :blurb "Fallback input profile", :type {:kind :string, :label "string"}} {:name "output-profile", :blurb "Fallback output profile", :type {:kind :string, :label "string"}} {:name "intent", :blurb "Rendering intent", :type {:kind :enum, :label "keyword", :enum-id :intent, :reference "ol.vips.enums/intent"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "auto-rotate", :blurb "Use orientation tags to rotate image upright", :type {:kind :boolean, :label "boolean"}} {:name "import-profile", :blurb "Fallback import profile", :type {:kind :string, :label "string"}} {:name "export-profile", :blurb "Fallback export profile", :type {:kind :string, :label "string"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :tiffload              {:id :tiffload, :operation-name "tiffload", :description "load tiff from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "page", :blurb "First page to load", :type {:kind :integer, :label "integer"}} {:name "n", :blurb "Number of pages to load, -1 for all", :type {:kind :integer, :label "integer"}} {:name "autorotate", :blurb "Rotate image using orientation tag", :type {:kind :boolean, :label "boolean"}} {:name "subifd", :blurb "Subifd index", :type {:kind :integer, :label "integer"}} {:name "unlimited", :blurb "Remove all denial of service limits", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :tiffsave              {:id :tiffsave, :operation-name "tiffsave", :description "save image to tiff file", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "compression", :blurb "Compression for this file", :type {:kind :enum, :label "keyword", :enum-id :foreign-tiff-compression, :reference "ol.vips.enums/foreign-tiff-compression"}} {:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "predictor", :blurb "Compression prediction", :type {:kind :enum, :label "keyword", :enum-id :foreign-tiff-predictor, :reference "ol.vips.enums/foreign-tiff-predictor"}} {:name "tile", :blurb "Write a tiled tiff", :type {:kind :boolean, :label "boolean"}} {:name "tile-width", :blurb "Tile width in pixels", :type {:kind :integer, :label "integer"}} {:name "tile-height", :blurb "Tile height in pixels", :type {:kind :integer, :label "integer"}} {:name "pyramid", :blurb "Write a pyramidal tiff", :type {:kind :boolean, :label "boolean"}} {:name "miniswhite", :blurb "Use 0 for white in 1-bit images", :type {:kind :boolean, :label "boolean"}} {:name "bitdepth", :blurb "Write as a 1, 2, 4 or 8 bit image", :type {:kind :integer, :label "integer"}} {:name "resunit", :blurb "Resolution unit", :type {:kind :enum, :label "keyword", :enum-id :foreign-tiff-resunit, :reference "ol.vips.enums/foreign-tiff-resunit"}} {:name "xres", :blurb "Horizontal resolution in pixels/mm", :type {:kind :float, :label "float"}} {:name "yres", :blurb "Vertical resolution in pixels/mm", :type {:kind :float, :label "float"}} {:name "bigtiff", :blurb "Write a bigtiff image", :type {:kind :boolean, :label "boolean"}} {:name "properties", :blurb "Write a properties document to IMAGEDESCRIPTION", :type {:kind :boolean, :label "boolean"}} {:name "region-shrink", :blurb "Method to shrink regions", :type {:kind :enum, :label "keyword", :enum-id :region-shrink, :reference "ol.vips.enums/region-shrink"}} {:name "level", :blurb "Deflate (1-9, default 6) or ZSTD (1-22, default 9) compression level", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable WEBP lossless mode", :type {:kind :boolean, :label "boolean"}} {:name "depth", :blurb "Pyramid depth", :type {:kind :enum, :label "keyword", :enum-id :foreign-dz-depth, :reference "ol.vips.enums/foreign-dz-depth"}} {:name "subifd", :blurb "Save pyr layers as sub-IFDs", :type {:kind :boolean, :label "boolean"}} {:name "premultiply", :blurb "Save with premultiplied alpha", :type {:kind :boolean, :label "boolean"}} {:name "rgbjpeg", :blurb "Output RGB JPEG rather than YCbCr", :type {:kind :boolean, :label "boolean"}} {:name "squash", :blurb "Squash images down to 1 bit", :type {:kind :boolean, :label "boolean"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :tilecache             {:id :tilecache, :operation-name "tilecache", :description "cache an image as a set of tiles", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "tile-width", :blurb "Tile width in pixels", :type {:kind :integer, :label "integer"}} {:name "tile-height", :blurb "Tile height in pixels", :type {:kind :integer, :label "integer"}} {:name "max-tiles", :blurb "Maximum number of tiles to cache", :type {:kind :integer, :label "integer"}} {:name "access", :blurb "Expected access pattern", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "threaded", :blurb "Allow threaded access", :type {:kind :boolean, :label "boolean"}} {:name "persistent", :blurb "Keep cache between evaluations", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :tonelut               {:id :tonelut, :operation-name "tonelut", :description "build a look-up table", :required-inputs [], :optional-inputs [{:name "in-max", :blurb "Size of LUT to build", :type {:kind :integer, :label "integer"}} {:name "out-max", :blurb "Maximum value in output LUT", :type {:kind :integer, :label "integer"}} {:name "Lb", :blurb "Lowest value in output", :type {:kind :float, :label "float"}} {:name "Lw", :blurb "Highest value in output", :type {:kind :float, :label "float"}} {:name "Ps", :blurb "Position of shadow", :type {:kind :float, :label "float"}} {:name "Pm", :blurb "Position of mid-tones", :type {:kind :float, :label "float"}} {:name "Ph", :blurb "Position of highlights", :type {:kind :float, :label "float"}} {:name "S", :blurb "Adjust shadows by this much", :type {:kind :float, :label "float"}} {:name "M", :blurb "Adjust mid-tones by this much", :type {:kind :float, :label "float"}} {:name "H", :blurb "Adjust highlights by this much", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :transpose3d           {:id :transpose3d, :operation-name "transpose3d", :description "transpose3d an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "page-height", :blurb "Height of each input page", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :unpremultiply         {:id :unpremultiply, :operation-name "unpremultiply", :description "unpremultiply image alpha", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "max-alpha", :blurb "Maximum value of alpha channel", :type {:kind :float, :label "float"}} {:name "alpha-band", :blurb "Unpremultiply with this alpha", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :vipsload              {:id :vipsload, :operation-name "vipsload", :description "load vips from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :vipssave              {:id :vipssave, :operation-name "vipssave", :description "save image to file in vips format", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :webpload              {:id :webpload, :operation-name "webpload", :description "load webp from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "page", :blurb "First page to load", :type {:kind :integer, :label "integer"}} {:name "n", :blurb "Number of pages to load, -1 for all", :type {:kind :integer, :label "integer"}} {:name "scale", :blurb "Factor to scale by", :type {:kind :float, :label "float"}} {:name "shrink", :blurb "Shrink factor on load", :type {:kind :integer, :label "integer"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :webpsave              {:id :webpsave, :operation-name "webpsave", :description "save as WebP", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "preset", :blurb "Preset for lossy compression", :type {:kind :enum, :label "keyword", :enum-id :foreign-webp-preset, :reference "ol.vips.enums/foreign-webp-preset"}} {:name "smart-subsample", :blurb "Enable high quality chroma subsampling", :type {:kind :boolean, :label "boolean"}} {:name "near-lossless", :blurb "Enable preprocessing in lossless mode (uses Q)", :type {:kind :boolean, :label "boolean"}} {:name "alpha-q", :blurb "Change alpha plane fidelity for lossy compression", :type {:kind :integer, :label "integer"}} {:name "min-size", :blurb "Optimise for minimum size", :type {:kind :boolean, :label "boolean"}} {:name "kmin", :blurb "Minimum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "kmax", :blurb "Maximum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "target-size", :blurb "Desired target size in bytes", :type {:kind :integer, :label "integer"}} {:name "reduction-effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "mixed", :blurb "Allow mixed encoding (might reduce file size)", :type {:kind :boolean, :label "boolean"}} {:name "smart-deblock", :blurb "Enable auto-adjusting of the deblocking filter", :type {:kind :boolean, :label "boolean"}} {:name "passes", :blurb "Number of entropy-analysis passes (in [1..10])", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :webpsave-mime         {:id :webpsave-mime, :operation-name "webpsave_mime", :description "save image to webp mime", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "preset", :blurb "Preset for lossy compression", :type {:kind :enum, :label "keyword", :enum-id :foreign-webp-preset, :reference "ol.vips.enums/foreign-webp-preset"}} {:name "smart-subsample", :blurb "Enable high quality chroma subsampling", :type {:kind :boolean, :label "boolean"}} {:name "near-lossless", :blurb "Enable preprocessing in lossless mode (uses Q)", :type {:kind :boolean, :label "boolean"}} {:name "alpha-q", :blurb "Change alpha plane fidelity for lossy compression", :type {:kind :integer, :label "integer"}} {:name "min-size", :blurb "Optimise for minimum size", :type {:kind :boolean, :label "boolean"}} {:name "kmin", :blurb "Minimum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "kmax", :blurb "Maximum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "target-size", :blurb "Desired target size in bytes", :type {:kind :integer, :label "integer"}} {:name "reduction-effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "mixed", :blurb "Allow mixed encoding (might reduce file size)", :type {:kind :boolean, :label "boolean"}} {:name "smart-deblock", :blurb "Enable auto-adjusting of the deblocking filter", :type {:kind :boolean, :label "boolean"}} {:name "passes", :blurb "Number of entropy-analysis passes (in [1..10])", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :worley                {:id :worley, :operation-name "worley", :description "make a worley noise image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "cell-size", :blurb "Size of Worley cells", :type {:kind :integer, :label "integer"}} {:name "seed", :blurb "Random number seed", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :wrap                  {:id :wrap, :operation-name "wrap", :description "wrap image origin", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "x", :blurb "Left edge of input in output", :type {:kind :integer, :label "integer"}} {:name "y", :blurb "Top edge of input in output", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :xyz                   {:id :xyz, :operation-name "xyz", :description "make an image where pixel values are coordinates", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "csize", :blurb "Size of third dimension", :type {:kind :integer, :label "integer"}} {:name "dsize", :blurb "Size of fourth dimension", :type {:kind :integer, :label "integer"}} {:name "esize", :blurb "Size of fifth dimension", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :xyz2-cmyk             {:id :xyz2-cmyk, :operation-name "XYZ2CMYK", :description "transform XYZ to CMYK", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :xyz2-lab              {:id :xyz2-lab, :operation-name "XYZ2Lab", :description "transform XYZ to Lab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :xyz2-yxy              {:id :xyz2-yxy, :operation-name "XYZ2Yxy", :description "transform XYZ to Yxy", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :xyz2sc-rgb            {:id :xyz2sc-rgb, :operation-name "XYZ2scRGB", :description "transform XYZ to scRGB", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :yxy2-xyz              {:id :yxy2-xyz, :operation-name "Yxy2XYZ", :description "transform Yxy to XYZ", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :zone                  {:id :zone, :operation-name "zone", :description "make a zone plate", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :zoom                  {:id :zoom, :operation-name "zoom", :description "zoom an image", :required-inputs [{:name "input", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "xfac", :blurb "Horizontal zoom factor", :type {:kind :integer, :label "integer"}} {:name "yfac", :blurb "Vertical zoom factor", :type {:kind :integer, :label "integer"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}})
 
 (defn operations [] (keys registry))
 
@@ -247,13 +247,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "abs" {:in input}))
 
@@ -265,14 +265,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "add" {:left left, :right right}))
 
@@ -284,13 +284,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "addalpha" {:in input}))
 
@@ -302,18 +302,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsArrayImage`): Array of input images
+  - `input` -> `:in` (seqable of image): Array of input images
   
   Optional inputs:
-  - `across` -> `:across` (`gint`): Number of images across grid
-  - `shim` -> `:shim` (`gint`): Pixels between images
-  - `halign` -> `:halign` (`VipsAlign`): Align on the left, centre or right
-  - `valign` -> `:valign` (`VipsAlign`): Align on the top, centre or bottom
-  - `hspacing` -> `:hspacing` (`gint`): Horizontal spacing between images
-  - `vspacing` -> `:vspacing` (`gint`): Vertical spacing between images
+  - `across` -> `:across` (integer): Number of images across grid
+  - `shim` -> `:shim` (integer): Pixels between images
+  - `halign` -> `:halign` (keyword, see `ol.vips.enums/align`): Align on the left, centre or right
+  - `valign` -> `:valign` (keyword, see `ol.vips.enums/align`): Align on the top, centre or bottom
+  - `hspacing` -> `:hspacing` (integer): Horizontal spacing between images
+  - `vspacing` -> `:vspacing` (integer): Vertical spacing between images
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (arrayjoin input {}))
   ([input opts]
    (v/call! "arrayjoin" (clojure.core/merge {:in input} opts))))
@@ -326,15 +326,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `angle` -> `:angle` (`VipsAngle`): Angle image was rotated by
-  - `flip` -> `:flip` (`gboolean`): Whether the image was flipped or not"
+  - `out` -> `:out` (image): Output image
+  - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Angle image was rotated by
+  - `flip` -> `:flip` (boolean): Whether the image was flipped or not"
   [input]
   (v/call! "autorot" {:in input}))
 
@@ -346,13 +346,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`gdouble`): Output value"
+  - `out` -> `:out` (float): Output value"
   [input]
   (v/call! "avg" {:in input}))
 
@@ -364,14 +364,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `boolean` -> `:boolean` (`VipsOperationBoolean`): Boolean to perform
+  - `input` -> `:in` (image): Input image argument
+  - `boolean` -> `:boolean` (keyword, see `ol.vips.enums/operation-boolean`): Boolean to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input boolean]
   (v/call! "bandbool" {:in input, :boolean boolean}))
 
@@ -383,13 +383,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `factor` -> `:factor` (`gint`): Fold by this factor
+  - `factor` -> `:factor` (integer): Fold by this factor
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (bandfold input {}))
   ([input opts]
    (v/call! "bandfold" (clojure.core/merge {:in input} opts))))
@@ -402,13 +402,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsArrayImage`): Array of input images
+  - `input` -> `:in` (seqable of image): Array of input images
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "bandjoin" {:in input}))
 
@@ -420,13 +420,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
+  - `input` -> `:in` (image): Input image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "bandmean" {:in input}))
 
@@ -438,13 +438,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsArrayImage`): Array of input images
+  - `input` -> `:in` (seqable of image): Array of input images
   
   Optional inputs:
-  - `index` -> `:index` (`gint`): Select this band element from sorted list
+  - `index` -> `:index` (integer): Select this band element from sorted list
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (bandrank input {}))
   ([input opts]
    (v/call! "bandrank" (clojure.core/merge {:in input} opts))))
@@ -457,13 +457,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `factor` -> `:factor` (`gint`): Unfold by this factor
+  - `factor` -> `:factor` (integer): Unfold by this factor
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (bandunfold input {}))
   ([input opts]
    (v/call! "bandunfold" (clojure.core/merge {:in input} opts))))
@@ -476,14 +476,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `bands` -> `:bands` (`gint`): Number of bands in image
+  - `bands` -> `:bands` (integer): Number of bands in image
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (black width height {}))
   ([width height opts]
    (v/call! "black" (clojure.core/merge {:width width, :height height} opts))))
@@ -496,15 +496,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
-  - `boolean` -> `:boolean` (`VipsOperationBoolean`): Boolean to perform
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
+  - `boolean` -> `:boolean` (keyword, see `ol.vips.enums/operation-boolean`): Boolean to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right boolean]
   (v/call! "boolean" {:left left, :right right, :boolean boolean}))
 
@@ -516,13 +516,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Matrix of XY coordinates
+  - `input` -> `:in` (image): Matrix of XY coordinates
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "buildlut" {:in input}))
 
@@ -534,13 +534,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "byteswap" {:in input}))
 
@@ -552,15 +552,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `max-tiles` -> `:max-tiles` (`gint`): Maximum number of tiles to cache
-  - `tile-height` -> `:tile-height` (`gint`): Tile height in pixels
-  - `tile-width` -> `:tile-width` (`gint`): Tile width in pixels
+  - `max-tiles` -> `:max-tiles` (integer): Maximum number of tiles to cache
+  - `tile-height` -> `:tile-height` (integer): Tile height in pixels
+  - `tile-width` -> `:tile-width` (integer): Tile width in pixels
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (cache input {}))
   ([input opts]
    (v/call! "cache" (clojure.core/merge {:in input} opts))))
@@ -573,14 +573,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `sigma` -> `:sigma` (`gdouble`): Sigma of Gaussian
-  - `precision` -> `:precision` (`VipsPrecision`): Convolve with this precision
+  - `sigma` -> `:sigma` (float): Sigma of Gaussian
+  - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (canny input {}))
   ([input opts]
    (v/call! "canny" (clojure.core/merge {:in input} opts))))
@@ -593,14 +593,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `index` -> `:index` (`VipsImage`): Index image
-  - `cases` -> `:cases` (`VipsArrayImage`): Array of case images
+  - `index` -> `:index` (image): Index image
+  - `cases` -> `:cases` (seqable of image): Array of case images
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [index cases]
   (v/call! "case" {:index index, :cases cases}))
 
@@ -612,14 +612,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `format` -> `:format` (`VipsBandFormat`): Format to cast to
+  - `input` -> `:in` (image): Input image
+  - `format` -> `:format` (keyword, see `ol.vips.enums/band-format`): Format to cast to
   
   Optional inputs:
-  - `shift` -> `:shift` (`gboolean`): Shift integer values up and down
+  - `shift` -> `:shift` (boolean): Shift integer values up and down
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input format] (cast input format {}))
   ([input format opts]
    (v/call! "cast" (clojure.core/merge {:in input, :format format} opts))))
@@ -632,14 +632,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `min` -> `:min` (`gdouble`): Minimum value
-  - `max` -> `:max` (`gdouble`): Maximum value
+  - `min` -> `:min` (float): Minimum value
+  - `max` -> `:max` (float): Maximum value
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (clamp input {}))
   ([input opts]
    (v/call! "clamp" (clojure.core/merge {:in input} opts))))
@@ -652,13 +652,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "CMC2LCh" {:in input}))
 
@@ -670,13 +670,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "CMYK2XYZ" {:in input}))
 
@@ -688,14 +688,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `space` -> `:space` (`VipsInterpretation`): Destination color space
+  - `input` -> `:in` (image): Input image
+  - `space` -> `:space` (keyword, see `ol.vips.enums/interpretation`): Destination color space
   
   Optional inputs:
-  - `source-space` -> `:source-space` (`VipsInterpretation`): Source color space
+  - `source-space` -> `:source-space` (keyword, see `ol.vips.enums/interpretation`): Source color space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input space] (colourspace input space {}))
   ([input space opts]
    (v/call! "colourspace" (clojure.core/merge {:in input, :space space} opts))))
@@ -708,19 +708,19 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `mask` -> `:mask` (`VipsImage`): Input matrix image
+  - `input` -> `:in` (image): Input image argument
+  - `mask` -> `:mask` (image): Input matrix image
   
   Optional inputs:
-  - `times` -> `:times` (`gint`): Rotate and convolve this many times
-  - `angle` -> `:angle` (`VipsAngle45`): Rotate mask by this much between convolutions
-  - `combine` -> `:combine` (`VipsCombine`): Combine convolution results like this
-  - `precision` -> `:precision` (`VipsPrecision`): Convolve with this precision
-  - `layers` -> `:layers` (`gint`): Use this many layers in approximation
-  - `cluster` -> `:cluster` (`gint`): Cluster lines closer than this in approximation
+  - `times` -> `:times` (integer): Rotate and convolve this many times
+  - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle45`): Rotate mask by this much between convolutions
+  - `combine` -> `:combine` (keyword, see `ol.vips.enums/combine`): Combine convolution results like this
+  - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
+  - `layers` -> `:layers` (integer): Use this many layers in approximation
+  - `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input mask] (compass input mask {}))
   ([input mask opts]
    (v/call! "compass" (clojure.core/merge {:in input, :mask mask} opts))))
@@ -733,14 +733,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `cmplx` -> `:cmplx` (`VipsOperationComplex`): Complex to perform
+  - `input` -> `:in` (image): Input image
+  - `cmplx` -> `:cmplx` (keyword, see `ol.vips.enums/operation-complex`): Complex to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input cmplx]
   (v/call! "complex" {:in input, :cmplx cmplx}))
 
@@ -752,15 +752,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
-  - `cmplx` -> `:cmplx` (`VipsOperationComplex2`): Binary complex operation to perform
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
+  - `cmplx` -> `:cmplx` (keyword, see `ol.vips.enums/operation-complex2`): Binary complex operation to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right cmplx]
   (v/call! "complex2" {:left left, :right right, :cmplx cmplx}))
 
@@ -772,14 +772,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "complexform" {:left left, :right right}))
 
@@ -791,14 +791,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `get` -> `:get` (`VipsOperationComplexget`): Complex to perform
+  - `input` -> `:in` (image): Input image
+  - `get` -> `:get` (keyword, see `ol.vips.enums/operation-complexget`): Complex to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input get]
   (v/call! "complexget" {:in input, :get get}))
 
@@ -810,18 +810,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `base` -> `:base` (`VipsImage`): Base image
-  - `overlay` -> `:overlay` (`VipsImage`): Overlay image
-  - `mode` -> `:mode` (`VipsBlendMode`): VipsBlendMode to join with
+  - `base` -> `:base` (image): Base image
+  - `overlay` -> `:overlay` (image): Overlay image
+  - `mode` -> `:mode` (keyword, see `ol.vips.enums/blend-mode`): VipsBlendMode to join with
   
   Optional inputs:
-  - `x` -> `:x` (`gint`): x position of overlay
-  - `y` -> `:y` (`gint`): y position of overlay
-  - `compositing-space` -> `:compositing-space` (`VipsInterpretation`): Composite images in this colour space
-  - `premultiplied` -> `:premultiplied` (`gboolean`): Images have premultiplied alpha
+  - `x` -> `:x` (integer): x position of overlay
+  - `y` -> `:y` (integer): y position of overlay
+  - `compositing-space` -> `:compositing-space` (keyword, see `ol.vips.enums/interpretation`): Composite images in this colour space
+  - `premultiplied` -> `:premultiplied` (boolean): Images have premultiplied alpha
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([base overlay mode] (composite2 base overlay mode {}))
   ([base overlay mode opts]
    (v/call! "composite2" (clojure.core/merge {:base base, :overlay overlay, :mode mode} opts))))
@@ -834,16 +834,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `mask` -> `:mask` (`VipsImage`): Input matrix image
+  - `input` -> `:in` (image): Input image argument
+  - `mask` -> `:mask` (image): Input matrix image
   
   Optional inputs:
-  - `precision` -> `:precision` (`VipsPrecision`): Convolve with this precision
-  - `layers` -> `:layers` (`gint`): Use this many layers in approximation
-  - `cluster` -> `:cluster` (`gint`): Cluster lines closer than this in approximation
+  - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
+  - `layers` -> `:layers` (integer): Use this many layers in approximation
+  - `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input mask] (conv input mask {}))
   ([input mask opts]
    (v/call! "conv" (clojure.core/merge {:in input, :mask mask} opts))))
@@ -856,15 +856,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `mask` -> `:mask` (`VipsImage`): Input matrix image
+  - `input` -> `:in` (image): Input image argument
+  - `mask` -> `:mask` (image): Input matrix image
   
   Optional inputs:
-  - `layers` -> `:layers` (`gint`): Use this many layers in approximation
-  - `cluster` -> `:cluster` (`gint`): Cluster lines closer than this in approximation
+  - `layers` -> `:layers` (integer): Use this many layers in approximation
+  - `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input mask] (conva input mask {}))
   ([input mask opts]
    (v/call! "conva" (clojure.core/merge {:in input, :mask mask} opts))))
@@ -877,14 +877,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `mask` -> `:mask` (`VipsImage`): Input matrix image
+  - `input` -> `:in` (image): Input image argument
+  - `mask` -> `:mask` (image): Input matrix image
   
   Optional inputs:
-  - `layers` -> `:layers` (`gint`): Use this many layers in approximation
+  - `layers` -> `:layers` (integer): Use this many layers in approximation
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input mask] (convasep input mask {}))
   ([input mask opts]
    (v/call! "convasep" (clojure.core/merge {:in input, :mask mask} opts))))
@@ -897,14 +897,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `mask` -> `:mask` (`VipsImage`): Input matrix image
+  - `input` -> `:in` (image): Input image argument
+  - `mask` -> `:mask` (image): Input matrix image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input mask]
   (v/call! "convf" {:in input, :mask mask}))
 
@@ -916,14 +916,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `mask` -> `:mask` (`VipsImage`): Input matrix image
+  - `input` -> `:in` (image): Input image argument
+  - `mask` -> `:mask` (image): Input matrix image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input mask]
   (v/call! "convi" {:in input, :mask mask}))
 
@@ -935,16 +935,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `mask` -> `:mask` (`VipsImage`): Input matrix image
+  - `input` -> `:in` (image): Input image argument
+  - `mask` -> `:mask` (image): Input matrix image
   
   Optional inputs:
-  - `precision` -> `:precision` (`VipsPrecision`): Convolve with this precision
-  - `layers` -> `:layers` (`gint`): Use this many layers in approximation
-  - `cluster` -> `:cluster` (`gint`): Cluster lines closer than this in approximation
+  - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
+  - `layers` -> `:layers` (integer): Use this many layers in approximation
+  - `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input mask] (convsep input mask {}))
   ([input mask opts]
    (v/call! "convsep" (clojure.core/merge {:in input, :mask mask} opts))))
@@ -957,23 +957,23 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `swap` -> `:swap` (`gboolean`): Swap bytes in image between little and big-endian
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `bands` -> `:bands` (`gint`): Number of bands in image
-  - `format` -> `:format` (`VipsBandFormat`): Pixel format in image
-  - `coding` -> `:coding` (`VipsCoding`): Pixel coding
-  - `interpretation` -> `:interpretation` (`VipsInterpretation`): Pixel interpretation
-  - `xres` -> `:xres` (`gdouble`): Horizontal resolution in pixels/mm
-  - `yres` -> `:yres` (`gdouble`): Vertical resolution in pixels/mm
-  - `xoffset` -> `:xoffset` (`gint`): Horizontal offset of origin
-  - `yoffset` -> `:yoffset` (`gint`): Vertical offset of origin
+  - `swap` -> `:swap` (boolean): Swap bytes in image between little and big-endian
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `bands` -> `:bands` (integer): Number of bands in image
+  - `format` -> `:format` (keyword, see `ol.vips.enums/band-format`): Pixel format in image
+  - `coding` -> `:coding` (keyword, see `ol.vips.enums/coding`): Pixel coding
+  - `interpretation` -> `:interpretation` (keyword, see `ol.vips.enums/interpretation`): Pixel interpretation
+  - `xres` -> `:xres` (float): Horizontal resolution in pixels/mm
+  - `yres` -> `:yres` (float): Vertical resolution in pixels/mm
+  - `xoffset` -> `:xoffset` (integer): Horizontal offset of origin
+  - `yoffset` -> `:yoffset` (integer): Vertical offset of origin
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (copy input {}))
   ([input opts]
    (v/call! "copy" (clojure.core/merge {:in input} opts))))
@@ -986,14 +986,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `direction` -> `:direction` (`VipsDirection`): Countlines left-right or up-down
+  - `input` -> `:in` (image): Input image argument
+  - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Countlines left-right or up-down
   
   Optional inputs:
   - none
   
   Outputs:
-  - `nolines` -> `:nolines` (`gdouble`): Number of lines"
+  - `nolines` -> `:nolines` (float): Number of lines"
   [input direction]
   (v/call! "countlines" {:in input, :direction direction}))
 
@@ -1005,24 +1005,24 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `skip` -> `:skip` (`gint`): Skip this many lines at the start of the file
-  - `lines` -> `:lines` (`gint`): Read this many lines from the file
-  - `whitespace` -> `:whitespace` (`gchararray`): Set of whitespace characters
-  - `separator` -> `:separator` (`gchararray`): Set of separator characters
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `skip` -> `:skip` (integer): Skip this many lines at the start of the file
+  - `lines` -> `:lines` (integer): Read this many lines from the file
+  - `whitespace` -> `:whitespace` (string): Set of whitespace characters
+  - `separator` -> `:separator` (string): Set of separator characters
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (csvload filename {}))
   ([filename opts]
    (v/call! "csvload" (clojure.core/merge {:filename filename} opts))))
@@ -1035,15 +1035,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `separator` -> `:separator` (`gchararray`): Separator characters
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `separator` -> `:separator` (string): Separator characters
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -1059,14 +1059,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand input image
-  - `right` -> `:right` (`VipsImage`): Right-hand input image
+  - `left` -> `:left` (image): Left-hand input image
+  - `right` -> `:right` (image): Right-hand input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "dE00" {:left left, :right right}))
 
@@ -1078,14 +1078,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand input image
-  - `right` -> `:right` (`VipsImage`): Right-hand input image
+  - `left` -> `:left` (image): Left-hand input image
+  - `right` -> `:right` (image): Right-hand input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "dE76" {:left left, :right right}))
 
@@ -1097,14 +1097,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand input image
-  - `right` -> `:right` (`VipsImage`): Right-hand input image
+  - `left` -> `:left` (image): Left-hand input image
+  - `right` -> `:right` (image): Right-hand input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "dECMC" {:left left, :right right}))
 
@@ -1116,13 +1116,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`gdouble`): Output value"
+  - `out` -> `:out` (float): Output value"
   [input]
   (v/call! "deviate" {:in input}))
 
@@ -1134,14 +1134,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "divide" {:left left, :right right}))
 
@@ -1153,13 +1153,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `image` -> `:image` (`VipsImage`): Image to draw on
-  - `sub` -> `:sub` (`VipsImage`): Sub-image to insert into main image
-  - `x` -> `:x` (`gint`): Draw image here
-  - `y` -> `:y` (`gint`): Draw image here
+  - `image` -> `:image` (image): Image to draw on
+  - `sub` -> `:sub` (image): Sub-image to insert into main image
+  - `x` -> `:x` (integer): Draw image here
+  - `y` -> `:y` (integer): Draw image here
   
   Optional inputs:
-  - `mode` -> `:mode` (`VipsCombineMode`): Combining mode
+  - `mode` -> `:mode` (keyword, see `ol.vips.enums/combine-mode`): Combining mode
   
   Outputs:
   - none"
@@ -1175,11 +1175,11 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `image` -> `:image` (`VipsImage`): Image to draw on
-  - `left` -> `:left` (`gint`): Rect to fill
-  - `top` -> `:top` (`gint`): Rect to fill
-  - `width` -> `:width` (`gint`): Rect to fill
-  - `height` -> `:height` (`gint`): Rect to fill
+  - `image` -> `:image` (image): Image to draw on
+  - `left` -> `:left` (integer): Rect to fill
+  - `top` -> `:top` (integer): Rect to fill
+  - `width` -> `:width` (integer): Rect to fill
+  - `height` -> `:height` (integer): Rect to fill
   
   Optional inputs:
   - none
@@ -1197,34 +1197,34 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `dirname` -> `:dirname` (`gchararray`): Directory name to save to
-  - `imagename` -> `:imagename` (`gchararray`): Image name
-  - `layout` -> `:layout` (`VipsForeignDzLayout`): Directory layout
-  - `suffix` -> `:suffix` (`gchararray`): Filename suffix for tiles
-  - `overlap` -> `:overlap` (`gint`): Tile overlap in pixels
-  - `tile-size` -> `:tile-size` (`gint`): Tile size in pixels
-  - `tile-height` -> `:tile-height` (`gint`): Tile height in pixels
-  - `tile-width` -> `:tile-width` (`gint`): Tile width in pixels
-  - `centre` -> `:centre` (`gboolean`): Center image in tile
-  - `depth` -> `:depth` (`VipsForeignDzDepth`): Pyramid depth
-  - `angle` -> `:angle` (`VipsAngle`): Rotate image during save
-  - `container` -> `:container` (`VipsForeignDzContainer`): Pyramid container type
-  - `properties` -> `:properties` (`gboolean`): Write a properties file to the output directory
-  - `compression` -> `:compression` (`gint`): ZIP deflate compression level
-  - `region-shrink` -> `:region-shrink` (`VipsRegionShrink`): Method to shrink regions
-  - `skip-blanks` -> `:skip-blanks` (`gint`): Skip tiles which are nearly equal to the background
-  - `id` -> `:id` (`gchararray`): Resource ID
-  - `q` -> `:Q` (`gint`): Q factor
-  - `no-strip` -> `:no-strip` (`gboolean`): Don't strip tile metadata
-  - `basename` -> `:basename` (`gchararray`): Base name to save to
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `dirname` -> `:dirname` (string): Directory name to save to
+  - `imagename` -> `:imagename` (string): Image name
+  - `layout` -> `:layout` (keyword, see `ol.vips.enums/foreign-dz-layout`): Directory layout
+  - `suffix` -> `:suffix` (string): Filename suffix for tiles
+  - `overlap` -> `:overlap` (integer): Tile overlap in pixels
+  - `tile-size` -> `:tile-size` (integer): Tile size in pixels
+  - `tile-height` -> `:tile-height` (integer): Tile height in pixels
+  - `tile-width` -> `:tile-width` (integer): Tile width in pixels
+  - `centre` -> `:centre` (boolean): Center image in tile
+  - `depth` -> `:depth` (keyword, see `ol.vips.enums/foreign-dz-depth`): Pyramid depth
+  - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Rotate image during save
+  - `container` -> `:container` (keyword, see `ol.vips.enums/foreign-dz-container`): Pyramid container type
+  - `properties` -> `:properties` (boolean): Write a properties file to the output directory
+  - `compression` -> `:compression` (integer): ZIP deflate compression level
+  - `region-shrink` -> `:region-shrink` (keyword, see `ol.vips.enums/region-shrink`): Method to shrink regions
+  - `skip-blanks` -> `:skip-blanks` (integer): Skip tiles which are nearly equal to the background
+  - `id` -> `:id` (string): Resource ID
+  - `q` -> `:Q` (integer): Q factor
+  - `no-strip` -> `:no-strip` (boolean): Don't strip tile metadata
+  - `basename` -> `:basename` (string): Base name to save to
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -1240,17 +1240,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `x` -> `:x` (`gint`): Left edge of input in output
-  - `y` -> `:y` (`gint`): Top edge of input in output
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `input` -> `:in` (image): Input image
+  - `x` -> `:x` (integer): Left edge of input in output
+  - `y` -> `:y` (integer): Top edge of input in output
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `extend` -> `:extend` (`VipsExtend`): How to generate the extra pixels
+  - `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input x y width height] (embed input x y width height {}))
   ([input x y width height opts]
    (v/call! "embed" (clojure.core/merge {:in input, :x x, :y y, :width width, :height height} opts))))
@@ -1263,17 +1263,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:input` (`VipsImage`): Input image
-  - `left` -> `:left` (`gint`): Left edge of extract area
-  - `top` -> `:top` (`gint`): Top edge of extract area
-  - `width` -> `:width` (`gint`): Width of extract area
-  - `height` -> `:height` (`gint`): Height of extract area
+  - `input` -> `:input` (image): Input image
+  - `left` -> `:left` (integer): Left edge of extract area
+  - `top` -> `:top` (integer): Top edge of extract area
+  - `width` -> `:width` (integer): Width of extract area
+  - `height` -> `:height` (integer): Height of extract area
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input left top width height]
   (v/call! "extract_area" {:input input, :left left, :top top, :width width, :height height}))
 
@@ -1285,14 +1285,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `band` -> `:band` (`gint`): Band to extract
+  - `input` -> `:in` (image): Input image
+  - `band` -> `:band` (integer): Band to extract
   
   Optional inputs:
-  - `n` -> `:n` (`gint`): Number of bands to extract
+  - `n` -> `:n` (integer): Number of bands to extract
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input band] (extract-band input band {}))
   ([input band opts]
    (v/call! "extract_band" (clojure.core/merge {:in input, :band band} opts))))
@@ -1305,15 +1305,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `factor` -> `:factor` (`gdouble`): Maximum spatial frequency
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `factor` -> `:factor` (float): Maximum spatial frequency
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (eye width height {}))
   ([width height opts]
    (v/call! "eye" (clojure.core/merge {:width width, :height height} opts))))
@@ -1326,13 +1326,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "falsecolour" {:in input}))
 
@@ -1344,14 +1344,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `ref` -> `:ref` (`VipsImage`): Input reference image
+  - `input` -> `:in` (image): Input image argument
+  - `ref` -> `:ref` (image): Input reference image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input ref]
   (v/call! "fastcor" {:in input, :ref ref}))
 
@@ -1363,14 +1363,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
+  - `input` -> `:in` (image): Input image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Value of nearest non-zero pixel
-  - `distance` -> `:distance` (`VipsImage`): Distance to nearest non-zero pixel"
+  - `out` -> `:out` (image): Value of nearest non-zero pixel
+  - `distance` -> `:distance` (image): Distance to nearest non-zero pixel"
   [input]
   (v/call! "fill_nearest" {:in input}))
 
@@ -1382,17 +1382,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to find_trim
+  - `input` -> `:in` (image): Image to find_trim
   
   Optional inputs:
-  - `threshold` -> `:threshold` (`gdouble`): Object threshold
-  - `line-art` -> `:line-art` (`gboolean`): Enable line art mode
+  - `threshold` -> `:threshold` (float): Object threshold
+  - `line-art` -> `:line-art` (boolean): Enable line art mode
   
   Outputs:
-  - `left` -> `:left` (`gint`): Left edge of image
-  - `top` -> `:top` (`gint`): Top edge of extract area
-  - `width` -> `:width` (`gint`): Width of extract area
-  - `height` -> `:height` (`gint`): Height of extract area"
+  - `left` -> `:left` (integer): Left edge of image
+  - `top` -> `:top` (integer): Top edge of extract area
+  - `width` -> `:width` (integer): Width of extract area
+  - `height` -> `:height` (integer): Height of extract area"
   ([input] (find-trim input {}))
   ([input opts]
    (v/call! "find_trim" (clojure.core/merge {:in input} opts))))
@@ -1405,13 +1405,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `max-alpha` -> `:max-alpha` (`gdouble`): Maximum value of alpha channel
+  - `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (flatten input {}))
   ([input opts]
    (v/call! "flatten" (clojure.core/merge {:in input} opts))))
@@ -1424,14 +1424,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `direction` -> `:direction` (`VipsDirection`): Direction to flip image
+  - `input` -> `:in` (image): Input image
+  - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Direction to flip image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input direction]
   (v/call! "flip" {:in input, :direction direction}))
 
@@ -1443,13 +1443,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "float2rad" {:in input}))
 
@@ -1461,15 +1461,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `fractal-dimension` -> `:fractal-dimension` (`gdouble`): Fractal dimension
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `fractal-dimension` -> `:fractal-dimension` (float): Fractal dimension
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [width height fractal-dimension]
   (v/call! "fractsurf" {:width width, :height height, :fractal-dimension fractal-dimension}))
 
@@ -1481,14 +1481,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `mask` -> `:mask` (`VipsImage`): Input mask image
+  - `input` -> `:in` (image): Input image
+  - `mask` -> `:mask` (image): Input mask image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input mask]
   (v/call! "freqmult" {:in input, :mask mask}))
 
@@ -1500,13 +1500,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `exponent` -> `:exponent` (`gdouble`): Gamma factor
+  - `exponent` -> `:exponent` (float): Gamma factor
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (gamma input {}))
   ([input opts]
    (v/call! "gamma" (clojure.core/merge {:in input} opts))))
@@ -1519,15 +1519,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `sigma` -> `:sigma` (`gdouble`): Sigma of Gaussian
+  - `input` -> `:in` (image): Input image
+  - `sigma` -> `:sigma` (float): Sigma of Gaussian
   
   Optional inputs:
-  - `min-ampl` -> `:min-ampl` (`gdouble`): Minimum amplitude of Gaussian
-  - `precision` -> `:precision` (`VipsPrecision`): Convolve with this precision
+  - `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
+  - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input sigma] (gaussblur input sigma {}))
   ([input sigma opts]
    (v/call! "gaussblur" (clojure.core/merge {:in input, :sigma sigma} opts))))
@@ -1540,16 +1540,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `sigma` -> `:sigma` (`gdouble`): Sigma of Gaussian
-  - `min-ampl` -> `:min-ampl` (`gdouble`): Minimum amplitude of Gaussian
+  - `sigma` -> `:sigma` (float): Sigma of Gaussian
+  - `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
   
   Optional inputs:
-  - `separable` -> `:separable` (`gboolean`): Generate separable Gaussian
-  - `integer` -> `:integer` (`gboolean`): Generate integer Gaussian
-  - `precision` -> `:precision` (`VipsPrecision`): Generate with this precision
+  - `separable` -> `:separable` (boolean): Generate separable Gaussian
+  - `integer` -> `:integer` (boolean): Generate integer Gaussian
+  - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Generate with this precision
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([sigma min-ampl] (gaussmat sigma min-ampl {}))
   ([sigma min-ampl opts]
    (v/call! "gaussmat" (clojure.core/merge {:sigma sigma, :min-ampl min-ampl} opts))))
@@ -1562,16 +1562,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `sigma` -> `:sigma` (`gdouble`): Standard deviation of pixels in generated image
-  - `mean` -> `:mean` (`gdouble`): Mean of pixels in generated image
-  - `seed` -> `:seed` (`gint`): Random number seed
+  - `sigma` -> `:sigma` (float): Standard deviation of pixels in generated image
+  - `mean` -> `:mean` (float): Mean of pixels in generated image
+  - `seed` -> `:seed` (integer): Random number seed
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (gaussnoise width height {}))
   ([width height opts]
    (v/call! "gaussnoise" (clojure.core/merge {:width width, :height height} opts))))
@@ -1584,22 +1584,22 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `n` -> `:n` (`gint`): Number of pages to load, -1 for all
-  - `page` -> `:page` (`gint`): First page to load
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `n` -> `:n` (integer): Number of pages to load, -1 for all
+  - `page` -> `:page` (integer): First page to load
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (gifload filename {}))
   ([filename opts]
    (v/call! "gifload" (clojure.core/merge {:filename filename} opts))))
@@ -1612,23 +1612,23 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `dither` -> `:dither` (`gdouble`): Amount of dithering
-  - `effort` -> `:effort` (`gint`): Quantisation effort
-  - `bitdepth` -> `:bitdepth` (`gint`): Number of bits per pixel
-  - `interframe-maxerror` -> `:interframe-maxerror` (`gdouble`): Maximum inter-frame error for transparency
-  - `reuse` -> `:reuse` (`gboolean`): Reuse palette from input
-  - `interpalette-maxerror` -> `:interpalette-maxerror` (`gdouble`): Maximum inter-palette error for palette reusage
-  - `interlace` -> `:interlace` (`gboolean`): Generate an interlaced (progressive) GIF
-  - `reoptimise` -> `:reoptimise` (`gboolean`): Reoptimise colour palettes
-  - `keep-duplicate-frames` -> `:keep-duplicate-frames` (`gboolean`): Keep duplicate frames in the output instead of combining them
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `dither` -> `:dither` (float): Amount of dithering
+  - `effort` -> `:effort` (integer): Quantisation effort
+  - `bitdepth` -> `:bitdepth` (integer): Number of bits per pixel
+  - `interframe-maxerror` -> `:interframe-maxerror` (float): Maximum inter-frame error for transparency
+  - `reuse` -> `:reuse` (boolean): Reuse palette from input
+  - `interpalette-maxerror` -> `:interpalette-maxerror` (float): Maximum inter-palette error for palette reusage
+  - `interlace` -> `:interlace` (boolean): Generate an interlaced (progressive) GIF
+  - `reoptimise` -> `:reoptimise` (boolean): Reoptimise colour palettes
+  - `keep-duplicate-frames` -> `:keep-duplicate-frames` (boolean): Keep duplicate frames in the output instead of combining them
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -1644,14 +1644,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `gamma` -> `:gamma` (`gdouble`): Image gamma
-  - `int-output` -> `:int-output` (`gboolean`): Integer output
+  - `gamma` -> `:gamma` (float): Image gamma
+  - `int-output` -> `:int-output` (boolean): Integer output
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (globalbalance input {}))
   ([input opts]
    (v/call! "globalbalance" (clojure.core/merge {:in input} opts))))
@@ -1664,16 +1664,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `direction` -> `:direction` (`VipsCompassDirection`): Direction to place image within width/height
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `input` -> `:in` (image): Input image
+  - `direction` -> `:direction` (keyword, see `ol.vips.enums/compass-direction`): Direction to place image within width/height
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `extend` -> `:extend` (`VipsExtend`): How to generate the extra pixels
+  - `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input direction width height] (gravity input direction width height {}))
   ([input direction width height opts]
    (v/call! "gravity" (clojure.core/merge {:in input, :direction direction, :width width, :height height} opts))))
@@ -1686,14 +1686,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (grey width height {}))
   ([width height opts]
    (v/call! "grey" (clojure.core/merge {:width width, :height height} opts))))
@@ -1706,16 +1706,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `tile-height` -> `:tile-height` (`gint`): Chop into tiles this high
-  - `across` -> `:across` (`gint`): Number of tiles across
-  - `down` -> `:down` (`gint`): Number of tiles down
+  - `input` -> `:in` (image): Input image
+  - `tile-height` -> `:tile-height` (integer): Chop into tiles this high
+  - `across` -> `:across` (integer): Number of tiles across
+  - `down` -> `:down` (integer): Number of tiles down
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input tile-height across down]
   (v/call! "grid" {:in input, :tile-height tile-height, :across across, :down down}))
 
@@ -1727,25 +1727,25 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `page` -> `:page` (`gint`): First page to load
-  - `n` -> `:n` (`gint`): Number of pages to load, -1 for all
-  - `thumbnail` -> `:thumbnail` (`gboolean`): Fetch thumbnail image
-  - `autorotate` -> `:autorotate` (`gboolean`): Rotate image using exif orientation
-  - `unlimited` -> `:unlimited` (`gboolean`): Remove all denial of service limits
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `page` -> `:page` (integer): First page to load
+  - `n` -> `:n` (integer): Number of pages to load, -1 for all
+  - `thumbnail` -> `:thumbnail` (boolean): Fetch thumbnail image
+  - `autorotate` -> `:autorotate` (boolean): Rotate image using exif orientation
+  - `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (heifload filename {}))
   ([filename opts]
    (v/call! "heifload" (clojure.core/merge {:filename filename} opts))))
@@ -1758,22 +1758,22 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `q` -> `:Q` (`gint`): Q factor
-  - `bitdepth` -> `:bitdepth` (`gint`): Number of bits per pixel
-  - `lossless` -> `:lossless` (`gboolean`): Enable lossless compression
-  - `compression` -> `:compression` (`VipsForeignHeifCompression`): Compression format
-  - `effort` -> `:effort` (`gint`): CPU effort
-  - `subsample-mode` -> `:subsample-mode` (`VipsForeignSubsample`): Select chroma subsample operation mode
-  - `speed` -> `:speed` (`gint`): CPU effort
-  - `encoder` -> `:encoder` (`VipsForeignHeifEncoder`): Select encoder to use
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `q` -> `:Q` (integer): Q factor
+  - `bitdepth` -> `:bitdepth` (integer): Number of bits per pixel
+  - `lossless` -> `:lossless` (boolean): Enable lossless compression
+  - `compression` -> `:compression` (keyword, see `ol.vips.enums/foreign-heif-compression`): Compression format
+  - `effort` -> `:effort` (integer): CPU effort
+  - `subsample-mode` -> `:subsample-mode` (keyword, see `ol.vips.enums/foreign-subsample`): Select chroma subsample operation mode
+  - `speed` -> `:speed` (integer): CPU effort
+  - `encoder` -> `:encoder` (keyword, see `ol.vips.enums/foreign-heif-encoder`): Select encoder to use
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -1789,13 +1789,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "hist_cum" {:in input}))
 
@@ -1807,13 +1807,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input histogram image
+  - `input` -> `:in` (image): Input histogram image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`gdouble`): Output value"
+  - `out` -> `:out` (float): Output value"
   [input]
   (v/call! "hist_entropy" {:in input}))
 
@@ -1825,13 +1825,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `band` -> `:band` (`gint`): Equalise with this band
+  - `band` -> `:band` (integer): Equalise with this band
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (hist-equal input {}))
   ([input opts]
    (v/call! "hist_equal" (clojure.core/merge {:in input} opts))))
@@ -1844,13 +1844,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `band` -> `:band` (`gint`): Find histogram of band
+  - `band` -> `:band` (integer): Find histogram of band
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output histogram"
+  - `out` -> `:out` (image): Output histogram"
   ([input] (hist-find input {}))
   ([input opts]
    (v/call! "hist_find" (clojure.core/merge {:in input} opts))))
@@ -1863,14 +1863,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `index` -> `:index` (`VipsImage`): Index image
+  - `input` -> `:in` (image): Input image
+  - `index` -> `:index` (image): Index image
   
   Optional inputs:
-  - `combine` -> `:combine` (`VipsCombine`): Combine bins like this
+  - `combine` -> `:combine` (keyword, see `ol.vips.enums/combine`): Combine bins like this
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output histogram"
+  - `out` -> `:out` (image): Output histogram"
   ([input index] (hist-find-indexed input index {}))
   ([input index opts]
    (v/call! "hist_find_indexed" (clojure.core/merge {:in input, :index index} opts))))
@@ -1883,13 +1883,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `bins` -> `:bins` (`gint`): Number of bins in each dimension
+  - `bins` -> `:bins` (integer): Number of bins in each dimension
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output histogram"
+  - `out` -> `:out` (image): Output histogram"
   ([input] (hist-find-ndim input {}))
   ([input opts]
    (v/call! "hist_find_ndim" (clojure.core/merge {:in input} opts))))
@@ -1902,13 +1902,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input histogram image
+  - `input` -> `:in` (image): Input histogram image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `monotonic` -> `:monotonic` (`gboolean`): true if in is monotonic"
+  - `monotonic` -> `:monotonic` (boolean): true if in is monotonic"
   [input]
   (v/call! "hist_ismonotonic" {:in input}))
 
@@ -1920,15 +1920,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `width` -> `:width` (`gint`): Window width in pixels
-  - `height` -> `:height` (`gint`): Window height in pixels
+  - `input` -> `:in` (image): Input image
+  - `width` -> `:width` (integer): Window width in pixels
+  - `height` -> `:height` (integer): Window height in pixels
   
   Optional inputs:
-  - `max-slope` -> `:max-slope` (`gint`): Maximum slope (CLAHE)
+  - `max-slope` -> `:max-slope` (integer): Maximum slope (CLAHE)
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input width height] (hist-local input width height {}))
   ([input width height opts]
    (v/call! "hist_local" (clojure.core/merge {:in input, :width width, :height height} opts))))
@@ -1941,14 +1941,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input histogram
-  - `ref` -> `:ref` (`VipsImage`): Reference histogram
+  - `input` -> `:in` (image): Input histogram
+  - `ref` -> `:ref` (image): Reference histogram
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input ref]
   (v/call! "hist_match" {:in input, :ref ref}))
 
@@ -1960,13 +1960,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "hist_norm" {:in input}))
 
@@ -1978,13 +1978,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "hist_plot" {:in input}))
 
@@ -1996,15 +1996,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `scale` -> `:scale` (`gint`): Scale down dimensions by this factor
-  - `min-radius` -> `:min-radius` (`gint`): Smallest radius to search for
-  - `max-radius` -> `:max-radius` (`gint`): Largest radius to search for
+  - `scale` -> `:scale` (integer): Scale down dimensions by this factor
+  - `min-radius` -> `:min-radius` (integer): Smallest radius to search for
+  - `max-radius` -> `:max-radius` (integer): Largest radius to search for
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (hough-circle input {}))
   ([input opts]
    (v/call! "hough_circle" (clojure.core/merge {:in input} opts))))
@@ -2017,14 +2017,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `width` -> `:width` (`gint`): Horizontal size of parameter space
-  - `height` -> `:height` (`gint`): Vertical size of parameter space
+  - `width` -> `:width` (integer): Horizontal size of parameter space
+  - `height` -> `:height` (integer): Vertical size of parameter space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (hough-line input {}))
   ([input opts]
    (v/call! "hough_line" (clojure.core/merge {:in input} opts))))
@@ -2037,13 +2037,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "HSV2sRGB" {:in input}))
 
@@ -2055,17 +2055,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `pcs` -> `:pcs` (`VipsPCS`): Set Profile Connection Space
-  - `intent` -> `:intent` (`VipsIntent`): Rendering intent
-  - `black-point-compensation` -> `:black-point-compensation` (`gboolean`): Enable black point compensation
-  - `output-profile` -> `:output-profile` (`gchararray`): Filename to load output profile from
-  - `depth` -> `:depth` (`gint`): Output device space depth in bits
+  - `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
+  - `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+  - `black-point-compensation` -> `:black-point-compensation` (boolean): Enable black point compensation
+  - `output-profile` -> `:output-profile` (string): Filename to load output profile from
+  - `depth` -> `:depth` (integer): Output device space depth in bits
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (icc-export input {}))
   ([input opts]
    (v/call! "icc_export" (clojure.core/merge {:in input} opts))))
@@ -2078,17 +2078,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `pcs` -> `:pcs` (`VipsPCS`): Set Profile Connection Space
-  - `intent` -> `:intent` (`VipsIntent`): Rendering intent
-  - `black-point-compensation` -> `:black-point-compensation` (`gboolean`): Enable black point compensation
-  - `embedded` -> `:embedded` (`gboolean`): Use embedded input profile, if available
-  - `input-profile` -> `:input-profile` (`gchararray`): Filename to load input profile from
+  - `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
+  - `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+  - `black-point-compensation` -> `:black-point-compensation` (boolean): Enable black point compensation
+  - `embedded` -> `:embedded` (boolean): Use embedded input profile, if available
+  - `input-profile` -> `:input-profile` (string): Filename to load input profile from
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (icc-import input {}))
   ([input opts]
    (v/call! "icc_import" (clojure.core/merge {:in input} opts))))
@@ -2101,19 +2101,19 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `output-profile` -> `:output-profile` (`gchararray`): Filename to load output profile from
+  - `input` -> `:in` (image): Input image
+  - `output-profile` -> `:output-profile` (string): Filename to load output profile from
   
   Optional inputs:
-  - `pcs` -> `:pcs` (`VipsPCS`): Set Profile Connection Space
-  - `intent` -> `:intent` (`VipsIntent`): Rendering intent
-  - `black-point-compensation` -> `:black-point-compensation` (`gboolean`): Enable black point compensation
-  - `embedded` -> `:embedded` (`gboolean`): Use embedded input profile, if available
-  - `input-profile` -> `:input-profile` (`gchararray`): Filename to load input profile from
-  - `depth` -> `:depth` (`gint`): Output device space depth in bits
+  - `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
+  - `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+  - `black-point-compensation` -> `:black-point-compensation` (boolean): Enable black point compensation
+  - `embedded` -> `:embedded` (boolean): Use embedded input profile, if available
+  - `input-profile` -> `:input-profile` (string): Filename to load input profile from
+  - `depth` -> `:depth` (integer): Output device space depth in bits
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input output-profile] (icc-transform input output-profile {}))
   ([input output-profile opts]
    (v/call! "icc_transform" (clojure.core/merge {:in input, :output-profile output-profile} opts))))
@@ -2129,12 +2129,12 @@
   - none
   
   Optional inputs:
-  - `bands` -> `:bands` (`gint`): Number of bands in LUT
-  - `ushort` -> `:ushort` (`gboolean`): Create a 16-bit LUT
-  - `size` -> `:size` (`gint`): Size of 16-bit LUT
+  - `bands` -> `:bands` (integer): Number of bands in LUT
+  - `ushort` -> `:ushort` (boolean): Create a 16-bit LUT
+  - `size` -> `:size` (integer): Size of 16-bit LUT
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([] (identity {}))
   ([opts]
    (v/call! "identity" (clojure.core/merge {} opts))))
@@ -2147,15 +2147,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `cond` -> `:cond` (`VipsImage`): Condition input image
-  - `in1` -> `:in1` (`VipsImage`): Source for TRUE pixels
-  - `in2` -> `:in2` (`VipsImage`): Source for FALSE pixels
+  - `cond` -> `:cond` (image): Condition input image
+  - `in1` -> `:in1` (image): Source for TRUE pixels
+  - `in2` -> `:in2` (image): Source for FALSE pixels
   
   Optional inputs:
-  - `blend` -> `:blend` (`gboolean`): Blend smoothly between then and else parts
+  - `blend` -> `:blend` (boolean): Blend smoothly between then and else parts
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([cond in1 in2] (ifthenelse cond in1 in2 {}))
   ([cond in1 in2 opts]
    (v/call! "ifthenelse" (clojure.core/merge {:cond cond, :in1 in1, :in2 in2} opts))))
@@ -2168,16 +2168,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `main` -> `:main` (`VipsImage`): Main input image
-  - `sub` -> `:sub` (`VipsImage`): Sub-image to insert into main image
-  - `x` -> `:x` (`gint`): Left edge of sub in main
-  - `y` -> `:y` (`gint`): Top edge of sub in main
+  - `main` -> `:main` (image): Main input image
+  - `sub` -> `:sub` (image): Sub-image to insert into main image
+  - `x` -> `:x` (integer): Left edge of sub in main
+  - `y` -> `:y` (integer): Top edge of sub in main
   
   Optional inputs:
-  - `expand` -> `:expand` (`gboolean`): Expand output to hold all of both inputs
+  - `expand` -> `:expand` (boolean): Expand output to hold all of both inputs
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([main sub x y] (insert main sub x y {}))
   ([main sub x y opts]
    (v/call! "insert" (clojure.core/merge {:main main, :sub sub, :x x, :y y} opts))))
@@ -2190,13 +2190,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "invert" {:in input}))
 
@@ -2208,13 +2208,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Matrix of XY coordinates
+  - `input` -> `:in` (image): Matrix of XY coordinates
   
   Optional inputs:
-  - `size` -> `:size` (`gint`): LUT size to generate
+  - `size` -> `:size` (integer): LUT size to generate
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (invertlut input {}))
   ([input opts]
    (v/call! "invertlut" (clojure.core/merge {:in input} opts))))
@@ -2227,17 +2227,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `in1` -> `:in1` (`VipsImage`): First input image
-  - `in2` -> `:in2` (`VipsImage`): Second input image
-  - `direction` -> `:direction` (`VipsDirection`): Join left-right or up-down
+  - `in1` -> `:in1` (image): First input image
+  - `in2` -> `:in2` (image): Second input image
+  - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Join left-right or up-down
   
   Optional inputs:
-  - `expand` -> `:expand` (`gboolean`): Expand output to hold all of both inputs
-  - `shim` -> `:shim` (`gint`): Pixels between images
-  - `align` -> `:align` (`VipsAlign`): Align on the low, centre or high coordinate edge
+  - `expand` -> `:expand` (boolean): Expand output to hold all of both inputs
+  - `shim` -> `:shim` (integer): Pixels between images
+  - `align` -> `:align` (keyword, see `ol.vips.enums/align`): Align on the low, centre or high coordinate edge
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([in1 in2 direction] (join in1 in2 direction {}))
   ([in1 in2 direction opts]
    (v/call! "join" (clojure.core/merge {:in1 in1, :in2 in2, :direction direction} opts))))
@@ -2250,23 +2250,23 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `shrink` -> `:shrink` (`gint`): Shrink factor on load
-  - `autorotate` -> `:autorotate` (`gboolean`): Rotate image using exif orientation
-  - `unlimited` -> `:unlimited` (`gboolean`): Remove all denial of service limits
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `shrink` -> `:shrink` (integer): Shrink factor on load
+  - `autorotate` -> `:autorotate` (boolean): Rotate image using exif orientation
+  - `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (jpegload filename {}))
   ([filename opts]
    (v/call! "jpegload" (clojure.core/merge {:filename filename} opts))))
@@ -2279,24 +2279,24 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `q` -> `:Q` (`gint`): Q factor
-  - `optimize-coding` -> `:optimize-coding` (`gboolean`): Compute optimal Huffman coding tables
-  - `interlace` -> `:interlace` (`gboolean`): Generate an interlaced (progressive) jpeg
-  - `no-subsample` -> `:no-subsample` (`gboolean`): Disable chroma subsample
-  - `trellis-quant` -> `:trellis-quant` (`gboolean`): Apply trellis quantisation to each 8x8 block
-  - `overshoot-deringing` -> `:overshoot-deringing` (`gboolean`): Apply overshooting to samples with extreme values
-  - `optimize-scans` -> `:optimize-scans` (`gboolean`): Split spectrum of DCT coefficients into separate scans
-  - `quant-table` -> `:quant-table` (`gint`): Use predefined quantization table with given index
-  - `subsample-mode` -> `:subsample-mode` (`VipsForeignSubsample`): Select chroma subsample operation mode
-  - `restart-interval` -> `:restart-interval` (`gint`): Add restart markers every specified number of mcu
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `q` -> `:Q` (integer): Q factor
+  - `optimize-coding` -> `:optimize-coding` (boolean): Compute optimal Huffman coding tables
+  - `interlace` -> `:interlace` (boolean): Generate an interlaced (progressive) jpeg
+  - `no-subsample` -> `:no-subsample` (boolean): Disable chroma subsample
+  - `trellis-quant` -> `:trellis-quant` (boolean): Apply trellis quantisation to each 8x8 block
+  - `overshoot-deringing` -> `:overshoot-deringing` (boolean): Apply overshooting to samples with extreme values
+  - `optimize-scans` -> `:optimize-scans` (boolean): Split spectrum of DCT coefficients into separate scans
+  - `quant-table` -> `:quant-table` (integer): Use predefined quantization table with given index
+  - `subsample-mode` -> `:subsample-mode` (keyword, see `ol.vips.enums/foreign-subsample`): Select chroma subsample operation mode
+  - `restart-interval` -> `:restart-interval` (integer): Add restart markers every specified number of mcu
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -2312,23 +2312,23 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
+  - `input` -> `:in` (image): Image to save
   
   Optional inputs:
-  - `q` -> `:Q` (`gint`): Q factor
-  - `optimize-coding` -> `:optimize-coding` (`gboolean`): Compute optimal Huffman coding tables
-  - `interlace` -> `:interlace` (`gboolean`): Generate an interlaced (progressive) jpeg
-  - `no-subsample` -> `:no-subsample` (`gboolean`): Disable chroma subsample
-  - `trellis-quant` -> `:trellis-quant` (`gboolean`): Apply trellis quantisation to each 8x8 block
-  - `overshoot-deringing` -> `:overshoot-deringing` (`gboolean`): Apply overshooting to samples with extreme values
-  - `optimize-scans` -> `:optimize-scans` (`gboolean`): Split spectrum of DCT coefficients into separate scans
-  - `quant-table` -> `:quant-table` (`gint`): Use predefined quantization table with given index
-  - `subsample-mode` -> `:subsample-mode` (`VipsForeignSubsample`): Select chroma subsample operation mode
-  - `restart-interval` -> `:restart-interval` (`gint`): Add restart markers every specified number of mcu
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `q` -> `:Q` (integer): Q factor
+  - `optimize-coding` -> `:optimize-coding` (boolean): Compute optimal Huffman coding tables
+  - `interlace` -> `:interlace` (boolean): Generate an interlaced (progressive) jpeg
+  - `no-subsample` -> `:no-subsample` (boolean): Disable chroma subsample
+  - `trellis-quant` -> `:trellis-quant` (boolean): Apply trellis quantisation to each 8x8 block
+  - `overshoot-deringing` -> `:overshoot-deringing` (boolean): Apply overshooting to samples with extreme values
+  - `optimize-scans` -> `:optimize-scans` (boolean): Split spectrum of DCT coefficients into separate scans
+  - `quant-table` -> `:quant-table` (integer): Use predefined quantization table with given index
+  - `subsample-mode` -> `:subsample-mode` (keyword, see `ol.vips.enums/foreign-subsample`): Select chroma subsample operation mode
+  - `restart-interval` -> `:restart-interval` (integer): Add restart markers every specified number of mcu
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -2344,13 +2344,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "LabQ2Lab" {:in input}))
 
@@ -2362,13 +2362,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "LabQ2LabS" {:in input}))
 
@@ -2380,13 +2380,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "LabQ2sRGB" {:in input}))
 
@@ -2398,13 +2398,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "LabS2Lab" {:in input}))
 
@@ -2416,13 +2416,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "LabS2LabQ" {:in input}))
 
@@ -2434,13 +2434,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "Lab2LabQ" {:in input}))
 
@@ -2452,13 +2452,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "Lab2LabS" {:in input}))
 
@@ -2470,13 +2470,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "Lab2LCh" {:in input}))
 
@@ -2488,13 +2488,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "Lab2XYZ" {:in input}))
 
@@ -2506,14 +2506,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
+  - `input` -> `:in` (image): Input image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `mask` -> `:mask` (`VipsImage`): Mask of region labels
-  - `segments` -> `:segments` (`gint`): Number of discrete contiguous regions"
+  - `mask` -> `:mask` (image): Mask of region labels
+  - `segments` -> `:segments` (integer): Number of discrete contiguous regions"
   [input]
   (v/call! "labelregions" {:in input}))
 
@@ -2525,13 +2525,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "LCh2CMC" {:in input}))
 
@@ -2543,13 +2543,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "LCh2Lab" {:in input}))
 
@@ -2561,16 +2561,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `tile-height` -> `:tile-height` (`gint`): Tile height in pixels
-  - `access` -> `:access` (`VipsAccess`): Expected access pattern
-  - `threaded` -> `:threaded` (`gboolean`): Allow threaded access
-  - `persistent` -> `:persistent` (`gboolean`): Keep cache between evaluations
+  - `tile-height` -> `:tile-height` (integer): Tile height in pixels
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
+  - `threaded` -> `:threaded` (boolean): Allow threaded access
+  - `persistent` -> `:persistent` (boolean): Keep cache between evaluations
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (linecache input {}))
   ([input opts]
    (v/call! "linecache" (clojure.core/merge {:in input} opts))))
@@ -2583,16 +2583,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `sigma` -> `:sigma` (`gdouble`): Radius of Gaussian
-  - `min-ampl` -> `:min-ampl` (`gdouble`): Minimum amplitude of Gaussian
+  - `sigma` -> `:sigma` (float): Radius of Gaussian
+  - `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
   
   Optional inputs:
-  - `separable` -> `:separable` (`gboolean`): Generate separable Gaussian
-  - `integer` -> `:integer` (`gboolean`): Generate integer Gaussian
-  - `precision` -> `:precision` (`VipsPrecision`): Generate with this precision
+  - `separable` -> `:separable` (boolean): Generate separable Gaussian
+  - `integer` -> `:integer` (boolean): Generate integer Gaussian
+  - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Generate with this precision
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([sigma min-ampl] (logmat sigma min-ampl {}))
   ([sigma min-ampl opts]
    (v/call! "logmat" (clojure.core/merge {:sigma sigma, :min-ampl min-ampl} opts))))
@@ -2605,15 +2605,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `index` -> `:index` (`VipsImage`): Index pixels with this
+  - `input` -> `:in` (image): Input image argument
+  - `index` -> `:index` (image): Index pixels with this
   
   Optional inputs:
-  - `premultiplied` -> `:premultiplied` (`gboolean`): Images have premultiplied alpha
-  - `extend` -> `:extend` (`VipsExtend`): How to generate the extra pixels
+  - `premultiplied` -> `:premultiplied` (boolean): Images have premultiplied alpha
+  - `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input index] (mapim input index {}))
   ([input index opts]
    (v/call! "mapim" (clojure.core/merge {:in input, :index index} opts))))
@@ -2626,14 +2626,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `lut` -> `:lut` (`VipsImage`): Look-up table image
+  - `input` -> `:in` (image): Input image
+  - `lut` -> `:lut` (image): Look-up table image
   
   Optional inputs:
-  - `band` -> `:band` (`gint`): Apply one-band lut to this band of in
+  - `band` -> `:band` (integer): Apply one-band lut to this band of in
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input lut] (maplut input lut {}))
   ([input lut opts]
    (v/call! "maplut" (clojure.core/merge {:in input, :lut lut} opts))))
@@ -2646,20 +2646,20 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `order` -> `:order` (`gdouble`): Filter order
-  - `frequency-cutoff` -> `:frequency-cutoff` (`gdouble`): Frequency cutoff
-  - `amplitude-cutoff` -> `:amplitude-cutoff` (`gdouble`): Amplitude cutoff
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `order` -> `:order` (float): Filter order
+  - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+  - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff amplitude-cutoff] (mask-butterworth width height order frequency-cutoff amplitude-cutoff {}))
   ([width height order frequency-cutoff amplitude-cutoff opts]
    (v/call! "mask_butterworth" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff} opts))))
@@ -2672,22 +2672,22 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `order` -> `:order` (`gdouble`): Filter order
-  - `frequency-cutoff-x` -> `:frequency-cutoff-x` (`gdouble`): Frequency cutoff x
-  - `frequency-cutoff-y` -> `:frequency-cutoff-y` (`gdouble`): Frequency cutoff y
-  - `radius` -> `:radius` (`gdouble`): Radius of circle
-  - `amplitude-cutoff` -> `:amplitude-cutoff` (`gdouble`): Amplitude cutoff
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `order` -> `:order` (float): Filter order
+  - `frequency-cutoff-x` -> `:frequency-cutoff-x` (float): Frequency cutoff x
+  - `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
+  - `radius` -> `:radius` (float): Radius of circle
+  - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff] (mask-butterworth-band width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff {}))
   ([width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff opts]
    (v/call! "mask_butterworth_band" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius, :amplitude-cutoff amplitude-cutoff} opts))))
@@ -2700,21 +2700,21 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `order` -> `:order` (`gdouble`): Filter order
-  - `frequency-cutoff` -> `:frequency-cutoff` (`gdouble`): Frequency cutoff
-  - `amplitude-cutoff` -> `:amplitude-cutoff` (`gdouble`): Amplitude cutoff
-  - `ringwidth` -> `:ringwidth` (`gdouble`): Ringwidth
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `order` -> `:order` (float): Filter order
+  - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+  - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
+  - `ringwidth` -> `:ringwidth` (float): Ringwidth
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff amplitude-cutoff ringwidth] (mask-butterworth-ring width height order frequency-cutoff amplitude-cutoff ringwidth {}))
   ([width height order frequency-cutoff amplitude-cutoff ringwidth opts]
    (v/call! "mask_butterworth_ring" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff, :ringwidth ringwidth} opts))))
@@ -2727,18 +2727,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `fractal-dimension` -> `:fractal-dimension` (`gdouble`): Fractal dimension
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `fractal-dimension` -> `:fractal-dimension` (float): Fractal dimension
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height fractal-dimension] (mask-fractal width height fractal-dimension {}))
   ([width height fractal-dimension opts]
    (v/call! "mask_fractal" (clojure.core/merge {:width width, :height height, :fractal-dimension fractal-dimension} opts))))
@@ -2751,19 +2751,19 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `frequency-cutoff` -> `:frequency-cutoff` (`gdouble`): Frequency cutoff
-  - `amplitude-cutoff` -> `:amplitude-cutoff` (`gdouble`): Amplitude cutoff
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+  - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff amplitude-cutoff] (mask-gaussian width height frequency-cutoff amplitude-cutoff {}))
   ([width height frequency-cutoff amplitude-cutoff opts]
    (v/call! "mask_gaussian" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff} opts))))
@@ -2776,21 +2776,21 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `frequency-cutoff-x` -> `:frequency-cutoff-x` (`gdouble`): Frequency cutoff x
-  - `frequency-cutoff-y` -> `:frequency-cutoff-y` (`gdouble`): Frequency cutoff y
-  - `radius` -> `:radius` (`gdouble`): Radius of circle
-  - `amplitude-cutoff` -> `:amplitude-cutoff` (`gdouble`): Amplitude cutoff
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `frequency-cutoff-x` -> `:frequency-cutoff-x` (float): Frequency cutoff x
+  - `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
+  - `radius` -> `:radius` (float): Radius of circle
+  - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff] (mask-gaussian-band width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff {}))
   ([width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff opts]
    (v/call! "mask_gaussian_band" (clojure.core/merge {:width width, :height height, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius, :amplitude-cutoff amplitude-cutoff} opts))))
@@ -2803,20 +2803,20 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `frequency-cutoff` -> `:frequency-cutoff` (`gdouble`): Frequency cutoff
-  - `amplitude-cutoff` -> `:amplitude-cutoff` (`gdouble`): Amplitude cutoff
-  - `ringwidth` -> `:ringwidth` (`gdouble`): Ringwidth
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+  - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
+  - `ringwidth` -> `:ringwidth` (float): Ringwidth
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff amplitude-cutoff ringwidth] (mask-gaussian-ring width height frequency-cutoff amplitude-cutoff ringwidth {}))
   ([width height frequency-cutoff amplitude-cutoff ringwidth opts]
    (v/call! "mask_gaussian_ring" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff, :ringwidth ringwidth} opts))))
@@ -2829,18 +2829,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `frequency-cutoff` -> `:frequency-cutoff` (`gdouble`): Frequency cutoff
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff] (mask-ideal width height frequency-cutoff {}))
   ([width height frequency-cutoff opts]
    (v/call! "mask_ideal" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff} opts))))
@@ -2853,20 +2853,20 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `frequency-cutoff-x` -> `:frequency-cutoff-x` (`gdouble`): Frequency cutoff x
-  - `frequency-cutoff-y` -> `:frequency-cutoff-y` (`gdouble`): Frequency cutoff y
-  - `radius` -> `:radius` (`gdouble`): Radius of circle
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `frequency-cutoff-x` -> `:frequency-cutoff-x` (float): Frequency cutoff x
+  - `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
+  - `radius` -> `:radius` (float): Radius of circle
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff-x frequency-cutoff-y radius] (mask-ideal-band width height frequency-cutoff-x frequency-cutoff-y radius {}))
   ([width height frequency-cutoff-x frequency-cutoff-y radius opts]
    (v/call! "mask_ideal_band" (clojure.core/merge {:width width, :height height, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius} opts))))
@@ -2879,19 +2879,19 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `frequency-cutoff` -> `:frequency-cutoff` (`gdouble`): Frequency cutoff
-  - `ringwidth` -> `:ringwidth` (`gdouble`): Ringwidth
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+  - `ringwidth` -> `:ringwidth` (float): Ringwidth
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `nodc` -> `:nodc` (`gboolean`): Remove DC component
-  - `reject` -> `:reject` (`gboolean`): Invert the sense of the filter
-  - `optical` -> `:optical` (`gboolean`): Rotate quadrants to optical space
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `nodc` -> `:nodc` (boolean): Remove DC component
+  - `reject` -> `:reject` (boolean): Invert the sense of the filter
+  - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff ringwidth] (mask-ideal-ring width height frequency-cutoff ringwidth {}))
   ([width height frequency-cutoff ringwidth opts]
    (v/call! "mask_ideal_ring" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :ringwidth ringwidth} opts))))
@@ -2904,24 +2904,24 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `ref` -> `:ref` (`VipsImage`): Reference image
-  - `sec` -> `:sec` (`VipsImage`): Secondary image
-  - `xr1` -> `:xr1` (`gint`): Position of first reference tie-point
-  - `yr1` -> `:yr1` (`gint`): Position of first reference tie-point
-  - `xs1` -> `:xs1` (`gint`): Position of first secondary tie-point
-  - `ys1` -> `:ys1` (`gint`): Position of first secondary tie-point
-  - `xr2` -> `:xr2` (`gint`): Position of second reference tie-point
-  - `yr2` -> `:yr2` (`gint`): Position of second reference tie-point
-  - `xs2` -> `:xs2` (`gint`): Position of second secondary tie-point
-  - `ys2` -> `:ys2` (`gint`): Position of second secondary tie-point
+  - `ref` -> `:ref` (image): Reference image
+  - `sec` -> `:sec` (image): Secondary image
+  - `xr1` -> `:xr1` (integer): Position of first reference tie-point
+  - `yr1` -> `:yr1` (integer): Position of first reference tie-point
+  - `xs1` -> `:xs1` (integer): Position of first secondary tie-point
+  - `ys1` -> `:ys1` (integer): Position of first secondary tie-point
+  - `xr2` -> `:xr2` (integer): Position of second reference tie-point
+  - `yr2` -> `:yr2` (integer): Position of second reference tie-point
+  - `xs2` -> `:xs2` (integer): Position of second secondary tie-point
+  - `ys2` -> `:ys2` (integer): Position of second secondary tie-point
   
   Optional inputs:
-  - `hwindow` -> `:hwindow` (`gint`): Half window size
-  - `harea` -> `:harea` (`gint`): Half area size
-  - `search` -> `:search` (`gboolean`): Search to improve tie-points
+  - `hwindow` -> `:hwindow` (integer): Half window size
+  - `harea` -> `:harea` (integer): Half area size
+  - `search` -> `:search` (boolean): Search to improve tie-points
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2] (match ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 {}))
   ([ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 opts]
    (v/call! "match" (clojure.core/merge {:xr1 xr1, :xs2 xs2, :ys2 ys2, :ref ref, :xr2 xr2, :xs1 xs1, :sec sec, :yr2 yr2, :yr1 yr1, :ys1 ys1} opts))))
@@ -2934,14 +2934,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `math` -> `:math` (`VipsOperationMath`): Math to perform
+  - `input` -> `:in` (image): Input image
+  - `math` -> `:math` (keyword, see `ol.vips.enums/operation-math`): Math to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input math]
   (v/call! "math" {:in input, :math math}))
 
@@ -2953,15 +2953,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
-  - `math2` -> `:math2` (`VipsOperationMath2`): Math to perform
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
+  - `math2` -> `:math2` (keyword, see `ol.vips.enums/operation-math2`): Math to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right math2]
   (v/call! "math2" {:left left, :right right, :math2 math2}))
 
@@ -2973,13 +2973,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): An square matrix
+  - `input` -> `:in` (image): An square matrix
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output matrix"
+  - `out` -> `:out` (image): Output matrix"
   [input]
   (v/call! "matrixinvert" {:in input}))
 
@@ -2991,20 +2991,20 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (matrixload filename {}))
   ([filename opts]
    (v/call! "matrixload" (clojure.core/merge {:filename filename} opts))))
@@ -3017,14 +3017,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): First matrix to multiply
-  - `right` -> `:right` (`VipsImage`): Second matrix to multiply
+  - `left` -> `:left` (image): First matrix to multiply
+  - `right` -> `:right` (image): Second matrix to multiply
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output matrix"
+  - `out` -> `:out` (image): Output matrix"
   [left right]
   (v/call! "matrixmultiply" {:left left, :right right}))
 
@@ -3036,13 +3036,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
+  - `input` -> `:in` (image): Image to save
   
   Optional inputs:
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -3058,14 +3058,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -3081,14 +3081,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "maxpair" {:left left, :right right}))
 
@@ -3100,18 +3100,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to measure
-  - `h` -> `:h` (`gint`): Number of patches across chart
-  - `v` -> `:v` (`gint`): Number of patches down chart
+  - `input` -> `:in` (image): Image to measure
+  - `h` -> `:h` (integer): Number of patches across chart
+  - `v` -> `:v` (integer): Number of patches down chart
   
   Optional inputs:
-  - `left` -> `:left` (`gint`): Left edge of extract area
-  - `top` -> `:top` (`gint`): Top edge of extract area
-  - `width` -> `:width` (`gint`): Width of extract area
-  - `height` -> `:height` (`gint`): Height of extract area
+  - `left` -> `:left` (integer): Left edge of extract area
+  - `top` -> `:top` (integer): Top edge of extract area
+  - `width` -> `:width` (integer): Width of extract area
+  - `height` -> `:height` (integer): Height of extract area
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output array of statistics"
+  - `out` -> `:out` (image): Output array of statistics"
   ([input h v] (measure input h v {}))
   ([input h v opts]
    (v/call! "measure" (clojure.core/merge {:in input, :h h, :v v} opts))))
@@ -3124,17 +3124,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `ref` -> `:ref` (`VipsImage`): Reference image
-  - `sec` -> `:sec` (`VipsImage`): Secondary image
-  - `direction` -> `:direction` (`VipsDirection`): Horizontal or vertical merge
-  - `dx` -> `:dx` (`gint`): Horizontal displacement from sec to ref
-  - `dy` -> `:dy` (`gint`): Vertical displacement from sec to ref
+  - `ref` -> `:ref` (image): Reference image
+  - `sec` -> `:sec` (image): Secondary image
+  - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Horizontal or vertical merge
+  - `dx` -> `:dx` (integer): Horizontal displacement from sec to ref
+  - `dy` -> `:dy` (integer): Vertical displacement from sec to ref
   
   Optional inputs:
-  - `mblend` -> `:mblend` (`gint`): Maximum blend size
+  - `mblend` -> `:mblend` (integer): Maximum blend size
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([ref sec direction dx dy] (merge ref sec direction dx dy {}))
   ([ref sec direction dx dy opts]
    (v/call! "merge" (clojure.core/merge {:ref ref, :sec sec, :direction direction, :dx dx, :dy dy} opts))))
@@ -3147,14 +3147,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "minpair" {:left left, :right right}))
 
@@ -3166,15 +3166,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `mask` -> `:mask` (`VipsImage`): Input matrix image
-  - `morph` -> `:morph` (`VipsOperationMorphology`): Morphological operation to perform
+  - `input` -> `:in` (image): Input image argument
+  - `mask` -> `:mask` (image): Input matrix image
+  - `morph` -> `:morph` (keyword, see `ol.vips.enums/operation-morphology`): Morphological operation to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input mask morph]
   (v/call! "morph" {:in input, :mask mask, :morph morph}))
 
@@ -3186,28 +3186,28 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `ref` -> `:ref` (`VipsImage`): Reference image
-  - `sec` -> `:sec` (`VipsImage`): Secondary image
-  - `direction` -> `:direction` (`VipsDirection`): Horizontal or vertical mosaic
-  - `xref` -> `:xref` (`gint`): Position of reference tie-point
-  - `yref` -> `:yref` (`gint`): Position of reference tie-point
-  - `xsec` -> `:xsec` (`gint`): Position of secondary tie-point
-  - `ysec` -> `:ysec` (`gint`): Position of secondary tie-point
+  - `ref` -> `:ref` (image): Reference image
+  - `sec` -> `:sec` (image): Secondary image
+  - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Horizontal or vertical mosaic
+  - `xref` -> `:xref` (integer): Position of reference tie-point
+  - `yref` -> `:yref` (integer): Position of reference tie-point
+  - `xsec` -> `:xsec` (integer): Position of secondary tie-point
+  - `ysec` -> `:ysec` (integer): Position of secondary tie-point
   
   Optional inputs:
-  - `hwindow` -> `:hwindow` (`gint`): Half window size
-  - `harea` -> `:harea` (`gint`): Half area size
-  - `mblend` -> `:mblend` (`gint`): Maximum blend size
-  - `bandno` -> `:bandno` (`gint`): Band to search for features on
+  - `hwindow` -> `:hwindow` (integer): Half window size
+  - `harea` -> `:harea` (integer): Half area size
+  - `mblend` -> `:mblend` (integer): Maximum blend size
+  - `bandno` -> `:bandno` (integer): Band to search for features on
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `dx0` -> `:dx0` (`gint`): Detected integer offset
-  - `dy0` -> `:dy0` (`gint`): Detected integer offset
-  - `scale1` -> `:scale1` (`gdouble`): Detected scale
-  - `angle1` -> `:angle1` (`gdouble`): Detected rotation
-  - `dy1` -> `:dy1` (`gdouble`): Detected first-order displacement
-  - `dx1` -> `:dx1` (`gdouble`): Detected first-order displacement"
+  - `out` -> `:out` (image): Output image
+  - `dx0` -> `:dx0` (integer): Detected integer offset
+  - `dy0` -> `:dy0` (integer): Detected integer offset
+  - `scale1` -> `:scale1` (float): Detected scale
+  - `angle1` -> `:angle1` (float): Detected rotation
+  - `dy1` -> `:dy1` (float): Detected first-order displacement
+  - `dx1` -> `:dx1` (float): Detected first-order displacement"
   ([ref sec direction xref yref xsec ysec] (mosaic ref sec direction xref yref xsec ysec {}))
   ([ref sec direction xref yref xsec ysec opts]
    (v/call! "mosaic" (clojure.core/merge {:ref ref, :sec sec, :direction direction, :xref xref, :yref yref, :xsec xsec, :ysec ysec} opts))))
@@ -3220,27 +3220,27 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `ref` -> `:ref` (`VipsImage`): Reference image
-  - `sec` -> `:sec` (`VipsImage`): Secondary image
-  - `direction` -> `:direction` (`VipsDirection`): Horizontal or vertical mosaic
-  - `xr1` -> `:xr1` (`gint`): Position of first reference tie-point
-  - `yr1` -> `:yr1` (`gint`): Position of first reference tie-point
-  - `xs1` -> `:xs1` (`gint`): Position of first secondary tie-point
-  - `ys1` -> `:ys1` (`gint`): Position of first secondary tie-point
-  - `xr2` -> `:xr2` (`gint`): Position of second reference tie-point
-  - `yr2` -> `:yr2` (`gint`): Position of second reference tie-point
-  - `xs2` -> `:xs2` (`gint`): Position of second secondary tie-point
-  - `ys2` -> `:ys2` (`gint`): Position of second secondary tie-point
+  - `ref` -> `:ref` (image): Reference image
+  - `sec` -> `:sec` (image): Secondary image
+  - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Horizontal or vertical mosaic
+  - `xr1` -> `:xr1` (integer): Position of first reference tie-point
+  - `yr1` -> `:yr1` (integer): Position of first reference tie-point
+  - `xs1` -> `:xs1` (integer): Position of first secondary tie-point
+  - `ys1` -> `:ys1` (integer): Position of first secondary tie-point
+  - `xr2` -> `:xr2` (integer): Position of second reference tie-point
+  - `yr2` -> `:yr2` (integer): Position of second reference tie-point
+  - `xs2` -> `:xs2` (integer): Position of second secondary tie-point
+  - `ys2` -> `:ys2` (integer): Position of second secondary tie-point
   
   Optional inputs:
-  - `hwindow` -> `:hwindow` (`gint`): Half window size
-  - `harea` -> `:harea` (`gint`): Half area size
-  - `search` -> `:search` (`gboolean`): Search to improve tie-points
-  - `mblend` -> `:mblend` (`gint`): Maximum blend size
-  - `bandno` -> `:bandno` (`gint`): Band to search for features on
+  - `hwindow` -> `:hwindow` (integer): Half window size
+  - `harea` -> `:harea` (integer): Half area size
+  - `search` -> `:search` (boolean): Search to improve tie-points
+  - `mblend` -> `:mblend` (integer): Maximum blend size
+  - `bandno` -> `:bandno` (integer): Band to search for features on
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2] (mosaic1 ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 {}))
   ([ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 opts]
    (v/call! "mosaic1" (clojure.core/merge {:xr1 xr1, :xs2 xs2, :ys2 ys2, :ref ref, :xr2 xr2, :xs1 xs1, :sec sec, :yr2 yr2, :yr1 yr1, :direction direction, :ys1 ys1} opts))))
@@ -3253,13 +3253,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `band` -> `:band` (`gint`): Band to msb
+  - `band` -> `:band` (integer): Band to msb
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (msb input {}))
   ([input opts]
    (v/call! "msb" (clojure.core/merge {:in input} opts))))
@@ -3272,14 +3272,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "multiply" {:left left, :right right}))
 
@@ -3291,14 +3291,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `percent` -> `:percent` (`gdouble`): Percent of pixels
+  - `input` -> `:in` (image): Input image
+  - `percent` -> `:percent` (float): Percent of pixels
   
   Optional inputs:
   - none
   
   Outputs:
-  - `threshold` -> `:threshold` (`gint`): Threshold above which lie percent of pixels"
+  - `threshold` -> `:threshold` (integer): Threshold above which lie percent of pixels"
   [input percent]
   (v/call! "percent" {:in input, :percent percent}))
 
@@ -3310,16 +3310,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `cell-size` -> `:cell-size` (`gint`): Size of Perlin cells
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `seed` -> `:seed` (`gint`): Random number seed
+  - `cell-size` -> `:cell-size` (integer): Size of Perlin cells
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `seed` -> `:seed` (integer): Random number seed
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (perlin width height {}))
   ([width height opts]
    (v/call! "perlin" (clojure.core/merge {:width width, :height height} opts))))
@@ -3332,14 +3332,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `in2` -> `:in2` (`VipsImage`): Second input image
+  - `input` -> `:in` (image): Input image
+  - `in2` -> `:in2` (image): Second input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input in2]
   (v/call! "phasecor" {:in input, :in2 in2}))
 
@@ -3351,21 +3351,21 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `unlimited` -> `:unlimited` (`gboolean`): Remove all denial of service limits
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (pngload filename {}))
   ([filename opts]
    (v/call! "pngload" (clojure.core/merge {:filename filename} opts))))
@@ -3378,23 +3378,23 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `compression` -> `:compression` (`gint`): Compression factor
-  - `interlace` -> `:interlace` (`gboolean`): Interlace image
-  - `filter` -> `:filter` (`VipsForeignPngFilter`): libspng row filter flag(s)
-  - `palette` -> `:palette` (`gboolean`): Quantise to 8bpp palette
-  - `colours` -> `:colours` (`gint`): Max number of palette colours
-  - `q` -> `:Q` (`gint`): Quantisation quality
-  - `dither` -> `:dither` (`gdouble`): Amount of dithering
-  - `bitdepth` -> `:bitdepth` (`gint`): Write as a 1, 2, 4, 8 or 16 bit image
-  - `effort` -> `:effort` (`gint`): Quantisation CPU effort
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `compression` -> `:compression` (integer): Compression factor
+  - `interlace` -> `:interlace` (boolean): Interlace image
+  - `filter` -> `:filter` (integer flags): libspng row filter flag(s)
+  - `palette` -> `:palette` (boolean): Quantise to 8bpp palette
+  - `colours` -> `:colours` (integer): Max number of palette colours
+  - `q` -> `:Q` (integer): Quantisation quality
+  - `dither` -> `:dither` (float): Amount of dithering
+  - `bitdepth` -> `:bitdepth` (integer): Write as a 1, 2, 4, 8 or 16 bit image
+  - `effort` -> `:effort` (integer): Quantisation CPU effort
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -3410,13 +3410,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `max-alpha` -> `:max-alpha` (`gdouble`): Maximum value of alpha channel
+  - `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (premultiply input {}))
   ([input opts]
    (v/call! "premultiply" (clojure.core/merge {:in input} opts))))
@@ -3429,13 +3429,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "prewitt" {:in input}))
 
@@ -3447,14 +3447,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `columns` -> `:columns` (`VipsImage`): First non-zero pixel in column
-  - `rows` -> `:rows` (`VipsImage`): First non-zero pixel in row"
+  - `columns` -> `:columns` (image): First non-zero pixel in column
+  - `rows` -> `:rows` (image): First non-zero pixel in row"
   [input]
   (v/call! "profile" {:in input}))
 
@@ -3466,14 +3466,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `columns` -> `:columns` (`VipsImage`): Sums of columns
-  - `rows` -> `:rows` (`VipsImage`): Sums of rows"
+  - `columns` -> `:columns` (image): Sums of columns
+  - `rows` -> `:rows` (image): Sums of rows"
   [input]
   (v/call! "project" {:in input}))
 
@@ -3485,14 +3485,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `coeff` -> `:coeff` (`VipsImage`): Coefficient matrix
+  - `input` -> `:in` (image): Input image argument
+  - `coeff` -> `:coeff` (image): Coefficient matrix
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input coeff]
   (v/call! "quadratic" {:in input, :coeff coeff}))
 
@@ -3504,13 +3504,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "rad2float" {:in input}))
 
@@ -3522,16 +3522,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `width` -> `:width` (`gint`): Window width in pixels
-  - `height` -> `:height` (`gint`): Window height in pixels
-  - `index` -> `:index` (`gint`): Select pixel at index
+  - `input` -> `:in` (image): Input image argument
+  - `width` -> `:width` (integer): Window width in pixels
+  - `height` -> `:height` (integer): Window height in pixels
+  - `index` -> `:index` (integer): Select pixel at index
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input width height index]
   (v/call! "rank" {:in input, :width width, :height height, :index index}))
 
@@ -3543,26 +3543,26 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `bands` -> `:bands` (`gint`): Number of bands in image
+  - `filename` -> `:filename` (string): Filename to load from
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `bands` -> `:bands` (integer): Number of bands in image
   
   Optional inputs:
-  - `offset` -> `:offset` (`guint64`): Offset in bytes from start of file
-  - `format` -> `:format` (`VipsBandFormat`): Pixel format in image
-  - `interpretation` -> `:interpretation` (`VipsInterpretation`): Pixel interpretation
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `offset` -> `:offset` (integer): Offset in bytes from start of file
+  - `format` -> `:format` (keyword, see `ol.vips.enums/band-format`): Pixel format in image
+  - `interpretation` -> `:interpretation` (keyword, see `ol.vips.enums/interpretation`): Pixel interpretation
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename width height bands] (rawload filename width height bands {}))
   ([filename width height bands opts]
    (v/call! "rawload" (clojure.core/merge {:filename filename, :width width, :height height, :bands bands} opts))))
@@ -3575,14 +3575,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -3598,14 +3598,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `m` -> `:m` (`VipsImage`): Matrix of coefficients
+  - `input` -> `:in` (image): Input image argument
+  - `m` -> `:m` (image): Matrix of coefficients
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input m]
   (v/call! "recomb" {:in input, :m m}))
 
@@ -3617,19 +3617,19 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `xshrink` -> `:xshrink` (`gdouble`): Horizontal shrink factor
-  - `hshrink` -> `:hshrink` (`gdouble`): Horizontal shrink factor
-  - `yshrink` -> `:yshrink` (`gdouble`): Vertical shrink factor
-  - `vshrink` -> `:vshrink` (`gdouble`): Vertical shrink factor
+  - `input` -> `:in` (image): Input image argument
+  - `xshrink` -> `:xshrink` (float): Horizontal shrink factor
+  - `hshrink` -> `:hshrink` (float): Horizontal shrink factor
+  - `yshrink` -> `:yshrink` (float): Vertical shrink factor
+  - `vshrink` -> `:vshrink` (float): Vertical shrink factor
   
   Optional inputs:
-  - `kernel` -> `:kernel` (`VipsKernel`): Resampling kernel
-  - `gap` -> `:gap` (`gdouble`): Reducing gap
-  - `centre` -> `:centre` (`gboolean`): Use centre sampling convention
+  - `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
+  - `gap` -> `:gap` (float): Reducing gap
+  - `centre` -> `:centre` (boolean): Use centre sampling convention
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink yshrink vshrink] (reduce input xshrink hshrink yshrink vshrink {}))
   ([input xshrink hshrink yshrink vshrink opts]
    (v/call! "reduce" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink, :yshrink yshrink, :vshrink vshrink} opts))))
@@ -3642,17 +3642,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `xshrink` -> `:xshrink` (`gdouble`): Horizontal shrink factor
-  - `hshrink` -> `:hshrink` (`gdouble`): Horizontal shrink factor
+  - `input` -> `:in` (image): Input image argument
+  - `xshrink` -> `:xshrink` (float): Horizontal shrink factor
+  - `hshrink` -> `:hshrink` (float): Horizontal shrink factor
   
   Optional inputs:
-  - `kernel` -> `:kernel` (`VipsKernel`): Resampling kernel
-  - `gap` -> `:gap` (`gdouble`): Reducing gap
-  - `centre` -> `:centre` (`gboolean`): Use centre sampling convention
+  - `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
+  - `gap` -> `:gap` (float): Reducing gap
+  - `centre` -> `:centre` (boolean): Use centre sampling convention
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink] (reduceh input xshrink hshrink {}))
   ([input xshrink hshrink opts]
    (v/call! "reduceh" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink} opts))))
@@ -3665,17 +3665,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `yshrink` -> `:yshrink` (`gdouble`): Vertical shrink factor
-  - `vshrink` -> `:vshrink` (`gdouble`): Vertical shrink factor
+  - `input` -> `:in` (image): Input image argument
+  - `yshrink` -> `:yshrink` (float): Vertical shrink factor
+  - `vshrink` -> `:vshrink` (float): Vertical shrink factor
   
   Optional inputs:
-  - `kernel` -> `:kernel` (`VipsKernel`): Resampling kernel
-  - `gap` -> `:gap` (`gdouble`): Reducing gap
-  - `centre` -> `:centre` (`gboolean`): Use centre sampling convention
+  - `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
+  - `gap` -> `:gap` (float): Reducing gap
+  - `centre` -> `:centre` (boolean): Use centre sampling convention
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input yshrink vshrink] (reducev input yshrink vshrink {}))
   ([input yshrink vshrink opts]
    (v/call! "reducev" (clojure.core/merge {:in input, :yshrink yshrink, :vshrink vshrink} opts))))
@@ -3688,15 +3688,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
-  - `relational` -> `:relational` (`VipsOperationRelational`): Relational to perform
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
+  - `relational` -> `:relational` (keyword, see `ol.vips.enums/operation-relational`): Relational to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right relational]
   (v/call! "relational" {:left left, :right right, :relational relational}))
 
@@ -3708,14 +3708,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "remainder" {:left left, :right right}))
 
@@ -3727,15 +3727,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `old-str` -> `:old-str` (`gchararray`): Search for this string
-  - `new-str` -> `:new-str` (`gchararray`): And swap for this string
+  - `input` -> `:in` (image): Input image
+  - `old-str` -> `:old-str` (string): Search for this string
+  - `new-str` -> `:new-str` (string): And swap for this string
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input old-str new-str]
   (v/call! "remosaic" {:in input, :old-str old-str, :new-str new-str}))
 
@@ -3747,15 +3747,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `across` -> `:across` (`gint`): Repeat this many times horizontally
-  - `down` -> `:down` (`gint`): Repeat this many times vertically
+  - `input` -> `:in` (image): Input image
+  - `across` -> `:across` (integer): Repeat this many times horizontally
+  - `down` -> `:down` (integer): Repeat this many times vertically
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input across down]
   (v/call! "replicate" {:in input, :across across, :down down}))
 
@@ -3767,19 +3767,19 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `scale` -> `:scale` (`gdouble`): Scale image by this factor
+  - `input` -> `:in` (image): Input image argument
+  - `scale` -> `:scale` (float): Scale image by this factor
   
   Optional inputs:
-  - `kernel` -> `:kernel` (`VipsKernel`): Resampling kernel
-  - `gap` -> `:gap` (`gdouble`): Reducing gap
-  - `centre` -> `:centre` (`gboolean`): Use centre sampling convention
-  - `vscale` -> `:vscale` (`gdouble`): Vertical scale image by this factor
-  - `idx` -> `:idx` (`gdouble`): Horizontal input displacement
-  - `idy` -> `:idy` (`gdouble`): Vertical input displacement
+  - `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
+  - `gap` -> `:gap` (float): Reducing gap
+  - `centre` -> `:centre` (boolean): Use centre sampling convention
+  - `vscale` -> `:vscale` (float): Vertical scale image by this factor
+  - `idx` -> `:idx` (float): Horizontal input displacement
+  - `idy` -> `:idy` (float): Vertical input displacement
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input scale] (resize input scale {}))
   ([input scale opts]
    (v/call! "resize" (clojure.core/merge {:in input, :scale scale} opts))))
@@ -3792,14 +3792,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `angle` -> `:angle` (`VipsAngle`): Angle to rotate image
+  - `input` -> `:in` (image): Input image
+  - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Angle to rotate image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input angle]
   (v/call! "rot" {:in input, :angle angle}))
 
@@ -3811,13 +3811,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `angle` -> `:angle` (`VipsAngle45`): Angle to rotate image
+  - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle45`): Angle to rotate image
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (rot45 input {}))
   ([input opts]
    (v/call! "rot45" (clojure.core/merge {:in input} opts))))
@@ -3830,17 +3830,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `angle` -> `:angle` (`gdouble`): Rotate clockwise by this many degrees
+  - `input` -> `:in` (image): Input image argument
+  - `angle` -> `:angle` (float): Rotate clockwise by this many degrees
   
   Optional inputs:
-  - `odx` -> `:odx` (`gdouble`): Horizontal output displacement
-  - `ody` -> `:ody` (`gdouble`): Vertical output displacement
-  - `idx` -> `:idx` (`gdouble`): Horizontal input displacement
-  - `idy` -> `:idy` (`gdouble`): Vertical input displacement
+  - `odx` -> `:odx` (float): Horizontal output displacement
+  - `ody` -> `:ody` (float): Vertical output displacement
+  - `idx` -> `:idx` (float): Horizontal input displacement
+  - `idy` -> `:idy` (float): Vertical input displacement
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input angle] (rotate input angle {}))
   ([input angle opts]
    (v/call! "rotate" (clojure.core/merge {:in input, :angle angle} opts))))
@@ -3853,14 +3853,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `round` -> `:round` (`VipsOperationRound`): Rounding operation to perform
+  - `input` -> `:in` (image): Input image
+  - `round` -> `:round` (keyword, see `ol.vips.enums/operation-round`): Rounding operation to perform
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input round]
   (v/call! "round" {:in input, :round round}))
 
@@ -3872,13 +3872,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "sRGB2HSV" {:in input}))
 
@@ -3890,13 +3890,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "sRGB2scRGB" {:in input}))
 
@@ -3908,13 +3908,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `depth` -> `:depth` (`gint`): Output device space depth in bits
+  - `depth` -> `:depth` (integer): Output device space depth in bits
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (sc-rgb2-bw input {}))
   ([input opts]
    (v/call! "scRGB2BW" (clojure.core/merge {:in input} opts))))
@@ -3927,13 +3927,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "scRGB2XYZ" {:in input}))
 
@@ -3945,13 +3945,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `depth` -> `:depth` (`gint`): Output device space depth in bits
+  - `depth` -> `:depth` (integer): Output device space depth in bits
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (sc-rgb2s-rgb input {}))
   ([input opts]
    (v/call! "scRGB2sRGB" (clojure.core/merge {:in input} opts))))
@@ -3964,14 +3964,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `exp` -> `:exp` (`gdouble`): Exponent for log scale
-  - `log` -> `:log` (`gboolean`): Log scale
+  - `exp` -> `:exp` (float): Exponent for log scale
+  - `log` -> `:log` (boolean): Log scale
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (scale input {}))
   ([input opts]
    (v/call! "scale" (clojure.core/merge {:in input} opts))))
@@ -3984,13 +3984,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "scharr" {:in input}))
 
@@ -4002,15 +4002,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
-  - `shape` -> `:shape` (`VipsSdfShape`): SDF shape to create
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
+  - `shape` -> `:shape` (keyword, see `ol.vips.enums/sdf-shape`): SDF shape to create
   
   Optional inputs:
-  - `r` -> `:r` (`gdouble`): Radius
+  - `r` -> `:r` (float): Radius
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height shape] (sdf width height shape {}))
   ([width height shape opts]
    (v/call! "sdf" (clojure.core/merge {:width width, :height height, :shape shape} opts))))
@@ -4023,15 +4023,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `trace` -> `:trace` (`gboolean`): Trace pixel requests
-  - `tile-height` -> `:tile-height` (`gint`): Tile height in pixels
-  - `access` -> `:access` (`VipsAccess`): Expected access pattern
+  - `trace` -> `:trace` (boolean): Trace pixel requests
+  - `tile-height` -> `:tile-height` (integer): Tile height in pixels
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (sequential input {}))
   ([input opts]
    (v/call! "sequential" (clojure.core/merge {:in input} opts))))
@@ -4044,19 +4044,19 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `radius` -> `:radius` (`gint`): Radius of Gaussian
-  - `sigma` -> `:sigma` (`gdouble`): Sigma of Gaussian
-  - `x1` -> `:x1` (`gdouble`): Flat/jaggy threshold
-  - `y2` -> `:y2` (`gdouble`): Maximum brightening
-  - `y3` -> `:y3` (`gdouble`): Maximum darkening
-  - `m1` -> `:m1` (`gdouble`): Slope for flat areas
-  - `m2` -> `:m2` (`gdouble`): Slope for jaggy areas
+  - `radius` -> `:radius` (integer): Radius of Gaussian
+  - `sigma` -> `:sigma` (float): Sigma of Gaussian
+  - `x1` -> `:x1` (float): Flat/jaggy threshold
+  - `y2` -> `:y2` (float): Maximum brightening
+  - `y3` -> `:y3` (float): Maximum darkening
+  - `m1` -> `:m1` (float): Slope for flat areas
+  - `m2` -> `:m2` (float): Slope for jaggy areas
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (sharpen input {}))
   ([input opts]
    (v/call! "sharpen" (clojure.core/merge {:in input} opts))))
@@ -4069,17 +4069,17 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `xshrink` -> `:xshrink` (`gdouble`): Horizontal shrink factor
-  - `hshrink` -> `:hshrink` (`gdouble`): Horizontal shrink factor
-  - `yshrink` -> `:yshrink` (`gdouble`): Vertical shrink factor
-  - `vshrink` -> `:vshrink` (`gdouble`): Vertical shrink factor
+  - `input` -> `:in` (image): Input image argument
+  - `xshrink` -> `:xshrink` (float): Horizontal shrink factor
+  - `hshrink` -> `:hshrink` (float): Horizontal shrink factor
+  - `yshrink` -> `:yshrink` (float): Vertical shrink factor
+  - `vshrink` -> `:vshrink` (float): Vertical shrink factor
   
   Optional inputs:
-  - `ceil` -> `:ceil` (`gboolean`): Round-up output dimensions
+  - `ceil` -> `:ceil` (boolean): Round-up output dimensions
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink yshrink vshrink] (shrink input xshrink hshrink yshrink vshrink {}))
   ([input xshrink hshrink yshrink vshrink opts]
    (v/call! "shrink" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink, :yshrink yshrink, :vshrink vshrink} opts))))
@@ -4092,15 +4092,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `xshrink` -> `:xshrink` (`gint`): Horizontal shrink factor
-  - `hshrink` -> `:hshrink` (`gint`): Horizontal shrink factor
+  - `input` -> `:in` (image): Input image argument
+  - `xshrink` -> `:xshrink` (integer): Horizontal shrink factor
+  - `hshrink` -> `:hshrink` (integer): Horizontal shrink factor
   
   Optional inputs:
-  - `ceil` -> `:ceil` (`gboolean`): Round-up output dimensions
+  - `ceil` -> `:ceil` (boolean): Round-up output dimensions
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink] (shrinkh input xshrink hshrink {}))
   ([input xshrink hshrink opts]
    (v/call! "shrinkh" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink} opts))))
@@ -4113,15 +4113,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `yshrink` -> `:yshrink` (`gint`): Vertical shrink factor
-  - `vshrink` -> `:vshrink` (`gint`): Vertical shrink factor
+  - `input` -> `:in` (image): Input image argument
+  - `yshrink` -> `:yshrink` (integer): Vertical shrink factor
+  - `vshrink` -> `:vshrink` (integer): Vertical shrink factor
   
   Optional inputs:
-  - `ceil` -> `:ceil` (`gboolean`): Round-up output dimensions
+  - `ceil` -> `:ceil` (boolean): Round-up output dimensions
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input yshrink vshrink] (shrinkv input yshrink vshrink {}))
   ([input yshrink vshrink opts]
    (v/call! "shrinkv" (clojure.core/merge {:in input, :yshrink yshrink, :vshrink vshrink} opts))))
@@ -4134,13 +4134,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "sign" {:in input}))
 
@@ -4152,18 +4152,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
+  - `input` -> `:in` (image): Input image argument
   
   Optional inputs:
-  - `scale` -> `:scale` (`gdouble`): Scale by this factor
-  - `angle` -> `:angle` (`gdouble`): Rotate clockwise by this many degrees
-  - `odx` -> `:odx` (`gdouble`): Horizontal output displacement
-  - `ody` -> `:ody` (`gdouble`): Vertical output displacement
-  - `idx` -> `:idx` (`gdouble`): Horizontal input displacement
-  - `idy` -> `:idy` (`gdouble`): Vertical input displacement
+  - `scale` -> `:scale` (float): Scale by this factor
+  - `angle` -> `:angle` (float): Rotate clockwise by this many degrees
+  - `odx` -> `:odx` (float): Horizontal output displacement
+  - `ody` -> `:ody` (float): Vertical output displacement
+  - `idx` -> `:idx` (float): Horizontal input displacement
+  - `idy` -> `:idy` (float): Vertical input displacement
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (similarity input {}))
   ([input opts]
    (v/call! "similarity" (clojure.core/merge {:in input} opts))))
@@ -4176,16 +4176,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
-  - `hfreq` -> `:hfreq` (`gdouble`): Horizontal spatial frequency
-  - `vfreq` -> `:vfreq` (`gdouble`): Vertical spatial frequency
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
+  - `hfreq` -> `:hfreq` (float): Horizontal spatial frequency
+  - `vfreq` -> `:vfreq` (float): Vertical spatial frequency
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (sines width height {}))
   ([width height opts]
    (v/call! "sines" (clojure.core/merge {:width width, :height height} opts))))
@@ -4198,18 +4198,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:input` (`VipsImage`): Input image
-  - `width` -> `:width` (`gint`): Width of extract area
-  - `height` -> `:height` (`gint`): Height of extract area
+  - `input` -> `:input` (image): Input image
+  - `width` -> `:width` (integer): Width of extract area
+  - `height` -> `:height` (integer): Height of extract area
   
   Optional inputs:
-  - `interesting` -> `:interesting` (`VipsInteresting`): How to measure interestingness
-  - `premultiplied` -> `:premultiplied` (`gboolean`): Input image already has premultiplied alpha
+  - `interesting` -> `:interesting` (keyword, see `ol.vips.enums/interesting`): How to measure interestingness
+  - `premultiplied` -> `:premultiplied` (boolean): Input image already has premultiplied alpha
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `attention-x` -> `:attention-x` (`gint`): Horizontal position of attention centre
-  - `attention-y` -> `:attention-y` (`gint`): Vertical position of attention centre"
+  - `out` -> `:out` (image): Output image
+  - `attention-x` -> `:attention-x` (integer): Horizontal position of attention centre
+  - `attention-y` -> `:attention-y` (integer): Vertical position of attention centre"
   ([input width height] (smartcrop input width height {}))
   ([input width height opts]
    (v/call! "smartcrop" (clojure.core/merge {:input input, :width width, :height height} opts))))
@@ -4222,13 +4222,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "sobel" {:in input}))
 
@@ -4240,14 +4240,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `ref` -> `:ref` (`VipsImage`): Input reference image
+  - `input` -> `:in` (image): Input image argument
+  - `ref` -> `:ref` (image): Input reference image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input ref]
   (v/call! "spcor" {:in input, :ref ref}))
 
@@ -4259,13 +4259,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "spectrum" {:in input}))
 
@@ -4277,13 +4277,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output array of statistics"
+  - `out` -> `:out` (image): Output array of statistics"
   [input]
   (v/call! "stats" {:in input}))
 
@@ -4295,18 +4295,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
-  - `width` -> `:width` (`gint`): Window width in pixels
-  - `height` -> `:height` (`gint`): Window height in pixels
+  - `input` -> `:in` (image): Input image
+  - `width` -> `:width` (integer): Window width in pixels
+  - `height` -> `:height` (integer): Window height in pixels
   
   Optional inputs:
-  - `s0` -> `:s0` (`gdouble`): New deviation
-  - `b` -> `:b` (`gdouble`): Weight of new deviation
-  - `m0` -> `:m0` (`gdouble`): New mean
-  - `a` -> `:a` (`gdouble`): Weight of new mean
+  - `s0` -> `:s0` (float): New deviation
+  - `b` -> `:b` (float): Weight of new deviation
+  - `m0` -> `:m0` (float): New mean
+  - `a` -> `:a` (float): Weight of new mean
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input width height] (stdif input width height {}))
   ([input width height opts]
    (v/call! "stdif" (clojure.core/merge {:in input, :width width, :height height} opts))))
@@ -4319,15 +4319,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:input` (`VipsImage`): Input image
-  - `xfac` -> `:xfac` (`gint`): Horizontal subsample factor
-  - `yfac` -> `:yfac` (`gint`): Vertical subsample factor
+  - `input` -> `:input` (image): Input image
+  - `xfac` -> `:xfac` (integer): Horizontal subsample factor
+  - `yfac` -> `:yfac` (integer): Vertical subsample factor
   
   Optional inputs:
-  - `point` -> `:point` (`gboolean`): Point sample
+  - `point` -> `:point` (boolean): Point sample
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input xfac yfac] (subsample input xfac yfac {}))
   ([input xfac yfac opts]
    (v/call! "subsample" (clojure.core/merge {:input input, :xfac xfac, :yfac yfac} opts))))
@@ -4340,14 +4340,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `left` -> `:left` (`VipsImage`): Left-hand image argument
-  - `right` -> `:right` (`VipsImage`): Right-hand image argument
+  - `left` -> `:left` (image): Left-hand image argument
+  - `right` -> `:right` (image): Right-hand image argument
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [left right]
   (v/call! "subtract" {:left left, :right right}))
 
@@ -4359,13 +4359,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsArrayImage`): Array of input images
+  - `input` -> `:in` (seqable of image): Array of input images
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "sum" {:in input}))
 
@@ -4377,25 +4377,25 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `dpi` -> `:dpi` (`gdouble`): Render at this DPI
-  - `scale` -> `:scale` (`gdouble`): Scale output by this factor
-  - `unlimited` -> `:unlimited` (`gboolean`): Allow SVG of any size
-  - `stylesheet` -> `:stylesheet` (`gchararray`): Custom CSS
-  - `high-bitdepth` -> `:high-bitdepth` (`gboolean`): Enable scRGB 128-bit output (32-bit per channel)
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `dpi` -> `:dpi` (float): Render at this DPI
+  - `scale` -> `:scale` (float): Scale output by this factor
+  - `unlimited` -> `:unlimited` (boolean): Allow SVG of any size
+  - `stylesheet` -> `:stylesheet` (string): Custom CSS
+  - `high-bitdepth` -> `:high-bitdepth` (boolean): Enable scRGB 128-bit output (32-bit per channel)
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (svgload filename {}))
   ([filename opts]
    (v/call! "svgload" (clojure.core/merge {:filename filename} opts))))
@@ -4408,13 +4408,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `tests` -> `:tests` (`VipsArrayImage`): Table of images to test
+  - `tests` -> `:tests` (seqable of image): Table of images to test
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [tests]
   (v/call! "switch" {:tests tests}))
 
@@ -4426,16 +4426,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `cmd-format` -> `:cmd-format` (`gchararray`): Command to run
+  - `cmd-format` -> `:cmd-format` (string): Command to run
   
   Optional inputs:
-  - `input` -> `:in` (`VipsArrayImage`): Array of input images
-  - `out-format` -> `:out-format` (`gchararray`): Format for output filename
-  - `in-format` -> `:in-format` (`gchararray`): Format for input filename
+  - `input` -> `:in` (seqable of image): Array of input images
+  - `out-format` -> `:out-format` (string): Format for output filename
+  - `in-format` -> `:in-format` (string): Format for input filename
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `log` -> `:log` (`gchararray`): Command log"
+  - `out` -> `:out` (image): Output image
+  - `log` -> `:log` (string): Command log"
   ([cmd-format] (system cmd-format {}))
   ([cmd-format opts]
    (v/call! "system" (clojure.core/merge {:cmd-format cmd-format} opts))))
@@ -4448,23 +4448,23 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `text` -> `:text` (`gchararray`): Text to render
+  - `text` -> `:text` (string): Text to render
   
   Optional inputs:
-  - `font` -> `:font` (`gchararray`): Font to render with
-  - `width` -> `:width` (`gint`): Maximum image width in pixels
-  - `height` -> `:height` (`gint`): Maximum image height in pixels
-  - `align` -> `:align` (`VipsAlign`): Align on the low, centre or high edge
-  - `justify` -> `:justify` (`gboolean`): Justify lines
-  - `dpi` -> `:dpi` (`gint`): DPI to render at
-  - `spacing` -> `:spacing` (`gint`): Line spacing
-  - `fontfile` -> `:fontfile` (`gchararray`): Load this font file
-  - `rgba` -> `:rgba` (`gboolean`): Enable RGBA output
-  - `wrap` -> `:wrap` (`VipsTextWrap`): Wrap lines on word or character boundaries
+  - `font` -> `:font` (string): Font to render with
+  - `width` -> `:width` (integer): Maximum image width in pixels
+  - `height` -> `:height` (integer): Maximum image height in pixels
+  - `align` -> `:align` (keyword, see `ol.vips.enums/align`): Align on the low, centre or high edge
+  - `justify` -> `:justify` (boolean): Justify lines
+  - `dpi` -> `:dpi` (integer): DPI to render at
+  - `spacing` -> `:spacing` (integer): Line spacing
+  - `fontfile` -> `:fontfile` (string): Load this font file
+  - `rgba` -> `:rgba` (boolean): Enable RGBA output
+  - `wrap` -> `:wrap` (keyword, see `ol.vips.enums/text-wrap`): Wrap lines on word or character boundaries
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `autofit-dpi` -> `:autofit-dpi` (`gint`): DPI selected by autofit"
+  - `out` -> `:out` (image): Output image
+  - `autofit-dpi` -> `:autofit-dpi` (integer): DPI selected by autofit"
   ([text] (text text {}))
   ([text opts]
    (v/call! "text" (clojure.core/merge {:text text} opts))))
@@ -4477,25 +4477,25 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to read from
-  - `width` -> `:width` (`gint`): Size to this width
+  - `filename` -> `:filename` (string): Filename to read from
+  - `width` -> `:width` (integer): Size to this width
   
   Optional inputs:
-  - `height` -> `:height` (`gint`): Size to this height
-  - `size` -> `:size` (`VipsSize`): Only upsize, only downsize, or both
-  - `no-rotate` -> `:no-rotate` (`gboolean`): Don't use orientation tags to rotate image upright
-  - `crop` -> `:crop` (`VipsInteresting`): Reduce to fill target rectangle, then crop
-  - `linear` -> `:linear` (`gboolean`): Reduce in linear light
-  - `input-profile` -> `:input-profile` (`gchararray`): Fallback input profile
-  - `output-profile` -> `:output-profile` (`gchararray`): Fallback output profile
-  - `intent` -> `:intent` (`VipsIntent`): Rendering intent
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `auto-rotate` -> `:auto-rotate` (`gboolean`): Use orientation tags to rotate image upright
-  - `import-profile` -> `:import-profile` (`gchararray`): Fallback import profile
-  - `export-profile` -> `:export-profile` (`gchararray`): Fallback export profile
+  - `height` -> `:height` (integer): Size to this height
+  - `size` -> `:size` (keyword, see `ol.vips.enums/size`): Only upsize, only downsize, or both
+  - `no-rotate` -> `:no-rotate` (boolean): Don't use orientation tags to rotate image upright
+  - `crop` -> `:crop` (keyword, see `ol.vips.enums/interesting`): Reduce to fill target rectangle, then crop
+  - `linear` -> `:linear` (boolean): Reduce in linear light
+  - `input-profile` -> `:input-profile` (string): Fallback input profile
+  - `output-profile` -> `:output-profile` (string): Fallback output profile
+  - `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `auto-rotate` -> `:auto-rotate` (boolean): Use orientation tags to rotate image upright
+  - `import-profile` -> `:import-profile` (string): Fallback import profile
+  - `export-profile` -> `:export-profile` (string): Fallback export profile
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([filename width] (thumbnail filename width {}))
   ([filename width opts]
    (v/call! "thumbnail" (clojure.core/merge {:filename filename, :width width} opts))))
@@ -4508,25 +4508,25 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image argument
-  - `width` -> `:width` (`gint`): Size to this width
+  - `input` -> `:in` (image): Input image argument
+  - `width` -> `:width` (integer): Size to this width
   
   Optional inputs:
-  - `height` -> `:height` (`gint`): Size to this height
-  - `size` -> `:size` (`VipsSize`): Only upsize, only downsize, or both
-  - `no-rotate` -> `:no-rotate` (`gboolean`): Don't use orientation tags to rotate image upright
-  - `crop` -> `:crop` (`VipsInteresting`): Reduce to fill target rectangle, then crop
-  - `linear` -> `:linear` (`gboolean`): Reduce in linear light
-  - `input-profile` -> `:input-profile` (`gchararray`): Fallback input profile
-  - `output-profile` -> `:output-profile` (`gchararray`): Fallback output profile
-  - `intent` -> `:intent` (`VipsIntent`): Rendering intent
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `auto-rotate` -> `:auto-rotate` (`gboolean`): Use orientation tags to rotate image upright
-  - `import-profile` -> `:import-profile` (`gchararray`): Fallback import profile
-  - `export-profile` -> `:export-profile` (`gchararray`): Fallback export profile
+  - `height` -> `:height` (integer): Size to this height
+  - `size` -> `:size` (keyword, see `ol.vips.enums/size`): Only upsize, only downsize, or both
+  - `no-rotate` -> `:no-rotate` (boolean): Don't use orientation tags to rotate image upright
+  - `crop` -> `:crop` (keyword, see `ol.vips.enums/interesting`): Reduce to fill target rectangle, then crop
+  - `linear` -> `:linear` (boolean): Reduce in linear light
+  - `input-profile` -> `:input-profile` (string): Fallback input profile
+  - `output-profile` -> `:output-profile` (string): Fallback output profile
+  - `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `auto-rotate` -> `:auto-rotate` (boolean): Use orientation tags to rotate image upright
+  - `import-profile` -> `:import-profile` (string): Fallback import profile
+  - `export-profile` -> `:export-profile` (string): Fallback export profile
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input width] (thumbnail-image input width {}))
   ([input width opts]
    (v/call! "thumbnail_image" (clojure.core/merge {:in input, :width width} opts))))
@@ -4539,25 +4539,25 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `page` -> `:page` (`gint`): First page to load
-  - `n` -> `:n` (`gint`): Number of pages to load, -1 for all
-  - `autorotate` -> `:autorotate` (`gboolean`): Rotate image using orientation tag
-  - `subifd` -> `:subifd` (`gint`): Subifd index
-  - `unlimited` -> `:unlimited` (`gboolean`): Remove all denial of service limits
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `page` -> `:page` (integer): First page to load
+  - `n` -> `:n` (integer): Number of pages to load, -1 for all
+  - `autorotate` -> `:autorotate` (boolean): Rotate image using orientation tag
+  - `subifd` -> `:subifd` (integer): Subifd index
+  - `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (tiffload filename {}))
   ([filename opts]
    (v/call! "tiffload" (clojure.core/merge {:filename filename} opts))))
@@ -4570,36 +4570,36 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `compression` -> `:compression` (`VipsForeignTiffCompression`): Compression for this file
-  - `q` -> `:Q` (`gint`): Q factor
-  - `predictor` -> `:predictor` (`VipsForeignTiffPredictor`): Compression prediction
-  - `tile` -> `:tile` (`gboolean`): Write a tiled tiff
-  - `tile-width` -> `:tile-width` (`gint`): Tile width in pixels
-  - `tile-height` -> `:tile-height` (`gint`): Tile height in pixels
-  - `pyramid` -> `:pyramid` (`gboolean`): Write a pyramidal tiff
-  - `miniswhite` -> `:miniswhite` (`gboolean`): Use 0 for white in 1-bit images
-  - `bitdepth` -> `:bitdepth` (`gint`): Write as a 1, 2, 4 or 8 bit image
-  - `resunit` -> `:resunit` (`VipsForeignTiffResunit`): Resolution unit
-  - `xres` -> `:xres` (`gdouble`): Horizontal resolution in pixels/mm
-  - `yres` -> `:yres` (`gdouble`): Vertical resolution in pixels/mm
-  - `bigtiff` -> `:bigtiff` (`gboolean`): Write a bigtiff image
-  - `properties` -> `:properties` (`gboolean`): Write a properties document to IMAGEDESCRIPTION
-  - `region-shrink` -> `:region-shrink` (`VipsRegionShrink`): Method to shrink regions
-  - `level` -> `:level` (`gint`): Deflate (1-9, default 6) or ZSTD (1-22, default 9) compression level
-  - `lossless` -> `:lossless` (`gboolean`): Enable WEBP lossless mode
-  - `depth` -> `:depth` (`VipsForeignDzDepth`): Pyramid depth
-  - `subifd` -> `:subifd` (`gboolean`): Save pyr layers as sub-IFDs
-  - `premultiply` -> `:premultiply` (`gboolean`): Save with premultiplied alpha
-  - `rgbjpeg` -> `:rgbjpeg` (`gboolean`): Output RGB JPEG rather than YCbCr
-  - `squash` -> `:squash` (`gboolean`): Squash images down to 1 bit
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `compression` -> `:compression` (keyword, see `ol.vips.enums/foreign-tiff-compression`): Compression for this file
+  - `q` -> `:Q` (integer): Q factor
+  - `predictor` -> `:predictor` (keyword, see `ol.vips.enums/foreign-tiff-predictor`): Compression prediction
+  - `tile` -> `:tile` (boolean): Write a tiled tiff
+  - `tile-width` -> `:tile-width` (integer): Tile width in pixels
+  - `tile-height` -> `:tile-height` (integer): Tile height in pixels
+  - `pyramid` -> `:pyramid` (boolean): Write a pyramidal tiff
+  - `miniswhite` -> `:miniswhite` (boolean): Use 0 for white in 1-bit images
+  - `bitdepth` -> `:bitdepth` (integer): Write as a 1, 2, 4 or 8 bit image
+  - `resunit` -> `:resunit` (keyword, see `ol.vips.enums/foreign-tiff-resunit`): Resolution unit
+  - `xres` -> `:xres` (float): Horizontal resolution in pixels/mm
+  - `yres` -> `:yres` (float): Vertical resolution in pixels/mm
+  - `bigtiff` -> `:bigtiff` (boolean): Write a bigtiff image
+  - `properties` -> `:properties` (boolean): Write a properties document to IMAGEDESCRIPTION
+  - `region-shrink` -> `:region-shrink` (keyword, see `ol.vips.enums/region-shrink`): Method to shrink regions
+  - `level` -> `:level` (integer): Deflate (1-9, default 6) or ZSTD (1-22, default 9) compression level
+  - `lossless` -> `:lossless` (boolean): Enable WEBP lossless mode
+  - `depth` -> `:depth` (keyword, see `ol.vips.enums/foreign-dz-depth`): Pyramid depth
+  - `subifd` -> `:subifd` (boolean): Save pyr layers as sub-IFDs
+  - `premultiply` -> `:premultiply` (boolean): Save with premultiplied alpha
+  - `rgbjpeg` -> `:rgbjpeg` (boolean): Output RGB JPEG rather than YCbCr
+  - `squash` -> `:squash` (boolean): Squash images down to 1 bit
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -4615,18 +4615,18 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `tile-width` -> `:tile-width` (`gint`): Tile width in pixels
-  - `tile-height` -> `:tile-height` (`gint`): Tile height in pixels
-  - `max-tiles` -> `:max-tiles` (`gint`): Maximum number of tiles to cache
-  - `access` -> `:access` (`VipsAccess`): Expected access pattern
-  - `threaded` -> `:threaded` (`gboolean`): Allow threaded access
-  - `persistent` -> `:persistent` (`gboolean`): Keep cache between evaluations
+  - `tile-width` -> `:tile-width` (integer): Tile width in pixels
+  - `tile-height` -> `:tile-height` (integer): Tile height in pixels
+  - `max-tiles` -> `:max-tiles` (integer): Maximum number of tiles to cache
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
+  - `threaded` -> `:threaded` (boolean): Allow threaded access
+  - `persistent` -> `:persistent` (boolean): Keep cache between evaluations
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (tilecache input {}))
   ([input opts]
    (v/call! "tilecache" (clojure.core/merge {:in input} opts))))
@@ -4642,19 +4642,19 @@
   - none
   
   Optional inputs:
-  - `in-max` -> `:in-max` (`gint`): Size of LUT to build
-  - `out-max` -> `:out-max` (`gint`): Maximum value in output LUT
-  - `lb` -> `:Lb` (`gdouble`): Lowest value in output
-  - `lw` -> `:Lw` (`gdouble`): Highest value in output
-  - `ps` -> `:Ps` (`gdouble`): Position of shadow
-  - `pm` -> `:Pm` (`gdouble`): Position of mid-tones
-  - `ph` -> `:Ph` (`gdouble`): Position of highlights
-  - `s` -> `:S` (`gdouble`): Adjust shadows by this much
-  - `m` -> `:M` (`gdouble`): Adjust mid-tones by this much
-  - `h` -> `:H` (`gdouble`): Adjust highlights by this much
+  - `in-max` -> `:in-max` (integer): Size of LUT to build
+  - `out-max` -> `:out-max` (integer): Maximum value in output LUT
+  - `lb` -> `:Lb` (float): Lowest value in output
+  - `lw` -> `:Lw` (float): Highest value in output
+  - `ps` -> `:Ps` (float): Position of shadow
+  - `pm` -> `:Pm` (float): Position of mid-tones
+  - `ph` -> `:Ph` (float): Position of highlights
+  - `s` -> `:S` (float): Adjust shadows by this much
+  - `m` -> `:M` (float): Adjust mid-tones by this much
+  - `h` -> `:H` (float): Adjust highlights by this much
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([] (tonelut {}))
   ([opts]
    (v/call! "tonelut" (clojure.core/merge {} opts))))
@@ -4667,13 +4667,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `page-height` -> `:page-height` (`gint`): Height of each input page
+  - `page-height` -> `:page-height` (integer): Height of each input page
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (transpose3d input {}))
   ([input opts]
    (v/call! "transpose3d" (clojure.core/merge {:in input} opts))))
@@ -4686,14 +4686,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `max-alpha` -> `:max-alpha` (`gdouble`): Maximum value of alpha channel
-  - `alpha-band` -> `:alpha-band` (`gint`): Unpremultiply with this alpha
+  - `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
+  - `alpha-band` -> `:alpha-band` (integer): Unpremultiply with this alpha
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (unpremultiply input {}))
   ([input opts]
    (v/call! "unpremultiply" (clojure.core/merge {:in input} opts))))
@@ -4706,20 +4706,20 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (vipsload filename {}))
   ([filename opts]
    (v/call! "vipsload" (clojure.core/merge {:filename filename} opts))))
@@ -4732,14 +4732,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -4755,24 +4755,24 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `filename` -> `:filename` (`gchararray`): Filename to load from
+  - `filename` -> `:filename` (string): Filename to load from
   
   Optional inputs:
-  - `page` -> `:page` (`gint`): First page to load
-  - `n` -> `:n` (`gint`): Number of pages to load, -1 for all
-  - `scale` -> `:scale` (`gdouble`): Factor to scale by
-  - `shrink` -> `:shrink` (`gint`): Shrink factor on load
-  - `memory` -> `:memory` (`gboolean`): Force open via memory
-  - `access` -> `:access` (`VipsAccess`): Required access pattern for this file
-  - `fail-on` -> `:fail-on` (`VipsFailOn`): Error level to fail on
-  - `revalidate` -> `:revalidate` (`gboolean`): Don't use a cached result for this operation
-  - `sequential` -> `:sequential` (`gboolean`): Sequential read only
-  - `fail` -> `:fail` (`gboolean`): Fail on first warning
-  - `disc` -> `:disc` (`gboolean`): Open to disc
+  - `page` -> `:page` (integer): First page to load
+  - `n` -> `:n` (integer): Number of pages to load, -1 for all
+  - `scale` -> `:scale` (float): Factor to scale by
+  - `shrink` -> `:shrink` (integer): Shrink factor on load
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image
-  - `flags` -> `:flags` (`VipsForeignFlags`): Flags for this file"
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (webpload filename {}))
   ([filename opts]
    (v/call! "webpload" (clojure.core/merge {:filename filename} opts))))
@@ -4785,29 +4785,29 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
-  - `filename` -> `:filename` (`gchararray`): Filename to save to
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
   
   Optional inputs:
-  - `q` -> `:Q` (`gint`): Q factor
-  - `lossless` -> `:lossless` (`gboolean`): Enable lossless compression
-  - `preset` -> `:preset` (`VipsForeignWebpPreset`): Preset for lossy compression
-  - `smart-subsample` -> `:smart-subsample` (`gboolean`): Enable high quality chroma subsampling
-  - `near-lossless` -> `:near-lossless` (`gboolean`): Enable preprocessing in lossless mode (uses Q)
-  - `alpha-q` -> `:alpha-q` (`gint`): Change alpha plane fidelity for lossy compression
-  - `min-size` -> `:min-size` (`gboolean`): Optimise for minimum size
-  - `kmin` -> `:kmin` (`gint`): Minimum number of frames between key frames
-  - `kmax` -> `:kmax` (`gint`): Maximum number of frames between key frames
-  - `effort` -> `:effort` (`gint`): Level of CPU effort to reduce file size
-  - `target-size` -> `:target-size` (`gint`): Desired target size in bytes
-  - `reduction-effort` -> `:reduction-effort` (`gint`): Level of CPU effort to reduce file size
-  - `mixed` -> `:mixed` (`gboolean`): Allow mixed encoding (might reduce file size)
-  - `smart-deblock` -> `:smart-deblock` (`gboolean`): Enable auto-adjusting of the deblocking filter
-  - `passes` -> `:passes` (`gint`): Number of entropy-analysis passes (in [1..10])
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `q` -> `:Q` (integer): Q factor
+  - `lossless` -> `:lossless` (boolean): Enable lossless compression
+  - `preset` -> `:preset` (keyword, see `ol.vips.enums/foreign-webp-preset`): Preset for lossy compression
+  - `smart-subsample` -> `:smart-subsample` (boolean): Enable high quality chroma subsampling
+  - `near-lossless` -> `:near-lossless` (boolean): Enable preprocessing in lossless mode (uses Q)
+  - `alpha-q` -> `:alpha-q` (integer): Change alpha plane fidelity for lossy compression
+  - `min-size` -> `:min-size` (boolean): Optimise for minimum size
+  - `kmin` -> `:kmin` (integer): Minimum number of frames between key frames
+  - `kmax` -> `:kmax` (integer): Maximum number of frames between key frames
+  - `effort` -> `:effort` (integer): Level of CPU effort to reduce file size
+  - `target-size` -> `:target-size` (integer): Desired target size in bytes
+  - `reduction-effort` -> `:reduction-effort` (integer): Level of CPU effort to reduce file size
+  - `mixed` -> `:mixed` (boolean): Allow mixed encoding (might reduce file size)
+  - `smart-deblock` -> `:smart-deblock` (boolean): Enable auto-adjusting of the deblocking filter
+  - `passes` -> `:passes` (integer): Number of entropy-analysis passes (in [1..10])
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -4823,28 +4823,28 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Image to save
+  - `input` -> `:in` (image): Image to save
   
   Optional inputs:
-  - `q` -> `:Q` (`gint`): Q factor
-  - `lossless` -> `:lossless` (`gboolean`): Enable lossless compression
-  - `preset` -> `:preset` (`VipsForeignWebpPreset`): Preset for lossy compression
-  - `smart-subsample` -> `:smart-subsample` (`gboolean`): Enable high quality chroma subsampling
-  - `near-lossless` -> `:near-lossless` (`gboolean`): Enable preprocessing in lossless mode (uses Q)
-  - `alpha-q` -> `:alpha-q` (`gint`): Change alpha plane fidelity for lossy compression
-  - `min-size` -> `:min-size` (`gboolean`): Optimise for minimum size
-  - `kmin` -> `:kmin` (`gint`): Minimum number of frames between key frames
-  - `kmax` -> `:kmax` (`gint`): Maximum number of frames between key frames
-  - `effort` -> `:effort` (`gint`): Level of CPU effort to reduce file size
-  - `target-size` -> `:target-size` (`gint`): Desired target size in bytes
-  - `reduction-effort` -> `:reduction-effort` (`gint`): Level of CPU effort to reduce file size
-  - `mixed` -> `:mixed` (`gboolean`): Allow mixed encoding (might reduce file size)
-  - `smart-deblock` -> `:smart-deblock` (`gboolean`): Enable auto-adjusting of the deblocking filter
-  - `passes` -> `:passes` (`gint`): Number of entropy-analysis passes (in [1..10])
-  - `keep` -> `:keep` (`VipsForeignKeep`): Which metadata to retain
-  - `page-height` -> `:page-height` (`gint`): Set page height for multipage save
-  - `profile` -> `:profile` (`gchararray`): Filename of ICC profile to embed
-  - `strip` -> `:strip` (`gboolean`): Strip all metadata from image
+  - `q` -> `:Q` (integer): Q factor
+  - `lossless` -> `:lossless` (boolean): Enable lossless compression
+  - `preset` -> `:preset` (keyword, see `ol.vips.enums/foreign-webp-preset`): Preset for lossy compression
+  - `smart-subsample` -> `:smart-subsample` (boolean): Enable high quality chroma subsampling
+  - `near-lossless` -> `:near-lossless` (boolean): Enable preprocessing in lossless mode (uses Q)
+  - `alpha-q` -> `:alpha-q` (integer): Change alpha plane fidelity for lossy compression
+  - `min-size` -> `:min-size` (boolean): Optimise for minimum size
+  - `kmin` -> `:kmin` (integer): Minimum number of frames between key frames
+  - `kmax` -> `:kmax` (integer): Maximum number of frames between key frames
+  - `effort` -> `:effort` (integer): Level of CPU effort to reduce file size
+  - `target-size` -> `:target-size` (integer): Desired target size in bytes
+  - `reduction-effort` -> `:reduction-effort` (integer): Level of CPU effort to reduce file size
+  - `mixed` -> `:mixed` (boolean): Allow mixed encoding (might reduce file size)
+  - `smart-deblock` -> `:smart-deblock` (boolean): Enable auto-adjusting of the deblocking filter
+  - `passes` -> `:passes` (integer): Number of entropy-analysis passes (in [1..10])
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
   
   Outputs:
   - none"
@@ -4860,15 +4860,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `cell-size` -> `:cell-size` (`gint`): Size of Worley cells
-  - `seed` -> `:seed` (`gint`): Random number seed
+  - `cell-size` -> `:cell-size` (integer): Size of Worley cells
+  - `seed` -> `:seed` (integer): Random number seed
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (worley width height {}))
   ([width height opts]
    (v/call! "worley" (clojure.core/merge {:width width, :height height} opts))))
@@ -4881,14 +4881,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
-  - `x` -> `:x` (`gint`): Left edge of input in output
-  - `y` -> `:y` (`gint`): Top edge of input in output
+  - `x` -> `:x` (integer): Left edge of input in output
+  - `y` -> `:y` (integer): Top edge of input in output
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([input] (wrap input {}))
   ([input opts]
    (v/call! "wrap" (clojure.core/merge {:in input} opts))))
@@ -4901,16 +4901,16 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `csize` -> `:csize` (`gint`): Size of third dimension
-  - `dsize` -> `:dsize` (`gint`): Size of fourth dimension
-  - `esize` -> `:esize` (`gint`): Size of fifth dimension
+  - `csize` -> `:csize` (integer): Size of third dimension
+  - `dsize` -> `:dsize` (integer): Size of fourth dimension
+  - `esize` -> `:esize` (integer): Size of fifth dimension
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (xyz width height {}))
   ([width height opts]
    (v/call! "xyz" (clojure.core/merge {:width width, :height height} opts))))
@@ -4923,13 +4923,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "XYZ2CMYK" {:in input}))
 
@@ -4941,13 +4941,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "XYZ2Lab" {:in input}))
 
@@ -4959,13 +4959,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "XYZ2Yxy" {:in input}))
 
@@ -4977,13 +4977,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "XYZ2scRGB" {:in input}))
 
@@ -4995,13 +4995,13 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:in` (`VipsImage`): Input image
+  - `input` -> `:in` (image): Input image
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input]
   (v/call! "Yxy2XYZ" {:in input}))
 
@@ -5013,14 +5013,14 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `width` -> `:width` (`gint`): Image width in pixels
-  - `height` -> `:height` (`gint`): Image height in pixels
+  - `width` -> `:width` (integer): Image width in pixels
+  - `height` -> `:height` (integer): Image height in pixels
   
   Optional inputs:
-  - `uchar` -> `:uchar` (`gboolean`): Output an unsigned char image
+  - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   ([width height] (zone width height {}))
   ([width height opts]
    (v/call! "zone" (clojure.core/merge {:width width, :height height} opts))))
@@ -5033,15 +5033,15 @@
   Returns the full output map from `ol.vips/call!`.
   
   Required inputs:
-  - `input` -> `:input` (`VipsImage`): Input image
-  - `xfac` -> `:xfac` (`gint`): Horizontal zoom factor
-  - `yfac` -> `:yfac` (`gint`): Vertical zoom factor
+  - `input` -> `:input` (image): Input image
+  - `xfac` -> `:xfac` (integer): Horizontal zoom factor
+  - `yfac` -> `:yfac` (integer): Vertical zoom factor
   
   Optional inputs:
   - none
   
   Outputs:
-  - `out` -> `:out` (`VipsImage`): Output image"
+  - `out` -> `:out` (image): Output image"
   [input xfac yfac]
   (v/call! "zoom" {:input input, :xfac xfac, :yfac yfac}))
 

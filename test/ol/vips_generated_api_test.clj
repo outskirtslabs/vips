@@ -16,12 +16,25 @@
 
 (deftest generated-operation-surface
   (testing "generated operations are discoverable by normalized keyword names"
-    (let [generated (set (ops/operations))]
+    (let [generated (set (ops/operations))
+          join      (ops/describe :join)
+          rotate    (ops/describe :rotate)]
       (is (contains? generated :rotate))
       (is (contains? generated :join))
       (is (contains? generated :thumbnail-image))
-      (is (= "join" (:operation-name (ops/describe :join))))
-      (is (= "rotate" (:operation-name (ops/describe :rotate)))))))
+      (is (= "join" (:operation-name join)))
+      (is (= "rotate" (:operation-name rotate)))
+      (is (= {:kind :image :label "image"}
+             (:type (first (:required-inputs rotate)))))
+      (is (= {:kind :float :label "float"}
+             (:type (second (:required-inputs rotate)))))
+      (is (= {:kind      :enum
+              :label     "keyword"
+              :enum-id   :direction
+              :reference "ol.vips.enums/direction"}
+             (:type (nth (:required-inputs join) 2))))
+      (is (not (re-find #"gdouble|VipsImage|gint"
+                        (:doc (meta #'ops/rotate))))))))
 
 (deftest generated-operations-return-output-maps
   (testing "generated wrappers preserve the full libvips output map contract"
