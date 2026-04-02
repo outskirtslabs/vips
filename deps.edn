@@ -1,23 +1,30 @@
 {:paths   ["src"]
- :deps    {app.photofox.vips-ffm/vips-ffm-core {:mvn/version "1.9.6"}}
+ :deps    {app.photofox.vips-ffm/vips-ffm-core {:mvn/version "1.9.6"}
+           org.suskalo/coffi                   {:git/url    "https://github.com/Ramblurr/coffi.git"
+                                                :git/branch "feat/update-tools-build"
+                                                :git/sha    "9b05e268b915b1992bfd4175cb7c8c7c45d8973a"}}
  :aliases {:kaocha {:extra-paths ["test"]
                     :extra-deps  {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
                     :main-opts   ["-m" "kaocha.runner"]}
            :dev    {:extra-paths ["dev" "examples"]
                     :jvm-opts    ["--enable-native-access=ALL-UNNAMED"]
-                    :extra-deps  {babashka/fs                              {:mvn/version "0.5.27"}
-                                  dev.weavejester/hashp                    {:mvn/version "0.5.1"}
-                                  io.github.tonsky/clj-reload              {:mvn/version "1.0.0"}
-                                  djblue/portal                            {:mvn/version "0.63.0"}
-                                  com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.7.0"}}}
-           :build  {:deps       {io.github.clojure/tools.build {:mvn/version "0.10.13"}
-                                 slipset/deps-deploy           {:mvn/version "0.2.2"}}
-                    :ns-default build}
-           :neil   {:project {:name        com.outskirtslabs/vips
-                              :url         "https://github.com/outskirtslabs/vips"
-                              :license     {:id "EUPL-1.2"}
-                              :created     "2025-05-29"
-                              :platforms   [:clj]
-                              :status      :experimental
-                              :description ""
-                              :version     "0.0.TODO"}}}}
+                    :extra-deps  {babashka/fs                                    {:mvn/version "0.5.27"}
+                                  dev.weavejester/hashp                          {:mvn/version "0.5.1"}
+                                  io.github.tonsky/clj-reload                    {:mvn/version "1.0.0"}
+                                  djblue/portal                                  {:mvn/version "0.63.0"}
+                                  com.clojure-goes-fast/clj-async-profiler       {:mvn/version "1.7.0"}
+                                  com.outskirtslabs/vips-native-linux-x86-64-gnu {:local/root "./native/linux-x86-64-gnu"}}}
+           :build  {:extra-paths ["src"]
+                    :deps        {io.github.clojure/tools.build {:mvn/version "0.10.13"}
+                                  org.clojure/data.json         {:mvn/version "2.5.1"}
+                                  slipset/deps-deploy           {:mvn/version "0.2.2"}}
+                    :ns-default  build}
+           :neil   {:project {:name         com.outskirtslabs/vips
+                              :url          "https://github.com/outskirtslabs/vips"
+                              :license      {:id "EUPL-1.2"}
+                              :created      "2025-05-29"
+                              :platforms    [:clj]
+                              :status       :experimental
+                              :description  ""
+                              :vips-version "8.17.3"
+                              :version      "0.0.TODO"}}}}

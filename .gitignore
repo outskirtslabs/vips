@@ -16,3 +16,7 @@ result
 prompts/
 *.md
 !README.md
+native/*/.cpcache/
+native/*/resources/
+native/*/target/
+target/native-cache/

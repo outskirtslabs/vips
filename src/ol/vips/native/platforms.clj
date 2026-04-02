@@ -1,0 +1,62 @@
+(ns ol.vips.native.platforms)
+
+(def supported-platforms
+  [{:platform-id   :linux-x86-64-gnu
+    :dir-name      "linux-x86-64-gnu"
+    :artifact-name "com.outskirtslabs/vips-native-linux-x86-64-gnu"
+    :sharp-package "@img/sharp-libvips-linux-x64"
+    :os            :linux
+    :arch          :x86-64
+    :libc          :glibc}
+   {:platform-id   :linux-x86-64-musl
+    :dir-name      "linux-x86-64-musl"
+    :artifact-name "com.outskirtslabs/vips-native-linux-x86-64-musl"
+    :sharp-package "@img/sharp-libvips-linuxmusl-x64"
+    :os            :linux
+    :arch          :x86-64
+    :libc          :musl}
+   {:platform-id   :linux-aarch64-gnu
+    :dir-name      "linux-aarch64-gnu"
+    :artifact-name "com.outskirtslabs/vips-native-linux-aarch64-gnu"
+    :sharp-package "@img/sharp-libvips-linux-arm64"
+    :os            :linux
+    :arch          :aarch64
+    :libc          :glibc}
+   {:platform-id   :linux-aarch64-musl
+    :dir-name      "linux-aarch64-musl"
+    :artifact-name "com.outskirtslabs/vips-native-linux-aarch64-musl"
+    :sharp-package "@img/sharp-libvips-linuxmusl-arm64"
+    :os            :linux
+    :arch          :aarch64
+    :libc          :musl}
+   {:platform-id   :macos-x86-64
+    :dir-name      "macos-x86-64"
+    :artifact-name "com.outskirtslabs/vips-native-macos-x86-64"
+    :sharp-package "@img/sharp-libvips-darwin-x64"
+    :os            :macos
+    :arch          :x86-64
+    :libc          nil}
+   {:platform-id   :macos-aarch64
+    :dir-name      "macos-aarch64"
+    :artifact-name "com.outskirtslabs/vips-native-macos-aarch64"
+    :sharp-package "@img/sharp-libvips-darwin-arm64"
+    :os            :macos
+    :arch          :aarch64
+    :libc          nil}
+   {:platform-id   :win32-x86-64
+    :dir-name      "win32-x86-64"
+    :artifact-name "com.outskirtslabs/vips-native-win32-x86-64"
+    :sharp-package "@img/sharp-libvips-win32-x64"
+    :os            :windows
+    :arch          :x86-64
+    :libc          nil}])
+
+(def supported-platform-ids
+  (mapv :platform-id supported-platforms))
+
+(defn platform
+  [platform-id]
+  (or (some #(when (= platform-id (:platform-id %)) %) supported-platforms)
+      (throw (ex-info "Unsupported native platform"
+                      {:platform-id platform-id
+                       :supported   supported-platform-ids}))))

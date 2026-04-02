@@ -1,0 +1,13 @@
+{:paths ["resources"],
+ :aliases
+ {:build
+  {:deps
+   {io.github.clojure/tools.build #:mvn{:version "0.10.13"},
+    slipset/deps-deploy #:mvn{:version "0.2.2"}},
+   :ns-default build},
+  :neil
+  {:project
+   {:name com.outskirtslabs/vips-native-win32-x86-64,
+    :description
+    "Platform-native libvips bundle for vips (win32-x86-64)",
+    :version "0.0.TODO"}}}}
