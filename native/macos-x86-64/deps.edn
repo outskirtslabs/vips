@@ -9,5 +9,9 @@
   {:project
    {:name com.outskirtslabs/vips-native-macos-x86-64,
     :description
-    "Platform-native libvips bundle for vips (macos-x86-64)",
+    "Platform-native bundle for com.outskirtslabs/vips (macos-x86-64)",
+    :license
+    {:id "LGPL-3.0-or-later",
+     :url "https://spdx.org/licenses/LGPL-3.0-or-later.html"},
+    :notice-file "THIRD-PARTY-NOTICES.md",
     :version "1.2.4-0"}}}}

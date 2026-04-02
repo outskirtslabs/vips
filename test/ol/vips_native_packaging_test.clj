@@ -130,9 +130,13 @@
                                          ":native-root"
                                          (pr-str temp-native-root))]
         (is (zero? exit) err)
-        (is (= "1.2.3-4"
-               (get-in (edn/read-string (slurp deps-path))
-                       [:aliases :neil :project :version]))))
+        (let [project (get-in (edn/read-string (slurp deps-path))
+                              [:aliases :neil :project])]
+          (is (= "1.2.3-4" (:version project)))
+          (is (= "LGPL-3.0-or-later" (get-in project [:license :id])))
+          (is (= "THIRD-PARTY-NOTICES.md" (:notice-file project)))
+          (is (= "Platform-native bundle for com.outskirtslabs/vips (linux-x86-64-gnu)"
+                 (:description project)))))
       (finally
         (when (.exists (io/file temp-native-root))
           (doseq [file (reverse (file-seq (io/file temp-native-root)))]
@@ -151,9 +155,10 @@
                                          ":native-root"
                                          (pr-str temp-native-root))]
         (is (zero? exit) err)
-        (is (= "1.2.4-0"
-               (get-in (edn/read-string (slurp deps-path))
-                       [:aliases :neil :project :version]))))
+        (let [project (get-in (edn/read-string (slurp deps-path))
+                              [:aliases :neil :project])]
+          (is (= "1.2.4-0" (:version project)))
+          (is (= "LGPL-3.0-or-later" (get-in project [:license :id])))))
       (finally
         (when (.exists (io/file temp-native-root))
           (doseq [file (reverse (file-seq (io/file temp-native-root)))]

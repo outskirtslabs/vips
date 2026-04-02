@@ -157,9 +157,19 @@ Use `v/operations` to list available libvips operations and `v/operation-info` t
 * Comprehensive format support - handles all major image formats (JPEG, PNG, WebP, TIFF, HEIF, AVIF) without extra libraries or need to `exec` external programs
 * [300 operations][vipsfuncs] covering arithmetic, histograms, convolution, morphological operations, frequency filtering, colour, resampling, statistics and others. 
 
+## Licensing
+
+The Clojure library `ol.vips` is copyright (C) 2026 Casey Link and is licensed under [EUPL-1.2](./LICENSE).
+
+The platform-native companion jars under `native/` redistribute upstream
+[sharp-libvips][sharp-libvips] binary bundles. Those redistributed native
+binaries are licensed separately from the `ol.vips` source, principally under
+LGPL-3.0-or-later, with additional bundled third-party component notices
+documented in [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md).
 
 [upstream]: https://github.com/libvips/libvips
 [coffi]: https://github.com/IGJoshua/coffi
 [vipsspeed]: https://github.com/libvips/libvips/wiki/Why-is-libvips-quick
 [vipsmemory]: https://github.com/libvips/libvips/wiki/Speed-and-memory-use
 [vipsfuncs]: https://www.libvips.org/API/current/func-list.html
+[sharp-libvips]: https://github.com/lovell/sharp-libvips/releases

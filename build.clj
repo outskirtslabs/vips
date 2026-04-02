@@ -28,6 +28,9 @@
 (def ^:dynamic *native-root* default-native-root)
 (def native-cache-root "target/native-cache")
 (def native-library-pattern #".*\.(?:dll|dylib|so(?:\..+)?)$")
+(def native-license-id "LGPL-3.0-or-later")
+(def native-license-url "https://spdx.org/licenses/LGPL-3.0-or-later.html")
+(def native-notice-file "THIRD-PARTY-NOTICES.md")
 
 (defn- git-origin-url []
   (try
@@ -377,11 +380,14 @@
                                    slipset/deps-deploy           {:mvn/version "0.2.2"}}
                      :ns-default 'build}
              :neil  {:project {:name        (symbol (:artifact-name platform))
-                               :description (str "Platform-native libvips bundle for "
-                                                 (name lib)
+                               :description (str "Platform-native bundle for "
+                                                 lib
                                                  " ("
                                                  (name (:platform-id platform))
                                                  ")")
+                               :license     {:id native-license-id
+                                             :url native-license-url}
+                               :notice-file native-notice-file
                                :version     companion-version}}}})
 
 (defn- native-companion-version
