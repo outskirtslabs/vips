@@ -111,23 +111,18 @@
           ];
           # https://numtide.github.io/devshell
           commands = [
-            # { package = pkgs.bazqux; }
+            { package = self.packages.${pkgs.system}.locker; }
           ];
           env = [
             {
               name = "LD_LIBRARY_PATH";
               value = pkgs.lib.makeLibraryPath [
                 pkgs.stdenv.cc.cc.lib
-                #pkgs.glib pkgs.vips
               ];
             }
           ];
           packages = [
-            #pkgs.vips
-            #pkgs.glib
-            #pkgs.gobject-introspection
-            (if self ? packages then self.packages.${pkgs.system}.locker else pkgs.deps-lock)
-            # pkgs.foobar
+            self.packages.${pkgs.system}.locker
           ];
 
         };
