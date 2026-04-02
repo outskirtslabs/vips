@@ -87,6 +87,12 @@
                   (apply shell "clj-kondo" "--lint" *command-line-args*)
                   (apply shell "clj-kondo --lint" lint-paths))}
 
+         gen
+         {:doc  "Generate enum and operation namespaces from live libvips introspection"
+          :task (do
+                  (clojure "-M:dev" "-m" "ol.vips.codegen")
+                  (shell "cljfmt" "--quiet" "-v" "fix" "src/ol/vips/enums.clj" "src/ol/vips/operations.clj"))}
+
          native:update
          {:doc  "Download and stage native resources for the selected platforms"
           :task (let [dirs (selected-native-dirs)]
