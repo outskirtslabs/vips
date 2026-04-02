@@ -10,4 +10,4 @@
    {:name com.outskirtslabs/vips-native-linux-x86-64-musl,
     :description
     "Platform-native libvips bundle for vips (linux-x86-64-musl)",
-    :version "0.0.TODO"}}}}
+    :version "1.2.4-0"}}}}

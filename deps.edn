@@ -30,6 +30,7 @@
                               :created      "2025-05-29"
                               :platforms    [:clj]
                               :status       :experimental
-                              :description  ""
-                              :vips-version "8.17.3"
-                              :version      "0.0.TODO"}}}}
+                              :description             "High-perf image processing for Clojure built with libvips."
+                              :sharp-vips-version      "1.2.4"
+                              :native-version-revision 0
+                              :version                 "0.0.1"}}}}

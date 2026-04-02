@@ -11,9 +11,9 @@
    [clojure.tools.build.api :as b]
    [ol.vips.native.platforms :as native.platforms])
   (:import
-   (java.net URI URLEncoder)
-   (java.net.http HttpClient HttpRequest HttpResponse$BodyHandlers)
-   (java.nio.file Files)))
+   [java.net URI URLEncoder]
+   [java.net.http HttpClient HttpRequest HttpResponse$BodyHandlers]
+   [java.nio.file Files]))
 
 (def project (-> (edn/read-string (slurp "deps.edn")) :aliases :neil :project))
 (def lib (:name project))
@@ -21,12 +21,12 @@
 (def license-id (-> project :license :id))
 (def license-file (or (-> project :license :file) "LICENSE"))
 (def description (:description project))
-(def vips-version (:vips-version project))
+(def sharp-vips-version (:sharp-vips-version project))
+(def native-version-revision (:native-version-revision project))
 
-(def native-root "native")
+(def default-native-root "native")
+(def ^:dynamic *native-root* default-native-root)
 (def native-cache-root "target/native-cache")
-(def native-resolution-cache-file (str native-cache-root "/resolution.edn"))
-(def native-version-probe-package "@img/sharp-libvips-linux-x64")
 (def native-library-pattern #".*\.(?:dll|dylib|so(?:\..+)?)$")
 
 (defn- git-origin-url []
@@ -52,7 +52,8 @@
 (assert version ":version must be set in deps.edn under the :neil alias")
 (assert description ":description must be set in deps.edn under the :neil alias")
 (assert license-id "[:license :id] must be set in deps.edn under the :neil alias")
-(assert vips-version "[:vips-version] must be set in deps.edn under the :neil alias")
+(assert sharp-vips-version "[:sharp-vips-version] must be set in deps.edn under the :neil alias")
+(assert (some? native-version-revision) "[:native-version-revision] must be set in deps.edn under the :neil alias")
 (assert rev "Either GIT_REV must be set or git rev-parse HEAD must succeed")
 (assert repo-url-prefix "Either :url must be set in deps.edn under the :neil alias or git remote origin must exist")
 
@@ -109,7 +110,7 @@
 
 (defn- platform-dir
   [{:keys [dir-name]}]
-  (str (io/file native-root dir-name)))
+  (str (io/file *native-root* dir-name)))
 
 (defn- platform-resources-dir
   [platform]
@@ -201,137 +202,30 @@
   [value]
   (Integer/parseInt value))
 
-(defn- parse-semver
-  [version-string]
-  (let [[_ major minor patch prerelease]
-        (re-matches #"(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?" version-string)]
-    (when-not major
-      (throw (ex-info "Unsupported semver string"
-                      {:version version-string})))
-    {:major      (parse-int major)
-     :minor      (parse-int minor)
-     :patch      (parse-int patch)
-     :prerelease (some-> prerelease (str/split #"\."))}))
-
-(defn- prerelease-part
-  [part]
-  (if (re-matches #"\d+" part)
-    {:type :number :value (parse-int part)}
-    {:type :string :value part}))
-
-(defn- compare-prerelease
-  [left right]
+(defn- native-version-revision-value
+  [{:keys [native-version-revision]}]
   (cond
-    (and (nil? left) (nil? right)) 0
-    (nil? left) 1
-    (nil? right) -1
+    (integer? native-version-revision) native-version-revision
+    (string? native-version-revision) (parse-int native-version-revision)
+    (nil? native-version-revision)
+    (throw (ex-info "Unable to determine native version revision" {}))
     :else
-    (loop [[left-part & left-rest]   left
-           [right-part & right-rest] right]
-      (cond
-        (and (nil? left-part) (nil? right-part)) 0
-        (nil? left-part) -1
-        (nil? right-part) 1
-        :else
-        (let [{left-type :type left-value :value}   (prerelease-part left-part)
-              {right-type :type right-value :value} (prerelease-part right-part)
-              result                                (cond
-                                                      (and (= left-type :number) (= right-type :number))
-                                                      (compare left-value right-value)
+    (throw (ex-info "Unsupported native version revision"
+                    {:native-version-revision native-version-revision
+                     :type                    (some-> native-version-revision class .getName)}))))
 
-                                                      (= left-type right-type)
-                                                      (compare left-value right-value)
-
-                                                      (= left-type :number)
-                                                      -1
-
-                                                      :else
-                                                      1)]
-          (if (zero? result)
-            (recur left-rest right-rest)
-            result))))))
-
-(defn- compare-semver
-  [left right]
-  (let [{left-major :major left-minor :minor left-patch :patch left-prerelease :prerelease}
-        (parse-semver left)
-        {right-major :major right-minor :minor right-patch :patch right-prerelease :prerelease}
-        (parse-semver right)]
-    (or (some identity
-              (remove zero?
-                      [(compare left-major right-major)
-                       (compare left-minor right-minor)
-                       (compare left-patch right-patch)
-                       (compare-prerelease left-prerelease right-prerelease)]))
-        0)))
-
-(defn- semver-desc
-  [left right]
-  (pos? (compare-semver left right)))
-
-(defn- cached-resolution
-  []
-  (when (.exists (io/file native-resolution-cache-file))
-    (edn/read-string (slurp native-resolution-cache-file))))
-
-(defn- cache-resolution!
-  [resolution]
-  (mkdirs! (.getParent (io/file native-resolution-cache-file)))
-  (spit native-resolution-cache-file (with-out-str (pprint/pprint resolution)))
-  resolution)
-
-(defn- unpacked-package-info
-  [archive-path]
-  (with-temp-dir "ol-vips-native-"
-    (fn [temp-dir]
-      (untar! archive-path temp-dir)
-      (let [package-dir   (str (io/file temp-dir "package"))
-            versions-file (str (io/file package-dir "versions.json"))]
-        (when-not (.exists (io/file versions-file))
-          (throw (ex-info "versions.json missing from sharp-libvips archive"
-                          {:archive archive-path})))
-        {:package-dir    package-dir
-         :versions-data  (-> versions-file slurp json/read-str)
-         :metadata-files {:package-json (str (io/file package-dir "package.json"))
-                          :versions     versions-file
-                          :readme       (str (io/file package-dir "README.md"))}}))))
-
-(defn- resolve-sharp-version
-  []
-  (let [cached (cached-resolution)]
-    (if (= vips-version (:vips-version cached))
-      (do
-        (println "using cached sharp-libvips version" (:sharp-version cached)
-                 "for libvips" vips-version)
-        cached)
-      (let [versions-map                                                                                (get (registry-package-metadata native-version-probe-package) "versions")
-            resolved
-            (some (fn [sharp-version]
-                    (let [version-info (get versions-map sharp-version)
-                          tarball-url  (get-in version-info ["dist" "tarball"])
-                          archive-path (tarball-cache-path native-version-probe-package sharp-version)]
-                      (println "checking sharp-libvips version" sharp-version
-                               "for libvips" vips-version)
-                      (download-file! tarball-url archive-path)
-                      (let [{versions-data :versions-data} (unpacked-package-info archive-path)
-                            packaged-vips-version          (get versions-data "vips")]
-                        (when (= packaged-vips-version vips-version)
-                          (println "resolved sharp-libvips version" sharp-version
-                                   "for libvips" vips-version)
-                          {:vips-version  vips-version
-                           :sharp-version sharp-version}))))
-                  (sort semver-desc (keys versions-map)))]
-        (or (some-> resolved cache-resolution!)
-            (throw (ex-info "Unable to resolve sharp-libvips version for pinned libvips version"
-                            {:vips-version vips-version})))))))
+(defn- selected-sharp-vips-version
+  [{provided-sharp-vips-version :sharp-vips-version}]
+  (or provided-sharp-vips-version
+      sharp-vips-version
+      (throw (ex-info "Unable to determine sharp-libvips version" {}))))
 
 (defn- registry-version-info
   [package-name sharp-version]
   (or (get-in (registry-package-metadata package-name) ["versions" sharp-version])
       (throw (ex-info "sharp-libvips version missing for platform package"
                       {:package-name  package-name
-                       :sharp-version sharp-version
-                       :vips-version  vips-version}))))
+                       :sharp-version sharp-version}))))
 
 (defn- native-library-files
   [package-dir]
@@ -358,11 +252,11 @@
         (throw (ex-info "Missing required file in sharp-libvips archive"
                         {:platform-id (:platform-id platform)
                          :path        path}))))
-    (when-not (= vips-version (get versions-data "vips"))
-      (throw (ex-info "Resolved sharp-libvips archive does not match pinned libvips version"
-                      {:platform-id           (:platform-id platform)
-                       :expected-vips-version vips-version
-                       :actual-vips-version   (get versions-data "vips")})))
+    (when-not (string? (get versions-data "vips"))
+      (throw (ex-info "sharp-libvips archive is missing the bundled libvips version"
+                      {:platform-id   (:platform-id platform)
+                       :package-dir   package-dir
+                       :versions-data versions-data})))
     (when-not (seq library-files)
       (throw (ex-info "No native libraries found in sharp-libvips archive"
                       {:platform-id (:platform-id platform)
@@ -409,7 +303,6 @@
    :artifact-name artifact-name
    :sharp-package sharp-package
    :sharp-version sharp-version
-   :vips-version  vips-version
    :libc          libc
    :os            os
    :arch          arch
@@ -478,7 +371,7 @@
               manifest)))))))
 
 (defn- native-deps-data
-  [platform]
+  [platform companion-version]
   {:paths   ["resources"]
    :aliases {:build {:deps       '{io.github.clojure/tools.build {:mvn/version "0.10.13"}
                                    slipset/deps-deploy           {:mvn/version "0.2.2"}}
@@ -489,20 +382,31 @@
                                                  " ("
                                                  (name (:platform-id platform))
                                                  ")")
-                               :version     version}}}})
+                               :version     companion-version}}}})
+
+(defn- native-companion-version
+  [opts]
+  (str (selected-sharp-vips-version opts)
+       "-"
+       (native-version-revision-value
+        {:native-version-revision (or (:native-version-revision opts)
+                                      native-version-revision)})))
 
 (defn sync-native-versions
-  [_]
-  (doseq [platform native.platforms/supported-platforms]
-    (let [deps-path (native-deps-file platform)
-          content   (with-out-str (pprint/pprint (native-deps-data platform)))]
-      (mkdirs! (platform-dir platform))
-      (when (not= content (when (.exists (io/file deps-path))
-                            (slurp deps-path)))
-        (spit deps-path content))))
-  (println "synced native companion versions to" version)
-  {:version version
-   :updated (mapv :platform-id native.platforms/supported-platforms)})
+  [{:keys [native-root] :as opts}]
+  (let [target-native-root (or native-root *native-root*)
+        companion-version  (native-companion-version opts)]
+    (binding [*native-root* target-native-root]
+      (doseq [platform native.platforms/supported-platforms]
+        (let [deps-path (native-deps-file platform)
+              content   (with-out-str (pprint/pprint (native-deps-data platform companion-version)))]
+          (mkdirs! (platform-dir platform))
+          (when (not= content (when (.exists (io/file deps-path))
+                                (slurp deps-path)))
+            (spit deps-path content)))))
+    (println "synced native companion versions to" companion-version)
+    {:version companion-version
+     :updated (mapv :platform-id native.platforms/supported-platforms)}))
 
 (defn clean [_]
   (b/delete {:path "target"}))
@@ -514,17 +418,20 @@
   (b/delete {:path native-cache-root}))
 
 (defn native-update
-  [{:keys [platforms]}]
-  (sync-native-versions nil)
-  (let [sharp-version (:sharp-version (resolve-sharp-version))
-        targets       (selected-platforms platforms)]
-    (println "updating native resources for"
-             (str/join ", " (map (comp name :platform-id) targets)))
-    {:sharp-version sharp-version
-     :platforms     (mapv (fn [platform]
-                            {:platform-id (:platform-id platform)
-                             :manifest    (stage-platform! platform sharp-version)})
-                          targets)}))
+  [{:keys [platforms native-root] :as opts}]
+  (let [target-native-root (or native-root *native-root*)
+        sharp-version      (selected-sharp-vips-version opts)
+        targets            (selected-platforms platforms)]
+    (binding [*native-root* target-native-root]
+      (sync-native-versions {:sharp-vips-version      sharp-version
+                             :native-version-revision (:native-version-revision opts)})
+      (println "updating native resources for"
+               (str/join ", " (map (comp name :platform-id) targets)))
+      {:sharp-version sharp-version
+       :platforms     (mapv (fn [platform]
+                              {:platform-id (:platform-id platform)
+                               :manifest    (stage-platform! platform sharp-version)})
+                            targets)})))
 
 (defn jar [_]
   (b/write-pom {:class-dir class-dir

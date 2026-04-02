@@ -1,10 +1,14 @@
 (ns ol.vips-native-packaging-test
   (:require
+   [clojure.edn :as edn]
+   [clojure.java.io :as io]
+   [clojure.java.shell :as shell]
    [clojure.test :refer [deftest is testing]]
    [ol.vips.native.loader :as loader]
    [ol.vips.native.platforms :as platforms])
   (:import
-   [clojure.lang ExceptionInfo]))
+   [clojure.lang ExceptionInfo]
+   [java.nio.file Files]))
 
 (defmacro with-system-properties
   [bindings & body]
@@ -108,3 +112,49 @@
     (testing "extracted library paths derive from the manifest order"
       (is (= ["/tmp/ol.vips/linux-x86-64-gnu/8.17.3-1.2.4/lib/libvips-cpp.so.8.17.3"]
              (loader/extracted-library-paths "/tmp/ol.vips" manifest))))))
+
+(deftest sync-native-versions-composes-companion-version-from-sharp-release-and-revision
+  (let [temp-native-root (str (Files/createTempDirectory
+                               "ol-vips-native-test-"
+                               (make-array java.nio.file.attribute.FileAttribute 0)))
+        platform         (platforms/platform :linux-x86-64-gnu)
+        deps-path        (io/file temp-native-root (:dir-name platform) "deps.edn")]
+    (try
+      (let [{:keys [exit err]} (shell/sh "clojure"
+                                         "-T:build"
+                                         "sync-native-versions"
+                                         ":sharp-vips-version"
+                                         "\"1.2.3\""
+                                         ":native-version-revision"
+                                         "4"
+                                         ":native-root"
+                                         (pr-str temp-native-root))]
+        (is (zero? exit) err)
+        (is (= "1.2.3-4"
+               (get-in (edn/read-string (slurp deps-path))
+                       [:aliases :neil :project :version]))))
+      (finally
+        (when (.exists (io/file temp-native-root))
+          (doseq [file (reverse (file-seq (io/file temp-native-root)))]
+            (.delete ^java.io.File file)))))))
+
+(deftest sync-native-versions-defaults-to-project-sharp-vips-version-and-revision
+  (let [temp-native-root (str (Files/createTempDirectory
+                               "ol-vips-native-test-"
+                               (make-array java.nio.file.attribute.FileAttribute 0)))
+        platform         (platforms/platform :linux-x86-64-gnu)
+        deps-path        (io/file temp-native-root (:dir-name platform) "deps.edn")]
+    (try
+      (let [{:keys [exit err]} (shell/sh "clojure"
+                                         "-T:build"
+                                         "sync-native-versions"
+                                         ":native-root"
+                                         (pr-str temp-native-root))]
+        (is (zero? exit) err)
+        (is (= "1.2.4-0"
+               (get-in (edn/read-string (slurp deps-path))
+                       [:aliases :neil :project :version]))))
+      (finally
+        (when (.exists (io/file temp-native-root))
+          (doseq [file (reverse (file-seq (io/file temp-native-root)))]
+            (.delete ^java.io.File file)))))))
