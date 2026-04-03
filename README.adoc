@@ -95,6 +95,7 @@ generated wrappers for libvips operations.
 
 * https://docs.outskirtslabs.com/ol.vips/next/[Docs Home]
 * https://docs.outskirtslabs.com/ol.vips/next/introduction/[Introduction]
+* https://docs.outskirtslabs.com/ol.vips/next/examples/[Examples]
 * https://docs.outskirtslabs.com/ol.vips/next/going-to-production/[Going to Production]
 * https://docs.outskirtslabs.com/ol.vips/next/multipage-and-animated-images/[Multipage and Animated Images]
 * https://docs.outskirtslabs.com/ol.vips/next/api/[API Reference]
