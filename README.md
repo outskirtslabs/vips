@@ -14,10 +14,14 @@ Install the main library plus exactly one native jar that matches your target pl
 
 ```clojure
 ;; deps.edn
-{:deps {com.outskirtslabs/vips {:mvn/version "0.0.1"}
+{:deps {com.outskirtslabs/vips {:git/url "https://github.com/outskirtslabs/vips.git"
+                                :git/sha "46789851fa8d749517bb7e09ea4e7340e1b757ec"}
         ;; change the following based on your runtime platform
         com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.2.4-1"}}}
 ```
+
+
+Don't forget to run `clojure -X:deps prep` before first use if using the git coord.
 
 [Choose one or more native artifacts][clojars] (only the appropriate one for the runtime platform will be used):
 
