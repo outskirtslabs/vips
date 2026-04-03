@@ -267,10 +267,6 @@
               (reset! state* state)
               state)))))
 
-(defn state
-  []
-  (ensure-initialized!))
-
 (defn allow-untrusted-operations!
   []
   (let [current-state (ensure-initialized!)
@@ -288,10 +284,6 @@
 (defn gtypes
   []
   (:gtypes (ensure-initialized!)))
-
-(defn version-string
-  []
-  (:version-string (ensure-initialized!)))
 
 (defn operation-cache-settings
   []
