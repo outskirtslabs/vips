@@ -1,8 +1,10 @@
 (ns ol.vips-test
   (:require
    [babashka.fs :as fs]
+   [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
-   [ol.vips :as v])
+   [ol.vips :as v]
+   [ol.vips.operations :as ops])
   (:import
    [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]))
 
@@ -17,6 +19,9 @@
 
 (def alpha-band-path
   (str (fs/path fixture-root "alpha_band.png")))
+
+(def animated-gif-path
+  (str (fs/path fixture-root "cogs.gif")))
 
 (defonce runtime-state
   (v/init!))
@@ -35,22 +40,22 @@
                             (v/encode-enum "VipsDirection" :horizontal))))
       (is (= "flip" (:name flip))))))
 
-(deftest open-and-image-info
-  (testing "from-file and info accept path strings and Path values"
+(deftest open-and-metadata
+  (testing "from-file and metadata accept path strings and Path values"
     (with-open [from-string (v/from-file fixture-path)
                 from-path   (v/from-file (java.nio.file.Path/of fixture-path
                                                                 (make-array String 0)))]
       (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
-             (select-keys (v/info from-string) [:width :height :bands :has-alpha?])))
+             (select-keys (v/metadata from-string) [:width :height :bands :has-alpha?])))
       (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
-             (select-keys (v/info from-path) [:width :height :bands :has-alpha?])))
+             (select-keys (v/metadata from-path) [:width :height :bands :has-alpha?])))
       (is (= 2490 (v/width from-string)))
       (is (= 3084 (v/height from-string)))
       (is (= 3 (v/bands from-string)))
       (is (false? (v/has-alpha? from-string)))
       (is (= [2490 3084 3] (v/shape from-string)))
-      (is (= (v/info from-string)
-             (v/image-info from-string))))))
+      (is (= (v/metadata from-string)
+             (v/metadata from-path))))))
 
 (deftest file-and-buffer-io-helpers
   (testing "write-to-file writes an image to a format inferred from the sink path"
@@ -62,7 +67,7 @@
                               (v/write-to-file image temp-path)
                               (v/from-file temp-path))]
           (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
-                 (select-keys (v/info written) [:width :height :bands :has-alpha?]))))
+                 (select-keys (v/metadata written) [:width :height :bands :has-alpha?]))))
         (finally
           (java.nio.file.Files/deleteIfExists temp-path)))))
   (testing "from-buffer and write-to-buffer round-trip formatted images"
@@ -70,11 +75,11 @@
                          (java.nio.file.Path/of fixture-path (make-array String 0)))]
       (with-open [from-buffer (v/from-buffer fixture-bytes)]
         (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
-               (select-keys (v/info from-buffer) [:width :height :bands :has-alpha?]))))
+               (select-keys (v/metadata from-buffer) [:width :height :bands :has-alpha?]))))
       (with-open [image     (v/from-file fixture-path)
                   roundtrip (v/from-buffer (v/write-to-buffer image ".png"))]
         (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
-               (select-keys (v/info roundtrip) [:width :height :bands :has-alpha?])))))))
+               (select-keys (v/metadata roundtrip) [:width :height :bands :has-alpha?])))))))
 
 (deftest stream-io-helpers
   (testing "from-stream reads an image from an InputStream and closes it with the image"
@@ -88,7 +93,7 @@
       (is (false? @closed?))
       (with-open [image (v/from-stream stream)]
         (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
-               (select-keys (v/info image) [:width :height :bands :has-alpha?])))
+               (select-keys (v/metadata image) [:width :height :bands :has-alpha?])))
         (is (false? @closed?)))
       (is (true? @closed?))))
   (testing "write-to-stream writes through the target callback path and closes the stream"
@@ -107,7 +112,7 @@
       (is (true? @closed?))
       (with-open [roundtrip (v/from-buffer (.toByteArray ^ByteArrayOutputStream out))]
         (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
-               (select-keys (v/info roundtrip) [:width :height :bands :has-alpha?])))))))
+               (select-keys (v/metadata roundtrip) [:width :height :bands :has-alpha?])))))))
 
 (deftest stream-callback-errors
   (testing "from-stream translates callback read failures into ex-info and closes the stream"
@@ -167,7 +172,7 @@
       (is (= 518 (v/width img1)))
       (is (= 389 (v/height img1)))
       (is (= 3 (v/bands img1)))
-      (is (= (v/info img1) (v/info img4)))
+      (is (= (v/metadata img1) (v/metadata img4)))
       (is (= (v/width img1) (* 2 (v/width img2))))
       (is (= (v/width img2) (v/width img3)))
       (is (= (v/height img2) (v/height img3)))))
@@ -233,7 +238,7 @@
     (with-open [image     (v/from-file fixture-path)
                 thumbnail (v/thumbnail image 400 {:auto-rotate true})]
       (is (= {:width 323 :height 400 :bands 3 :has-alpha? false}
-             (select-keys (v/info thumbnail) [:width :height :bands :has-alpha?]))))))
+             (select-keys (v/metadata thumbnail) [:width :height :bands :has-alpha?]))))))
 
 (deftest image-result-maps-work-as-image-inputs
   (testing "public image helpers accept operation result maps with :out"
@@ -243,14 +248,14 @@
               png   (v/write-to-buffer autorot ".png")]
           (with-open [thumb thumb]
             (is (= {:width 323 :height 400 :bands 3 :has-alpha? false}
-                   (select-keys (v/info thumb) [:width :height :bands :has-alpha?])))
+                   (select-keys (v/metadata thumb) [:width :height :bands :has-alpha?])))
             (is (pos? (alength ^bytes png))))))))
   (testing "raw operation calls accept operation result maps for image inputs"
     (with-open [image (v/from-file fixture-path)]
       (with-open [autorot (v/call! "autorot" {:in image})
                   flipped (v/call! "flip" {:in autorot :direction :horizontal})]
         (is (= {:width 2490 :height 3084 :has-alpha? false}
-               (select-keys (v/image-info flipped) [:width :height :has-alpha?])))))))
+               (select-keys (v/metadata flipped) [:width :height :has-alpha?])))))))
 
 (deftest single-image-operations-return-image-handles
   (testing "single-image operation results can be used directly in with-open"
@@ -259,7 +264,7 @@
                 flipped (v/call! "flip" {:in rotated :direction :horizontal})
                 bw      (v/call! "colourspace" {:in flipped :space :b-w})]
       (is (= {:width 3084 :height 2490 :bands 1 :has-alpha? false}
-             (select-keys (v/info bw) [:width :height :bands :has-alpha?]))))))
+             (select-keys (v/metadata bw) [:width :height :bands :has-alpha?]))))))
 
 (deftest transforms
   (testing "rotate, colourspace, and flip compose through call!"
@@ -268,11 +273,11 @@
                 bw      (v/call! "colourspace" {:in image :space :b-w})
                 flipped (v/call! "flip" {:in image :direction :horizontal})]
       (is (= {:width 3084 :height 2490 :has-alpha? false}
-             (select-keys (v/image-info rotated) [:width :height :has-alpha?])))
+             (select-keys (v/metadata rotated) [:width :height :has-alpha?])))
       (is (= {:width 2490 :height 3084 :has-alpha? false}
-             (select-keys (v/image-info bw) [:width :height :has-alpha?])))
+             (select-keys (v/metadata bw) [:width :height :has-alpha?])))
       (is (= {:width 2490 :height 3084 :has-alpha? false}
-             (select-keys (v/image-info flipped) [:width :height :has-alpha?])))))
+             (select-keys (v/metadata flipped) [:width :height :has-alpha?])))))
   (testing "invalid enum keywords fail before entering libvips"
     (with-open [image (v/image-from-file fixture-path)]
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
@@ -290,7 +295,7 @@
                                         :in2       right
                                         :direction :horizontal})]
       (is (= {:width 4980 :height 3084 :has-alpha? false}
-             (select-keys (v/image-info joined) [:width :height :has-alpha?])))))
+             (select-keys (v/metadata joined) [:width :height :has-alpha?])))))
   (testing "arrayjoin accepts a collection of images plus layout options"
     (with-open [a    (v/image-from-file fixture-path)
                 b    (v/image-from-file fixture-path)
@@ -302,4 +307,168 @@
                                            :halign :centre
                                            :valign :centre})]
       (is (= {:width 4990 :height 6178 :has-alpha? false}
-             (select-keys (v/image-info grid) [:width :height :has-alpha?]))))))
+             (select-keys (v/metadata grid) [:width :height :has-alpha?]))))))
+
+(deftest metadata-api
+  (testing "generic field helpers expose typed metadata values and discovery"
+    (with-open [img (ops/gifload animated-gif-path {:n -1})]
+      (is (= 5 (v/field img "n-pages")))
+      (is (= 77 (v/field img "page-height")))
+      (is (= [0 50 50 50 50] (v/field img "delay")))
+      (is (= 32761 (v/field img "loop")))
+      (is (some #{"delay"} (v/field-names img)))
+      (is (= "0 50 50 50 50" (str/trim (v/field-as-string img "delay"))))
+      (is (nil? (v/field img "does-not-exist")))
+      (is (= ::missing (v/field img "does-not-exist" ::missing)))
+      (is (= 5 (get (v/headers img) "n-pages")))))
+  (testing "assoc/update/dissoc field operate immutably on image metadata"
+    (with-open [img         (v/from-file puppies-path)
+                int-added   (v/assoc-field img "custom-int" 42)
+                dbl-added   (v/assoc-field int-added "custom-double" 3.5)
+                str-added   (v/assoc-field dbl-added "custom-string" "hello")
+                arr-added   (v/assoc-field str-added "custom-delay" [10 20 30] {:type :array-int})
+                incremented (v/update-field arr-added "custom-int" inc)
+                stripped    (v/dissoc-field incremented "custom-string")]
+      (is (nil? (v/field img "custom-int")))
+      (is (= 42 (v/field int-added "custom-int")))
+      (is (= 3.5 (v/field dbl-added "custom-double")))
+      (is (= "hello" (v/field str-added "custom-string")))
+      (is (= [10 20 30] (v/field arr-added "custom-delay")))
+      (is (= 43 (v/field incremented "custom-int")))
+      (is (nil? (v/field stripped "custom-string")))
+      (is (= 42 (v/field arr-added "custom-int")))))
+  (testing "assoc-field persists core header fields like xres and yres through save and reload"
+    (let [tmp-path (java.nio.file.Files/createTempFile "ol-vips-meta-" ".jpg"
+                                                       (make-array java.nio.file.attribute.FileAttribute 0))]
+      (try
+        (with-open [img    (v/from-file puppies-path)
+                    tagged (-> img
+                               (v/assoc-field "xres" 10.0)
+                               (v/assoc-field "yres" 10.0))]
+          (is (= 10.0 (v/field tagged "xres")))
+          (is (= 10.0 (v/field tagged "yres")))
+          (v/write-to-file tagged tmp-path {:strip false}))
+        (with-open [roundtrip (v/from-file tmp-path)]
+          (is (= 10.0 (v/field roundtrip "xres")))
+          (is (= 10.0 (v/field roundtrip "yres"))))
+        (finally
+          (java.nio.file.Files/deleteIfExists tmp-path))))))
+
+(deftest animated-metadata-and-readers
+  (testing "metadata includes animated keys and dedicated readers mirror generic fields"
+    (with-open [img (ops/gifload animated-gif-path {:n -1})]
+      (is (= {:width       85
+              :height      385
+              :bands       4
+              :has-alpha?  true
+              :pages       5
+              :page-height 77
+              :loop        32761
+              :delay       [0 50 50 50 50]}
+             (select-keys (v/metadata img)
+                          [:width :height :bands :has-alpha? :pages :page-height :loop :delay])))
+      (is (= 5 (v/pages img)))
+      (is (= 77 (v/page-height img)))
+      (is (= [0 50 50 50 50] (v/page-delays img)))
+      (is (= 32761 (v/loop-count img))))))
+
+(deftest animated-metadata-writers
+  (testing "assoc-page helpers return new images and preserve the original"
+    (with-open [img     (ops/gifload animated-gif-path {:n -1})
+                pages*  (v/assoc-pages img 9)
+                height* (v/assoc-page-height pages* 11)
+                delay*  (v/assoc-page-delays height* [1 2 3 4 5 6 7 8 9])
+                loop*   (v/assoc-loop-count delay* 7)]
+      (is (= 5 (v/pages img)))
+      (is (= 77 (v/page-height img)))
+      (is (= [0 50 50 50 50] (v/page-delays img)))
+      (is (= 32761 (v/loop-count img)))
+      (is (= 9 (v/pages pages*)))
+      (is (= 11 (v/page-height height*)))
+      (is (= [1 2 3 4 5 6 7 8 9] (v/page-delays delay*)))
+      (is (= 7 (v/loop-count loop*)))))
+  (testing "assoc-page-delays validates delay counts when page count is known"
+    (with-open [img (ops/gifload animated-gif-path {:n -1})]
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"delay"
+                            (v/assoc-page-delays img [1 2]))))))
+
+(deftest animated-frame-aware-transforms
+  (testing "extract-area-pages crops each frame and preserves page metadata"
+    (with-open [img     (ops/gifload animated-gif-path {:n -1})
+                cropped (v/extract-area-pages img 10 7 20 11)]
+      (is (= {:width       20
+              :height      55
+              :pages       5
+              :page-height 11
+              :loop        32761
+              :delay       [0 50 50 50 50]}
+             (select-keys (v/metadata cropped) [:width :height :pages :page-height :loop :delay])))))
+  (testing "embed-pages applies to each frame and updates page height"
+    (with-open [img      (ops/gifload animated-gif-path {:n -1})
+                embedded (v/embed-pages img 3 4 100 90 {:extend     :background
+                                                        :background [0 0 0 0]})]
+      (is (= {:width 100 :height 450 :pages 5 :page-height 90}
+             (select-keys (v/metadata embedded) [:width :height :pages :page-height])))))
+  (testing "rot-pages rotates each frame and updates frame geometry"
+    (with-open [img    (ops/gifload animated-gif-path {:n -1})
+                turned (v/rot-pages img :d90)]
+      (is (= {:width 77 :height 425 :pages 5 :page-height 85}
+             (select-keys (v/metadata turned) [:width :height :pages :page-height])))))
+  (testing "single-page inputs behave like the ordinary operations"
+    (with-open [img     (v/from-file puppies-path)
+                cropped (v/extract-area-pages img 0 0 20 30)
+                turned  (v/rot-pages img :d90)]
+      (is (= {:width 20 :height 30}
+             (select-keys (v/metadata cropped) [:width :height])))
+      (is (= {:width 389 :height 518}
+             (select-keys (v/metadata turned) [:width :height])))
+      (is (nil? (v/pages cropped)))
+      (is (nil? (v/page-height turned))))))
+
+(deftest animated-assembly
+  (testing "assemble-pages joins equal-sized frames and round-trips through gif save"
+    (let [tmp-path (java.nio.file.Files/createTempFile "ol-vips-animated-" ".gif"
+                                                       (make-array java.nio.file.attribute.FileAttribute 0))]
+      (try
+        (with-open [base     (v/from-file puppies-path)
+                    frame-a  (ops/extract-area base 0 0 40 30)
+                    frame-b  (ops/extract-area base 10 10 40 30)
+                    frame-c  (ops/extract-area base 20 20 40 30)
+                    animated (v/assemble-pages [frame-a frame-b frame-c]
+                                               {:loop  2
+                                                :delay [80 120 160]})]
+          (is (= {:width       40
+                  :height      90
+                  :pages       3
+                  :page-height 30
+                  :loop        2
+                  :delay       [80 120 160]}
+                 (select-keys (v/metadata animated)
+                              [:width :height :pages :page-height :loop :delay])))
+          (v/write-to-file animated tmp-path)
+          (with-open [roundtrip (ops/gifload tmp-path {:n -1})]
+            (is (= {:width       40
+                    :height      90
+                    :pages       3
+                    :page-height 30
+                    :loop        2
+                    :delay       [80 120 160]}
+                   (select-keys (v/metadata roundtrip)
+                                [:width :height :pages :page-height :loop :delay])))))
+        (finally
+          (java.nio.file.Files/deleteIfExists tmp-path)))))
+  (testing "assemble-pages rejects mixed frame sizes"
+    (with-open [base    (v/from-file puppies-path)
+                frame-a (ops/extract-area base 0 0 40 30)
+                frame-b (ops/extract-area base 0 0 20 30)]
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"same size"
+                            (v/assemble-pages [frame-a frame-b] {:delay [10 10]})))))
+  (testing "assemble-pages rejects mismatched delay counts"
+    (with-open [base    (v/from-file puppies-path)
+                frame-a (ops/extract-area base 0 0 40 30)
+                frame-b (ops/extract-area base 10 10 40 30)]
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"delay"
+                            (v/assemble-pages [frame-a frame-b] {:delay [10]}))))))

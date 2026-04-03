@@ -49,9 +49,9 @@
                 rotated (ops/rotate image 90.0)
                 joined  (ops/join image rotated :horizontal {:shim 10})]
       (is (= {:width 3084 :height 2490 :has-alpha? false}
-             (select-keys (v/image-info rotated) [:width :height :has-alpha?])))
+             (select-keys (v/metadata rotated) [:width :height :has-alpha?])))
       (is (= {:width 5584 :height 2490 :has-alpha? false}
-             (select-keys (v/image-info joined) [:width :height :has-alpha?])))))
+             (select-keys (v/metadata joined) [:width :height :has-alpha?])))))
   (testing "multi-output wrappers preserve additional outputs in a closeable result"
     (with-open [image   (v/image-from-file fixture-path)
                 autorot (ops/autorot image)]
@@ -59,7 +59,7 @@
       (is (keyword? (:angle autorot)))
       (is (boolean? (:flip autorot)))
       (is (= {:width 2490 :height 3084 :has-alpha? false}
-             (select-keys (v/image-info autorot) [:width :height :has-alpha?]))))))
+             (select-keys (v/metadata autorot) [:width :height :has-alpha?]))))))
 
 (deftest generated-array-operations-work
   (testing "generated boxed image-array operations delegate through call!"
@@ -73,7 +73,7 @@
                                      :halign :centre
                                      :valign :centre})]
       (is (= {:width 4990 :height 6178 :has-alpha? false}
-             (select-keys (v/image-info grid) [:width :height :has-alpha?]))))))
+             (select-keys (v/metadata grid) [:width :height :has-alpha?]))))))
 
 (deftest generated-operations-accept-result-maps
   (testing "generated wrappers accept prior operation result maps as image inputs"
@@ -82,4 +82,4 @@
                   flipped (ops/flip autorot :horizontal)
                   joined  (ops/join autorot flipped :horizontal)]
         (is (= {:width 4980 :height 3084 :has-alpha? false}
-               (select-keys (v/image-info joined) [:width :height :has-alpha?])))))))
+               (select-keys (v/metadata joined) [:width :height :has-alpha?])))))))

@@ -31,6 +31,7 @@
 
 (def ^:private native-symbol-specs
   {:g-free                  ["g_free" [::mem/pointer] ::mem/void]
+   :g-strfreev              ["g_strfreev" [::mem/pointer] ::mem/void]
    :g-signal-connect-data   ["g_signal_connect_data"
                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer ::mem/int]
                              ::mem/long]
@@ -94,7 +95,31 @@
    :g-value-unset           ["g_value_unset" [::mem/pointer] ::mem/void]
    :image-get-height        ["vips_image_get_height" [::mem/pointer] ::mem/int]
    :image-get-bands         ["vips_image_get_bands" [::mem/pointer] ::mem/int]
+   :image-get               ["vips_image_get" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/int]
+   :image-get-array-double  ["vips_image_get_array_double"
+                             [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
+                             ::mem/int]
+   :image-get-array-int     ["vips_image_get_array_int"
+                             [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
+                             ::mem/int]
+   :image-get-as-string     ["vips_image_get_as_string"
+                             [::mem/pointer ::mem/c-string ::mem/pointer]
+                             ::mem/int]
+   :image-get-blob          ["vips_image_get_blob"
+                             [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
+                             ::mem/int]
+   :image-get-double        ["vips_image_get_double"
+                             [::mem/pointer ::mem/c-string ::mem/pointer]
+                             ::mem/int]
+   :image-get-fields        ["vips_image_get_fields" [::mem/pointer] ::mem/pointer]
+   :image-get-int           ["vips_image_get_int"
+                             [::mem/pointer ::mem/c-string ::mem/pointer]
+                             ::mem/int]
+   :image-get-string        ["vips_image_get_string"
+                             [::mem/pointer ::mem/c-string ::mem/pointer]
+                             ::mem/int]
    :image-get-type          ["vips_image_get_type" [] ::g-type]
+   :image-get-typeof        ["vips_image_get_typeof" [::mem/pointer ::mem/c-string] ::g-type]
    :image-get-width         ["vips_image_get_width" [::mem/pointer] ::mem/int]
    :image-has-alpha         ["vips_image_hasalpha" [::mem/pointer] ::mem/int]
    :image-new-from-buffer   ["vips_image_new_from_buffer"
@@ -112,6 +137,20 @@
    :image-write-to-file     ["vips_image_write_to_file"
                              [::mem/pointer ::mem/c-string ::mem/pointer]
                              ::mem/int]
+   :image-remove            ["vips_image_remove" [::mem/pointer ::mem/c-string] ::mem/int]
+   :image-set               ["vips_image_set" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/void]
+   :image-set-array-double  ["vips_image_set_array_double"
+                             [::mem/pointer ::mem/c-string ::mem/pointer ::mem/int]
+                             ::mem/void]
+   :image-set-array-int     ["vips_image_set_array_int"
+                             [::mem/pointer ::mem/c-string ::mem/pointer ::mem/int]
+                             ::mem/void]
+   :image-set-blob-copy     ["vips_image_set_blob_copy"
+                             [::mem/pointer ::mem/c-string ::mem/pointer ::size-t]
+                             ::mem/void]
+   :image-set-double        ["vips_image_set_double" [::mem/pointer ::mem/c-string ::mem/double] ::mem/void]
+   :image-set-int           ["vips_image_set_int" [::mem/pointer ::mem/c-string ::mem/int] ::mem/void]
+   :image-set-string        ["vips_image_set_string" [::mem/pointer ::mem/c-string ::mem/c-string] ::mem/void]
    :image-write-to-target   ["vips_image_write_to_target"
                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
                              ::mem/int]
@@ -529,6 +568,12 @@
 (def ^:private byte-array-class
   (class (byte-array 0)))
 
+(def ^:private missing-field-sentinel
+  (Object.))
+
+(def ^:private c-string-max-bytes
+  65536)
+
 (defn- ->byte-array
   [value]
   (cond
@@ -638,3 +683,250 @@
    :height     (image-height image)
    :bands      (image-bands image)
    :has-alpha? (image-has-alpha? image)})
+
+(defn image-field-type
+  [image field-name]
+  ((bindings :image-get-typeof) (pointer (image-handle image)) (str field-name)))
+
+(defn image-has-field?
+  [image field-name]
+  (not (zero? (image-field-type image field-name))))
+
+(defn- read-c-string
+  [ptr]
+  (.getString ^java.lang.foreign.MemorySegment
+   (.reinterpret ^java.lang.foreign.MemorySegment ptr c-string-max-bytes)
+              0))
+
+(defn image-field-names
+  [image]
+  (let [raw-fields ((bindings :image-get-fields) (pointer (image-handle image)))]
+    (if (mem/null? raw-fields)
+      []
+      (let [slot-size  (mem/size-of ::mem/pointer)
+            max-fields 1024
+            fields-ptr (.reinterpret ^java.lang.foreign.MemorySegment raw-fields
+                                     (* max-fields slot-size))]
+        (try
+          (loop [idx 0
+                 acc []]
+            (let [field-ptr (.getAtIndex ^java.lang.foreign.MemorySegment fields-ptr
+                                         java.lang.foreign.ValueLayout/ADDRESS
+                                         idx)]
+              (if (mem/null? field-ptr)
+                acc
+                (recur (inc idx) (conj acc (read-c-string field-ptr))))))
+          (finally
+            ((bindings :g-strfreev) raw-fields)))))))
+
+(defn image-field-as-string
+  ([image field-name]
+   (image-field-as-string image field-name missing-field-sentinel))
+  ([image field-name not-found]
+   (if-not (image-has-field? image field-name)
+     (if (identical? not-found missing-field-sentinel) nil not-found)
+     (with-open [arena (mem/confined-arena)]
+       (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+             code    ((bindings :image-get-as-string)
+                      (pointer (image-handle image))
+                      (str field-name)
+                      out-ptr)]
+         (when-not (zero? code)
+           (throw-vips-error (bindings)
+                             "Failed to read image metadata field as string"
+                             {:field (str field-name)}))
+         (let [value-ptr (mem/read-address out-ptr)]
+           (try
+             (read-c-string value-ptr)
+             (finally
+               ((bindings :g-free) value-ptr)))))))))
+
+(defn- image-int-field
+  [image field-name]
+  (with-open [arena (mem/confined-arena)]
+    (let [out-ptr (mem/alloc-instance ::mem/int arena)
+          code    ((bindings :image-get-int)
+                   (pointer (image-handle image))
+                   (str field-name)
+                   out-ptr)]
+      (when-not (zero? code)
+        (throw-vips-error (bindings)
+                          "Failed to read integer image metadata field"
+                          {:field (str field-name)}))
+      (mem/read-int out-ptr))))
+
+(defn- image-double-field
+  [image field-name]
+  (with-open [arena (mem/confined-arena)]
+    (let [out-ptr (mem/alloc-instance ::mem/double arena)
+          code    ((bindings :image-get-double)
+                   (pointer (image-handle image))
+                   (str field-name)
+                   out-ptr)]
+      (when-not (zero? code)
+        (throw-vips-error (bindings)
+                          "Failed to read double image metadata field"
+                          {:field (str field-name)}))
+      (mem/read-double out-ptr))))
+
+(defn- image-string-field
+  [image field-name]
+  (with-open [arena (mem/confined-arena)]
+    (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+          code    ((bindings :image-get-string)
+                   (pointer (image-handle image))
+                   (str field-name)
+                   out-ptr)]
+      (when-not (zero? code)
+        (throw-vips-error (bindings)
+                          "Failed to read string image metadata field"
+                          {:field (str field-name)}))
+      (read-c-string (mem/read-address out-ptr)))))
+
+(defn- image-array-int-field
+  [image field-name]
+  (with-open [arena (mem/confined-arena)]
+    (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+          n-ptr   (mem/alloc-instance ::mem/int arena)
+          code    ((bindings :image-get-array-int)
+                   (pointer (image-handle image))
+                   (str field-name)
+                   out-ptr
+                   n-ptr)]
+      (when-not (zero? code)
+        (throw-vips-error (bindings)
+                          "Failed to read integer-array image metadata field"
+                          {:field (str field-name)}))
+      (let [count     (mem/read-int n-ptr)
+            data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
+                       (mem/read-address out-ptr)
+                                    (* count (mem/size-of ::mem/int)))
+            slot-size (mem/size-of ::mem/int)]
+        (mapv (fn [idx]
+                (.get ^java.lang.foreign.MemorySegment
+                 data-ptr
+                      java.lang.foreign.ValueLayout/JAVA_INT
+                      (long (* idx slot-size))))
+              (range count))))))
+
+(defn- image-array-double-field
+  [image field-name]
+  (with-open [arena (mem/confined-arena)]
+    (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+          n-ptr   (mem/alloc-instance ::mem/int arena)
+          code    ((bindings :image-get-array-double)
+                   (pointer (image-handle image))
+                   (str field-name)
+                   out-ptr
+                   n-ptr)]
+      (when-not (zero? code)
+        (throw-vips-error (bindings)
+                          "Failed to read double-array image metadata field"
+                          {:field (str field-name)}))
+      (let [count     (mem/read-int n-ptr)
+            data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
+                       (mem/read-address out-ptr)
+                                    (* count (mem/size-of ::mem/double)))
+            slot-size (mem/size-of ::mem/double)]
+        (mapv (fn [idx]
+                (.get ^java.lang.foreign.MemorySegment
+                 data-ptr
+                      java.lang.foreign.ValueLayout/JAVA_DOUBLE
+                      (long (* idx slot-size))))
+              (range count))))))
+
+(defn- image-blob-field
+  [image field-name]
+  (with-open [arena (mem/confined-arena)]
+    (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+          len-ptr (mem/alloc-instance ::size-t arena)
+          code    ((bindings :image-get-blob)
+                   (pointer (image-handle image))
+                   (str field-name)
+                   out-ptr
+                   len-ptr)]
+      (when-not (zero? code)
+        (throw-vips-error (bindings)
+                          "Failed to read blob image metadata field"
+                          {:field (str field-name)}))
+      (let [data-ptr (mem/read-address out-ptr)
+            length   (mem/read-long len-ptr)]
+        (mem/read-bytes (mem/reinterpret data-ptr length) (int length))))))
+
+(defn image-field
+  ([image field-name]
+   (image-field image field-name missing-field-sentinel))
+  ([image field-name not-found]
+   (let [gtype (image-field-type image field-name)]
+     (if (zero? gtype)
+       (if (identical? not-found missing-field-sentinel) nil not-found)
+       (let [field-type-name (type-name gtype)]
+         (case field-type-name
+           ("gint" "guint") (image-int-field image field-name)
+           ("gdouble") (image-double-field image field-name)
+           ("gchararray" "VipsRefString") (image-string-field image field-name)
+           ("VipsArrayInt") (image-array-int-field image field-name)
+           ("VipsArrayDouble") (image-array-double-field image field-name)
+           ("VipsBlob") (image-blob-field image field-name)
+           (image-field-as-string image field-name)))))))
+
+(defn image-metadata
+  [image]
+  (into {}
+        (map (fn [field-name]
+               [field-name (image-field image field-name)]))
+        (image-field-names image)))
+
+(defn- infer-field-type
+  [value]
+  (cond
+    (instance? byte-array-class value) :blob
+    (string? value) :string
+    (integer? value) :int
+    (number? value) :double
+    (and (sequential? value) (every? integer? value)) :array-int
+    (and (sequential? value) (every? number? value)) :array-double
+    :else (throw (ex-info "Unsupported image metadata value"
+                          {:value value}))))
+
+(defn image-assoc-field!
+  ([image field-name value]
+   (image-assoc-field! image field-name value {}))
+  ([image field-name value {:keys [type]}]
+   (let [field-name (str field-name)
+         type       (or type (infer-field-type value))
+         image-ptr  (pointer (image-handle image))]
+     (case type
+       :int ((bindings :image-set-int) image-ptr field-name (int value))
+       :double ((bindings :image-set-double) image-ptr field-name (double value))
+       :string ((bindings :image-set-string) image-ptr field-name (str value))
+       :blob (let [data (->byte-array value)]
+               ((bindings :image-set-blob-copy) image-ptr field-name data (alength ^bytes data)))
+       :array-int (let [values (vec value)
+                        count  (count values)]
+                    (with-open [arena (mem/confined-arena)]
+                      (let [data (mem/alloc (* count (mem/size-of ::mem/int))
+                                            (mem/align-of ::mem/int)
+                                            arena)]
+                        (doseq [[idx item] (map-indexed vector values)]
+                          (mem/write-int data (* idx (mem/size-of ::mem/int)) (int item)))
+                        ((bindings :image-set-array-int) image-ptr field-name data count))))
+       :array-double (let [values (vec value)
+                           count  (count values)]
+                       (with-open [arena (mem/confined-arena)]
+                         (let [data (mem/alloc (* count (mem/size-of ::mem/double))
+                                               (mem/align-of ::mem/double)
+                                               arena)]
+                           (doseq [[idx item] (map-indexed vector values)]
+                             (mem/write-double data (* idx (mem/size-of ::mem/double)) (double item)))
+                           ((bindings :image-set-array-double) image-ptr field-name data count))))
+       (throw (ex-info "Unsupported image metadata type"
+                       {:field field-name
+                        :type  type
+                        :value value})))
+     image)))
+
+(defn image-dissoc-field!
+  [image field-name]
+  ((bindings :image-remove) (pointer (image-handle image)) (str field-name))
+  image)

@@ -55,7 +55,7 @@ To use your own libvips build, see [Loading the native library](#loading-the-nat
             thumb   (v/thumbnail image 300 {:auto-rotate true})
             rotated (ops/rotate thumb 90.0)]
   (v/write-to-file rotated "thumbnail.jpg")
-  (v/info rotated))
+  (v/metadata rotated))
 ;; => {:width 300, :height 242, :bands 3, :has-alpha? false}
 ```
 
@@ -69,7 +69,7 @@ This model is immutable and pipeline-oriented. In the common case, libvips reads
 
 libvips is demand-driven, so the pixel work happens when something downstream asks for image data. In `ol.vips`, that usually means a sink such as `v/write-to-file`, `v/write-to-buffer`, or `v/write-to-stream`. At that point libvips pulls pixels through the pipeline, processing small regions with a horizontally threaded execution model instead of materializing every intermediate image in memory.
 
-Some operations that need actual pixel values can trigger evaluation earlier, but metadata queries such as `v/width`, `v/height`, and `v/info` can often be satisfied from loader metadata alone. Because the image graph is immutable and operations are generally side-effect free, libvips can also reuse and cache operation results internally.
+Some operations that need actual pixel values can trigger evaluation earlier, but metadata queries such as `v/width`, `v/height`, and `v/metadata` can often be satisfied from loader metadata alone. Because the image graph is immutable and operations are generally side-effect free, libvips can also reuse and cache operation results internally.
 
 `ol.vips` adds a small amount of Clojure-specific structure on top of that model. The `ol.vips.operations` namespace is generated from libvips introspection data, `ol.vips.enums` exposes the enum keywords used by many options, and the top-level `ol.vips` namespace provides the file, buffer, stream, metadata, and convenience helpers you use most often.
 
@@ -100,7 +100,8 @@ The snippets below show the main API shapes inline. For runnable end-to-end scri
 - [`examples/compose_images.clj`](./examples/compose_images.clj) joins two images and builds a small grid with `join` and `arrayjoin`.
 - [`examples/bytes_and_streams.clj`](./examples/bytes_and_streams.clj) reads image bytes into memory, streams them through libvips, and writes the result back out.
 - [`examples/http_stream_fetch.clj`](./examples/http_stream_fetch.clj) streams an HTTP response body into libvips and saves a transformed result.
-- [`examples/metadata_roundtrip.clj`](./examples/metadata_roundtrip.clj) copies an image while preserving metadata on write.
+- [`examples/metadata_roundtrip.clj`](./examples/metadata_roundtrip.clj) reads and writes metadata fields before saving an image.
+- [`examples/animated_gif.clj`](./examples/animated_gif.clj) loads every GIF frame, transforms each page, and writes an animated result.
 
 ### File Input and Output
 
@@ -108,11 +109,61 @@ Use the file helpers when your source and destination already live on disk and y
 
 ```clojure
 (with-open [image (v/from-file "dev/rabbit.jpg" {:shrink 2})]
-  (v/info image)
+  (v/metadata image)
   (v/shape image)
   (v/write-to-file image "rabbit.png" {:compression 9})
   (v/write-to-buffer image ".png" {:compression 9}))
 ```
+
+### Metadata
+
+`ol.vips` exposes a curated `v/metadata` summary and a generic header API for libvips metadata fields.
+
+```clojure
+(with-open [image (v/from-file "dev/rabbit.jpg")]
+  {:meta   (v/metadata image)
+   :width  (v/field image "width")
+   :fields (take 5 (v/field-names image))})
+;; => {:meta {:width 2490, :height 3084, :bands 3, :has-alpha? false}
+;;     :width 2490
+;;     :fields ("width" "height" "bands" "format" "coding")}
+```
+
+Immutable metadata edits use `assoc`/`update`/`dissoc` style names.
+
+```clojure
+(with-open [image  (v/from-file "dev/rabbit.jpg")
+            tagged (-> image
+                       (v/assoc-field "xres" 10.0)
+                       (v/update-field "yres" (constantly 10.0)))]
+  (v/write-to-file tagged "rabbit-copy.jpg" {:strip false})
+  (select-keys (v/headers tagged) ["width" "height" "xres" "yres"]))
+```
+
+### Animated Images
+
+Load every page or frame with a format-specific loader and `{:n -1}`. libvips represents animated and multipage images as one tall strip plus metadata such as `n-pages`, `page-height`, `loop`, and `delay`.
+
+```clojure
+(require '[ol.vips :as v]
+         '[ol.vips.operations :as ops])
+
+(with-open [image   (ops/gifload "test/fixtures/cogs.gif" {:n -1})
+            cropped (v/extract-area-pages image 10 7 50 50)
+            turned  (v/rot-pages cropped :d90)
+            looped  (v/assoc-loop-count turned 2)]
+  (v/write-to-file looped "cogs-turned.gif")
+  (v/metadata looped))
+;; => {:width 50, :height 250, :bands 4, :has-alpha? true, :pages 5, ...}
+```
+
+The dedicated animated helpers are:
+
+- `v/pages`, `v/page-height`, `v/page-delays`, and `v/loop-count`
+- `v/assoc-pages`, `v/assoc-page-height`, `v/assoc-page-delays`, and `v/assoc-loop-count`
+- `v/extract-area-pages`, `v/embed-pages`, `v/rot-pages`, and `v/assemble-pages`
+
+These helpers work best for uniform-height multipage inputs such as animated GIF/WebP strips and similarly-shaped TIFF/PDF inputs.
 
 ### Image Loaders
 
@@ -126,7 +177,7 @@ JPEG auto-rotation rotates the image according to its EXIF orientation at load t
 
 (with-open [image (ops/jpegload "dev/rabbit.jpg" {:autorotate true})]
   (v/write-to-file image "rabbit-upright.jpg")
-  (v/info image))
+  (v/metadata image))
 ```
 
 ### Streaming Input And Output
@@ -139,14 +190,14 @@ JPEG auto-rotation rotates the image according to its EXIF orientation at load t
 
 (import '[java.io FileOutputStream])
 
-(with-open [response-body (:body (http/get "https://casey.link/square-flask.png"
+  (with-open [response-body (:body (http/get "https://casey.link/square-flask.png"
                                            {:as :stream}))
             image         (v/from-stream response-body {:access  :sequential
                                                         :fail-on :error})
             thumbnail     (v/thumbnail image 200)
             out           (FileOutputStream. "square-flask-thumb.png")]
   (v/write-to-stream thumbnail out ".png")
-  (v/info thumbnail))
+  (v/metadata thumbnail))
 ```
 
 `write-to-stream` writes encoded bytes to any `java.io.OutputStream`.
@@ -162,7 +213,7 @@ JPEG auto-rotation rotates the image according to its EXIF orientation at load t
               thumbnail (v/thumbnail image 200)
               out       (FileOutputStream. "rabbit-thumb.png")]
     (v/write-to-stream thumbnail out ".png")
-    (v/info thumbnail)))
+    (v/metadata thumbnail)))
 ```
 
 ### Autorotate And Inspect Outputs
@@ -174,8 +225,8 @@ JPEG auto-rotation rotates the image according to its EXIF orientation at load t
             autorot (ops/autorot image)]
   {:angle (:angle autorot)
    :flip  (:flip autorot)
-   :info  (v/info autorot)})
-;; => {:angle :d0, :flip false, :info {:width 2490, :height 3084, :bands 3, :has-alpha? false}}
+   :meta  (v/metadata autorot)})
+;; => {:angle :d0, :flip false, :meta {:width 2490, :height 3084, :bands 3, :has-alpha? false}}
 ```
 
 ### Resize And Crop
@@ -188,8 +239,8 @@ Use these geometry operations when you want to rescale an image first and then w
             cropped (ops/extract-area resized 100 100 500 500)]
   (v/write-to-file resized "rabbit-resized.jpg")
   (v/write-to-file cropped "rabbit-cropped.jpg")
-  {:resized (v/info resized)
-   :cropped (v/info cropped)})
+  {:resized (v/metadata resized)
+   :cropped (v/metadata cropped)})
 ```
 
 ### Smart Thumbnailing
@@ -202,7 +253,7 @@ Use these geometry operations when you want to rescale an image first and then w
                                   :size :down
                                   :crop :attention})]
   (v/write-to-file thumb "rabbit-smart-thumb.jpg")
-  (v/info thumb))
+  (v/metadata thumb))
 ```
 
 ### Transforming Images
@@ -227,8 +278,8 @@ libvips includes a large set of convolution and enhancement operations, so commo
             sharp   (ops/sharpen image {:sigma 1.0})]
   (v/write-to-file blurred "rabbit-blur.jpg")
   (v/write-to-file sharp "rabbit-sharp.jpg")
-  {:blurred (v/info blurred)
-   :sharp   (v/info sharp)})
+  {:blurred (v/metadata blurred)
+   :sharp   (v/metadata sharp)})
 ```
 
 ### Composing Images
@@ -270,7 +321,7 @@ Use `v/call!` when you want access to the full libvips operation surface before 
 ```clojure
 (with-open [image   (v/from-file "dev/rabbit.jpg")
             rotated (v/call! "rotate" {:in image :angle 90.0})]
-  (v/info rotated))
+  (v/metadata rotated))
 ```
 
 Use `v/operations` to list available libvips operations and `v/operation-info` to inspect their inputs and outputs.
@@ -286,7 +337,7 @@ Generated operation wrappers also cover image synthesis and compositing, so over
                               :rgba true})
             poster (ops/composite2 image label :over {:x 40 :y 40})]
   (v/write-to-file poster "rabbit-poster.png")
-  (v/info poster))
+  (v/metadata poster))
 ```
 
 ## Loading the native library
