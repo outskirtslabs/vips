@@ -204,15 +204,15 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L53-L55[sou
 
 '''
 
-[#call-BANG-]
-== call!
+[#call]
+== call
 
 
 
 
 [source,clojure]
 ----
-(call! operation-name opts)
+(call operation-name opts)
 ----
 
 

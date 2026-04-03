@@ -54,7 +54,7 @@
   [enum-type-name value]
   (introspect/decode-enum enum-type-name value))
 
-(defn call!
+(defn call
   [operation-name opts]
   (introspect/call-operation operation-name opts))
 
@@ -152,9 +152,9 @@
   ([image width]
    (thumbnail image width {}))
   ([image width opts]
-   (call! "thumbnail_image" (merge {:in    image
-                                    :width width}
-                                   opts))))
+   (call "thumbnail_image" (merge {:in    image
+                                   :width width}
+                                  opts))))
 
 (defn assoc-field
   ([image field-name value]

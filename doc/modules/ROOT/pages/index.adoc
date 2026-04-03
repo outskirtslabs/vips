@@ -96,7 +96,7 @@ generated wrappers for libvips operations.
 https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/Closeable.html[Closeable]
 Clojure values. Loader functions such as `v/from-file`, `v/from-buffer`,
 and `v/from-stream` return image handles, and operations such as
-`ops/resize`, `ops/colourspace`, and `v/call!` return new handles rather
+`ops/resize`, `ops/colourspace`, and `v/call` return new handles rather
 than mutating the original image.
 
 This model is immutable and pipeline-oriented. In the common case,
@@ -168,7 +168,7 @@ This means that you can even use a custom libvips build or a newer
 version of libvips without having to wait for `ol.vips` to catch up
 (though I expect to keep it up to date). Any new or updated operations
 in libvips can be used with this library using the lower level
-`ol.vips/call!` function. You can even generate the bindings yourself if
+`ol.vips/call` function. You can even generate the bindings yourself if
 you need to, simply use `ol.vips.codegen`.
 
 == Going to Production
@@ -463,13 +463,13 @@ source image.
 
 === Calling Raw Operations
 
-Use `v/call!` when you want access to the full libvips operation surface
+Use `v/call` when you want access to the full libvips operation surface
 before a dedicated convenience wrapper exists.
 
 [source,clojure]
 ----
 (with-open [image   (v/from-file "dev/rabbit.jpg")
-            rotated (v/call! "rotate" {:in image :angle 90.0})]
+            rotated (v/call "rotate" {:in image :angle 90.0})]
   (v/metadata rotated))
 ----
 

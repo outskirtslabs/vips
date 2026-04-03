@@ -62,7 +62,7 @@
              (select-keys (v/metadata autorot) [:width :height :has-alpha?]))))))
 
 (deftest generated-array-operations-work
-  (testing "generated boxed image-array operations delegate through call!"
+  (testing "generated boxed image-array operations delegate through call"
     (with-open [a    (v/image-from-file fixture-path)
                 b    (v/image-from-file fixture-path)
                 c    (v/image-from-file fixture-path)

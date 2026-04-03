@@ -267,7 +267,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "abs" {:in input}))
+  (v/call "abs" {:in input}))
 
 (defn add
   "add two images
@@ -286,7 +286,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "add" {:left left, :right right}))
+  (v/call "add" {:left left, :right right}))
 
 (defn addalpha
   "append an alpha channel
@@ -304,7 +304,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "addalpha" {:in input}))
+  (v/call "addalpha" {:in input}))
 
 (defn affine
   "affine transform of an image
@@ -330,7 +330,7 @@
   - `out` -> `:out` (image): Output image"
   ([input matrix] (affine input matrix {}))
   ([input matrix opts]
-   (v/call! "affine" (clojure.core/merge {:in input, :matrix matrix} opts))))
+   (v/call "affine" (clojure.core/merge {:in input, :matrix matrix} opts))))
 
 (defn arrayjoin
   "join an array of images
@@ -355,7 +355,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (arrayjoin input {}))
   ([input opts]
-   (v/call! "arrayjoin" (clojure.core/merge {:in input} opts))))
+   (v/call "arrayjoin" (clojure.core/merge {:in input} opts))))
 
 (defn autorot
   "autorotate image by exif tag
@@ -375,7 +375,7 @@
   - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Angle image was rotated by
   - `flip` -> `:flip` (boolean): Whether the image was flipped or not"
   [input]
-  (v/call! "autorot" {:in input}))
+  (v/call "autorot" {:in input}))
 
 (defn avg
   "find image average
@@ -393,7 +393,7 @@
   Outputs:
   - `out` -> `:out` (float): Output value"
   [input]
-  (v/call! "avg" {:in input}))
+  (v/call "avg" {:in input}))
 
 (defn bandbool
   "boolean operation across image bands
@@ -412,7 +412,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input boolean]
-  (v/call! "bandbool" {:in input, :boolean boolean}))
+  (v/call "bandbool" {:in input, :boolean boolean}))
 
 (defn bandfold
   "fold up x axis into bands
@@ -431,7 +431,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (bandfold input {}))
   ([input opts]
-   (v/call! "bandfold" (clojure.core/merge {:in input} opts))))
+   (v/call "bandfold" (clojure.core/merge {:in input} opts))))
 
 (defn bandjoin
   "bandwise join a set of images
@@ -449,7 +449,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "bandjoin" {:in input}))
+  (v/call "bandjoin" {:in input}))
 
 (defn bandjoin-const
   "append a constant band to an image
@@ -468,7 +468,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input c]
-  (v/call! "bandjoin_const" {:in input, :c c}))
+  (v/call "bandjoin_const" {:in input, :c c}))
 
 (defn bandmean
   "band-wise average
@@ -486,7 +486,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "bandmean" {:in input}))
+  (v/call "bandmean" {:in input}))
 
 (defn bandrank
   "band-wise rank of a set of images
@@ -505,7 +505,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (bandrank input {}))
   ([input opts]
-   (v/call! "bandrank" (clojure.core/merge {:in input} opts))))
+   (v/call "bandrank" (clojure.core/merge {:in input} opts))))
 
 (defn bandunfold
   "unfold image bands into x axis
@@ -524,7 +524,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (bandunfold input {}))
   ([input opts]
-   (v/call! "bandunfold" (clojure.core/merge {:in input} opts))))
+   (v/call "bandunfold" (clojure.core/merge {:in input} opts))))
 
 (defn black
   "make a black image
@@ -544,7 +544,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (black width height {}))
   ([width height opts]
-   (v/call! "black" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "black" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn boolean
   "boolean operation on two images
@@ -564,7 +564,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right boolean]
-  (v/call! "boolean" {:left left, :right right, :boolean boolean}))
+  (v/call "boolean" {:left left, :right right, :boolean boolean}))
 
 (defn boolean-const
   "boolean operations against a constant
@@ -584,7 +584,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input boolean c]
-  (v/call! "boolean_const" {:in input, :boolean boolean, :c c}))
+  (v/call "boolean_const" {:in input, :boolean boolean, :c c}))
 
 (defn buildlut
   "build a look-up table
@@ -602,7 +602,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "buildlut" {:in input}))
+  (v/call "buildlut" {:in input}))
 
 (defn byteswap
   "byteswap an image
@@ -620,7 +620,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "byteswap" {:in input}))
+  (v/call "byteswap" {:in input}))
 
 (defn cache
   "cache an image
@@ -641,7 +641,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (cache input {}))
   ([input opts]
-   (v/call! "cache" (clojure.core/merge {:in input} opts))))
+   (v/call "cache" (clojure.core/merge {:in input} opts))))
 
 (defn canny
   "Canny edge detector
@@ -661,7 +661,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (canny input {}))
   ([input opts]
-   (v/call! "canny" (clojure.core/merge {:in input} opts))))
+   (v/call "canny" (clojure.core/merge {:in input} opts))))
 
 (defn case
   "use pixel values to pick cases from an array of images
@@ -680,7 +680,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [index cases]
-  (v/call! "case" {:index index, :cases cases}))
+  (v/call "case" {:index index, :cases cases}))
 
 (defn cast
   "cast an image
@@ -700,7 +700,7 @@
   - `out` -> `:out` (image): Output image"
   ([input format] (cast input format {}))
   ([input format opts]
-   (v/call! "cast" (clojure.core/merge {:in input, :format format} opts))))
+   (v/call "cast" (clojure.core/merge {:in input, :format format} opts))))
 
 (defn clamp
   "clamp values of an image
@@ -720,7 +720,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (clamp input {}))
   ([input opts]
-   (v/call! "clamp" (clojure.core/merge {:in input} opts))))
+   (v/call "clamp" (clojure.core/merge {:in input} opts))))
 
 (defn cmc2-lch
   "transform LCh to CMC
@@ -738,7 +738,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "CMC2LCh" {:in input}))
+  (v/call "CMC2LCh" {:in input}))
 
 (defn cmyk2-xyz
   "transform CMYK to XYZ
@@ -756,7 +756,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "CMYK2XYZ" {:in input}))
+  (v/call "CMYK2XYZ" {:in input}))
 
 (defn colourspace
   "convert to a new colorspace
@@ -776,7 +776,7 @@
   - `out` -> `:out` (image): Output image"
   ([input space] (colourspace input space {}))
   ([input space opts]
-   (v/call! "colourspace" (clojure.core/merge {:in input, :space space} opts))))
+   (v/call "colourspace" (clojure.core/merge {:in input, :space space} opts))))
 
 (defn compass
   "convolve with rotating mask
@@ -801,7 +801,7 @@
   - `out` -> `:out` (image): Output image"
   ([input mask] (compass input mask {}))
   ([input mask opts]
-   (v/call! "compass" (clojure.core/merge {:in input, :mask mask} opts))))
+   (v/call "compass" (clojure.core/merge {:in input, :mask mask} opts))))
 
 (defn complex
   "perform a complex operation on an image
@@ -820,7 +820,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input cmplx]
-  (v/call! "complex" {:in input, :cmplx cmplx}))
+  (v/call "complex" {:in input, :cmplx cmplx}))
 
 (defn complex2
   "complex binary operations on two images
@@ -840,7 +840,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right cmplx]
-  (v/call! "complex2" {:left left, :right right, :cmplx cmplx}))
+  (v/call "complex2" {:left left, :right right, :cmplx cmplx}))
 
 (defn complexform
   "form a complex image from two real images
@@ -859,7 +859,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "complexform" {:left left, :right right}))
+  (v/call "complexform" {:left left, :right right}))
 
 (defn complexget
   "get a component from a complex image
@@ -878,7 +878,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input get]
-  (v/call! "complexget" {:in input, :get get}))
+  (v/call "complexget" {:in input, :get get}))
 
 (defn composite2
   "blend a pair of images with a blend mode
@@ -902,7 +902,7 @@
   - `out` -> `:out` (image): Output image"
   ([base overlay mode] (composite2 base overlay mode {}))
   ([base overlay mode opts]
-   (v/call! "composite2" (clojure.core/merge {:base base, :overlay overlay, :mode mode} opts))))
+   (v/call "composite2" (clojure.core/merge {:base base, :overlay overlay, :mode mode} opts))))
 
 (defn conv
   "convolution operation
@@ -924,7 +924,7 @@
   - `out` -> `:out` (image): Output image"
   ([input mask] (conv input mask {}))
   ([input mask opts]
-   (v/call! "conv" (clojure.core/merge {:in input, :mask mask} opts))))
+   (v/call "conv" (clojure.core/merge {:in input, :mask mask} opts))))
 
 (defn conva
   "approximate integer convolution
@@ -945,7 +945,7 @@
   - `out` -> `:out` (image): Output image"
   ([input mask] (conva input mask {}))
   ([input mask opts]
-   (v/call! "conva" (clojure.core/merge {:in input, :mask mask} opts))))
+   (v/call "conva" (clojure.core/merge {:in input, :mask mask} opts))))
 
 (defn convasep
   "approximate separable integer convolution
@@ -965,7 +965,7 @@
   - `out` -> `:out` (image): Output image"
   ([input mask] (convasep input mask {}))
   ([input mask opts]
-   (v/call! "convasep" (clojure.core/merge {:in input, :mask mask} opts))))
+   (v/call "convasep" (clojure.core/merge {:in input, :mask mask} opts))))
 
 (defn convf
   "float convolution operation
@@ -984,7 +984,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input mask]
-  (v/call! "convf" {:in input, :mask mask}))
+  (v/call "convf" {:in input, :mask mask}))
 
 (defn convi
   "int convolution operation
@@ -1003,7 +1003,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input mask]
-  (v/call! "convi" {:in input, :mask mask}))
+  (v/call "convi" {:in input, :mask mask}))
 
 (defn convsep
   "separable convolution operation
@@ -1025,7 +1025,7 @@
   - `out` -> `:out` (image): Output image"
   ([input mask] (convsep input mask {}))
   ([input mask opts]
-   (v/call! "convsep" (clojure.core/merge {:in input, :mask mask} opts))))
+   (v/call "convsep" (clojure.core/merge {:in input, :mask mask} opts))))
 
 (defn copy
   "copy an image
@@ -1054,7 +1054,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (copy input {}))
   ([input opts]
-   (v/call! "copy" (clojure.core/merge {:in input} opts))))
+   (v/call "copy" (clojure.core/merge {:in input} opts))))
 
 (defn countlines
   "count lines in an image
@@ -1073,7 +1073,7 @@
   Outputs:
   - `nolines` -> `:nolines` (float): Number of lines"
   [input direction]
-  (v/call! "countlines" {:in input, :direction direction}))
+  (v/call "countlines" {:in input, :direction direction}))
 
 (defn csvload
   "load csv
@@ -1103,7 +1103,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (csvload filename {}))
   ([filename opts]
-   (v/call! "csvload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "csvload" (clojure.core/merge {:filename filename} opts))))
 
 (defn csvsave
   "save image to csv
@@ -1128,7 +1128,7 @@
   - none"
   ([input filename] (csvsave input filename {}))
   ([input filename opts]
-   (v/call! "csvsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "csvsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn d-e00
   "calculate dE00
@@ -1147,7 +1147,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "dE00" {:left left, :right right}))
+  (v/call "dE00" {:left left, :right right}))
 
 (defn d-e76
   "calculate dE76
@@ -1166,7 +1166,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "dE76" {:left left, :right right}))
+  (v/call "dE76" {:left left, :right right}))
 
 (defn d-ecmc
   "calculate dECMC
@@ -1185,7 +1185,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "dECMC" {:left left, :right right}))
+  (v/call "dECMC" {:left left, :right right}))
 
 (defn deviate
   "find image standard deviation
@@ -1203,7 +1203,7 @@
   Outputs:
   - `out` -> `:out` (float): Output value"
   [input]
-  (v/call! "deviate" {:in input}))
+  (v/call "deviate" {:in input}))
 
 (defn divide
   "divide two images
@@ -1222,7 +1222,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "divide" {:left left, :right right}))
+  (v/call "divide" {:left left, :right right}))
 
 (defn draw-circle
   "draw a circle on an image
@@ -1245,7 +1245,7 @@
   - none"
   ([image ink cx cy radius] (draw-circle image ink cx cy radius {}))
   ([image ink cx cy radius opts]
-   (v/call! "draw_circle" (clojure.core/merge {:image image, :ink ink, :cx cx, :cy cy, :radius radius} opts))))
+   (v/call "draw_circle" (clojure.core/merge {:image image, :ink ink, :cx cx, :cy cy, :radius radius} opts))))
 
 (defn draw-flood
   "flood-fill an area
@@ -1271,7 +1271,7 @@
   - `height` -> `:height` (integer): Height of modified area"
   ([image ink x y] (draw-flood image ink x y {}))
   ([image ink x y opts]
-   (v/call! "draw_flood" (clojure.core/merge {:image image, :ink ink, :x x, :y y} opts))))
+   (v/call "draw_flood" (clojure.core/merge {:image image, :ink ink, :x x, :y y} opts))))
 
 (defn draw-image
   "paint an image into another image
@@ -1293,7 +1293,7 @@
   - none"
   ([image sub x y] (draw-image image sub x y {}))
   ([image sub x y opts]
-   (v/call! "draw_image" (clojure.core/merge {:image image, :sub sub, :x x, :y y} opts))))
+   (v/call "draw_image" (clojure.core/merge {:image image, :sub sub, :x x, :y y} opts))))
 
 (defn draw-line
   "draw a line on an image
@@ -1316,7 +1316,7 @@
   Outputs:
   - none"
   [image ink x1 y1 x2 y2]
-  (v/call! "draw_line" {:image image, :ink ink, :x1 x1, :y1 y1, :x2 x2, :y2 y2}))
+  (v/call "draw_line" {:image image, :ink ink, :x1 x1, :y1 y1, :x2 x2, :y2 y2}))
 
 (defn draw-mask
   "draw a mask on an image
@@ -1338,7 +1338,7 @@
   Outputs:
   - none"
   [image ink mask x y]
-  (v/call! "draw_mask" {:image image, :ink ink, :mask mask, :x x, :y y}))
+  (v/call "draw_mask" {:image image, :ink ink, :mask mask, :x x, :y y}))
 
 (defn draw-rect
   "paint a rectangle on an image
@@ -1362,7 +1362,7 @@
   - none"
   ([image ink left top width height] (draw-rect image ink left top width height {}))
   ([image ink left top width height opts]
-   (v/call! "draw_rect" (clojure.core/merge {:image image, :ink ink, :left left, :top top, :width width, :height height} opts))))
+   (v/call "draw_rect" (clojure.core/merge {:image image, :ink ink, :left left, :top top, :width width, :height height} opts))))
 
 (defn draw-smudge
   "blur a rectangle on an image
@@ -1384,7 +1384,7 @@
   Outputs:
   - none"
   [image left top width height]
-  (v/call! "draw_smudge" {:image image, :left left, :top top, :width width, :height height}))
+  (v/call "draw_smudge" {:image image, :left left, :top top, :width width, :height height}))
 
 (defn dzsave
   "save image to deepzoom file
@@ -1428,7 +1428,7 @@
   - none"
   ([input filename] (dzsave input filename {}))
   ([input filename opts]
-   (v/call! "dzsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "dzsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn embed
   "embed an image in a larger image
@@ -1452,7 +1452,7 @@
   - `out` -> `:out` (image): Output image"
   ([input x y width height] (embed input x y width height {}))
   ([input x y width height opts]
-   (v/call! "embed" (clojure.core/merge {:in input, :x x, :y y, :width width, :height height} opts))))
+   (v/call "embed" (clojure.core/merge {:in input, :x x, :y y, :width width, :height height} opts))))
 
 (defn extract-area
   "extract an area from an image
@@ -1474,7 +1474,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input left top width height]
-  (v/call! "extract_area" {:input input, :left left, :top top, :width width, :height height}))
+  (v/call "extract_area" {:input input, :left left, :top top, :width width, :height height}))
 
 (defn extract-band
   "extract band from an image
@@ -1494,7 +1494,7 @@
   - `out` -> `:out` (image): Output image"
   ([input band] (extract-band input band {}))
   ([input band opts]
-   (v/call! "extract_band" (clojure.core/merge {:in input, :band band} opts))))
+   (v/call "extract_band" (clojure.core/merge {:in input, :band band} opts))))
 
 (defn eye
   "make an image showing the eye's spatial response
@@ -1515,7 +1515,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (eye width height {}))
   ([width height opts]
-   (v/call! "eye" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "eye" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn falsecolour
   "false-color an image
@@ -1533,7 +1533,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "falsecolour" {:in input}))
+  (v/call "falsecolour" {:in input}))
 
 (defn fastcor
   "fast correlation
@@ -1552,7 +1552,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input ref]
-  (v/call! "fastcor" {:in input, :ref ref}))
+  (v/call "fastcor" {:in input, :ref ref}))
 
 (defn fill-nearest
   "fill image zeros with nearest non-zero pixel
@@ -1571,7 +1571,7 @@
   - `out` -> `:out` (image): Value of nearest non-zero pixel
   - `distance` -> `:distance` (image): Distance to nearest non-zero pixel"
   [input]
-  (v/call! "fill_nearest" {:in input}))
+  (v/call "fill_nearest" {:in input}))
 
 (defn find-trim
   "search an image for non-edge areas
@@ -1595,7 +1595,7 @@
   - `height` -> `:height` (integer): Height of extract area"
   ([input] (find-trim input {}))
   ([input opts]
-   (v/call! "find_trim" (clojure.core/merge {:in input} opts))))
+   (v/call "find_trim" (clojure.core/merge {:in input} opts))))
 
 (defn flatten
   "flatten alpha out of an image
@@ -1615,7 +1615,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (flatten input {}))
   ([input opts]
-   (v/call! "flatten" (clojure.core/merge {:in input} opts))))
+   (v/call "flatten" (clojure.core/merge {:in input} opts))))
 
 (defn flip
   "flip an image
@@ -1634,7 +1634,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input direction]
-  (v/call! "flip" {:in input, :direction direction}))
+  (v/call "flip" {:in input, :direction direction}))
 
 (defn float2rad
   "transform float RGB to Radiance coding
@@ -1652,7 +1652,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "float2rad" {:in input}))
+  (v/call "float2rad" {:in input}))
 
 (defn fractsurf
   "make a fractal surface
@@ -1672,7 +1672,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [width height fractal-dimension]
-  (v/call! "fractsurf" {:width width, :height height, :fractal-dimension fractal-dimension}))
+  (v/call "fractsurf" {:width width, :height height, :fractal-dimension fractal-dimension}))
 
 (defn freqmult
   "frequency-domain filtering
@@ -1691,7 +1691,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input mask]
-  (v/call! "freqmult" {:in input, :mask mask}))
+  (v/call "freqmult" {:in input, :mask mask}))
 
 (defn gamma
   "gamma an image
@@ -1710,7 +1710,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (gamma input {}))
   ([input opts]
-   (v/call! "gamma" (clojure.core/merge {:in input} opts))))
+   (v/call "gamma" (clojure.core/merge {:in input} opts))))
 
 (defn gaussblur
   "gaussian blur
@@ -1731,7 +1731,7 @@
   - `out` -> `:out` (image): Output image"
   ([input sigma] (gaussblur input sigma {}))
   ([input sigma opts]
-   (v/call! "gaussblur" (clojure.core/merge {:in input, :sigma sigma} opts))))
+   (v/call "gaussblur" (clojure.core/merge {:in input, :sigma sigma} opts))))
 
 (defn gaussmat
   "make a gaussian image
@@ -1753,7 +1753,7 @@
   - `out` -> `:out` (image): Output image"
   ([sigma min-ampl] (gaussmat sigma min-ampl {}))
   ([sigma min-ampl opts]
-   (v/call! "gaussmat" (clojure.core/merge {:sigma sigma, :min-ampl min-ampl} opts))))
+   (v/call "gaussmat" (clojure.core/merge {:sigma sigma, :min-ampl min-ampl} opts))))
 
 (defn gaussnoise
   "make a gaussnoise image
@@ -1775,7 +1775,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (gaussnoise width height {}))
   ([width height opts]
-   (v/call! "gaussnoise" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "gaussnoise" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn gifload
   "load GIF with libnsgif
@@ -1803,7 +1803,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (gifload filename {}))
   ([filename opts]
-   (v/call! "gifload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "gifload" (clojure.core/merge {:filename filename} opts))))
 
 (defn gifsave
   "save as gif
@@ -1836,7 +1836,7 @@
   - none"
   ([input filename] (gifsave input filename {}))
   ([input filename opts]
-   (v/call! "gifsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "gifsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn globalbalance
   "global balance an image mosaic
@@ -1856,7 +1856,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (globalbalance input {}))
   ([input opts]
-   (v/call! "globalbalance" (clojure.core/merge {:in input} opts))))
+   (v/call "globalbalance" (clojure.core/merge {:in input} opts))))
 
 (defn gravity
   "place an image within a larger image with a certain gravity
@@ -1879,7 +1879,7 @@
   - `out` -> `:out` (image): Output image"
   ([input direction width height] (gravity input direction width height {}))
   ([input direction width height opts]
-   (v/call! "gravity" (clojure.core/merge {:in input, :direction direction, :width width, :height height} opts))))
+   (v/call "gravity" (clojure.core/merge {:in input, :direction direction, :width width, :height height} opts))))
 
 (defn grey
   "make a grey ramp image
@@ -1899,7 +1899,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (grey width height {}))
   ([width height opts]
-   (v/call! "grey" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "grey" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn grid
   "grid an image
@@ -1920,7 +1920,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input tile-height across down]
-  (v/call! "grid" {:in input, :tile-height tile-height, :across across, :down down}))
+  (v/call "grid" {:in input, :tile-height tile-height, :across across, :down down}))
 
 (defn heifload
   "load a HEIF image
@@ -1951,7 +1951,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (heifload filename {}))
   ([filename opts]
-   (v/call! "heifload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "heifload" (clojure.core/merge {:filename filename} opts))))
 
 (defn heifsave
   "save image in HEIF format
@@ -1983,7 +1983,7 @@
   - none"
   ([input filename] (heifsave input filename {}))
   ([input filename opts]
-   (v/call! "heifsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "heifsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn hist-cum
   "form cumulative histogram
@@ -2001,7 +2001,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "hist_cum" {:in input}))
+  (v/call "hist_cum" {:in input}))
 
 (defn hist-entropy
   "estimate image entropy
@@ -2019,7 +2019,7 @@
   Outputs:
   - `out` -> `:out` (float): Output value"
   [input]
-  (v/call! "hist_entropy" {:in input}))
+  (v/call "hist_entropy" {:in input}))
 
 (defn hist-equal
   "histogram equalisation
@@ -2038,7 +2038,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (hist-equal input {}))
   ([input opts]
-   (v/call! "hist_equal" (clojure.core/merge {:in input} opts))))
+   (v/call "hist_equal" (clojure.core/merge {:in input} opts))))
 
 (defn hist-find
   "find image histogram
@@ -2057,7 +2057,7 @@
   - `out` -> `:out` (image): Output histogram"
   ([input] (hist-find input {}))
   ([input opts]
-   (v/call! "hist_find" (clojure.core/merge {:in input} opts))))
+   (v/call "hist_find" (clojure.core/merge {:in input} opts))))
 
 (defn hist-find-indexed
   "find indexed image histogram
@@ -2077,7 +2077,7 @@
   - `out` -> `:out` (image): Output histogram"
   ([input index] (hist-find-indexed input index {}))
   ([input index opts]
-   (v/call! "hist_find_indexed" (clojure.core/merge {:in input, :index index} opts))))
+   (v/call "hist_find_indexed" (clojure.core/merge {:in input, :index index} opts))))
 
 (defn hist-find-ndim
   "find n-dimensional image histogram
@@ -2096,7 +2096,7 @@
   - `out` -> `:out` (image): Output histogram"
   ([input] (hist-find-ndim input {}))
   ([input opts]
-   (v/call! "hist_find_ndim" (clojure.core/merge {:in input} opts))))
+   (v/call "hist_find_ndim" (clojure.core/merge {:in input} opts))))
 
 (defn hist-ismonotonic
   "test for monotonicity
@@ -2114,7 +2114,7 @@
   Outputs:
   - `monotonic` -> `:monotonic` (boolean): true if in is monotonic"
   [input]
-  (v/call! "hist_ismonotonic" {:in input}))
+  (v/call "hist_ismonotonic" {:in input}))
 
 (defn hist-local
   "local histogram equalisation
@@ -2135,7 +2135,7 @@
   - `out` -> `:out` (image): Output image"
   ([input width height] (hist-local input width height {}))
   ([input width height opts]
-   (v/call! "hist_local" (clojure.core/merge {:in input, :width width, :height height} opts))))
+   (v/call "hist_local" (clojure.core/merge {:in input, :width width, :height height} opts))))
 
 (defn hist-match
   "match two histograms
@@ -2154,7 +2154,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input ref]
-  (v/call! "hist_match" {:in input, :ref ref}))
+  (v/call "hist_match" {:in input, :ref ref}))
 
 (defn hist-norm
   "normalise histogram
@@ -2172,7 +2172,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "hist_norm" {:in input}))
+  (v/call "hist_norm" {:in input}))
 
 (defn hist-plot
   "plot histogram
@@ -2190,7 +2190,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "hist_plot" {:in input}))
+  (v/call "hist_plot" {:in input}))
 
 (defn hough-circle
   "find hough circle transform
@@ -2211,7 +2211,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (hough-circle input {}))
   ([input opts]
-   (v/call! "hough_circle" (clojure.core/merge {:in input} opts))))
+   (v/call "hough_circle" (clojure.core/merge {:in input} opts))))
 
 (defn hough-line
   "find hough line transform
@@ -2231,7 +2231,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (hough-line input {}))
   ([input opts]
-   (v/call! "hough_line" (clojure.core/merge {:in input} opts))))
+   (v/call "hough_line" (clojure.core/merge {:in input} opts))))
 
 (defn hsv2s-rgb
   "transform HSV to sRGB
@@ -2249,7 +2249,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "HSV2sRGB" {:in input}))
+  (v/call "HSV2sRGB" {:in input}))
 
 (defn icc-export
   "output to device with ICC profile
@@ -2272,7 +2272,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (icc-export input {}))
   ([input opts]
-   (v/call! "icc_export" (clojure.core/merge {:in input} opts))))
+   (v/call "icc_export" (clojure.core/merge {:in input} opts))))
 
 (defn icc-import
   "import from device with ICC profile
@@ -2295,7 +2295,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (icc-import input {}))
   ([input opts]
-   (v/call! "icc_import" (clojure.core/merge {:in input} opts))))
+   (v/call "icc_import" (clojure.core/merge {:in input} opts))))
 
 (defn icc-transform
   "transform between devices with ICC profiles
@@ -2320,7 +2320,7 @@
   - `out` -> `:out` (image): Output image"
   ([input output-profile] (icc-transform input output-profile {}))
   ([input output-profile opts]
-   (v/call! "icc_transform" (clojure.core/merge {:in input, :output-profile output-profile} opts))))
+   (v/call "icc_transform" (clojure.core/merge {:in input, :output-profile output-profile} opts))))
 
 (defn identity
   "make a 1D image where pixel values are indexes
@@ -2341,7 +2341,7 @@
   - `out` -> `:out` (image): Output image"
   ([] (identity {}))
   ([opts]
-   (v/call! "identity" (clojure.core/merge {} opts))))
+   (v/call "identity" (clojure.core/merge {} opts))))
 
 (defn ifthenelse
   "ifthenelse an image
@@ -2362,7 +2362,7 @@
   - `out` -> `:out` (image): Output image"
   ([cond in1 in2] (ifthenelse cond in1 in2 {}))
   ([cond in1 in2 opts]
-   (v/call! "ifthenelse" (clojure.core/merge {:cond cond, :in1 in1, :in2 in2} opts))))
+   (v/call "ifthenelse" (clojure.core/merge {:cond cond, :in1 in1, :in2 in2} opts))))
 
 (defn insert
   "insert image @sub into @main at @x, @y
@@ -2385,7 +2385,7 @@
   - `out` -> `:out` (image): Output image"
   ([main sub x y] (insert main sub x y {}))
   ([main sub x y opts]
-   (v/call! "insert" (clojure.core/merge {:main main, :sub sub, :x x, :y y} opts))))
+   (v/call "insert" (clojure.core/merge {:main main, :sub sub, :x x, :y y} opts))))
 
 (defn invert
   "invert an image
@@ -2403,7 +2403,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "invert" {:in input}))
+  (v/call "invert" {:in input}))
 
 (defn invertlut
   "build an inverted look-up table
@@ -2422,7 +2422,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (invertlut input {}))
   ([input opts]
-   (v/call! "invertlut" (clojure.core/merge {:in input} opts))))
+   (v/call "invertlut" (clojure.core/merge {:in input} opts))))
 
 (defn join
   "join a pair of images
@@ -2446,7 +2446,7 @@
   - `out` -> `:out` (image): Output image"
   ([in1 in2 direction] (join in1 in2 direction {}))
   ([in1 in2 direction opts]
-   (v/call! "join" (clojure.core/merge {:in1 in1, :in2 in2, :direction direction} opts))))
+   (v/call "join" (clojure.core/merge {:in1 in1, :in2 in2, :direction direction} opts))))
 
 (defn jpegload
   "load jpeg from file
@@ -2475,7 +2475,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (jpegload filename {}))
   ([filename opts]
-   (v/call! "jpegload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "jpegload" (clojure.core/merge {:filename filename} opts))))
 
 (defn jpegsave
   "save image to jpeg file
@@ -2509,7 +2509,7 @@
   - none"
   ([input filename] (jpegsave input filename {}))
   ([input filename opts]
-   (v/call! "jpegsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "jpegsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn jpegsave-mime
   "save image to jpeg mime
@@ -2542,7 +2542,7 @@
   - none"
   ([input] (jpegsave-mime input {}))
   ([input opts]
-   (v/call! "jpegsave_mime" (clojure.core/merge {:in input} opts))))
+   (v/call "jpegsave_mime" (clojure.core/merge {:in input} opts))))
 
 (defn lab-q2-lab
   "unpack a LabQ image to float Lab
@@ -2560,7 +2560,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "LabQ2Lab" {:in input}))
+  (v/call "LabQ2Lab" {:in input}))
 
 (defn lab-q2-lab-s
   "unpack a LabQ image to short Lab
@@ -2578,7 +2578,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "LabQ2LabS" {:in input}))
+  (v/call "LabQ2LabS" {:in input}))
 
 (defn lab-q2s-rgb
   "convert a LabQ image to sRGB
@@ -2596,7 +2596,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "LabQ2sRGB" {:in input}))
+  (v/call "LabQ2sRGB" {:in input}))
 
 (defn lab-s2-lab
   "transform signed short Lab to float
@@ -2614,7 +2614,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "LabS2Lab" {:in input}))
+  (v/call "LabS2Lab" {:in input}))
 
 (defn lab-s2-lab-q
   "transform short Lab to LabQ coding
@@ -2632,7 +2632,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "LabS2LabQ" {:in input}))
+  (v/call "LabS2LabQ" {:in input}))
 
 (defn lab2-lab-q
   "transform float Lab to LabQ coding
@@ -2650,7 +2650,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "Lab2LabQ" {:in input}))
+  (v/call "Lab2LabQ" {:in input}))
 
 (defn lab2-lab-s
   "transform float Lab to signed short
@@ -2668,7 +2668,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "Lab2LabS" {:in input}))
+  (v/call "Lab2LabS" {:in input}))
 
 (defn lab2-lch
   "transform Lab to LCh
@@ -2686,7 +2686,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "Lab2LCh" {:in input}))
+  (v/call "Lab2LCh" {:in input}))
 
 (defn lab2-xyz
   "transform CIELAB to XYZ
@@ -2705,7 +2705,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (lab2-xyz input {}))
   ([input opts]
-   (v/call! "Lab2XYZ" (clojure.core/merge {:in input} opts))))
+   (v/call "Lab2XYZ" (clojure.core/merge {:in input} opts))))
 
 (defn labelregions
   "label regions in an image
@@ -2724,7 +2724,7 @@
   - `mask` -> `:mask` (image): Mask of region labels
   - `segments` -> `:segments` (integer): Number of discrete contiguous regions"
   [input]
-  (v/call! "labelregions" {:in input}))
+  (v/call "labelregions" {:in input}))
 
 (defn lch2-cmc
   "transform LCh to CMC
@@ -2742,7 +2742,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "LCh2CMC" {:in input}))
+  (v/call "LCh2CMC" {:in input}))
 
 (defn lch2-lab
   "transform LCh to Lab
@@ -2760,7 +2760,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "LCh2Lab" {:in input}))
+  (v/call "LCh2Lab" {:in input}))
 
 (defn linear
   "calculate (a * in + b)
@@ -2781,7 +2781,7 @@
   - `out` -> `:out` (image): Output image"
   ([input a b] (linear input a b {}))
   ([input a b opts]
-   (v/call! "linear" (clojure.core/merge {:in input, :a a, :b b} opts))))
+   (v/call "linear" (clojure.core/merge {:in input, :a a, :b b} opts))))
 
 (defn linecache
   "cache an image as a set of lines
@@ -2803,7 +2803,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (linecache input {}))
   ([input opts]
-   (v/call! "linecache" (clojure.core/merge {:in input} opts))))
+   (v/call "linecache" (clojure.core/merge {:in input} opts))))
 
 (defn logmat
   "make a Laplacian of Gaussian image
@@ -2825,7 +2825,7 @@
   - `out` -> `:out` (image): Output image"
   ([sigma min-ampl] (logmat sigma min-ampl {}))
   ([sigma min-ampl opts]
-   (v/call! "logmat" (clojure.core/merge {:sigma sigma, :min-ampl min-ampl} opts))))
+   (v/call "logmat" (clojure.core/merge {:sigma sigma, :min-ampl min-ampl} opts))))
 
 (defn mapim
   "resample with a map image
@@ -2847,7 +2847,7 @@
   - `out` -> `:out` (image): Output image"
   ([input index] (mapim input index {}))
   ([input index opts]
-   (v/call! "mapim" (clojure.core/merge {:in input, :index index} opts))))
+   (v/call "mapim" (clojure.core/merge {:in input, :index index} opts))))
 
 (defn maplut
   "map an image though a lut
@@ -2867,7 +2867,7 @@
   - `out` -> `:out` (image): Output image"
   ([input lut] (maplut input lut {}))
   ([input lut opts]
-   (v/call! "maplut" (clojure.core/merge {:in input, :lut lut} opts))))
+   (v/call "maplut" (clojure.core/merge {:in input, :lut lut} opts))))
 
 (defn mask-butterworth
   "make a butterworth filter
@@ -2893,7 +2893,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff amplitude-cutoff] (mask-butterworth width height order frequency-cutoff amplitude-cutoff {}))
   ([width height order frequency-cutoff amplitude-cutoff opts]
-   (v/call! "mask_butterworth" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff} opts))))
+   (v/call "mask_butterworth" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff} opts))))
 
 (defn mask-butterworth-band
   "make a butterworth_band filter
@@ -2921,7 +2921,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff] (mask-butterworth-band width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff {}))
   ([width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff opts]
-   (v/call! "mask_butterworth_band" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius, :amplitude-cutoff amplitude-cutoff} opts))))
+   (v/call "mask_butterworth_band" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius, :amplitude-cutoff amplitude-cutoff} opts))))
 
 (defn mask-butterworth-ring
   "make a butterworth ring filter
@@ -2948,7 +2948,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff amplitude-cutoff ringwidth] (mask-butterworth-ring width height order frequency-cutoff amplitude-cutoff ringwidth {}))
   ([width height order frequency-cutoff amplitude-cutoff ringwidth opts]
-   (v/call! "mask_butterworth_ring" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff, :ringwidth ringwidth} opts))))
+   (v/call "mask_butterworth_ring" (clojure.core/merge {:width width, :height height, :order order, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff, :ringwidth ringwidth} opts))))
 
 (defn mask-fractal
   "make fractal filter
@@ -2972,7 +2972,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height fractal-dimension] (mask-fractal width height fractal-dimension {}))
   ([width height fractal-dimension opts]
-   (v/call! "mask_fractal" (clojure.core/merge {:width width, :height height, :fractal-dimension fractal-dimension} opts))))
+   (v/call "mask_fractal" (clojure.core/merge {:width width, :height height, :fractal-dimension fractal-dimension} opts))))
 
 (defn mask-gaussian
   "make a gaussian filter
@@ -2997,7 +2997,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff amplitude-cutoff] (mask-gaussian width height frequency-cutoff amplitude-cutoff {}))
   ([width height frequency-cutoff amplitude-cutoff opts]
-   (v/call! "mask_gaussian" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff} opts))))
+   (v/call "mask_gaussian" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff} opts))))
 
 (defn mask-gaussian-band
   "make a gaussian filter
@@ -3024,7 +3024,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff] (mask-gaussian-band width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff {}))
   ([width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff opts]
-   (v/call! "mask_gaussian_band" (clojure.core/merge {:width width, :height height, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius, :amplitude-cutoff amplitude-cutoff} opts))))
+   (v/call "mask_gaussian_band" (clojure.core/merge {:width width, :height height, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius, :amplitude-cutoff amplitude-cutoff} opts))))
 
 (defn mask-gaussian-ring
   "make a gaussian ring filter
@@ -3050,7 +3050,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff amplitude-cutoff ringwidth] (mask-gaussian-ring width height frequency-cutoff amplitude-cutoff ringwidth {}))
   ([width height frequency-cutoff amplitude-cutoff ringwidth opts]
-   (v/call! "mask_gaussian_ring" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff, :ringwidth ringwidth} opts))))
+   (v/call "mask_gaussian_ring" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :amplitude-cutoff amplitude-cutoff, :ringwidth ringwidth} opts))))
 
 (defn mask-ideal
   "make an ideal filter
@@ -3074,7 +3074,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff] (mask-ideal width height frequency-cutoff {}))
   ([width height frequency-cutoff opts]
-   (v/call! "mask_ideal" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff} opts))))
+   (v/call "mask_ideal" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff} opts))))
 
 (defn mask-ideal-band
   "make an ideal band filter
@@ -3100,7 +3100,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff-x frequency-cutoff-y radius] (mask-ideal-band width height frequency-cutoff-x frequency-cutoff-y radius {}))
   ([width height frequency-cutoff-x frequency-cutoff-y radius opts]
-   (v/call! "mask_ideal_band" (clojure.core/merge {:width width, :height height, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius} opts))))
+   (v/call "mask_ideal_band" (clojure.core/merge {:width width, :height height, :frequency-cutoff-x frequency-cutoff-x, :frequency-cutoff-y frequency-cutoff-y, :radius radius} opts))))
 
 (defn mask-ideal-ring
   "make an ideal ring filter
@@ -3125,7 +3125,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff ringwidth] (mask-ideal-ring width height frequency-cutoff ringwidth {}))
   ([width height frequency-cutoff ringwidth opts]
-   (v/call! "mask_ideal_ring" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :ringwidth ringwidth} opts))))
+   (v/call "mask_ideal_ring" (clojure.core/merge {:width width, :height height, :frequency-cutoff frequency-cutoff, :ringwidth ringwidth} opts))))
 
 (defn match
   "first-order match of two images
@@ -3155,7 +3155,7 @@
   - `out` -> `:out` (image): Output image"
   ([ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2] (match ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 {}))
   ([ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 opts]
-   (v/call! "match" (clojure.core/merge {:xr1 xr1, :xs2 xs2, :ys2 ys2, :ref ref, :xr2 xr2, :xs1 xs1, :sec sec, :yr2 yr2, :yr1 yr1, :ys1 ys1} opts))))
+   (v/call "match" (clojure.core/merge {:xr1 xr1, :xs2 xs2, :ys2 ys2, :ref ref, :xr2 xr2, :xs1 xs1, :sec sec, :yr2 yr2, :yr1 yr1, :ys1 ys1} opts))))
 
 (defn math
   "apply a math operation to an image
@@ -3174,7 +3174,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input math]
-  (v/call! "math" {:in input, :math math}))
+  (v/call "math" {:in input, :math math}))
 
 (defn math2
   "binary math operations
@@ -3194,7 +3194,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right math2]
-  (v/call! "math2" {:left left, :right right, :math2 math2}))
+  (v/call "math2" {:left left, :right right, :math2 math2}))
 
 (defn math2-const
   "binary math operations with a constant
@@ -3214,7 +3214,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input math2 c]
-  (v/call! "math2_const" {:in input, :math2 math2, :c c}))
+  (v/call "math2_const" {:in input, :math2 math2, :c c}))
 
 (defn matrixinvert
   "invert a matrix
@@ -3232,7 +3232,7 @@
   Outputs:
   - `out` -> `:out` (image): Output matrix"
   [input]
-  (v/call! "matrixinvert" {:in input}))
+  (v/call "matrixinvert" {:in input}))
 
 (defn matrixload
   "load matrix
@@ -3258,7 +3258,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (matrixload filename {}))
   ([filename opts]
-   (v/call! "matrixload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "matrixload" (clojure.core/merge {:filename filename} opts))))
 
 (defn matrixmultiply
   "multiply two matrices
@@ -3277,7 +3277,7 @@
   Outputs:
   - `out` -> `:out` (image): Output matrix"
   [left right]
-  (v/call! "matrixmultiply" {:left left, :right right}))
+  (v/call "matrixmultiply" {:left left, :right right}))
 
 (defn matrixprint
   "print matrix
@@ -3300,7 +3300,7 @@
   - none"
   ([input] (matrixprint input {}))
   ([input opts]
-   (v/call! "matrixprint" (clojure.core/merge {:in input} opts))))
+   (v/call "matrixprint" (clojure.core/merge {:in input} opts))))
 
 (defn matrixsave
   "save image to matrix
@@ -3324,7 +3324,7 @@
   - none"
   ([input filename] (matrixsave input filename {}))
   ([input filename opts]
-   (v/call! "matrixsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "matrixsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn maxpair
   "maximum of a pair of images
@@ -3343,7 +3343,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "maxpair" {:left left, :right right}))
+  (v/call "maxpair" {:left left, :right right}))
 
 (defn measure
   "measure a set of patches on a color chart
@@ -3367,7 +3367,7 @@
   - `out` -> `:out` (image): Output array of statistics"
   ([input h v] (measure input h v {}))
   ([input h v opts]
-   (v/call! "measure" (clojure.core/merge {:in input, :h h, :v v} opts))))
+   (v/call "measure" (clojure.core/merge {:in input, :h h, :v v} opts))))
 
 (defn merge
   "merge two images
@@ -3390,7 +3390,7 @@
   - `out` -> `:out` (image): Output image"
   ([ref sec direction dx dy] (merge ref sec direction dx dy {}))
   ([ref sec direction dx dy opts]
-   (v/call! "merge" (clojure.core/merge {:ref ref, :sec sec, :direction direction, :dx dx, :dy dy} opts))))
+   (v/call "merge" (clojure.core/merge {:ref ref, :sec sec, :direction direction, :dx dx, :dy dy} opts))))
 
 (defn minpair
   "minimum of a pair of images
@@ -3409,7 +3409,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "minpair" {:left left, :right right}))
+  (v/call "minpair" {:left left, :right right}))
 
 (defn morph
   "morphology operation
@@ -3429,7 +3429,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input mask morph]
-  (v/call! "morph" {:in input, :mask mask, :morph morph}))
+  (v/call "morph" {:in input, :mask mask, :morph morph}))
 
 (defn mosaic
   "mosaic two images
@@ -3463,7 +3463,7 @@
   - `dx1` -> `:dx1` (float): Detected first-order displacement"
   ([ref sec direction xref yref xsec ysec] (mosaic ref sec direction xref yref xsec ysec {}))
   ([ref sec direction xref yref xsec ysec opts]
-   (v/call! "mosaic" (clojure.core/merge {:ref ref, :sec sec, :direction direction, :xref xref, :yref yref, :xsec xsec, :ysec ysec} opts))))
+   (v/call "mosaic" (clojure.core/merge {:ref ref, :sec sec, :direction direction, :xref xref, :yref yref, :xsec xsec, :ysec ysec} opts))))
 
 (defn mosaic1
   "first-order mosaic of two images
@@ -3496,7 +3496,7 @@
   - `out` -> `:out` (image): Output image"
   ([ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2] (mosaic1 ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 {}))
   ([ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 opts]
-   (v/call! "mosaic1" (clojure.core/merge {:xr1 xr1, :xs2 xs2, :ys2 ys2, :ref ref, :xr2 xr2, :xs1 xs1, :sec sec, :yr2 yr2, :yr1 yr1, :direction direction, :ys1 ys1} opts))))
+   (v/call "mosaic1" (clojure.core/merge {:xr1 xr1, :xs2 xs2, :ys2 ys2, :ref ref, :xr2 xr2, :xs1 xs1, :sec sec, :yr2 yr2, :yr1 yr1, :direction direction, :ys1 ys1} opts))))
 
 (defn msb
   "pick most-significant byte from an image
@@ -3515,7 +3515,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (msb input {}))
   ([input opts]
-   (v/call! "msb" (clojure.core/merge {:in input} opts))))
+   (v/call "msb" (clojure.core/merge {:in input} opts))))
 
 (defn multiply
   "multiply two images
@@ -3534,7 +3534,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "multiply" {:left left, :right right}))
+  (v/call "multiply" {:left left, :right right}))
 
 (defn percent
   "find threshold for percent of pixels
@@ -3553,7 +3553,7 @@
   Outputs:
   - `threshold` -> `:threshold` (integer): Threshold above which lie percent of pixels"
   [input percent]
-  (v/call! "percent" {:in input, :percent percent}))
+  (v/call "percent" {:in input, :percent percent}))
 
 (defn perlin
   "make a perlin noise image
@@ -3575,7 +3575,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (perlin width height {}))
   ([width height opts]
-   (v/call! "perlin" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "perlin" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn phasecor
   "calculate phase correlation
@@ -3594,7 +3594,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input in2]
-  (v/call! "phasecor" {:in input, :in2 in2}))
+  (v/call "phasecor" {:in input, :in2 in2}))
 
 (defn pngload
   "load png from file
@@ -3621,7 +3621,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (pngload filename {}))
   ([filename opts]
-   (v/call! "pngload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "pngload" (clojure.core/merge {:filename filename} opts))))
 
 (defn pngsave
   "save image to file as PNG
@@ -3654,7 +3654,7 @@
   - none"
   ([input filename] (pngsave input filename {}))
   ([input filename opts]
-   (v/call! "pngsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "pngsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn premultiply
   "premultiply image alpha
@@ -3673,7 +3673,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (premultiply input {}))
   ([input opts]
-   (v/call! "premultiply" (clojure.core/merge {:in input} opts))))
+   (v/call "premultiply" (clojure.core/merge {:in input} opts))))
 
 (defn prewitt
   "Prewitt edge detector
@@ -3691,7 +3691,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "prewitt" {:in input}))
+  (v/call "prewitt" {:in input}))
 
 (defn profile
   "find image profiles
@@ -3710,7 +3710,7 @@
   - `columns` -> `:columns` (image): First non-zero pixel in column
   - `rows` -> `:rows` (image): First non-zero pixel in row"
   [input]
-  (v/call! "profile" {:in input}))
+  (v/call "profile" {:in input}))
 
 (defn project
   "find image projections
@@ -3729,7 +3729,7 @@
   - `columns` -> `:columns` (image): Sums of columns
   - `rows` -> `:rows` (image): Sums of rows"
   [input]
-  (v/call! "project" {:in input}))
+  (v/call "project" {:in input}))
 
 (defn quadratic
   "resample an image with a quadratic transform
@@ -3748,7 +3748,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input coeff]
-  (v/call! "quadratic" {:in input, :coeff coeff}))
+  (v/call "quadratic" {:in input, :coeff coeff}))
 
 (defn rad2float
   "unpack Radiance coding to float RGB
@@ -3766,7 +3766,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "rad2float" {:in input}))
+  (v/call "rad2float" {:in input}))
 
 (defn rank
   "rank filter
@@ -3787,7 +3787,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input width height index]
-  (v/call! "rank" {:in input, :width width, :height height, :index index}))
+  (v/call "rank" {:in input, :width width, :height height, :index index}))
 
 (defn rawload
   "load raw data from a file
@@ -3819,7 +3819,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename width height bands] (rawload filename width height bands {}))
   ([filename width height bands opts]
-   (v/call! "rawload" (clojure.core/merge {:filename filename, :width width, :height height, :bands bands} opts))))
+   (v/call "rawload" (clojure.core/merge {:filename filename, :width width, :height height, :bands bands} opts))))
 
 (defn rawsave
   "save image to raw file
@@ -3843,7 +3843,7 @@
   - none"
   ([input filename] (rawsave input filename {}))
   ([input filename opts]
-   (v/call! "rawsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "rawsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn recomb
   "linear recombination with matrix
@@ -3862,7 +3862,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input m]
-  (v/call! "recomb" {:in input, :m m}))
+  (v/call "recomb" {:in input, :m m}))
 
 (defn reduce
   "reduce an image
@@ -3887,7 +3887,7 @@
   - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink yshrink vshrink] (reduce input xshrink hshrink yshrink vshrink {}))
   ([input xshrink hshrink yshrink vshrink opts]
-   (v/call! "reduce" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink, :yshrink yshrink, :vshrink vshrink} opts))))
+   (v/call "reduce" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink, :yshrink yshrink, :vshrink vshrink} opts))))
 
 (defn reduceh
   "shrink an image horizontally
@@ -3910,7 +3910,7 @@
   - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink] (reduceh input xshrink hshrink {}))
   ([input xshrink hshrink opts]
-   (v/call! "reduceh" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink} opts))))
+   (v/call "reduceh" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink} opts))))
 
 (defn reducev
   "shrink an image vertically
@@ -3933,7 +3933,7 @@
   - `out` -> `:out` (image): Output image"
   ([input yshrink vshrink] (reducev input yshrink vshrink {}))
   ([input yshrink vshrink opts]
-   (v/call! "reducev" (clojure.core/merge {:in input, :yshrink yshrink, :vshrink vshrink} opts))))
+   (v/call "reducev" (clojure.core/merge {:in input, :yshrink yshrink, :vshrink vshrink} opts))))
 
 (defn relational
   "relational operation on two images
@@ -3953,7 +3953,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right relational]
-  (v/call! "relational" {:left left, :right right, :relational relational}))
+  (v/call "relational" {:left left, :right right, :relational relational}))
 
 (defn relational-const
   "relational operations against a constant
@@ -3973,7 +3973,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input relational c]
-  (v/call! "relational_const" {:in input, :relational relational, :c c}))
+  (v/call "relational_const" {:in input, :relational relational, :c c}))
 
 (defn remainder
   "remainder after integer division of two images
@@ -3992,7 +3992,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "remainder" {:left left, :right right}))
+  (v/call "remainder" {:left left, :right right}))
 
 (defn remainder-const
   "remainder after integer division of an image and a constant
@@ -4011,7 +4011,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input c]
-  (v/call! "remainder_const" {:in input, :c c}))
+  (v/call "remainder_const" {:in input, :c c}))
 
 (defn remosaic
   "rebuild an mosaiced image
@@ -4031,7 +4031,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input old-str new-str]
-  (v/call! "remosaic" {:in input, :old-str old-str, :new-str new-str}))
+  (v/call "remosaic" {:in input, :old-str old-str, :new-str new-str}))
 
 (defn replicate
   "replicate an image
@@ -4051,7 +4051,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input across down]
-  (v/call! "replicate" {:in input, :across across, :down down}))
+  (v/call "replicate" {:in input, :across across, :down down}))
 
 (defn resize
   "resize an image
@@ -4076,7 +4076,7 @@
   - `out` -> `:out` (image): Output image"
   ([input scale] (resize input scale {}))
   ([input scale opts]
-   (v/call! "resize" (clojure.core/merge {:in input, :scale scale} opts))))
+   (v/call "resize" (clojure.core/merge {:in input, :scale scale} opts))))
 
 (defn rot
   "rotate an image
@@ -4095,7 +4095,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input angle]
-  (v/call! "rot" {:in input, :angle angle}))
+  (v/call "rot" {:in input, :angle angle}))
 
 (defn rot45
   "rotate an image
@@ -4114,7 +4114,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (rot45 input {}))
   ([input opts]
-   (v/call! "rot45" (clojure.core/merge {:in input} opts))))
+   (v/call "rot45" (clojure.core/merge {:in input} opts))))
 
 (defn rotate
   "rotate an image by a number of degrees
@@ -4138,7 +4138,7 @@
   - `out` -> `:out` (image): Output image"
   ([input angle] (rotate input angle {}))
   ([input angle opts]
-   (v/call! "rotate" (clojure.core/merge {:in input, :angle angle} opts))))
+   (v/call "rotate" (clojure.core/merge {:in input, :angle angle} opts))))
 
 (defn round
   "perform a round function on an image
@@ -4157,7 +4157,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input round]
-  (v/call! "round" {:in input, :round round}))
+  (v/call "round" {:in input, :round round}))
 
 (defn s-rgb2-hsv
   "transform sRGB to HSV
@@ -4175,7 +4175,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "sRGB2HSV" {:in input}))
+  (v/call "sRGB2HSV" {:in input}))
 
 (defn s-rgb2sc-rgb
   "convert an sRGB image to scRGB
@@ -4193,7 +4193,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "sRGB2scRGB" {:in input}))
+  (v/call "sRGB2scRGB" {:in input}))
 
 (defn sc-rgb2-bw
   "convert scRGB to BW
@@ -4212,7 +4212,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (sc-rgb2-bw input {}))
   ([input opts]
-   (v/call! "scRGB2BW" (clojure.core/merge {:in input} opts))))
+   (v/call "scRGB2BW" (clojure.core/merge {:in input} opts))))
 
 (defn sc-rgb2-xyz
   "transform scRGB to XYZ
@@ -4230,7 +4230,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "scRGB2XYZ" {:in input}))
+  (v/call "scRGB2XYZ" {:in input}))
 
 (defn sc-rgb2s-rgb
   "convert scRGB to sRGB
@@ -4249,7 +4249,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (sc-rgb2s-rgb input {}))
   ([input opts]
-   (v/call! "scRGB2sRGB" (clojure.core/merge {:in input} opts))))
+   (v/call "scRGB2sRGB" (clojure.core/merge {:in input} opts))))
 
 (defn scale
   "scale an image to uchar
@@ -4269,7 +4269,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (scale input {}))
   ([input opts]
-   (v/call! "scale" (clojure.core/merge {:in input} opts))))
+   (v/call "scale" (clojure.core/merge {:in input} opts))))
 
 (defn scharr
   "Scharr edge detector
@@ -4287,7 +4287,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "scharr" {:in input}))
+  (v/call "scharr" {:in input}))
 
 (defn sdf
   "create an SDF image
@@ -4311,7 +4311,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height shape] (sdf width height shape {}))
   ([width height shape opts]
-   (v/call! "sdf" (clojure.core/merge {:width width, :height height, :shape shape} opts))))
+   (v/call "sdf" (clojure.core/merge {:width width, :height height, :shape shape} opts))))
 
 (defn sequential
   "check sequential access
@@ -4332,7 +4332,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (sequential input {}))
   ([input opts]
-   (v/call! "sequential" (clojure.core/merge {:in input} opts))))
+   (v/call "sequential" (clojure.core/merge {:in input} opts))))
 
 (defn sharpen
   "unsharp masking for print
@@ -4357,7 +4357,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (sharpen input {}))
   ([input opts]
-   (v/call! "sharpen" (clojure.core/merge {:in input} opts))))
+   (v/call "sharpen" (clojure.core/merge {:in input} opts))))
 
 (defn shrink
   "shrink an image
@@ -4380,7 +4380,7 @@
   - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink yshrink vshrink] (shrink input xshrink hshrink yshrink vshrink {}))
   ([input xshrink hshrink yshrink vshrink opts]
-   (v/call! "shrink" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink, :yshrink yshrink, :vshrink vshrink} opts))))
+   (v/call "shrink" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink, :yshrink yshrink, :vshrink vshrink} opts))))
 
 (defn shrinkh
   "shrink an image horizontally
@@ -4401,7 +4401,7 @@
   - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink] (shrinkh input xshrink hshrink {}))
   ([input xshrink hshrink opts]
-   (v/call! "shrinkh" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink} opts))))
+   (v/call "shrinkh" (clojure.core/merge {:in input, :xshrink xshrink, :hshrink hshrink} opts))))
 
 (defn shrinkv
   "shrink an image vertically
@@ -4422,7 +4422,7 @@
   - `out` -> `:out` (image): Output image"
   ([input yshrink vshrink] (shrinkv input yshrink vshrink {}))
   ([input yshrink vshrink opts]
-   (v/call! "shrinkv" (clojure.core/merge {:in input, :yshrink yshrink, :vshrink vshrink} opts))))
+   (v/call "shrinkv" (clojure.core/merge {:in input, :yshrink yshrink, :vshrink vshrink} opts))))
 
 (defn sign
   "unit vector of pixel
@@ -4440,7 +4440,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "sign" {:in input}))
+  (v/call "sign" {:in input}))
 
 (defn similarity
   "similarity transform of an image
@@ -4465,7 +4465,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (similarity input {}))
   ([input opts]
-   (v/call! "similarity" (clojure.core/merge {:in input} opts))))
+   (v/call "similarity" (clojure.core/merge {:in input} opts))))
 
 (defn sines
   "make a 2D sine wave
@@ -4487,7 +4487,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (sines width height {}))
   ([width height opts]
-   (v/call! "sines" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "sines" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn smartcrop
   "extract an area from an image
@@ -4511,7 +4511,7 @@
   - `attention-y` -> `:attention-y` (integer): Vertical position of attention centre"
   ([input width height] (smartcrop input width height {}))
   ([input width height opts]
-   (v/call! "smartcrop" (clojure.core/merge {:input input, :width width, :height height} opts))))
+   (v/call "smartcrop" (clojure.core/merge {:input input, :width width, :height height} opts))))
 
 (defn sobel
   "Sobel edge detector
@@ -4529,7 +4529,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "sobel" {:in input}))
+  (v/call "sobel" {:in input}))
 
 (defn spcor
   "spatial correlation
@@ -4548,7 +4548,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input ref]
-  (v/call! "spcor" {:in input, :ref ref}))
+  (v/call "spcor" {:in input, :ref ref}))
 
 (defn spectrum
   "make displayable power spectrum
@@ -4566,7 +4566,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "spectrum" {:in input}))
+  (v/call "spectrum" {:in input}))
 
 (defn stats
   "find many image stats
@@ -4584,7 +4584,7 @@
   Outputs:
   - `out` -> `:out` (image): Output array of statistics"
   [input]
-  (v/call! "stats" {:in input}))
+  (v/call "stats" {:in input}))
 
 (defn stdif
   "statistical difference
@@ -4608,7 +4608,7 @@
   - `out` -> `:out` (image): Output image"
   ([input width height] (stdif input width height {}))
   ([input width height opts]
-   (v/call! "stdif" (clojure.core/merge {:in input, :width width, :height height} opts))))
+   (v/call "stdif" (clojure.core/merge {:in input, :width width, :height height} opts))))
 
 (defn subsample
   "subsample an image
@@ -4629,7 +4629,7 @@
   - `out` -> `:out` (image): Output image"
   ([input xfac yfac] (subsample input xfac yfac {}))
   ([input xfac yfac opts]
-   (v/call! "subsample" (clojure.core/merge {:input input, :xfac xfac, :yfac yfac} opts))))
+   (v/call "subsample" (clojure.core/merge {:input input, :xfac xfac, :yfac yfac} opts))))
 
 (defn subtract
   "subtract two images
@@ -4648,7 +4648,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
-  (v/call! "subtract" {:left left, :right right}))
+  (v/call "subtract" {:left left, :right right}))
 
 (defn sum
   "sum an array of images
@@ -4666,7 +4666,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "sum" {:in input}))
+  (v/call "sum" {:in input}))
 
 (defn svgload
   "load SVG with rsvg
@@ -4697,7 +4697,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (svgload filename {}))
   ([filename opts]
-   (v/call! "svgload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "svgload" (clojure.core/merge {:filename filename} opts))))
 
 (defn switch
   "find the index of the first non-zero pixel in tests
@@ -4715,7 +4715,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [tests]
-  (v/call! "switch" {:tests tests}))
+  (v/call "switch" {:tests tests}))
 
 (defn system
   "run an external command
@@ -4737,7 +4737,7 @@
   - `log` -> `:log` (string): Command log"
   ([cmd-format] (system cmd-format {}))
   ([cmd-format opts]
-   (v/call! "system" (clojure.core/merge {:cmd-format cmd-format} opts))))
+   (v/call "system" (clojure.core/merge {:cmd-format cmd-format} opts))))
 
 (defn text
   "make a text image
@@ -4766,7 +4766,7 @@
   - `autofit-dpi` -> `:autofit-dpi` (integer): DPI selected by autofit"
   ([text] (text text {}))
   ([text opts]
-   (v/call! "text" (clojure.core/merge {:text text} opts))))
+   (v/call "text" (clojure.core/merge {:text text} opts))))
 
 (defn thumbnail
   "generate thumbnail from file
@@ -4797,7 +4797,7 @@
   - `out` -> `:out` (image): Output image"
   ([filename width] (thumbnail filename width {}))
   ([filename width opts]
-   (v/call! "thumbnail" (clojure.core/merge {:filename filename, :width width} opts))))
+   (v/call "thumbnail" (clojure.core/merge {:filename filename, :width width} opts))))
 
 (defn thumbnail-image
   "generate thumbnail from image
@@ -4828,7 +4828,7 @@
   - `out` -> `:out` (image): Output image"
   ([input width] (thumbnail-image input width {}))
   ([input width opts]
-   (v/call! "thumbnail_image" (clojure.core/merge {:in input, :width width} opts))))
+   (v/call "thumbnail_image" (clojure.core/merge {:in input, :width width} opts))))
 
 (defn tiffload
   "load tiff from file
@@ -4859,7 +4859,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (tiffload filename {}))
   ([filename opts]
-   (v/call! "tiffload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "tiffload" (clojure.core/merge {:filename filename} opts))))
 
 (defn tiffsave
   "save image to tiff file
@@ -4905,7 +4905,7 @@
   - none"
   ([input filename] (tiffsave input filename {}))
   ([input filename opts]
-   (v/call! "tiffsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "tiffsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn tilecache
   "cache an image as a set of tiles
@@ -4929,7 +4929,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (tilecache input {}))
   ([input opts]
-   (v/call! "tilecache" (clojure.core/merge {:in input} opts))))
+   (v/call "tilecache" (clojure.core/merge {:in input} opts))))
 
 (defn tonelut
   "build a look-up table
@@ -4957,7 +4957,7 @@
   - `out` -> `:out` (image): Output image"
   ([] (tonelut {}))
   ([opts]
-   (v/call! "tonelut" (clojure.core/merge {} opts))))
+   (v/call "tonelut" (clojure.core/merge {} opts))))
 
 (defn transpose3d
   "transpose3d an image
@@ -4976,7 +4976,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (transpose3d input {}))
   ([input opts]
-   (v/call! "transpose3d" (clojure.core/merge {:in input} opts))))
+   (v/call "transpose3d" (clojure.core/merge {:in input} opts))))
 
 (defn unpremultiply
   "unpremultiply image alpha
@@ -4996,7 +4996,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (unpremultiply input {}))
   ([input opts]
-   (v/call! "unpremultiply" (clojure.core/merge {:in input} opts))))
+   (v/call "unpremultiply" (clojure.core/merge {:in input} opts))))
 
 (defn vipsload
   "load vips from file
@@ -5022,7 +5022,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (vipsload filename {}))
   ([filename opts]
-   (v/call! "vipsload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "vipsload" (clojure.core/merge {:filename filename} opts))))
 
 (defn vipssave
   "save image to file in vips format
@@ -5046,7 +5046,7 @@
   - none"
   ([input filename] (vipssave input filename {}))
   ([input filename opts]
-   (v/call! "vipssave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "vipssave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn webpload
   "load webp from file
@@ -5076,7 +5076,7 @@
   - `flags` -> `:flags` (integer flags): Flags for this file"
   ([filename] (webpload filename {}))
   ([filename opts]
-   (v/call! "webpload" (clojure.core/merge {:filename filename} opts))))
+   (v/call "webpload" (clojure.core/merge {:filename filename} opts))))
 
 (defn webpsave
   "save as WebP
@@ -5115,7 +5115,7 @@
   - none"
   ([input filename] (webpsave input filename {}))
   ([input filename opts]
-   (v/call! "webpsave" (clojure.core/merge {:in input, :filename filename} opts))))
+   (v/call "webpsave" (clojure.core/merge {:in input, :filename filename} opts))))
 
 (defn webpsave-mime
   "save image to webp mime
@@ -5153,7 +5153,7 @@
   - none"
   ([input] (webpsave-mime input {}))
   ([input opts]
-   (v/call! "webpsave_mime" (clojure.core/merge {:in input} opts))))
+   (v/call "webpsave_mime" (clojure.core/merge {:in input} opts))))
 
 (defn worley
   "make a worley noise image
@@ -5174,7 +5174,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (worley width height {}))
   ([width height opts]
-   (v/call! "worley" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "worley" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn wrap
   "wrap image origin
@@ -5194,7 +5194,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (wrap input {}))
   ([input opts]
-   (v/call! "wrap" (clojure.core/merge {:in input} opts))))
+   (v/call "wrap" (clojure.core/merge {:in input} opts))))
 
 (defn xyz
   "make an image where pixel values are coordinates
@@ -5216,7 +5216,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (xyz width height {}))
   ([width height opts]
-   (v/call! "xyz" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "xyz" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn xyz2-cmyk
   "transform XYZ to CMYK
@@ -5234,7 +5234,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "XYZ2CMYK" {:in input}))
+  (v/call "XYZ2CMYK" {:in input}))
 
 (defn xyz2-lab
   "transform XYZ to Lab
@@ -5253,7 +5253,7 @@
   - `out` -> `:out` (image): Output image"
   ([input] (xyz2-lab input {}))
   ([input opts]
-   (v/call! "XYZ2Lab" (clojure.core/merge {:in input} opts))))
+   (v/call "XYZ2Lab" (clojure.core/merge {:in input} opts))))
 
 (defn xyz2-yxy
   "transform XYZ to Yxy
@@ -5271,7 +5271,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "XYZ2Yxy" {:in input}))
+  (v/call "XYZ2Yxy" {:in input}))
 
 (defn xyz2sc-rgb
   "transform XYZ to scRGB
@@ -5289,7 +5289,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "XYZ2scRGB" {:in input}))
+  (v/call "XYZ2scRGB" {:in input}))
 
 (defn yxy2-xyz
   "transform Yxy to XYZ
@@ -5307,7 +5307,7 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
-  (v/call! "Yxy2XYZ" {:in input}))
+  (v/call "Yxy2XYZ" {:in input}))
 
 (defn zone
   "make a zone plate
@@ -5327,7 +5327,7 @@
   - `out` -> `:out` (image): Output image"
   ([width height] (zone width height {}))
   ([width height opts]
-   (v/call! "zone" (clojure.core/merge {:width width, :height height} opts))))
+   (v/call "zone" (clojure.core/merge {:width width, :height height} opts))))
 
 (defn zoom
   "zoom an image
@@ -5347,5 +5347,5 @@
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input xfac yfac]
-  (v/call! "zoom" {:input input, :xfac xfac, :yfac yfac}))
+  (v/call "zoom" {:input input, :xfac xfac, :yfac yfac}))
 

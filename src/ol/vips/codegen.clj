@@ -259,12 +259,12 @@
                            (when (seq required-syms)
                              (str " " (str/join " " (map str required-syms))))
                            " {})")
-        base-call     (str "(v/call! "
+        base-call     (str "(v/call "
                            (pr-str (:operation-name spec))
                            " "
                            (pr-str required-map)
                            ")")
-        merged-call   (str "(v/call! "
+        merged-call   (str "(v/call "
                            (pr-str (:operation-name spec))
                            " "
                            "(clojure.core/merge "

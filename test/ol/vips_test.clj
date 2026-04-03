@@ -215,21 +215,21 @@
 (deftest boxed-double-array-operation-args
   (testing "operations accept boxed VipsArrayDouble inputs such as embed background colors"
     (with-open [image    (v/from-file alpha-band-path)
-                bordered (v/call! "embed" {:in         image
-                                           :x          20
-                                           :y          20
-                                           :width      (+ (v/width image) 40)
-                                           :height     (+ (v/height image) 40)
-                                           :extend     :background
-                                           :background [231 98 39 255]})
-                sample   (v/call! "extract_area" {:input  bordered
-                                                  :left   0
-                                                  :top    0
-                                                  :width  1
-                                                  :height 1})]
+                bordered (v/call "embed" {:in         image
+                                          :x          20
+                                          :y          20
+                                          :width      (+ (v/width image) 40)
+                                          :height     (+ (v/height image) 40)
+                                          :extend     :background
+                                          :background [231 98 39 255]})
+                sample   (v/call "extract_area" {:input  bordered
+                                                 :left   0
+                                                 :top    0
+                                                 :width  1
+                                                 :height 1})]
       (is (= (+ (v/width image) 40) (v/width bordered)))
       (is (= (+ (v/height image) 40) (v/height bordered)))
-      (is (> (:out (v/call! "avg" {:in sample})) 100.0)))))
+      (is (> (:out (v/call "avg" {:in sample})) 100.0)))))
 
 (deftest load-save-options
   (testing "from-file supports option maps and suffix options"
@@ -311,7 +311,7 @@
 (deftest image-result-maps-work-as-image-inputs
   (testing "public image helpers accept operation result maps with :out"
     (with-open [image (v/from-file fixture-path)]
-      (with-open [autorot (v/call! "autorot" {:in image})]
+      (with-open [autorot (v/call "autorot" {:in image})]
         (let [thumb (v/thumbnail autorot 400)
               png   (v/write-to-buffer autorot ".png")]
           (with-open [thumb thumb]
@@ -320,26 +320,26 @@
             (is (pos? (alength ^bytes png))))))))
   (testing "raw operation calls accept operation result maps for image inputs"
     (with-open [image (v/from-file fixture-path)]
-      (with-open [autorot (v/call! "autorot" {:in image})
-                  flipped (v/call! "flip" {:in autorot :direction :horizontal})]
+      (with-open [autorot (v/call "autorot" {:in image})
+                  flipped (v/call "flip" {:in autorot :direction :horizontal})]
         (is (= {:width 2490 :height 3084 :has-alpha? false}
                (select-keys (v/metadata flipped) [:width :height :has-alpha?])))))))
 
 (deftest single-image-operations-return-image-handles
   (testing "single-image operation results can be used directly in with-open"
     (with-open [image   (v/from-file fixture-path)
-                rotated (v/call! "rotate" {:in image :angle 90.0})
-                flipped (v/call! "flip" {:in rotated :direction :horizontal})
-                bw      (v/call! "colourspace" {:in flipped :space :b-w})]
+                rotated (v/call "rotate" {:in image :angle 90.0})
+                flipped (v/call "flip" {:in rotated :direction :horizontal})
+                bw      (v/call "colourspace" {:in flipped :space :b-w})]
       (is (= {:width 3084 :height 2490 :bands 1 :has-alpha? false}
              (select-keys (v/metadata bw) [:width :height :bands :has-alpha?]))))))
 
 (deftest transforms
-  (testing "rotate, colourspace, and flip compose through call!"
+  (testing "rotate, colourspace, and flip compose through call"
     (with-open [image   (v/image-from-file fixture-path)
-                rotated (v/call! "rotate" {:in image :angle 90.0})
-                bw      (v/call! "colourspace" {:in image :space :b-w})
-                flipped (v/call! "flip" {:in image :direction :horizontal})]
+                rotated (v/call "rotate" {:in image :angle 90.0})
+                bw      (v/call "colourspace" {:in image :space :b-w})
+                flipped (v/call "flip" {:in image :direction :horizontal})]
       (is (= {:width 3084 :height 2490 :has-alpha? false}
              (select-keys (v/metadata rotated) [:width :height :has-alpha?])))
       (is (= {:width 2490 :height 3084 :has-alpha? false}
@@ -350,18 +350,18 @@
     (with-open [image (v/image-from-file fixture-path)]
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"Unknown enum value"
-                            (v/call! "flip" {:in image :direction :sideways})))
+                            (v/call "flip" {:in image :direction :sideways})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"Unknown enum value"
-                            (v/call! "colourspace" {:in image :space :sepia}))))))
+                            (v/call "colourspace" {:in image :space :sepia}))))))
 
 (deftest join-and-array-join
   (testing "join composes two images through the raw operation contract"
     (with-open [left   (v/image-from-file fixture-path)
                 right  (v/image-from-file fixture-path)
-                joined (v/call! "join" {:in1       left
-                                        :in2       right
-                                        :direction :horizontal})]
+                joined (v/call "join" {:in1       left
+                                       :in2       right
+                                       :direction :horizontal})]
       (is (= {:width 4980 :height 3084 :has-alpha? false}
              (select-keys (v/metadata joined) [:width :height :has-alpha?])))))
   (testing "arrayjoin accepts a collection of images plus layout options"
@@ -369,11 +369,11 @@
                 b    (v/image-from-file fixture-path)
                 c    (v/image-from-file fixture-path)
                 d    (v/image-from-file fixture-path)
-                grid (v/call! "arrayjoin" {:in     [a b c d]
-                                           :across 2
-                                           :shim   10
-                                           :halign :centre
-                                           :valign :centre})]
+                grid (v/call "arrayjoin" {:in     [a b c d]
+                                          :across 2
+                                          :shim   10
+                                          :halign :centre
+                                          :valign :centre})]
       (is (= {:width 4990 :height 6178 :has-alpha? false}
              (select-keys (v/metadata grid) [:width :height :has-alpha?]))))))
 
