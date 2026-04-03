@@ -23,7 +23,7 @@ Install the main library plus exactly one native jar that matches your target pl
         com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.2.4-1"}}}
 ```
 
-Choose one or more native artifacts (only the appropriate one for the runtiem platform will be used):
+[Choose one or more native artifacts][clojars] (only the appropriate one for the runtime platform will be used):
 
 - `com.outskirtslabs/vips-native-linux-x86-64-gnu`
 - `com.outskirtslabs/vips-native-linux-x86-64-musl`
@@ -251,3 +251,4 @@ The platform-native companion jars under `native/` redistribute upstream [sharp-
 [vipsmemory]: https://github.com/libvips/libvips/wiki/Speed-and-memory-use
 [vipsfuncs]: https://www.libvips.org/API/current/func-list.html
 [sharp-libvips]: https://github.com/lovell/sharp-libvips/releases
+[clojars]: https://clojars.org/search?q=group-id%3Acom.outskirtslabs+AND+artifact-id%3Avips-native*
