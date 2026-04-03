@@ -21,7 +21,8 @@
   (testing "generated operations are discoverable by normalized keyword names"
     (let [generated (set (ops/operations))
           join      (ops/describe :join)
-          rotate    (ops/describe :rotate)]
+          rotate    (ops/describe :rotate)
+          embed     (ops/describe :embed)]
       (is (contains? generated :rotate))
       (is (contains? generated :join))
       (is (contains? generated :thumbnail-image))
@@ -36,6 +37,9 @@
               :enum-id   :direction
               :reference "ol.vips.enums/direction"}
              (:type (nth (:required-inputs join) 2))))
+      (is (= {:kind :float-seq :label "seqable of number"}
+             (:type (some #(when (= "background" (:name %)) %)
+                          (:optional-inputs embed)))))
       (is (not (re-find #"gdouble|VipsImage|gint"
                         (:doc (meta #'ops/rotate))))))))
 

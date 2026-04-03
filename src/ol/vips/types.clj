@@ -33,11 +33,16 @@
   [{:keys [value-type]}]
   (= "VipsArrayImage" value-type))
 
+(defn- float-seq-type?
+  [{:keys [value-type]}]
+  (= "VipsArrayDouble" value-type))
+
 (defn supported-input?
   [{:keys [kind] :as arg}]
   (case kind
     :object (image-type? arg)
-    :boxed (image-seq-type? arg)
+    :boxed (or (image-seq-type? arg)
+               (float-seq-type? arg))
     (contains? supported-primitive-kinds kind)))
 
 (defn supported-output?
@@ -54,8 +59,18 @@
      :label "image"}
 
     (= kind :boxed)
-    {:kind  :image-seq
-     :label "seqable of image"}
+    (cond
+      (= value-type "VipsArrayImage")
+      {:kind  :image-seq
+       :label "seqable of image"}
+
+      (= value-type "VipsArrayDouble")
+      {:kind  :float-seq
+       :label "seqable of number"}
+
+      :else
+      {:kind  :unknown
+       :label "value"})
 
     (= kind :string)
     {:kind  :string

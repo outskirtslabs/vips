@@ -139,6 +139,25 @@
                               (v/write-to-stream image out ".png"))))
       (is (true? @closed?)))))
 
+(deftest boxed-double-array-operation-args
+  (testing "operations accept boxed VipsArrayDouble inputs such as embed background colors"
+    (with-open [image    (v/from-file alpha-band-path)
+                bordered (v/call! "embed" {:in         image
+                                           :x          20
+                                           :y          20
+                                           :width      (+ (v/width image) 40)
+                                           :height     (+ (v/height image) 40)
+                                           :extend     :background
+                                           :background [231 98 39 255]})
+                sample   (v/call! "extract_area" {:input  bordered
+                                                  :left   0
+                                                  :top    0
+                                                  :width  1
+                                                  :height 1})]
+      (is (= (+ (v/width image) 40) (v/width bordered)))
+      (is (= (+ (v/height image) 40) (v/height bordered)))
+      (is (> (:out (v/call! "avg" {:in sample})) 100.0)))))
+
 (deftest load-save-options
   (testing "from-file supports option maps and suffix options"
     (with-open [img1 (v/from-file puppies-path)

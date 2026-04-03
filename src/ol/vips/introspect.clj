@@ -255,6 +255,32 @@
             (finally
               ((:area-unref native) boxed))))))))
 
+(defn- numeric-seq?
+  [value]
+  (and (sequential? value)
+       (every? number? value)))
+
+(defn- encode-array-double
+  [native numbers gvalue]
+  (let [numbers (vec numbers)]
+    (with-open [arena (mem/confined-arena)]
+      (let [values (double-array (map double numbers))
+            data   (mem/alloc (* (count numbers) (mem/size-of ::mem/double))
+                              (mem/align-of ::mem/double)
+                              arena)]
+        (mem/write-doubles data (count numbers) values)
+        (let [boxed ((:array-double-new native) data (count numbers))]
+          (when (mem/null? boxed)
+            (throw (ex-info "Failed to encode boxed double array"
+                            {:kind       :boxed
+                             :value-type "VipsArrayDouble"
+                             :value      numbers
+                             :error      ((:vips-error-buffer native))})))
+          (try
+            ((:g-value-set-boxed native) gvalue boxed)
+            (finally
+              ((:area-unref native) boxed))))))))
+
 (defn- encode-boxed-value
   [native value-type value gvalue]
   (case value-type
@@ -264,6 +290,12 @@
                                        {:kind       :boxed
                                         :value-type value-type
                                         :value      value})))
+    "VipsArrayDouble" (if (numeric-seq? value)
+                        (encode-array-double native value gvalue)
+                        (throw (ex-info "Expected a sequential collection of numbers"
+                                        {:kind       :boxed
+                                         :value-type value-type
+                                         :value      value})))
     (throw (ex-info "Unsupported operation argument type"
                     {:kind       :boxed
                      :value-type value-type
