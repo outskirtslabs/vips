@@ -1,5 +1,35 @@
 = ol.vips.codegen
 
+
+Generate the introspected wrapper namespaces for `ol.vips`.
+
+This namespace queries the live libvips runtime through xref:api/ol-vips.adoc[`ol.vips`] and
+`ol.vips.impl.introspect`, then writes the generated public wrapper files:
+
+- `src/ol/vips/enums.clj`
+- `src/ol/vips/operations.clj`
+
+The generated files are derived from the currently loaded libvips build, so
+run this from a development environment where `ol.vips` can initialize its
+native libraries.
+
+Usage:
+
+[source,clojure]
+----
+(require '[ol.vips.codegen :as codegen])
+
+(codegen/generate!)
+;;=> {:enum-count 42
+;;    :operation-count 233
+;;    :skipped-count 57
+;;    :paths ["src/ol/vips/enums.clj"
+;;            "src/ol/vips/operations.clj"]}
+----
+
+In the ol.vips code repo the babashka task `bb codegen` is the normal project entry point for this
+namespace.
+
 [#generate-BANG-]
 == generate!
 
@@ -11,9 +41,25 @@
 (generate!)
 ----
 
+Generates `ol.vips.enums` and `ol.vips.operations` from live libvips introspection.
+
+Initializes the runtime if needed, discovers the supported operations and
+enums from the current libvips build, writes the generated source files, and
+returns a summary map describing what was emitted.
+
+Example:
+
+[source,clojure]
+----
+(generate!)
+;;=> {:enum-count ...
+;;    :operation-count ...
+;;    :skipped-count ...
+;;    :paths ["src/ol/vips/enums.clj" "src/ol/vips/operations.clj"]}
+----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L411-L436[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L441-L481[source,window=_blank]
 
 '''
 
@@ -28,6 +74,7 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L41
 (-main & _args)
 ----
 
+Runs <<generate-BANG-,`generate!`>> and prints a short CLI summary.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L438-L444[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L483-L490[source,window=_blank]

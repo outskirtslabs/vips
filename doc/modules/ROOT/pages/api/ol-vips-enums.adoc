@@ -1,5 +1,10 @@
 = ol.vips.enums
 
+
+Generated enum descriptors for normalized libvips enum ids.
+
+Use <<registry,`registry`>> or the generated enum vars to inspect enum metadata. Use xref:api/ol-vips.adoc#encode-enum[`ol.vips/encode-enum`] and xref:api/ol-vips.adoc#decode-enum[`ol.vips/decode-enum`] to convert between keywords and the underlying libvips integer values.
+
 [#registry]
 == registry
 
@@ -7,9 +12,10 @@
 
 
 
+Generated registry of libvips enum descriptors keyed by normalized enum id.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L7-L49[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L11-L54[source,window=_blank]
 
 '''
 
@@ -20,9 +26,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L7-L4
 
 
 
+Generated enum descriptor for `VipsAccess`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:random`
+- `:sequential`
+- `:sequential-unbuffered`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L51-L51[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L56-L65[source,window=_blank]
 
 '''
 
@@ -33,9 +47,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L51-L
 
 
 
+Generated enum descriptor for `VipsAlign`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:centre`
+- `:high`
+- `:low`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L53-L53[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L67-L76[source,window=_blank]
 
 '''
 
@@ -46,9 +68,18 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L53-L
 
 
 
+Generated enum descriptor for `VipsAngle`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:d0`
+- `:d180`
+- `:d270`
+- `:d90`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L55-L55[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L78-L88[source,window=_blank]
 
 '''
 
@@ -59,9 +90,22 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L55-L
 
 
 
+Generated enum descriptor for `VipsAngle45`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:d0`
+- `:d135`
+- `:d180`
+- `:d225`
+- `:d270`
+- `:d315`
+- `:d45`
+- `:d90`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L57-L57[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L90-L104[source,window=_blank]
 
 '''
 
@@ -72,9 +116,25 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L57-L
 
 
 
+Generated enum descriptor for `VipsBandFormat`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:char`
+- `:complex`
+- `:double`
+- `:dpcomplex`
+- `:float`
+- `:int`
+- `:notset`
+- `:short`
+- `:uchar`
+- `:uint`
+- `:ushort`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L59-L59[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L106-L123[source,window=_blank]
 
 '''
 
@@ -85,9 +145,39 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L59-L
 
 
 
+Generated enum descriptor for `VipsBlendMode`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:add`
+- `:atop`
+- `:clear`
+- `:colour-burn`
+- `:colour-dodge`
+- `:darken`
+- `:dest`
+- `:dest-atop`
+- `:dest-in`
+- `:dest-out`
+- `:dest-over`
+- `:difference`
+- `:exclusion`
+- `:hard-light`
+- `:in`
+- `:lighten`
+- `:multiply`
+- `:out`
+- `:over`
+- `:overlay`
+- `:saturate`
+- `:screen`
+- `:soft-light`
+- `:source`
+- `:xor`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L61-L61[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L125-L156[source,window=_blank]
 
 '''
 
@@ -98,9 +188,18 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L61-L
 
 
 
+Generated enum descriptor for `VipsCoding`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:error`
+- `:labq`
+- `:none`
+- `:rad`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L63-L63[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L158-L168[source,window=_blank]
 
 '''
 
@@ -111,9 +210,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L63-L
 
 
 
+Generated enum descriptor for `VipsCombine`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:max`
+- `:min`
+- `:sum`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L65-L65[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L170-L179[source,window=_blank]
 
 '''
 
@@ -124,9 +231,16 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L65-L
 
 
 
+Generated enum descriptor for `VipsCombineMode`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:add`
+- `:set`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L67-L67[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L181-L189[source,window=_blank]
 
 '''
 
@@ -137,9 +251,23 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L67-L
 
 
 
+Generated enum descriptor for `VipsCompassDirection`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:centre`
+- `:east`
+- `:north`
+- `:north-east`
+- `:north-west`
+- `:south`
+- `:south-east`
+- `:south-west`
+- `:west`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L69-L69[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L191-L206[source,window=_blank]
 
 '''
 
@@ -150,9 +278,16 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L69-L
 
 
 
+Generated enum descriptor for `VipsDirection`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:horizontal`
+- `:vertical`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L71-L71[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L208-L216[source,window=_blank]
 
 '''
 
@@ -163,9 +298,20 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L71-L
 
 
 
+Generated enum descriptor for `VipsExtend`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:background`
+- `:black`
+- `:copy`
+- `:mirror`
+- `:repeat`
+- `:white`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L73-L73[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L218-L230[source,window=_blank]
 
 '''
 
@@ -176,9 +322,18 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L73-L
 
 
 
+Generated enum descriptor for `VipsFailOn`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:error`
+- `:none`
+- `:truncated`
+- `:warning`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L75-L75[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L232-L242[source,window=_blank]
 
 '''
 
@@ -189,9 +344,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L75-L
 
 
 
+Generated enum descriptor for `VipsForeignDzContainer`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:fs`
+- `:szi`
+- `:zip`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L77-L77[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L244-L253[source,window=_blank]
 
 '''
 
@@ -202,9 +365,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L77-L
 
 
 
+Generated enum descriptor for `VipsForeignDzDepth`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:one`
+- `:onepixel`
+- `:onetile`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L79-L79[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L255-L264[source,window=_blank]
 
 '''
 
@@ -215,9 +386,19 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L79-L
 
 
 
+Generated enum descriptor for `VipsForeignDzLayout`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:dz`
+- `:google`
+- `:iiif`
+- `:iiif3`
+- `:zoomify`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L81-L81[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L266-L277[source,window=_blank]
 
 '''
 
@@ -228,9 +409,18 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L81-L
 
 
 
+Generated enum descriptor for `VipsForeignHeifCompression`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:av1`
+- `:avc`
+- `:hevc`
+- `:jpeg`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L83-L83[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L279-L289[source,window=_blank]
 
 '''
 
@@ -241,9 +431,19 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L83-L
 
 
 
+Generated enum descriptor for `VipsForeignHeifEncoder`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:aom`
+- `:auto`
+- `:rav1e`
+- `:svt`
+- `:x265`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L85-L85[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L291-L302[source,window=_blank]
 
 '''
 
@@ -254,9 +454,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L85-L
 
 
 
+Generated enum descriptor for `VipsForeignSubsample`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:auto`
+- `:off`
+- `:on`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L87-L87[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L304-L313[source,window=_blank]
 
 '''
 
@@ -267,9 +475,23 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L87-L
 
 
 
+Generated enum descriptor for `VipsForeignTiffCompression`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:ccittfax4`
+- `:deflate`
+- `:jp2k`
+- `:jpeg`
+- `:lzw`
+- `:none`
+- `:packbits`
+- `:webp`
+- `:zstd`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L89-L89[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L315-L330[source,window=_blank]
 
 '''
 
@@ -280,9 +502,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L89-L
 
 
 
+Generated enum descriptor for `VipsForeignTiffPredictor`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:float`
+- `:horizontal`
+- `:none`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L91-L91[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L332-L341[source,window=_blank]
 
 '''
 
@@ -293,9 +523,16 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L91-L
 
 
 
+Generated enum descriptor for `VipsForeignTiffResunit`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:cm`
+- `:inch`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L93-L93[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L343-L351[source,window=_blank]
 
 '''
 
@@ -306,9 +543,20 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L93-L
 
 
 
+Generated enum descriptor for `VipsForeignWebpPreset`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:default`
+- `:drawing`
+- `:icon`
+- `:photo`
+- `:picture`
+- `:text`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L95-L95[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L353-L365[source,window=_blank]
 
 '''
 
@@ -319,9 +567,19 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L95-L
 
 
 
+Generated enum descriptor for `VipsIntent`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:absolute`
+- `:auto`
+- `:perceptual`
+- `:relative`
+- `:saturation`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L97-L97[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L367-L378[source,window=_blank]
 
 '''
 
@@ -332,9 +590,21 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L97-L
 
 
 
+Generated enum descriptor for `VipsInteresting`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:all`
+- `:attention`
+- `:centre`
+- `:entropy`
+- `:high`
+- `:low`
+- `:none`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L99-L99[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L380-L393[source,window=_blank]
 
 '''
 
@@ -345,9 +615,34 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L99-L
 
 
 
+Generated enum descriptor for `VipsInterpretation`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:b-w`
+- `:cmc`
+- `:cmyk`
+- `:error`
+- `:fourier`
+- `:grey16`
+- `:histogram`
+- `:hsv`
+- `:lab`
+- `:labq`
+- `:labs`
+- `:lch`
+- `:matrix`
+- `:multiband`
+- `:rgb`
+- `:rgb16`
+- `:scrgb`
+- `:srgb`
+- `:xyz`
+- `:yxy`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L101-L101[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L395-L421[source,window=_blank]
 
 '''
 
@@ -358,9 +653,22 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L101-
 
 
 
+Generated enum descriptor for `VipsKernel`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:cubic`
+- `:lanczos2`
+- `:lanczos3`
+- `:linear`
+- `:mitchell`
+- `:mks2013`
+- `:mks2021`
+- `:nearest`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L103-L103[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L423-L437[source,window=_blank]
 
 '''
 
@@ -371,9 +679,19 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L103-
 
 
 
+Generated enum descriptor for `VipsOperationBoolean`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:and`
+- `:eor`
+- `:lshift`
+- `:or`
+- `:rshift`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L105-L105[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L439-L450[source,window=_blank]
 
 '''
 
@@ -384,9 +702,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L105-
 
 
 
+Generated enum descriptor for `VipsOperationComplex`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:conj`
+- `:polar`
+- `:rect`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L107-L107[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L452-L461[source,window=_blank]
 
 '''
 
@@ -397,9 +723,15 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L107-
 
 
 
+Generated enum descriptor for `VipsOperationComplex2`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:cross-phase`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L109-L109[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L463-L470[source,window=_blank]
 
 '''
 
@@ -410,9 +742,16 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L109-
 
 
 
+Generated enum descriptor for `VipsOperationComplexget`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:imag`
+- `:real`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L111-L111[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L472-L480[source,window=_blank]
 
 '''
 
@@ -423,9 +762,30 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L111-
 
 
 
+Generated enum descriptor for `VipsOperationMath`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:acos`
+- `:acosh`
+- `:asin`
+- `:asinh`
+- `:atan`
+- `:atanh`
+- `:cos`
+- `:cosh`
+- `:exp`
+- `:exp10`
+- `:log`
+- `:log10`
+- `:sin`
+- `:sinh`
+- `:tan`
+- `:tanh`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L113-L113[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L482-L504[source,window=_blank]
 
 '''
 
@@ -436,9 +796,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L113-
 
 
 
+Generated enum descriptor for `VipsOperationMath2`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:atan2`
+- `:pow`
+- `:wop`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L115-L115[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L506-L515[source,window=_blank]
 
 '''
 
@@ -449,9 +817,16 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L115-
 
 
 
+Generated enum descriptor for `VipsOperationMorphology`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:dilate`
+- `:erode`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L117-L117[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L517-L525[source,window=_blank]
 
 '''
 
@@ -462,9 +837,20 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L117-
 
 
 
+Generated enum descriptor for `VipsOperationRelational`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:equal`
+- `:less`
+- `:lesseq`
+- `:more`
+- `:moreeq`
+- `:noteq`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L119-L119[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L527-L539[source,window=_blank]
 
 '''
 
@@ -475,9 +861,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L119-
 
 
 
+Generated enum descriptor for `VipsOperationRound`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:ceil`
+- `:floor`
+- `:rint`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L121-L121[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L541-L550[source,window=_blank]
 
 '''
 
@@ -488,9 +882,16 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L121-
 
 
 
+Generated enum descriptor for `VipsPCS`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:lab`
+- `:xyz`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L123-L123[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L552-L560[source,window=_blank]
 
 '''
 
@@ -501,9 +902,17 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L123-
 
 
 
+Generated enum descriptor for `VipsPrecision`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:approximate`
+- `:float`
+- `:integer`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L125-L125[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L562-L571[source,window=_blank]
 
 '''
 
@@ -514,9 +923,20 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L125-
 
 
 
+Generated enum descriptor for `VipsRegionShrink`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:max`
+- `:mean`
+- `:median`
+- `:min`
+- `:mode`
+- `:nearest`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L127-L127[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L573-L585[source,window=_blank]
 
 '''
 
@@ -527,9 +947,18 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L127-
 
 
 
+Generated enum descriptor for `VipsSdfShape`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:box`
+- `:circle`
+- `:line`
+- `:rounded-box`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L129-L129[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L587-L597[source,window=_blank]
 
 '''
 
@@ -540,9 +969,18 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L129-
 
 
 
+Generated enum descriptor for `VipsSize`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:both`
+- `:down`
+- `:force`
+- `:up`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L131-L131[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L599-L609[source,window=_blank]
 
 '''
 
@@ -553,9 +991,18 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L131-
 
 
 
+Generated enum descriptor for `VipsTextWrap`.
+
+Use this value directly or look it up in <<registry,`registry`>> when you want the generated enum map.
+
+Known values:
+- `:char`
+- `:none`
+- `:word`
+- `:word-char`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L133-L133[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L611-L621[source,window=_blank]
 
 '''
 
@@ -570,57 +1017,7 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L133-
 (enums)
 ----
 
+Lists the generated libvips enum ids.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L135-L135[source,window=_blank]
-
-'''
-
-[#describe]
-== describe
-
-
-
-
-[source,clojure]
-----
-(describe enum-id)
-----
-
-
-[.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L137-L140[source,window=_blank]
-
-'''
-
-[#encode]
-== encode
-
-
-
-
-[source,clojure]
-----
-(encode enum-id value)
-----
-
-
-[.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L142-L145[source,window=_blank]
-
-'''
-
-[#decode]
-== decode
-
-
-
-
-[source,clojure]
-----
-(decode enum-id value)
-----
-
-
-[.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L147-L150[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L623-L623[source,window=_blank]

@@ -14,20 +14,45 @@
     (is (contains? (set (enums/enums)) :direction))
     (is (= "VipsDirection" (:type-name enums/direction)))
     (is (= :horizontal
-           (enums/decode :direction
-                         (enums/encode :direction :horizontal))))))
+           (v/decode-enum "VipsDirection"
+                          (v/encode-enum "VipsDirection" :horizontal)))))
+  (testing "generated namespaces expose basic namespace docstrings"
+    (is (re-find #"Generated enum descriptors"
+                 (:doc (meta (find-ns 'ol.vips.enums)))))
+    (is (re-find #"Generated libvips operation wrappers"
+                 (:doc (meta (find-ns 'ol.vips.operations))))))
+  (testing "generated enums expose useful docstrings"
+    (is (re-find #"Lists the generated libvips enum ids"
+                 (:doc (meta #'enums/enums))))
+    (is (re-find #"Generated enum descriptor for `VipsDirection`"
+                 (:doc (meta #'enums/direction))))))
+
+(deftest generated-enum-source-formatting
+  (testing "generated namespace header keeps ns name on the same line and docstring indented"
+    (let [source (slurp "src/ol/vips/enums.clj")]
+      (is (re-find #"\(ns ol\.vips\.enums\n  \"Generated enum descriptors for normalized libvips enum ids\." source))
+      (is (not (re-find #"\(ns\s*\n\s+ol\.vips\.enums" source)))
+      (is (re-find #"\n  Use \[\[registry\]\] or the generated enum vars" source)))
+    (let [source (slurp "src/ol/vips/operations.clj")]
+      (is (re-find #"\(ns ol\.vips\.operations\n  \"Generated libvips operation wrappers keyed by normalized operation id\." source))
+      (is (not (re-find #"\(ns\s*\n\s+ol\.vips\.operations" source)))
+      (is (re-find #"\n  Inspect \[\[registry\]\] directly for generated operation metadata" source))))
+  (testing "generated enum vars keep the var name on the def line and indent docstrings cleanly"
+    (let [source (slurp "src/ol/vips/enums.clj")]
+      (is (re-find #"\(def access\n  \"Generated enum descriptor for `VipsAccess`\." source))
+      (is (not (re-find #"\(def\s*\n\s+access" source)))
+      (is (re-find #"\n  Use this value directly or look it up in \[\[registry\]\]" source))
+      (is (re-find #"\n  Known values:\n  - `:random`\n  - `:sequential`" source)))))
 
 (deftest generated-operation-surface
   (testing "generated operations are discoverable by normalized keyword names"
-    (let [generated (set (ops/operations))
-          join      (ops/describe :join)
-          rotate    (ops/describe :rotate)
-          embed     (ops/describe :embed)]
-      (is (contains? generated :rotate))
-      (is (contains? generated :join))
-      (is (contains? generated :thumbnail-image))
+    (let [join      (get ops/registry :join)
+          rotate    (get ops/registry :rotate)
+          embed     (get ops/registry :embed)
+          thumbnail (get ops/registry :thumbnail-image)]
       (is (= "join" (:operation-name join)))
       (is (= "rotate" (:operation-name rotate)))
+      (is (= "thumbnail_image" (:operation-name thumbnail)))
       (is (= {:kind :image :label "image"}
              (:type (first (:required-inputs rotate)))))
       (is (= {:kind :float :label "float"}

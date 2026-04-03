@@ -1,4 +1,31 @@
 (ns ol.vips.codegen
+  "Generate the introspected wrapper namespaces for `ol.vips`.
+
+  This namespace queries the live libvips runtime through [[ol.vips]] and
+  [[ol.vips.impl.introspect]], then writes the generated public wrapper files:
+
+  - `src/ol/vips/enums.clj`
+  - `src/ol/vips/operations.clj`
+
+  The generated files are derived from the currently loaded libvips build, so
+  run this from a development environment where `ol.vips` can initialize its
+  native libraries.
+
+  Usage:
+
+  ```clojure
+  (require '[ol.vips.codegen :as codegen])
+
+  (codegen/generate!)
+  ;;=> {:enum-count 42
+  ;;    :operation-count 233
+  ;;    :skipped-count 57
+  ;;    :paths [\"src/ol/vips/enums.clj\"
+  ;;            \"src/ol/vips/operations.clj\"]}
+  ```
+
+  In the ol.vips code repo the babashka task `bb codegen` is the normal project entry point for this
+  namespace."
   (:require
    [clojure.java.io :as io]
    [clojure.pprint :as pprint]
@@ -308,14 +335,45 @@
             (str/replace "\\n" "\n"))))
 
 (defn- registry-source
-  [registry]
-  (str "(def registry\n"
-       "  {\n"
-       (str/join "\n"
-                 (map (fn [[k v]]
-                        (str "   " (pr-str k) " " (pr-str v)))
-                      registry))
-       "\n  })"))
+  ([registry]
+   (registry-source registry nil))
+  ([registry docstring]
+   (str "(def registry\n"
+        (when docstring
+          (str "  " (pr-str docstring) "\n"))
+        "  {\n"
+        (str/join "\n"
+                  (map (fn [[k v]]
+                         (str "   " (pr-str k) " " (pr-str v)))
+                       registry))
+        "\n  })")))
+
+(defn- ns-source
+  [ns-name docstring clauses]
+  (let [docstring*   (-> (pr-str (indent-docstring docstring))
+                         (str/replace "\\n" "\n"))
+        clause-lines (map #(str "  " (pr-str %)) clauses)]
+    (str "(ns " ns-name "\n"
+         "  " docstring* "\n"
+         (str/join "\n" clause-lines)
+         ")")))
+
+(defn- enum-var-docstring
+  [{:keys [type-name values]}]
+  (indent-docstring
+   (str "Generated enum descriptor for `" type-name "`.\n\n"
+        "Use this value directly or look it up in [[registry]] when you want the generated enum map.\n\n"
+        "Known values:\n"
+        (str/join "\n" (map #(str "- `" (pr-str %) "`") values)))))
+
+(defn- enum-var-source
+  [{:keys [id] :as spec}]
+  (let [var-name  (name id)
+        docstring (-> (pr-str (enum-var-docstring spec))
+                      (str/replace "\\n" "\n"))]
+    (str "(def " var-name "\n"
+         "  " docstring "\n"
+         "  (get registry " (pr-str id) "))")))
 
 (defn- refer-clojure-exclude-clause
   [symbols]
@@ -347,68 +405,55 @@
   (let [registry       (into (sorted-map) (map (juxt :id identity) enum-specs))
         enum-symbols   (map (comp symbol name :id) enum-specs)
         exclude-clause (refer-clojure-exclude-clause enum-symbols)
-        ns-form        (list* 'ns
-                              'ol.vips.enums
-                              (cond-> []
-                                exclude-clause (conj exclude-clause)
-                                true (conj '(:require [ol.vips :as v]))))]
+        ns-form        (ns-source "ol.vips.enums"
+                                  "Generated enum descriptors for normalized libvips enum ids.\n\nUse [[registry]] or the generated enum vars to inspect enum metadata. Use [[ol.vips/encode-enum]] and [[ol.vips/decode-enum]] to convert between keywords and the underlying libvips integer values."
+                                  (cond-> []
+                                    exclude-clause (conj exclude-clause)))]
     (vec
      (concat
       [ns-form
-       (registry-source registry)]
+       (registry-source registry "Generated registry of libvips enum descriptors keyed by normalized enum id.")]
 
-      (map (fn [{:keys [id]}]
-             (list 'def (symbol (name id)) (list 'get 'registry id)))
-           enum-specs)
+      (map enum-var-source enum-specs)
 
       ['(defn enums
+          "Lists the generated libvips enum ids."
           []
-          (keys registry))
-
-       '(defn describe
-          [enum-id]
-          (or (get registry enum-id)
-              (throw (ex-info "Unknown generated enum"
-                              {:enum-id enum-id}))))
-
-       '(defn encode
-          [enum-id value]
-          (let [{:keys [type-name]} (describe enum-id)]
-            (v/encode-enum type-name value)))
-
-       '(defn decode
-          [enum-id value]
-          (let [{:keys [type-name]} (describe enum-id)]
-            (v/decode-enum type-name value)))]))))
+          (keys registry))]))))
 
 (defn- operation-forms
   [operation-specs]
   (let [registry       (into (sorted-map) (map (juxt :id identity) operation-specs))
         op-symbols     (map (comp symbol name :id) operation-specs)
         exclude-clause (refer-clojure-exclude-clause op-symbols)
-        ns-form        (list* 'ns
-                              'ol.vips.operations
-                              (cond-> []
-                                exclude-clause (conj exclude-clause)
-                                true (conj '(:require [ol.vips :as v]))))]
+        ns-form        (ns-source "ol.vips.operations"
+                                  "Generated libvips operation wrappers keyed by normalized operation id.\n\nInspect [[registry]] directly for generated operation metadata, then call the generated wrapper vars directly for typed access to supported libvips operations."
+                                  (cond-> []
+                                    exclude-clause (conj exclude-clause)
+                                    true (conj '(:require [ol.vips :as v]))))]
     (vec
      (concat
       [ns-form
-       (registry-source registry)
-
-       '(defn operations
-          []
-          (keys registry))
-
-       '(defn describe
-          [operation-id]
-          (or (get registry operation-id)
-              (throw (ex-info "Unknown generated operation"
-                              {:operation-id operation-id}))))]
+       (registry-source registry)]
 
       (map operation-source operation-specs)))))
 
 (defn generate!
+  "Generates `ol.vips.enums` and `ol.vips.operations` from live libvips introspection.
+
+  Initializes the runtime if needed, discovers the supported operations and
+  enums from the current libvips build, writes the generated source files, and
+  returns a summary map describing what was emitted.
+
+  Example:
+
+  ```clojure
+  (generate!)
+  ;;=> {:enum-count ...
+  ;;    :operation-count ...
+  ;;    :skipped-count ...
+  ;;    :paths [\"src/ol/vips/enums.clj\" \"src/ol/vips/operations.clj\"]}
+  ```"
   []
   (v/init!)
   (let [{raw-operations :operations
@@ -436,6 +481,7 @@
                        "src/ol/vips/operations.clj"]}))
 
 (defn -main
+  "Runs [[generate!]] and prints a short CLI summary."
   [& _args]
   (let [{:keys [enum-count operation-count skipped-count paths]} (generate!)]
     (println "generated" enum-count "enum defs and" operation-count "operation defs")

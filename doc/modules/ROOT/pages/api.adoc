@@ -10,12 +10,12 @@ This release publishes 4 namespaces.
 | -
 
 | xref:api/ol-vips-codegen.adoc[`ol.vips.codegen`]
-| -
+| Generate the introspected wrapper namespaces for `ol.
 
 | xref:api/ol-vips-enums.adoc[`ol.vips.enums`]
-| -
+| Generated enum descriptors and codecs for normalized libvips enum ids.
 
 | xref:api/ol-vips-operations.adoc[`ol.vips.operations`]
-| -
+| Generated libvips operation wrappers keyed by normalized operation id.
 
 |===
