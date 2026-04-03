@@ -80,8 +80,7 @@ link:#loading-the-native-library[Loading the native library].
 
 (v/init!)
 
-(with-open [image   (v/from-file "dev/rabbit.jpg")
-            thumb   (v/thumbnail image 300 {:auto-rotate true})
+(with-open [thumb   (ops/thumbnail "dev/rabbit.jpg" 300 {:auto-rotate true})
             rotated (ops/rotate thumb 90.0)]
   (v/write-to-file rotated "thumbnail.jpg")
   (v/metadata rotated))
@@ -327,7 +326,8 @@ from a byte array already in memory.
 [source,clojure]
 ----
 (require '[babashka.http-client :as http]
-         '[ol.vips :as v])
+         '[ol.vips :as v]
+         '[ol.vips.operations :as ops])
 
 (import '[java.io FileOutputStream])
 
@@ -335,7 +335,7 @@ from a byte array already in memory.
                                            {:as :stream}))
             image         (v/from-stream response-body {:access  :sequential
                                                         :fail-on :error})
-            thumbnail     (v/thumbnail image 200)
+            thumbnail     (ops/thumbnail-image image 200)
             out           (FileOutputStream. "square-flask-thumb.png")]
   (v/write-to-stream thumbnail out ".png")
   (v/metadata thumbnail))
@@ -346,13 +346,14 @@ from a byte array already in memory.
 [source,clojure]
 ----
 (require '[babashka.fs :as fs]
-         '[ol.vips :as v])
+         '[ol.vips :as v]
+         '[ol.vips.operations :as ops])
 
 (import '[java.io FileOutputStream])
 
 (let [source-bytes (fs/read-all-bytes "dev/rabbit.jpg")]
   (with-open [image     (v/from-buffer source-bytes)
-              thumbnail (v/thumbnail image 200)
+              thumbnail (ops/thumbnail-image image 200)
               out       (FileOutputStream. "rabbit-thumb.png")]
     (v/write-to-stream thumbnail out ".png")
     (v/metadata thumbnail)))

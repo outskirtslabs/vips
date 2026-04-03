@@ -387,14 +387,6 @@
    (height image)
    (bands image)])
 
-(defn thumbnail
-  ([image width]
-   (thumbnail image width {}))
-  ([image width opts]
-   (call "thumbnail_image" (merge {:in    image
-                                   :width width}
-                                  opts))))
-
 (defn copy-memory
   "Materializes `image` into a private in-memory `VipsImage` and returns it as a
   normal closeable image handle.

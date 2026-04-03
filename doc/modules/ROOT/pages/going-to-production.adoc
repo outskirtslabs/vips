@@ -32,10 +32,10 @@ shrinking afterwards.
   (v/write-to-file thumb "thumb.jpg"))
 ----
 
-xref:api/ol-vips.adoc#thumbnail[`v/thumbnail`] is still useful when you
-already have an image handle in hand and want to create a thumbnail of that
-in-memory pipeline stage. But it wraps libvips `thumbnail_image`, so it does
-not get the load-time rendering and shrink-on-load advantages that
+If you already have an image handle in hand, there is still a lower-level
+xref:api/ol-vips-operations.adoc#thumbnail-image[`ops/thumbnail-image`]
+wrapper. Treat it as an escape hatch. It wraps libvips `thumbnail_image`, so
+it does not get the load-time rendering and shrink-on-load advantages that
 `ops/thumbnail` gets from starting at the source.
 
 == Use sequential access when your pipeline can stream

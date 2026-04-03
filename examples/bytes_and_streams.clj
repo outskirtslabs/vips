@@ -1,7 +1,8 @@
 (ns bytes-and-streams
   (:require
    [babashka.fs :as fs]
-   [ol.vips :as v])
+   [ol.vips :as v]
+   [ol.vips.operations :as ops])
   (:import
    [java.io ByteArrayInputStream ByteArrayOutputStream]))
 
@@ -16,7 +17,7 @@
   (let [source-bytes (fs/read-all-bytes rabbit-path)
         final-bytes  (with-open [in        (ByteArrayInputStream. source-bytes)
                                  source    (v/from-stream in)
-                                 thumbnail (v/thumbnail source 200)
+                                 thumbnail (ops/thumbnail-image source 200)
                                  out       (ByteArrayOutputStream.)]
                        (v/write-to-stream thumbnail out ".png")
                        (.toByteArray out))]

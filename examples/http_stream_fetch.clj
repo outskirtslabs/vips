@@ -21,8 +21,8 @@
   (with-open [response-body (:body (http/get image-url {:as :stream}))
               image         (v/from-stream response-body {:access  :sequential
                                                           :fail-on :error})
-              thumbnail     (v/thumbnail image 800 {:height  1000
-                                                    :fail-on :error})
+              thumbnail     (ops/thumbnail-image image 800 {:height  1000
+                                                            :fail-on :error})
               bordered      (ops/embed thumbnail
                                        border-size
                                        border-size

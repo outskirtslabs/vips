@@ -12,9 +12,7 @@
 
 (defn -main [& _]
   (fs/create-dirs "examples")
-  (with-open [image  (v/from-file rabbit-path)
-              result (-> image
-                         (v/thumbnail 400)
+  (with-open [result (-> (ops/thumbnail rabbit-path 400)
                          (ops/invert)
                          (ops/rotate 90.0)
                          (ops/colourspace :cmyk)

@@ -209,7 +209,11 @@
 
 (defn- operation-docstring
   [{:keys [operation-name description required-inputs optional-inputs outputs]}]
-  (let [returns-line
+  (let [warning-line
+        (when (= "thumbnail_image" operation-name)
+          (str "Avoid for routine thumbnailing. Prefer `thumbnail` when you can start from a filename."
+               "For already-loaded images, use normal image operations such as `resize` unless you specifically need this escape hatch.\n\n"))
+        returns-line
         (cond
           (and (= 1 (count outputs))
                (= "out" (:name (first outputs)))
@@ -225,6 +229,7 @@
      (str description
           "\n\n"
           "Operation name: `" operation-name "`.\n\n"
+          warning-line
           returns-line
           "Required inputs:\n"
           (if (seq required-inputs)

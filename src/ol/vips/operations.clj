@@ -4804,6 +4804,8 @@
   
   Operation name: `thumbnail_image`.
   
+  Avoid for routine thumbnailing. Prefer `thumbnail` when you can start from a filename.For already-loaded images, use normal image operations such as `resize` unless you specifically need this escape hatch.
+  
   Returns an image handle.
   
   Required inputs:

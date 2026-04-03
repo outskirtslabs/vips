@@ -18,13 +18,11 @@
 
 (defn -main [& _]
   (fs/create-dirs "examples")
-  (with-open [rabbit      (v/from-file rabbit-path)
-              puppies     (v/from-file puppies-path)
-              rabbit-500  (v/thumbnail rabbit 500)
-              puppies-500 (v/thumbnail puppies 500)
+  (with-open [rabbit-500  (ops/thumbnail rabbit-path 500)
+              puppies-500 (ops/thumbnail puppies-path 500)
               joined      (ops/join rabbit-500 puppies-500 :horizontal {:shim 10})
-              rabbit-400  (v/thumbnail rabbit 400)
-              puppies-400 (v/thumbnail puppies 400)
+              rabbit-400  (ops/thumbnail rabbit-path 400)
+              puppies-400 (ops/thumbnail puppies-path 400)
               grid        (ops/arrayjoin [rabbit-400 puppies-400 puppies-400 rabbit-400]
                                          {:across 2
                                           :shim   10

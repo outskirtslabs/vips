@@ -40,6 +40,8 @@
       (is (= {:kind :float-seq :label "seqable of number"}
              (:type (some #(when (= "background" (:name %)) %)
                           (:optional-inputs embed)))))
+      (is (re-find #"Avoid for routine thumbnailing"
+                   (:doc (meta #'ops/thumbnail-image))))
       (is (not (re-find #"gdouble|VipsImage|gint"
                         (:doc (meta #'ops/rotate))))))))
 

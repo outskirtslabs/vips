@@ -343,9 +343,8 @@
       (is (= 4 (v/bands png))))))
 
 (deftest thumbnail-helper
-  (testing "thumbnail returns a derived image handle"
-    (with-open [image     (v/from-file fixture-path)
-                thumbnail (v/thumbnail image 400 {:auto-rotate true})]
+  (testing "thumbnail returns a derived image handle when starting from a filename"
+    (with-open [thumbnail (ops/thumbnail fixture-path 400 {:auto-rotate true})]
       (is (= {:width 323 :height 400 :bands 3 :has-alpha? false}
              (select-keys (v/metadata thumbnail) [:width :height :bands :has-alpha?]))))))
 
@@ -441,7 +440,7 @@
   (testing "public image helpers accept operation result maps with :out"
     (with-open [image (v/from-file fixture-path)]
       (with-open [autorot (v/call "autorot" {:in image})]
-        (let [thumb (v/thumbnail autorot 400)
+        (let [thumb (ops/thumbnail-image autorot 400)
               png   (v/write-to-buffer autorot ".png")]
           (with-open [thumb thumb]
             (is (= {:width 323 :height 400 :bands 3 :has-alpha? false}
