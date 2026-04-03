@@ -119,6 +119,16 @@ the page metadata for you.
                [:width :height :pages :page-height :loop :delay]))
 ----
 
+Here, `frame-a`, `frame-b`, and `frame-c` are just ordinary image handles.
+`v/assemble-pages` does not require a special frame type. The `frames`
+argument is simply a non-empty collection of same-sized images, with each image
+becoming one animation frame in the output.
+
+In practice, those images can come from any image-producing operation, not only
+from xref:api/ol-vips-operations.adoc#extract-area[`ops/extract-area`]. You
+can resize, crop, composite, render text, or load separate files first, then
+pass the resulting image handles to `v/assemble-pages`.
+
 If you already have a tall strip and need to annotate or adjust it, use
 xref:api/ol-vips.adoc#assoc-pages[`v/assoc-pages`],
 xref:api/ol-vips.adoc#assoc-page-height[`v/assoc-page-height`],
