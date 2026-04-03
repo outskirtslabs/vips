@@ -1,6 +1,6 @@
 # ol.vips
 
-> High-perf image processing for Clojure built with [libvips][upstream]. 
+> Clojure bindings for [libvips][upstream] image processing library
 
 This package wraps the core functionality of the native [libvips][upstream] image processing library by exposing all native image operations as data and functions to Clojure programs.
 
