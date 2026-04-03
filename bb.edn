@@ -89,7 +89,7 @@
                   (apply shell "clj-kondo" "--lint" *command-line-args*)
                   (apply shell "clj-kondo --lint" lint-paths))}
 
-         gen
+         codegen
          {:doc  "Generate enum and operation namespaces from live libvips introspection"
           :task (do
                   (clojure "-M:dev" "-m" "ol.vips.codegen")
@@ -98,6 +98,9 @@
          gen-docs
          {:doc  "Generate all Antora documentation"
           :task (gen-docs/generate!)}
+
+         gen       {:doc     "Generate docs and code"
+                    :depends [codegen gen-docs]}
 
          native:update
          {:doc  "Download and stage native resources for the selected platforms"
