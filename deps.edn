@@ -15,6 +15,7 @@
                                   com.outskirtslabs/vips-native-macos-x86-64       {:local/root "./native/macos-x86-64"}
                                   com.outskirtslabs/vips-native-win32-x86-64       {:local/root "./native/win32-x86-64"}
                                   babashka/fs                                      {:mvn/version "0.5.27"}
+                                  org.babashka/http-client                         {:mvn/version "0.4.22"}
                                   dev.weavejester/hashp                            {:mvn/version "0.5.1"}
                                   io.github.tonsky/clj-reload                      {:mvn/version "1.0.0"}
                                   djblue/portal                                    {:mvn/version "0.63.0"}

@@ -16,6 +16,7 @@ result
 prompts/
 *.md
 !README.md
+examples/square_flask_http_stream.png
 native/*/.cpcache/
 native/*/resources/
 native/*/target/

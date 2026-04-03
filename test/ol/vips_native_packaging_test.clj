@@ -157,7 +157,7 @@
         (is (zero? exit) err)
         (let [project (get-in (edn/read-string (slurp deps-path))
                               [:aliases :neil :project])]
-          (is (= "1.2.4-0" (:version project)))
+          (is (= "1.2.4-1" (:version project)))
           (is (= "LGPL-3.0-or-later" (get-in project [:license :id])))))
       (finally
         (when (.exists (io/file temp-native-root))

@@ -2,7 +2,9 @@
   (:require
    [babashka.fs :as fs]
    [clojure.test :refer [deftest is testing]]
-   [ol.vips :as v]))
+   [ol.vips :as v])
+  (:import
+   [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]))
 
 (def fixture-path
   (str (fs/path "dev" "rabbit.jpg")))
@@ -75,110 +77,67 @@
                (select-keys (v/info roundtrip) [:width :height :bands :has-alpha?])))))))
 
 (deftest stream-io-helpers
-  (let [fixture-bytes (java.nio.file.Files/readAllBytes
-                       (java.nio.file.Path/of fixture-path (make-array String 0)))
-        expected-info {:width 2490 :height 3084 :bands 3 :has-alpha? false}]
-    (testing "from-stream reads images from an input stream"
-      (with-open [source      (java.io.ByteArrayInputStream. fixture-bytes)
-                  from-stream (v/from-stream source)]
-        (is (= expected-info
-               (select-keys (v/info from-stream) [:width :height :bands :has-alpha?])))))
-    (testing "from-stream does not rely on InputStream.readAllBytes"
-      (let [delegate (java.io.ByteArrayInputStream. fixture-bytes)]
-        (with-open [source      (proxy [java.io.InputStream] []
-                                  (read
-                                    ([] (.read delegate))
-                                    ([buffer offset length]
-                                     (.read delegate buffer offset length)))
-                                  (readAllBytes []
-                                    (throw (ex-info "readAllBytes should not be called" {})))
-                                  (close []
-                                    (.close delegate)))
-                    from-stream (v/from-stream source)]
-          (is (= expected-info
-                 (select-keys (v/info from-stream) [:width :height :bands :has-alpha?]))))))
-    (testing "from-stream tolerates an intermediate zero-byte read"
-      (let [delegate       (java.io.ByteArrayInputStream. fixture-bytes)
-            returned-zero? (java.util.concurrent.atomic.AtomicBoolean. false)]
-        (with-open [source      (proxy [java.io.InputStream] []
-                                  (read
-                                    ([] (.read delegate))
-                                    ([buffer offset length]
-                                     (if (.compareAndSet returned-zero? false true)
-                                       0
-                                       (.read delegate buffer offset length))))
-                                  (close []
-                                    (.close delegate)))
-                    from-stream (v/from-stream source)]
-          (is (= expected-info
-                 (select-keys (v/info from-stream) [:width :height :bands :has-alpha?]))))))
-    (testing "from-stream surfaces producer exceptions cleanly"
-      (let [delegate    (java.io.ByteArrayInputStream. fixture-bytes)
-            read-count  (java.util.concurrent.atomic.AtomicInteger. 0)
-            close-count (java.util.concurrent.atomic.AtomicInteger. 0)
-            source      (proxy [java.io.InputStream] []
-                          (read
-                            ([] (.read delegate))
-                            ([buffer offset length]
-                             (if (zero? (.getAndIncrement read-count))
-                               (.read delegate buffer offset (min length 2048))
-                               (throw (java.io.IOException. "stream exploded")))))
+  (testing "from-stream reads an image from an InputStream and closes it with the image"
+    (let [fixture-bytes (java.nio.file.Files/readAllBytes
+                         (java.nio.file.Path/of fixture-path (make-array String 0)))
+          closed?       (atom false)
+          stream        (proxy [ByteArrayInputStream] [fixture-bytes]
                           (close []
-                            (.incrementAndGet close-count)
-                            (.close delegate)))
-            thrown      (try
-                          (with-open [source source]
-                            (v/from-stream source))
-                          (catch Throwable t
-                            t))]
-        (is (instance? Throwable thrown))
-        (is (= "stream exploded"
-               (some-> thrown ex-cause ex-message)))
-        (is (= 1 (.get close-count)))))
-    (testing "from-chunks reads images from chunked binary data"
-      (let [chunks (partition-all 4096 fixture-bytes)]
-        (with-open [from-chunks (v/from-chunks chunks)]
-          (is (= expected-info
-                 (select-keys (v/info from-chunks) [:width :height :bands :has-alpha?]))))))
-    (testing "from-chunks closes a closeable chunk source"
-      (let [closed? (atom false)
-            chunks  (reify
-                      clojure.lang.Seqable
-                      (seq [_]
-                        (seq (map byte-array (partition-all 4096 fixture-bytes))))
-                      java.lang.AutoCloseable
-                      (close [_]
-                        (reset! closed? true)))]
-        (with-open [from-chunks (v/from-chunks chunks)]
-          (is (= expected-info
-                 (select-keys (v/info from-chunks) [:width :height :bands :has-alpha?]))))
-        (is (true? @closed?))))
-    (testing "write-to-stream returns chunked binary output that can be read back"
-      (with-open [image     (v/from-file fixture-path)
-                  roundtrip (v/from-chunks (v/write-to-stream image ".png"))]
-        (is (= expected-info
-               (select-keys (v/info roundtrip) [:width :height :bands :has-alpha?])))))
-    (testing "write-to-stream supports save options and chunk sizing"
-      (with-open [image (v/from-file puppies-path)]
-        (let [bin1 (->> (v/write-to-stream image ".png" {:compression 0 :chunk-size 2048})
-                        (map #(alength ^bytes %))
-                        (reduce + 0))
-              bin2 (->> (v/write-to-stream image ".png" {:compression 9 :chunk-size 2048})
-                        (map #(alength ^bytes %))
-                        (reduce + 0))]
-          (is (> bin1 bin2)))))
-    (testing "write-to-stream can be closed early and multiple close calls are safe"
+                            (reset! closed? true)
+                            (proxy-super close)))]
+      (is (false? @closed?))
+      (with-open [image (v/from-stream stream)]
+        (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+               (select-keys (v/info image) [:width :height :bands :has-alpha?])))
+        (is (false? @closed?)))
+      (is (true? @closed?))))
+  (testing "write-to-stream writes through the target callback path and closes the stream"
+    (let [flushed? (atom false)
+          closed?  (atom false)
+          out      (proxy [ByteArrayOutputStream] []
+                     (flush []
+                       (reset! flushed? true)
+                       (proxy-super flush))
+                     (close []
+                       (reset! closed? true)
+                       (proxy-super close)))]
       (with-open [image (v/from-file fixture-path)]
-        (let [result (deref
-                      (future
-                        (with-open [stream (v/write-to-stream image ".png" {:chunk-size 1024})]
-                          (is (bytes? (first (seq stream))))
-                          (.close ^java.lang.AutoCloseable stream)
-                          (.close ^java.lang.AutoCloseable stream)
-                          :closed))
-                      5000
-                      ::timeout)]
-          (is (= :closed result)))))))
+        (v/write-to-stream image out ".png"))
+      (is (true? @flushed?))
+      (is (true? @closed?))
+      (with-open [roundtrip (v/from-buffer (.toByteArray ^ByteArrayOutputStream out))]
+        (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
+               (select-keys (v/info roundtrip) [:width :height :bands :has-alpha?])))))))
+
+(deftest stream-callback-errors
+  (testing "from-stream translates callback read failures into ex-info and closes the stream"
+    (let [closed? (atom false)
+          stream  (proxy [InputStream] []
+                    (read
+                      ([] (throw (IOException. "read exploded")))
+                      ([^bytes _bytes ^Integer _off ^Integer _len]
+                       (throw (IOException. "read exploded"))))
+                    (close []
+                      (reset! closed? true)))]
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"stream"
+                            (v/from-stream stream)))
+      (is (true? @closed?))))
+  (testing "write-to-stream translates callback write failures into ex-info and closes the stream"
+    (let [closed? (atom false)
+          out     (proxy [OutputStream] []
+                    (write
+                      ([^Integer _b]
+                       (throw (IOException. "write exploded")))
+                      ([^bytes _bytes ^Integer _off ^Integer _len]
+                       (throw (IOException. "write exploded"))))
+                    (close []
+                      (reset! closed? true)))]
+      (with-open [image (v/from-file fixture-path)]
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"stream"
+                              (v/write-to-stream image out ".png"))))
+      (is (true? @closed?)))))
 
 (deftest load-save-options
   (testing "from-file supports option maps and suffix options"

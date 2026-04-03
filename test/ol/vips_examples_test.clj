@@ -25,9 +25,8 @@
             chain-path     (fs/path output-root "rabbit_chain.jpg")
             joined-path    (fs/path output-root "rabbit_fox_joined.jpg")
             grid-path      (fs/path output-root "rabbit_grid.jpg")
-            io-path        (fs/path output-root "rabbit_stream_bytes.png")
             metadata-path  (fs/path output-root "rabbit_metadata_copy.jpg")]
-        (doseq [path [thumbnail-path chain-path joined-path grid-path io-path metadata-path]]
+        (doseq [path [thumbnail-path chain-path joined-path grid-path metadata-path]]
           (fs/delete-if-exists path))
 
         (testing "thumbnail example is runnable as a script"
@@ -53,13 +52,6 @@
                    (image-size joined-path)))
             (is (= {:width 656 :height 810 :has-alpha? false}
                    (image-size grid-path)))))
-
-        (testing "bytes and stream example is runnable as a script"
-          (let [{:keys [exit out err]} (run-example! "examples/bytes_and_streams.clj")]
-            (is (zero? exit) (str out err))
-            (is (fs/exists? io-path))
-            (is (= {:width 161 :height 200 :has-alpha? false}
-                   (image-size io-path)))))
 
         (testing "metadata example is runnable as a script"
           (let [{:keys [exit out err]} (run-example! "examples/metadata_roundtrip.clj")]

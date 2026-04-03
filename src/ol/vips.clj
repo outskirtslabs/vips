@@ -87,15 +87,9 @@
 
 (defn from-stream
   ([source]
-   (from-stream source {}))
+   (runtime/open-image-from-stream source))
   ([source opts]
    (runtime/open-image-from-stream source (render-option-string opts))))
-
-(defn from-enum
-  ([chunks]
-   (from-enum chunks {}))
-  ([chunks opts]
-   (runtime/open-image-from-enum chunks (render-option-string opts))))
 
 (defn write-to-buffer
   ([image suffix]
@@ -104,15 +98,10 @@
    (runtime/write-image-to-buffer image (append-options suffix opts))))
 
 (defn write-to-stream
-  ([image suffix]
-   (write-to-stream image suffix {}))
-  ([image suffix opts]
-   (let [chunk-size (or (:chunk-size opts) 65536)
-         save-opts  (dissoc opts :chunk-size)]
-     (when-not (pos-int? chunk-size)
-       (throw (ex-info "Chunk size must be a positive integer"
-                       {:chunk-size chunk-size})))
-     (runtime/write-image-to-stream image (append-options suffix save-opts) chunk-size))))
+  ([image sink suffix]
+   (runtime/write-image-to-stream image sink suffix))
+  ([image sink suffix opts]
+   (runtime/write-image-to-stream image sink (append-options suffix opts))))
 
 (defn info
   [image]
