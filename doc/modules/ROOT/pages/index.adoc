@@ -69,7 +69,7 @@ process:
 ----
 
 To use your own libvips build, see
-https://docs.outskirtslabs.com/ol.vips/next/introduction/#loading-the-native-library[Loading the native library].
+https://docs.outskirtslabs.com/ol.vips/next/introduction#loading_the_native_library[Loading the native library].
 
 == Quick Start
 
@@ -98,7 +98,7 @@ generated wrappers for libvips operations.
 * https://docs.outskirtslabs.com/ol.vips/next/examples/[Examples]
 * https://docs.outskirtslabs.com/ol.vips/next/going-to-production/[Going to Production]
 * https://docs.outskirtslabs.com/ol.vips/next/multipage-and-animated-images/[Multipage and Animated Images]
-* https://docs.outskirtslabs.com/ol.vips/next/api/[API Reference]
+* https://docs.outskirtslabs.com/ol.vips/next/api/ol-vips[API Reference]
 * https://docs.outskirtslabs.com/ol.vips/next/changelog/[Changelog]
 * https://docs.outskirtslabs.com/ol.vips/next/security/[Security Policy]
 * https://github.com/outskirtslabs/vips/issues[Support via GitHub Issues]

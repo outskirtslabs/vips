@@ -7,7 +7,7 @@ This release publishes 4 namespaces.
 | Namespace | Summary
 
 | xref:api/ol-vips.adoc[`ol.vips`]
-| -
+| Load, transform, and write images with libvips from Clojure.
 
 | xref:api/ol-vips-codegen.adoc[`ol.vips.codegen`]
 | Generate the introspected wrapper namespaces for `ol.

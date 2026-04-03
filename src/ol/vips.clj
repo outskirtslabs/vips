@@ -1,4 +1,42 @@
 (ns ol.vips
+  "Load, transform, and write images with libvips from Clojure.
+
+  `ol.vips` exposes the runtime, I/O, metadata, and animated-image helpers that
+  most applications use directly. Loaders such as [[from-file]],
+  [[from-buffer]], and [[from-stream]] return closeable image handles.
+  Operations return new image handles rather than mutating the original image,
+  and sinks such as [[write-to-file]], [[write-to-buffer]], and
+  [[write-to-stream]] trigger evaluation of the underlying libvips pipeline.
+
+  Guides and API reference live at https://docs.outskirtslabs.com/ol.vips/next/.
+
+  Use this namespace for:
+
+  - runtime initialization and safety controls
+  - file, buffer, and stream input/output
+  - metadata and raw header access
+  - animated-image metadata and frame-aware helpers
+  - low-level generic operation calls with [[call]]
+
+  ## Related Namespaces
+
+  - [[ol.vips.operations]] for generated wrappers around the libvips operation surface
+  - [[ol.vips.enums]] for normalized enum keywords and enum value sets
+
+  ## Example
+
+  ```clojure
+  (require '[ol.vips :as v]
+           '[ol.vips.operations :as ops])
+
+  (v/init!)
+
+  (with-open [thumb   (ops/thumbnail \"dev/rabbit.jpg\" 300 {:auto-rotate true})
+              rotated (ops/rotate thumb 90.0)]
+    (v/write-to-file rotated \"thumbnail.jpg\")
+    (v/metadata rotated))
+  ;; => {:width 300, :height 242, :bands 3, :has-alpha? false}
+  ```"
   (:require
    [ol.vips.impl.api :as api]
    [ol.vips.impl.image :as image]
