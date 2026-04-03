@@ -3,9 +3,11 @@
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.string :as str]
+   [coffi.ffi :as ffi]
    [ol.vips.native.platforms :as platforms])
   (:import
    [java.io InputStream PushbackReader RandomAccessFile]
+   [java.lang.foreign Arena SymbolLookup]
    [java.net URL]
    [java.nio.file CopyOption Files Path Paths StandardCopyOption]
    [java.nio.file.attribute FileAttribute]))
@@ -26,6 +28,32 @@
 (defn- path-string
   ^String [pathish]
   (str (absolute-path pathish)))
+
+(defn- path->lookup
+  ^SymbolLookup [^String library-path ^Arena arena]
+  (SymbolLookup/libraryLookup (absolute-path library-path)
+                              arena))
+
+(defn- library-lookup
+  [library-paths]
+  (let [arena   (Arena/ofShared)
+        lookups (mapv #(path->lookup % arena) library-paths)]
+    {:arena  arena
+     :lookup (reduce (fn [^SymbolLookup acc ^SymbolLookup lookup]
+                       (.or acc lookup))
+                     lookups)}))
+
+(defn- lookup-symbol
+  [^SymbolLookup lookup symbol-name]
+  (or (.orElse (.find lookup symbol-name) nil)
+      (throw (ex-info "Native symbol not found in loaded ol.vips libraries"
+                      {:symbol symbol-name}))))
+
+(defn- loaded-symbol
+  [symbol-name]
+  (or (ffi/find-symbol symbol-name)
+      (throw (ex-info "Native symbol not found in loaded ol.vips libraries"
+                      {:symbol symbol-name}))))
 
 (defn- present-string
   [value]
@@ -161,6 +189,24 @@
       user-home (path-of user-home ".cache" "ol.vips")
       :else (path-of tmp-dir "ol.vips"))))
 
+(defn preload-library-paths
+  []
+  (when-let [value (property-value "ol.vips.native.preload")]
+    (->> (str/split value (re-pattern (java.util.regex.Pattern/quote java.io.File/pathSeparator)))
+         (map str/trim)
+         (remove str/blank?)
+         vec)))
+
+(defn system-library-names
+  []
+  (if-let [value (property-value "ol.vips.native.system-libs")]
+    (->> (str/split value (re-pattern (java.util.regex.Pattern/quote java.io.File/pathSeparator)))
+         (map str/trim)
+         (remove str/blank?)
+         distinct
+         vec)
+    ["vips-cpp" "vips"]))
+
 (defn extraction-root
   ([manifest]
    (extraction-root (default-cache-root) manifest))
@@ -203,3 +249,66 @@
   (when-let [primary-library-path (first library-paths)]
     (System/setProperty "ol.vips.native.primary-library-path" primary-library-path))
   state)
+
+(defn- load-system-libraries!
+  []
+  (let [attempts
+        (system-library-names)
+
+        {:keys [loaded failures]}
+        (reduce (fn [{:keys [loaded failures] :as acc} lib]
+                  (try
+                    (ffi/load-system-library lib)
+                    (assoc acc :loaded (conj loaded lib))
+                    (catch Throwable t
+                      (assoc acc :failures (conj failures {:library lib
+                                                           :cause   t})))))
+                {:loaded [] :failures []}
+                attempts)]
+    (if (seq loaded)
+      loaded
+      (throw (ex-info "Failed to load libvips from the system library path"
+                      {:libraries (vec attempts)
+                       :failures  (mapv (fn [{:keys [library cause]}]
+                                          {:library library
+                                           :message (ex-message cause)
+                                           :class   (.getName (class cause))})
+                                        failures)})))))
+
+(defn- load-packaged-native-state
+  []
+  (let [manifest               (read-manifest)
+        extracted              (extract-libraries! (default-cache-root) manifest)
+        load-paths             (vec (concat (preload-library-paths) (:library-paths extracted)))
+        _                      (doseq [path load-paths]
+                                 (ffi/load-library path))
+        {:keys [arena lookup]} (library-lookup load-paths)
+        exposed                (expose-paths! extracted)]
+    (merge exposed
+           {:lookup               lookup
+            :lookup-arena         arena
+            :manifest             manifest
+            :primary-library-path (first (:library-paths extracted))
+            :native-load-source   :packaged
+            :resolve-symbol       #(lookup-symbol lookup %)})))
+
+(defn- load-system-native-state
+  [cause]
+  (let [loaded-libraries (load-system-libraries!)]
+    {:lookup                     nil
+     :lookup-arena               nil
+     :manifest                   nil
+     :primary-library-path       nil
+     :native-load-source         :system
+     :native-load-fallback-from  :packaged
+     :native-load-fallback-cause (ex-message cause)
+     :native-load-fallback-class (.getName (class cause))
+     :system-library-names       loaded-libraries
+     :resolve-symbol             loaded-symbol}))
+
+(defn load-native!
+  []
+  (try
+    (load-packaged-native-state)
+    (catch Throwable packaged-load-failure
+      (load-system-native-state packaged-load-failure))))

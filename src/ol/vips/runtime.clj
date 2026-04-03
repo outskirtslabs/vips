@@ -1,14 +1,12 @@
 (ns ol.vips.runtime
   (:require
-   [clojure.string :as str]
    [coffi.ffi :as ffi]
    [coffi.layout :as layout]
    [coffi.mem :as mem]
    [ol.vips.native.loader :as loader])
   (:import
-   [java.io File InputStream OutputStream]
-   [java.lang.foreign Arena SymbolLookup]
-   [java.nio.file Path]
+   [java.io InputStream OutputStream]
+   [java.lang.foreign Arena]
    [java.util.concurrent.atomic AtomicBoolean AtomicReference]))
 
 (set! *warn-on-reflection* true)
@@ -22,8 +20,6 @@
      [[:g-type ::mem/long]
       [:data [::mem/array ::mem/long 2]]]]))
 
-(declare bindings)
-
 (def ^:private source-read-callback-type
   [::ffi/fn [::mem/pointer ::mem/pointer ::mem/long ::mem/pointer] ::mem/long :raw-fn? true])
 
@@ -32,97 +28,6 @@
 
 (def ^:private target-end-callback-type
   [::ffi/fn [::mem/pointer ::mem/pointer] ::mem/int :raw-fn? true])
-
-(defprotocol PointerBacked
-  (pointer ^java.lang.foreign.MemorySegment [this]))
-
-(deftype OperationResult [result-map ^AtomicBoolean closed?]
-  clojure.lang.ILookup
-  (valAt [_ key]
-    (get result-map key))
-  (valAt [_ key not-found]
-    (get result-map key not-found))
-
-  clojure.lang.Associative
-  (assoc [_ key value]
-    (assoc result-map key value))
-  (containsKey [_ key]
-    (contains? result-map key))
-  (entryAt [_ key]
-    (find result-map key))
-
-  clojure.lang.IPersistentMap
-  (without [_ key]
-    (dissoc result-map key))
-
-  clojure.lang.Seqable
-  (seq [_]
-    (seq result-map))
-
-  clojure.lang.Counted
-  (count [_]
-    (count result-map))
-
-  clojure.lang.IPersistentCollection
-  (cons [_ entry]
-    (cons entry result-map))
-  (empty [_]
-    {})
-  (equiv [_ other]
-    (= result-map other))
-
-  java.lang.Iterable
-  (iterator [_]
-    (.iterator ^Iterable result-map))
-
-  java.lang.AutoCloseable
-  (close [_]
-    (when (.compareAndSet closed? false true)
-      (doseq [value (vals result-map)]
-        (when (instance? java.lang.AutoCloseable value)
-          (.close ^java.lang.AutoCloseable value)))))
-
-  Object
-  (equals [_ other]
-    (= result-map other))
-  (hashCode [_]
-    (hash result-map))
-  (toString [_]
-    (str result-map)))
-
-(deftype ImageHandle [ptr ^AtomicBoolean closed? keeper]
-  PointerBacked
-  (pointer [_] ptr)
-
-  java.lang.AutoCloseable
-  (close [_]
-    (when (.compareAndSet closed? false true)
-      ((bindings :g-object-unref) ptr)
-      (when keeper
-        (.close ^java.lang.AutoCloseable keeper))))
-
-  Object
-  (toString [_]
-    (str "#<ol.vips.runtime.ImageHandle " ptr ">")))
-
-(deftype StreamBridge [ptr ^Arena arena stream callbacks ^AtomicReference failure-ref close-stream! ^AtomicBoolean closed?]
-  PointerBacked
-  (pointer [_] ptr)
-
-  java.lang.AutoCloseable
-  (close [_]
-    (when (.compareAndSet closed? false true)
-      (try
-        ((bindings :g-object-unref) ptr)
-        (finally
-          (try
-            (close-stream!)
-            (finally
-              (.close arena)))))))
-
-  Object
-  (toString [_]
-    (str "#<ol.vips.runtime.StreamBridge " ptr ">")))
 
 (def ^:private native-symbol-specs
   {:g-free                  ["g_free" [::mem/pointer] ::mem/void]
@@ -233,33 +138,13 @@
 
 (defonce ^:private state* (atom nil))
 
-(defn- path->lookup
-  ^SymbolLookup [^String library-path ^Arena arena]
-  (SymbolLookup/libraryLookup (Path/of library-path (make-array String 0))
-                              arena))
-
-(defn- library-lookup
-  [library-paths]
-  (let [arena   (Arena/ofShared)
-        lookups (mapv #(path->lookup % arena) library-paths)]
-    {:arena  arena
-     :lookup (reduce (fn [^SymbolLookup acc ^SymbolLookup lookup]
-                       (.or acc lookup))
-                     lookups)}))
-
-(defn- lookup-symbol
-  [^SymbolLookup lookup symbol-name]
-  (or (.orElse (.find lookup symbol-name) nil)
-      (throw (ex-info "Native symbol not found in loaded ol.vips libraries"
-                      {:symbol symbol-name}))))
-
-(defn- bind-symbols
-  [^SymbolLookup lookup]
+(defn- bind-symbols*
+  [resolve-symbol]
   (reduce-kv
    (fn [native k [symbol-name arg-types return-type]]
      (assoc native
             k
-            (ffi/cfn (lookup-symbol lookup symbol-name)
+            (ffi/cfn (resolve-symbol symbol-name)
                      arg-types
                      return-type)))
    {}
@@ -273,16 +158,6 @@
   [native]
   ((:vips-error-clear native)))
 
-(defn- preload-library-paths
-  []
-  (when-let [value (some-> (System/getProperty "ol.vips.native.preload")
-                           str/trim
-                           not-empty)]
-    (->> (str/split value (re-pattern (java.util.regex.Pattern/quote File/pathSeparator)))
-         (map str/trim)
-         (remove str/blank?)
-         vec)))
-
 (defn- throw-vips-error
   [native message data]
   (let [error-message (last-error-message native)]
@@ -290,6 +165,157 @@
     (throw (ex-info message
                     (cond-> data
                       error-message (assoc :vips/error error-message))))))
+
+(defn- build-gtypes
+  [native]
+  {:boolean      ((:g-type-from-name native) "gboolean")
+   :boxed        ((:g-type-from-name native) "GBoxed")
+   :double       ((:g-type-from-name native) "gdouble")
+   :enum         ((:g-type-from-name native) "GEnum")
+   :flags        ((:g-type-from-name native) "GFlags")
+   :image        ((:image-get-type native))
+   :int          ((:g-type-from-name native) "gint")
+   :int64        ((:g-type-from-name native) "gint64")
+   :long         ((:g-type-from-name native) "glong")
+   :object       ((:g-type-from-name native) "GObject")
+   :operation    ((:operation-get-type native))
+   :string       ((:g-type-from-name native) "gchararray")
+   :uint         ((:g-type-from-name native) "guint")
+   :uint64       ((:g-type-from-name native) "guint64")
+   :array-image  ((:array-image-get-type native))
+   :array-double ((:array-double-get-type native))})
+
+(defn- initialize-native-state
+  [load-state]
+  (let [native     (bind-symbols* (:resolve-symbol load-state))
+        base-state (dissoc load-state :resolve-symbol)
+        init-code  (int ((:vips-init native) "ol.vips"))
+        _          (when-not (zero? init-code)
+                     (throw-vips-error native
+                                       "Failed to initialize libvips"
+                                       {:exit-code init-code}))
+        version    ((:vips-version-string native))]
+    (merge base-state
+           {:bindings       native
+            :gtypes         (build-gtypes native)
+            :version-string version})))
+
+(defn ensure-initialized!
+  []
+  (or @state*
+      (locking state*
+        (or @state*
+            (let [state (initialize-native-state (loader/load-native!))]
+              (reset! state* state)
+              state)))))
+
+(defn state
+  []
+  (ensure-initialized!))
+
+(defn bindings
+  ([] (:bindings (ensure-initialized!)))
+  ([k] (get (bindings) k))
+  ([k not-found] (get (bindings) k not-found)))
+
+(defn gtypes
+  []
+  (:gtypes (ensure-initialized!)))
+
+(defn version-string
+  []
+  (:version-string (ensure-initialized!)))
+
+(defprotocol PointerBacked
+  (pointer ^java.lang.foreign.MemorySegment [this]))
+
+(deftype OperationResult [result-map ^AtomicBoolean closed?]
+  clojure.lang.ILookup
+  (valAt [_ key]
+    (get result-map key))
+  (valAt [_ key not-found]
+    (get result-map key not-found))
+
+  clojure.lang.Associative
+  (assoc [_ key value]
+    (assoc result-map key value))
+  (containsKey [_ key]
+    (contains? result-map key))
+  (entryAt [_ key]
+    (find result-map key))
+
+  clojure.lang.IPersistentMap
+  (without [_ key]
+    (dissoc result-map key))
+
+  clojure.lang.Seqable
+  (seq [_]
+    (seq result-map))
+
+  clojure.lang.Counted
+  (count [_]
+    (count result-map))
+
+  clojure.lang.IPersistentCollection
+  (cons [_ entry]
+    (cons entry result-map))
+  (empty [_]
+    {})
+  (equiv [_ other]
+    (= result-map other))
+
+  java.lang.Iterable
+  (iterator [_]
+    (.iterator ^Iterable result-map))
+
+  java.lang.AutoCloseable
+  (close [_]
+    (when (.compareAndSet closed? false true)
+      (doseq [value (vals result-map)]
+        (when (instance? java.lang.AutoCloseable value)
+          (.close ^java.lang.AutoCloseable value)))))
+
+  Object
+  (equals [_ other]
+    (= result-map other))
+  (hashCode [_]
+    (hash result-map))
+  (toString [_]
+    (str result-map)))
+
+(deftype ImageHandle [ptr ^AtomicBoolean closed? keeper]
+  PointerBacked
+  (pointer [_] ptr)
+
+  java.lang.AutoCloseable
+  (close [_]
+    (when (.compareAndSet closed? false true)
+      ((bindings :g-object-unref) ptr)
+      (when keeper
+        (.close ^java.lang.AutoCloseable keeper))))
+
+  Object
+  (toString [_]
+    (str "#<ol.vips.runtime.ImageHandle " ptr ">")))
+
+(deftype StreamBridge [ptr ^Arena arena stream callbacks ^AtomicReference failure-ref close-stream! ^AtomicBoolean closed?]
+  PointerBacked
+  (pointer [_] ptr)
+
+  java.lang.AutoCloseable
+  (close [_]
+    (when (.compareAndSet closed? false true)
+      (try
+        ((bindings :g-object-unref) ptr)
+        (finally
+          (try
+            (close-stream!)
+            (finally
+              (.close arena)))))))
+
+  Object
+  (toString [_]
+    (str "#<ol.vips.runtime.StreamBridge " ptr ">")))
 
 (defn- throw-stream-error
   [message data ^AtomicReference failure-ref]
@@ -431,25 +457,6 @@
         (close-quietly stream)
         (throw t)))))
 
-(defn- build-gtypes
-  [native]
-  {:boolean      ((:g-type-from-name native) "gboolean")
-   :boxed        ((:g-type-from-name native) "GBoxed")
-   :double       ((:g-type-from-name native) "gdouble")
-   :enum         ((:g-type-from-name native) "GEnum")
-   :flags        ((:g-type-from-name native) "GFlags")
-   :image        ((:image-get-type native))
-   :int          ((:g-type-from-name native) "gint")
-   :int64        ((:g-type-from-name native) "gint64")
-   :long         ((:g-type-from-name native) "glong")
-   :object       ((:g-type-from-name native) "GObject")
-   :operation    ((:operation-get-type native))
-   :string       ((:g-type-from-name native) "gchararray")
-   :uint         ((:g-type-from-name native) "guint")
-   :uint64       ((:g-type-from-name native) "guint64")
-   :array-image  ((:array-image-get-type native))
-   :array-double ((:array-double-get-type native))})
-
 (defn- wrap-image
   ([ptr]
    (wrap-image ptr nil))
@@ -490,53 +497,6 @@
     :else
     (throw (ex-info "Expected an image handle or operation result map"
                     {:value value}))))
-
-(defn ensure-initialized!
-  []
-  (or @state*
-      (locking state*
-        (or @state*
-            (let [manifest               (loader/read-manifest)
-                  extracted              (loader/extract-libraries! (loader/default-cache-root) manifest)
-                  load-paths             (vec (concat (preload-library-paths) (:library-paths extracted)))
-                  _                      (doseq [path load-paths]
-                                           (ffi/load-library path))
-                  {:keys [arena lookup]} (library-lookup load-paths)
-                  exposed                (loader/expose-paths! extracted)
-                  native                 (bind-symbols lookup)
-                  init-code              ((:vips-init native) "ol.vips")
-                  _                      (when-not (zero? init-code)
-                                           (throw-vips-error native
-                                                             "Failed to initialize libvips"
-                                                             {:exit-code init-code}))
-                  version                ((:vips-version-string native))
-                  state                  (merge exposed
-                                                {:bindings             native
-                                                 :gtypes               (build-gtypes native)
-                                                 :lookup               lookup
-                                                 :lookup-arena         arena
-                                                 :manifest             manifest
-                                                 :primary-library-path (first (:library-paths extracted))
-                                                 :version-string       version})]
-              (reset! state* state)
-              state)))))
-
-(defn state
-  []
-  (ensure-initialized!))
-
-(defn bindings
-  ([] (:bindings (ensure-initialized!)))
-  ([k] (get (bindings) k))
-  ([k not-found] (get (bindings) k not-found)))
-
-(defn gtypes
-  []
-  (:gtypes (ensure-initialized!)))
-
-(defn version-string
-  []
-  (:version-string (ensure-initialized!)))
 
 (defn type-name
   [gtype]
