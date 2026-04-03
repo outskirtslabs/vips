@@ -170,6 +170,15 @@ in libvips can be used with this library using the lower level
 `ol.vips/call!` function. You can even generate the bindings yourself if
 you need to, simply use `ol.vips.codegen`.
 
+== Going to Production
+
+Before putting `ol.vips` on a production path, review the upstream libvips
+guidance for loader selection, untrusted input handling, image sanity
+checks, and long-running process tuning.
+
+See the libvips
+https://www.libvips.org/API/8.17/developer-checklist.html[Checklist for programmers using libvips].
+
 == Examples
 
 The snippets below show the main API shapes inline. For runnable
@@ -264,6 +273,29 @@ auto-detect the input format and accept option maps that libvips
 forwards to the selected loader. When you need format-specific behavior,
 use the generated loader operations in `ol.vips.operations`, such as
 `ops/jpegload`.
+
+`ol.vips` blocks libvips operations marked as untrusted by default. This
+can block loaders with a larger attack surface, such as PDF or
+ImageMagick-backed formats.
+
+If you trust your input and need those operations, opt in explicitly
+before loading that data:
+
+[source,clojure]
+----
+(require '[ol.vips :as v]
+         '[ol.vips.operations :as ops])
+
+(v/allow-untrusted-operations!)
+
+(with-open [image (ops/pdfload "document.pdf")]
+  (v/metadata image))
+----
+
+Use that override only for trusted inputs. See the upstream
+https://www.libvips.org/API/8.17/func.block_untrusted_set.html[`vips_block_untrusted_set`
+documentation]. In libvips terms this is equivalent to calling
+`vips_block_untrusted_set(FALSE)` after initialization.
 
 JPEG auto-rotation rotates the image according to its EXIF orientation
 at load time:
@@ -493,8 +525,8 @@ the system library loader instead of continuing with the native jar.
 === 2. Classpath native bundle
 
 `ol.vips` detects the current platform, builds a resource path like
-`ol/vips/native/{os}-{arch}` on macOS and Windows or
-`ol/vips/native/{os}-{arch}-{libc}` on Linux, and then looks
+`ol/vips/native/<os>-<arch>` on macOS and Windows or
+`ol/vips/native/<os>-<arch>-<libc>` on Linux, and then looks
 for `manifest.edn` under that path.
 
 For example, Linux x86-64 glibc resolves to

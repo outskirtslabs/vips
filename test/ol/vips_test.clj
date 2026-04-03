@@ -4,6 +4,7 @@
    [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
    [ol.vips :as v]
+   [ol.vips.impl.api :as api]
    [ol.vips.operations :as ops])
   (:import
    [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]))
@@ -39,6 +40,33 @@
              (v/decode-enum "VipsDirection"
                             (v/encode-enum "VipsDirection" :horizontal))))
       (is (= "flip" (:name flip))))))
+
+(deftest initialization-blocks-untrusted-operations-by-default
+  (testing "runtime initialization blocks libvips operations marked as untrusted"
+    (let [calls (atom [])]
+      (with-redefs [api/bind-symbols* (fn [_]
+                                        {:vips-init                (fn [_] 0)
+                                         :vips-version-string      (fn [] "8.17.3")
+                                         :vips-block-untrusted-set (fn [state]
+                                                                     (swap! calls conj state))})
+                    api/build-gtypes  (fn [_] {:boolean :gboolean})]
+        (let [state (api/initialize-native-state {:resolve-symbol     identity
+                                                  :native-load-source :test})]
+          (is (= 1 (count @calls)))
+          (is (not (zero? (first @calls))))
+          (is (true? (:block-untrusted-operations? state))))))))
+
+(deftest allow-untrusted-operations-override
+  (testing "the runtime exposes an explicit override for trusted environments"
+    (let [calls   (atom [])
+          current {:bindings                    {:vips-block-untrusted-set
+                                                 (fn [state]
+                                                   (swap! calls conj state))}
+                   :block-untrusted-operations? true}]
+      (with-redefs [api/ensure-initialized! (fn [] current)]
+        (let [state (v/allow-untrusted-operations!)]
+          (is (= [0] @calls))
+          (is (false? (:block-untrusted-operations? state))))))))
 
 (deftest open-and-metadata
   (testing "from-file and metadata accept path strings and Path values"

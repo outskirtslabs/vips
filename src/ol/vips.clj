@@ -10,6 +10,10 @@
   []
   (api/ensure-initialized!))
 
+(defn allow-untrusted-operations!
+  []
+  (api/allow-untrusted-operations!))
+
 (defn operations
   []
   (introspect/list-operations))
