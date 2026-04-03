@@ -1,13 +1,20 @@
 (ns ol.vips-introspection-test
   (:require
+   [babashka.fs :as fs]
    [clojure.test :refer [deftest is testing]]
-   [ol.vips-test-common :as common]
    [ol.vips.introspect :as introspect]
-   [ol.vips.runtime :as runtime]))
+   [ol.vips.runtime :as runtime]
+   [ol.vips :as v]))
+
+(def fixture-path
+  (str (fs/path "dev" "rabbit.jpg")))
+
+(defonce runtime-state
+  (v/init!))
 
 (deftest runtime-initialization
   (testing "the runtime can initialize the packaged libvips bundle"
-    (let [state common/runtime-state]
+    (let [state runtime-state]
       (is (= "8.17.3" (:version-string state)))
       (is (seq (:library-paths state)))
       (is (string? (:primary-library-path state))))))
@@ -68,7 +75,7 @@
 
 (deftest generic-image-operation-call
   (testing "generic operation calls can drive simple image transforms"
-    (with-open [image   (runtime/open-image common/fixture-path)
+    (with-open [image   (runtime/open-image fixture-path)
                 rotated (introspect/call-operation "rotate" {:in image :angle 90.0})
                 flipped (introspect/call-operation "flip" {:in image :direction :horizontal})]
       (is (= {:width 3084 :height 2490 :has-alpha? false}

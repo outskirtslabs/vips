@@ -12,7 +12,7 @@
          :init
          (do
            (def paths ["src" "test" "examples" "native"])
-           (def lint-paths ["src" "test" "native"])
+           (def lint-paths ["src" "test" "native" "examples"])
            (defn native-dirs []
              (->> (fs/list-dir "native")
                   (filter fs/directory?)
@@ -37,9 +37,9 @@
                         (str/join ", " (map (fn [dir]
                                               (str (fs/file-name dir)))
                                             dirs)))
-                (shell "clojure"
-                       "-T:build"
-                       "native-update"
+               (shell "clojure"
+                      "-T:build"
+                      "native-update"
                       ":platforms"
                       (pr-str (mapv (fn [dir]
                                       (keyword (str (fs/file-name dir))))
