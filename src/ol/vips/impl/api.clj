@@ -31,151 +31,162 @@
   [::ffi/fn [::mem/pointer ::mem/pointer] ::mem/int :raw-fn? true])
 
 (def ^:private native-symbol-specs
-  {:g-free                   ["g_free" [::mem/pointer] ::mem/void]
-   :g-strfreev               ["g_strfreev" [::mem/pointer] ::mem/void]
-   :g-signal-connect-data    ["g_signal_connect_data"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer ::mem/int]
-                              ::mem/long]
-   :g-object-ref             ["g_object_ref" [::mem/pointer] ::mem/pointer]
-   :g-object-unref           ["g_object_unref" [::mem/pointer] ::mem/void]
-   :g-object-get-property    ["g_object_get_property"
-                              [::mem/pointer ::mem/c-string ::mem/pointer]
-                              ::mem/void]
-   :g-object-set-property    ["g_object_set_property"
-                              [::mem/pointer ::mem/c-string ::mem/pointer]
-                              ::mem/void]
-   :g-type-children          ["g_type_children" [::g-type ::mem/pointer] ::mem/pointer]
-   :g-type-class-ref         ["g_type_class_ref" [::g-type] ::mem/pointer]
-   :g-type-class-unref       ["g_type_class_unref" [::mem/pointer] ::mem/void]
-   :g-type-fundamental       ["g_type_fundamental" [::g-type] ::g-type]
-   :g-type-from-name         ["g_type_from_name" [::mem/c-string] ::g-type]
-   :g-type-name              ["g_type_name" [::g-type] ::mem/c-string]
-   :param-spec-get-blurb     ["g_param_spec_get_blurb" [::mem/pointer] ::mem/c-string]
-   :param-spec-get-name      ["g_param_spec_get_name" [::mem/pointer] ::mem/c-string]
-   :nickname-find            ["vips_nickname_find" [::g-type] ::mem/c-string]
-   :argument-map             ["vips_argument_map"
-                              [::mem/pointer
-                               [::ffi/fn [::mem/pointer
-                                          ::mem/pointer
-                                          ::mem/pointer
-                                          ::mem/pointer
-                                          ::mem/pointer
-                                          ::mem/pointer]
-                                ::mem/pointer]
-                               ::mem/pointer
-                               ::mem/pointer]
-                              ::mem/pointer]
-   :type-map-all             ["vips_type_map_all"
-                              [::g-type
-                               [::ffi/fn [::g-type ::mem/pointer] ::mem/pointer]
-                               ::mem/pointer]
-                              ::mem/pointer]
-   :g-value-get-boolean      ["g_value_get_boolean" [::mem/pointer] ::mem/int]
-   :g-value-get-double       ["g_value_get_double" [::mem/pointer] ::mem/double]
-   :g-value-get-enum         ["g_value_get_enum" [::mem/pointer] ::mem/int]
-   :g-value-get-flags        ["g_value_get_flags" [::mem/pointer] ::mem/int]
-   :g-value-get-int          ["g_value_get_int" [::mem/pointer] ::mem/int]
-   :g-value-get-int64        ["g_value_get_int64" [::mem/pointer] ::mem/long]
-   :g-value-get-object       ["g_value_get_object" [::mem/pointer] ::mem/pointer]
-   :g-value-get-string       ["g_value_get_string" [::mem/pointer] ::mem/c-string]
-   :g-value-get-uint         ["g_value_get_uint" [::mem/pointer] ::mem/int]
-   :g-value-get-uint64       ["g_value_get_uint64" [::mem/pointer] ::mem/long]
-   :g-value-init             ["g_value_init" [::mem/pointer ::g-type] ::mem/pointer]
-   :g-value-set-boolean      ["g_value_set_boolean" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-boxed        ["g_value_set_boxed" [::mem/pointer ::mem/pointer] ::mem/void]
-   :g-value-set-double       ["g_value_set_double" [::mem/pointer ::mem/double] ::mem/void]
-   :g-value-set-enum         ["g_value_set_enum" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-flags        ["g_value_set_flags" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-int          ["g_value_set_int" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-int64        ["g_value_set_int64" [::mem/pointer ::mem/long] ::mem/void]
-   :g-value-set-long         ["g_value_set_long" [::mem/pointer ::mem/long] ::mem/void]
-   :g-value-set-object       ["g_value_set_object" [::mem/pointer ::mem/pointer] ::mem/void]
-   :g-value-set-string       ["g_value_set_string" [::mem/pointer ::mem/c-string] ::mem/void]
-   :g-value-set-uint         ["g_value_set_uint" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-uint64       ["g_value_set_uint64" [::mem/pointer ::mem/long] ::mem/void]
-   :g-value-unset            ["g_value_unset" [::mem/pointer] ::mem/void]
-   :image-get-height         ["vips_image_get_height" [::mem/pointer] ::mem/int]
-   :image-get-bands          ["vips_image_get_bands" [::mem/pointer] ::mem/int]
-   :image-get                ["vips_image_get" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/int]
-   :image-get-array-double   ["vips_image_get_array_double"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
-                              ::mem/int]
-   :image-get-array-int      ["vips_image_get_array_int"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
-                              ::mem/int]
-   :image-get-as-string      ["vips_image_get_as_string"
-                              [::mem/pointer ::mem/c-string ::mem/pointer]
-                              ::mem/int]
-   :image-get-blob           ["vips_image_get_blob"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
-                              ::mem/int]
-   :image-get-double         ["vips_image_get_double"
-                              [::mem/pointer ::mem/c-string ::mem/pointer]
-                              ::mem/int]
-   :image-get-fields         ["vips_image_get_fields" [::mem/pointer] ::mem/pointer]
-   :image-get-int            ["vips_image_get_int"
-                              [::mem/pointer ::mem/c-string ::mem/pointer]
-                              ::mem/int]
-   :image-get-string         ["vips_image_get_string"
-                              [::mem/pointer ::mem/c-string ::mem/pointer]
-                              ::mem/int]
-   :image-get-type           ["vips_image_get_type" [] ::g-type]
-   :image-get-typeof         ["vips_image_get_typeof" [::mem/pointer ::mem/c-string] ::g-type]
-   :image-get-width          ["vips_image_get_width" [::mem/pointer] ::mem/int]
-   :image-has-alpha          ["vips_image_hasalpha" [::mem/pointer] ::mem/int]
-   :image-new-from-buffer    ["vips_image_new_from_buffer"
-                              [::mem/pointer ::size-t ::mem/c-string ::mem/pointer]
-                              ::mem/pointer]
-   :image-new-from-file      ["vips_image_new_from_file"
-                              [::mem/c-string ::mem/pointer]
-                              ::mem/pointer]
-   :image-new-from-source    ["vips_image_new_from_source"
-                              [::mem/pointer ::mem/c-string ::mem/pointer]
-                              ::mem/pointer]
-   :image-write-to-buffer    ["vips_image_write_to_buffer"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer]
-                              ::mem/int]
-   :image-write-to-file      ["vips_image_write_to_file"
-                              [::mem/pointer ::mem/c-string ::mem/pointer]
-                              ::mem/int]
-   :image-remove             ["vips_image_remove" [::mem/pointer ::mem/c-string] ::mem/int]
-   :image-set                ["vips_image_set" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/void]
-   :image-set-array-double   ["vips_image_set_array_double"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/int]
-                              ::mem/void]
-   :image-set-array-int      ["vips_image_set_array_int"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/int]
-                              ::mem/void]
-   :image-set-blob-copy      ["vips_image_set_blob_copy"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::size-t]
-                              ::mem/void]
-   :image-set-double         ["vips_image_set_double" [::mem/pointer ::mem/c-string ::mem/double] ::mem/void]
-   :image-set-int            ["vips_image_set_int" [::mem/pointer ::mem/c-string ::mem/int] ::mem/void]
-   :image-set-string         ["vips_image_set_string" [::mem/pointer ::mem/c-string ::mem/c-string] ::mem/void]
-   :image-write-to-target    ["vips_image_write_to_target"
-                              [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
-                              ::mem/int]
-   :operation-get-type       ["vips_operation_get_type" [] ::g-type]
-   :operation-new            ["vips_operation_new" [::mem/c-string] ::mem/pointer]
-   :array-image-get-type     ["vips_array_image_get_type" [] ::g-type]
-   :array-double-get-type    ["vips_array_double_get_type" [] ::g-type]
-   :array-image-new          ["vips_array_image_new" [::mem/pointer ::mem/int] ::mem/pointer]
-   :array-double-new         ["vips_array_double_new" [::mem/pointer ::mem/int] ::mem/pointer]
-   :area-unref               ["vips_area_unref" [::mem/pointer] ::mem/void]
-   :object-get-description   ["vips_object_get_description" [::mem/pointer] ::mem/c-string]
-   :object-get-arg-flags     ["vips_object_get_argument_flags" [::mem/pointer ::mem/c-string] ::mem/int]
-   :object-get-arg-priority  ["vips_object_get_argument_priority" [::mem/pointer ::mem/c-string] ::mem/int]
-   :object-unref-outputs     ["vips_object_unref_outputs" [::mem/pointer] ::mem/void]
-   :cache-operation-build    ["vips_cache_operation_build" [::mem/pointer] ::mem/pointer]
-   :source-custom-new        ["vips_source_custom_new" [] ::mem/pointer]
-   :target-custom-new        ["vips_target_custom_new" [] ::mem/pointer]
-   :vips-error-buffer        ["vips_error_buffer" [] ::mem/c-string]
-   :vips-error-clear         ["vips_error_clear" [] ::mem/void]
-   :vips-block-untrusted-set ["vips_block_untrusted_set" [::mem/int] ::mem/void]
-   :vips-init                ["vips_init" [::mem/c-string] ::mem/int]
-   :vips-shutdown            ["vips_shutdown" [] ::mem/void]
-   :vips-version             ["vips_version" [::mem/int] ::mem/int]
-   :vips-version-string      ["vips_version_string" [] ::mem/c-string]})
+  {:g-free                         ["g_free" [::mem/pointer] ::mem/void]
+   :g-strfreev                     ["g_strfreev" [::mem/pointer] ::mem/void]
+   :g-signal-connect-data          ["g_signal_connect_data"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer ::mem/int]
+                                    ::mem/long]
+   :g-object-ref                   ["g_object_ref" [::mem/pointer] ::mem/pointer]
+   :g-object-unref                 ["g_object_unref" [::mem/pointer] ::mem/void]
+   :g-object-get-property          ["g_object_get_property"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer]
+                                    ::mem/void]
+   :g-object-set-property          ["g_object_set_property"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer]
+                                    ::mem/void]
+   :g-type-children                ["g_type_children" [::g-type ::mem/pointer] ::mem/pointer]
+   :g-type-class-ref               ["g_type_class_ref" [::g-type] ::mem/pointer]
+   :g-type-class-unref             ["g_type_class_unref" [::mem/pointer] ::mem/void]
+   :g-type-fundamental             ["g_type_fundamental" [::g-type] ::g-type]
+   :g-type-from-name               ["g_type_from_name" [::mem/c-string] ::g-type]
+   :g-type-name                    ["g_type_name" [::g-type] ::mem/c-string]
+   :param-spec-get-blurb           ["g_param_spec_get_blurb" [::mem/pointer] ::mem/c-string]
+   :param-spec-get-name            ["g_param_spec_get_name" [::mem/pointer] ::mem/c-string]
+   :nickname-find                  ["vips_nickname_find" [::g-type] ::mem/c-string]
+   :argument-map                   ["vips_argument_map"
+                                    [::mem/pointer
+                                     [::ffi/fn [::mem/pointer
+                                                ::mem/pointer
+                                                ::mem/pointer
+                                                ::mem/pointer
+                                                ::mem/pointer
+                                                ::mem/pointer]
+                                      ::mem/pointer]
+                                     ::mem/pointer
+                                     ::mem/pointer]
+                                    ::mem/pointer]
+   :type-map-all                   ["vips_type_map_all"
+                                    [::g-type
+                                     [::ffi/fn [::g-type ::mem/pointer] ::mem/pointer]
+                                     ::mem/pointer]
+                                    ::mem/pointer]
+   :g-value-get-boolean            ["g_value_get_boolean" [::mem/pointer] ::mem/int]
+   :g-value-get-double             ["g_value_get_double" [::mem/pointer] ::mem/double]
+   :g-value-get-enum               ["g_value_get_enum" [::mem/pointer] ::mem/int]
+   :g-value-get-flags              ["g_value_get_flags" [::mem/pointer] ::mem/int]
+   :g-value-get-int                ["g_value_get_int" [::mem/pointer] ::mem/int]
+   :g-value-get-int64              ["g_value_get_int64" [::mem/pointer] ::mem/long]
+   :g-value-get-object             ["g_value_get_object" [::mem/pointer] ::mem/pointer]
+   :g-value-get-string             ["g_value_get_string" [::mem/pointer] ::mem/c-string]
+   :g-value-get-uint               ["g_value_get_uint" [::mem/pointer] ::mem/int]
+   :g-value-get-uint64             ["g_value_get_uint64" [::mem/pointer] ::mem/long]
+   :g-value-init                   ["g_value_init" [::mem/pointer ::g-type] ::mem/pointer]
+   :g-value-set-boolean            ["g_value_set_boolean" [::mem/pointer ::mem/int] ::mem/void]
+   :g-value-set-boxed              ["g_value_set_boxed" [::mem/pointer ::mem/pointer] ::mem/void]
+   :g-value-set-double             ["g_value_set_double" [::mem/pointer ::mem/double] ::mem/void]
+   :g-value-set-enum               ["g_value_set_enum" [::mem/pointer ::mem/int] ::mem/void]
+   :g-value-set-flags              ["g_value_set_flags" [::mem/pointer ::mem/int] ::mem/void]
+   :g-value-set-int                ["g_value_set_int" [::mem/pointer ::mem/int] ::mem/void]
+   :g-value-set-int64              ["g_value_set_int64" [::mem/pointer ::mem/long] ::mem/void]
+   :g-value-set-long               ["g_value_set_long" [::mem/pointer ::mem/long] ::mem/void]
+   :g-value-set-object             ["g_value_set_object" [::mem/pointer ::mem/pointer] ::mem/void]
+   :g-value-set-string             ["g_value_set_string" [::mem/pointer ::mem/c-string] ::mem/void]
+   :g-value-set-uint               ["g_value_set_uint" [::mem/pointer ::mem/int] ::mem/void]
+   :g-value-set-uint64             ["g_value_set_uint64" [::mem/pointer ::mem/long] ::mem/void]
+   :g-value-unset                  ["g_value_unset" [::mem/pointer] ::mem/void]
+   :image-get-height               ["vips_image_get_height" [::mem/pointer] ::mem/int]
+   :image-get-bands                ["vips_image_get_bands" [::mem/pointer] ::mem/int]
+   :image-get                      ["vips_image_get" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/int]
+   :image-get-array-double         ["vips_image_get_array_double"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
+                                    ::mem/int]
+   :image-get-array-int            ["vips_image_get_array_int"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
+                                    ::mem/int]
+   :image-get-as-string            ["vips_image_get_as_string"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer]
+                                    ::mem/int]
+   :image-get-blob                 ["vips_image_get_blob"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
+                                    ::mem/int]
+   :image-get-double               ["vips_image_get_double"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer]
+                                    ::mem/int]
+   :image-get-fields               ["vips_image_get_fields" [::mem/pointer] ::mem/pointer]
+   :image-get-int                  ["vips_image_get_int"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer]
+                                    ::mem/int]
+   :image-get-string               ["vips_image_get_string"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer]
+                                    ::mem/int]
+   :image-get-type                 ["vips_image_get_type" [] ::g-type]
+   :image-get-typeof               ["vips_image_get_typeof" [::mem/pointer ::mem/c-string] ::g-type]
+   :image-get-width                ["vips_image_get_width" [::mem/pointer] ::mem/int]
+   :image-has-alpha                ["vips_image_hasalpha" [::mem/pointer] ::mem/int]
+   :image-new-from-buffer          ["vips_image_new_from_buffer"
+                                    [::mem/pointer ::size-t ::mem/c-string ::mem/pointer]
+                                    ::mem/pointer]
+   :image-new-from-file            ["vips_image_new_from_file"
+                                    [::mem/c-string ::mem/pointer]
+                                    ::mem/pointer]
+   :image-new-from-source          ["vips_image_new_from_source"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer]
+                                    ::mem/pointer]
+   :image-write-to-buffer          ["vips_image_write_to_buffer"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer]
+                                    ::mem/int]
+   :image-write-to-file            ["vips_image_write_to_file"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer]
+                                    ::mem/int]
+   :image-remove                   ["vips_image_remove" [::mem/pointer ::mem/c-string] ::mem/int]
+   :image-set                      ["vips_image_set" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/void]
+   :image-set-array-double         ["vips_image_set_array_double"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/int]
+                                    ::mem/void]
+   :image-set-array-int            ["vips_image_set_array_int"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/int]
+                                    ::mem/void]
+   :image-set-blob-copy            ["vips_image_set_blob_copy"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::size-t]
+                                    ::mem/void]
+   :image-set-double               ["vips_image_set_double" [::mem/pointer ::mem/c-string ::mem/double] ::mem/void]
+   :image-set-int                  ["vips_image_set_int" [::mem/pointer ::mem/c-string ::mem/int] ::mem/void]
+   :image-set-string               ["vips_image_set_string" [::mem/pointer ::mem/c-string ::mem/c-string] ::mem/void]
+   :image-write-to-target          ["vips_image_write_to_target"
+                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
+                                    ::mem/int]
+   :operation-get-type             ["vips_operation_get_type" [] ::g-type]
+   :operation-new                  ["vips_operation_new" [::mem/c-string] ::mem/pointer]
+   :array-image-get-type           ["vips_array_image_get_type" [] ::g-type]
+   :array-double-get-type          ["vips_array_double_get_type" [] ::g-type]
+   :array-image-new                ["vips_array_image_new" [::mem/pointer ::mem/int] ::mem/pointer]
+   :array-double-new               ["vips_array_double_new" [::mem/pointer ::mem/int] ::mem/pointer]
+   :area-unref                     ["vips_area_unref" [::mem/pointer] ::mem/void]
+   :object-get-description         ["vips_object_get_description" [::mem/pointer] ::mem/c-string]
+   :object-get-arg-flags           ["vips_object_get_argument_flags" [::mem/pointer ::mem/c-string] ::mem/int]
+   :object-get-arg-priority        ["vips_object_get_argument_priority" [::mem/pointer ::mem/c-string] ::mem/int]
+   :object-unref-outputs           ["vips_object_unref_outputs" [::mem/pointer] ::mem/void]
+   :cache-operation-build          ["vips_cache_operation_build" [::mem/pointer] ::mem/pointer]
+   :vips-cache-set-max             ["vips_cache_set_max" [::mem/int] ::mem/void]
+   :vips-cache-set-max-mem         ["vips_cache_set_max_mem" [::size-t] ::mem/void]
+   :vips-cache-get-max             ["vips_cache_get_max" [] ::mem/int]
+   :vips-cache-get-size            ["vips_cache_get_size" [] ::mem/int]
+   :vips-cache-get-max-mem         ["vips_cache_get_max_mem" [] ::size-t]
+   :vips-cache-get-max-files       ["vips_cache_get_max_files" [] ::mem/int]
+   :vips-cache-set-max-files       ["vips_cache_set_max_files" [::mem/int] ::mem/void]
+   :vips-tracked-get-mem           ["vips_tracked_get_mem" [] ::size-t]
+   :vips-tracked-get-mem-highwater ["vips_tracked_get_mem_highwater" [] ::size-t]
+   :vips-tracked-get-allocs        ["vips_tracked_get_allocs" [] ::mem/int]
+   :vips-tracked-get-files         ["vips_tracked_get_files" [] ::mem/int]
+   :source-custom-new              ["vips_source_custom_new" [] ::mem/pointer]
+   :target-custom-new              ["vips_target_custom_new" [] ::mem/pointer]
+   :vips-error-buffer              ["vips_error_buffer" [] ::mem/c-string]
+   :vips-error-clear               ["vips_error_clear" [] ::mem/void]
+   :vips-block-untrusted-set       ["vips_block_untrusted_set" [::mem/int] ::mem/void]
+   :vips-init                      ["vips_init" [::mem/c-string] ::mem/int]
+   :vips-shutdown                  ["vips_shutdown" [] ::mem/void]
+   :vips-version                   ["vips_version" [::mem/int] ::mem/int]
+   :vips-version-string            ["vips_version_string" [] ::mem/c-string]})
 
 (defonce ^:private state* (atom nil))
 
@@ -281,6 +292,44 @@
 (defn version-string
   []
   (:version-string (ensure-initialized!)))
+
+(defn operation-cache-settings
+  []
+  (let [native (bindings)]
+    {:max       ((:vips-cache-get-max native))
+     :size      ((:vips-cache-get-size native))
+     :max-mem   ((:vips-cache-get-max-mem native))
+     :max-files ((:vips-cache-get-max-files native))}))
+
+(defn set-operation-cache-max!
+  [max]
+  (let [native (bindings)]
+    ((:vips-cache-set-max native) max)
+    (operation-cache-settings)))
+
+(defn set-operation-cache-max-mem!
+  [max-mem]
+  (let [native (bindings)]
+    ((:vips-cache-set-max-mem native) max-mem)
+    (operation-cache-settings)))
+
+(defn set-operation-cache-max-files!
+  [max-files]
+  (let [native (bindings)]
+    ((:vips-cache-set-max-files native) max-files)
+    (operation-cache-settings)))
+
+(defn disable-operation-cache!
+  []
+  (set-operation-cache-max! 0))
+
+(defn tracked-resources
+  []
+  (let [native (bindings)]
+    {:mem           ((:vips-tracked-get-mem native))
+     :mem-highwater ((:vips-tracked-get-mem-highwater native))
+     :allocs        ((:vips-tracked-get-allocs native))
+     :files         ((:vips-tracked-get-files native))}))
 
 (defn render-option-value
   [value]

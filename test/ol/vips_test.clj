@@ -68,6 +68,46 @@
           (is (= [0] @calls))
           (is (false? (:block-untrusted-operations? state))))))))
 
+(deftest operation-cache-controls
+  (testing "the public runtime exposes cache limits and a disable helper"
+    (let [max*       (atom 100)
+          max-mem*   (atom 104857600)
+          max-files* (atom 100)
+          current    {:bindings {:vips-cache-set-max       (fn [max]
+                                                             (reset! max* max))
+                                 :vips-cache-set-max-mem   (fn [max-mem]
+                                                             (reset! max-mem* max-mem))
+                                 :vips-cache-set-max-files (fn [max-files]
+                                                             (reset! max-files* max-files))
+                                 :vips-cache-get-max       (fn [] @max*)
+                                 :vips-cache-get-size      (fn [] 3)
+                                 :vips-cache-get-max-mem   (fn [] @max-mem*)
+                                 :vips-cache-get-max-files (fn [] @max-files*)}}]
+      (with-redefs [api/ensure-initialized! (fn [] current)]
+        (is (= {:max 100 :size 3 :max-mem 104857600 :max-files 100}
+               (v/operation-cache-settings)))
+        (is (= {:max 0 :size 3 :max-mem 104857600 :max-files 100}
+               (v/disable-operation-cache!)))
+        (is (= {:max 12 :size 3 :max-mem 104857600 :max-files 100}
+               (v/set-operation-cache-max! 12)))
+        (is (= {:max 12 :size 3 :max-mem 4096 :max-files 100}
+               (v/set-operation-cache-max-mem! 4096)))
+        (is (= {:max 12 :size 3 :max-mem 4096 :max-files 8}
+               (v/set-operation-cache-max-files! 8)))))))
+
+(deftest tracked-resource-stats
+  (testing "the public runtime exposes libvips tracked resource counters"
+    (let [current {:bindings {:vips-tracked-get-mem           (fn [] 2048)
+                              :vips-tracked-get-mem-highwater (fn [] 8192)
+                              :vips-tracked-get-allocs        (fn [] 7)
+                              :vips-tracked-get-files         (fn [] 2)}}]
+      (with-redefs [api/ensure-initialized! (fn [] current)]
+        (is (= {:mem           2048
+                :mem-highwater 8192
+                :allocs        7
+                :files         2}
+               (v/tracked-resources)))))))
+
 (deftest open-and-metadata
   (testing "from-file and metadata accept path strings and Path values"
     (with-open [from-string (v/from-file fixture-path)

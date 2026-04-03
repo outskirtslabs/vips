@@ -176,6 +176,14 @@ Before putting `ol.vips` on a production path, review the upstream libvips
 guidance for loader selection, untrusted input handling, image sanity
 checks, and long-running process tuning.
 
+If you are building an image proxy or another workload that processes many
+different images, libvips's operation cache is often not useful. You can
+disable it with `v/disable-operation-cache!`, or tune the related limits
+with `v/set-operation-cache-max!`, `v/set-operation-cache-max-mem!`, and
+`v/set-operation-cache-max-files!`. Use `v/operation-cache-settings` and
+`v/tracked-resources` to inspect the current limits and libvips tracked
+memory/file counters.
+
 See the libvips
 https://www.libvips.org/API/8.17/developer-checklist.html[Checklist for programmers using libvips].
 

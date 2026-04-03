@@ -14,6 +14,30 @@
   []
   (api/allow-untrusted-operations!))
 
+(defn operation-cache-settings
+  []
+  (api/operation-cache-settings))
+
+(defn set-operation-cache-max!
+  [max]
+  (api/set-operation-cache-max! max))
+
+(defn set-operation-cache-max-mem!
+  [max-mem]
+  (api/set-operation-cache-max-mem! max-mem))
+
+(defn set-operation-cache-max-files!
+  [max-files]
+  (api/set-operation-cache-max-files! max-files))
+
+(defn disable-operation-cache!
+  []
+  (api/disable-operation-cache!))
+
+(defn tracked-resources
+  []
+  (api/tracked-resources))
+
 (defn operations
   []
   (introspect/list-operations))
