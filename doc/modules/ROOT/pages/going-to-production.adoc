@@ -1,0 +1,238 @@
+= Going to Production
+
+This page adapts the upstream libvips production checklist to `ol.vips`.
+The original reference is the libvips
+https://www.libvips.org/API/8.17/developer-checklist.html[Checklist for programmers using libvips].
+
+Use this page as guidance for application design and deployment. It is not a
+hard rulebook, but these defaults are a good starting point for long-running
+services, upload pipelines, and image proxy workloads.
+
+== Prefer smart thumbnailing over load then resize
+
+If you are starting from a filename and want a thumbnail, prefer
+xref:api/ol-vips-operations.adoc#thumbnail[`ops/thumbnail`] over loading the
+full image and then calling
+xref:api/ol-vips-operations.adoc#resize[`ops/resize`].
+Unlike a separate load followed by resize, `ops/thumbnail` combines loading
+and shrinking into one step. That lets libvips use format-specific tricks such
+as shrink-on-load, which can significantly reduce memory use and latency.
+
+This is not only about speed. Thumbnailing at load time can also improve
+quality, because libvips can premultiply automatically where needed and can
+render vector inputs at the target size instead of rasterizing them large and
+shrinking afterwards.
+
+[source,clojure]
+----
+(require '[ol.vips :as v]
+         '[ol.vips.operations :as ops])
+
+(with-open [thumb (ops/thumbnail "input.jpg" 300 {:height 300})]
+  (v/write-to-file thumb "thumb.jpg"))
+----
+
+xref:api/ol-vips.adoc#thumbnail[`v/thumbnail`] is still useful when you
+already have an image handle in hand and want to create a thumbnail of that
+in-memory pipeline stage. But it wraps libvips `thumbnail_image`, so it does
+not get the load-time rendering and shrink-on-load advantages that
+`ops/thumbnail` gets from starting at the source.
+
+== Use sequential access when your pipeline can stream
+
+When you know you will read the source once in loader order, pass
+`{:access :sequential}` to your loader. This often reduces memory use and can
+improve throughput.
+
+For background on why this matters, see the upstream libvips
+https://www.libvips.org/API/8.17/how-it-opens-files.html["How it opens files"
+chapter].
+
+[source,clojure]
+----
+(with-open [image (v/from-file "input.jpg" {:access :sequential})]
+  (v/metadata image))
+----
+
+The same applies to xref:api/ol-vips.adoc#from-stream[`v/from-stream`],
+xref:api/ol-vips.adoc#from-buffer[`v/from-buffer`], and format-specific
+loader operations such as
+xref:api/ol-vips-operations.adoc#jpegload[`ops/jpegload`] and
+xref:api/ol-vips-operations.adoc#pngload[`ops/pngload`].
+
+== Prefer longer pipelines to many materialized steps
+
+libvips is demand-driven and uses partial images as intermediates. In
+`ol.vips`, that means you can usually build one longer pipeline of operations
+without materializing every step in memory or on disk. The work is deferred
+until a sink asks for pixels, such as
+xref:api/ol-vips.adoc#write-to-file[`v/write-to-file`],
+xref:api/ol-vips.adoc#write-to-buffer[`v/write-to-buffer`], or
+xref:api/ol-vips.adoc#write-to-stream[`v/write-to-stream`].
+
+This is one of the main reasons to lean into the libvips model instead of
+breaking processing into many disconnected phases. Long pipelines usually stay
+memory-efficient because intermediate results are represented as graph nodes
+rather than fully realized images.
+
+libvips is also horizontally threaded: threads tend to run along the pipeline
+you are evaluating, rather than up and down the image. In practice, that means
+longer pipelines often parallelize better than shorter ones.
+
+[source,clojure]
+----
+(with-open [image   (v/from-file "input.jpg")
+            result  (-> image
+                        (ops/resize 0.5)
+                        (ops/colourspace :b-w)
+                        (ops/sharpen))]
+  (v/write-to-file result "output.jpg"))
+----
+
+If you can, aim for one coherent processing pipeline per output rather than a
+series of intermediate writes, reloads, and separate mini-pipelines.
+
+This generally works better than repeatedly writing intermediates to disk or
+breaking the flow into many disconnected steps.
+
+== Reuse shared intermediates intentionally
+
+If one derived image is reused several times in the same request, bind it once
+and pass that handle to downstream operations instead of recalculating it.
+
+[source,clojure]
+----
+(with-open [image   (v/from-file "input.jpg")
+            base    (ops/resize image 0.5)
+            preview (ops/colourspace base :srgb)
+            mask    (ops/extract-band base 0)]
+  ...)
+----
+
+`ol.vips` does not currently expose a dedicated "copy to memory" convenience
+helper, so cross-request reuse and persistence should usually live in your
+application cache rather than in the image graph itself.
+
+== Put large resizes early in the pipeline
+
+If a pipeline includes a large resize, do it near the start. After that, apply
+area operations such as sharpening, then point operations.
+
+This reduces the amount of pixel data that later stages need to touch.
+
+== Restrict loaders and untrusted inputs
+
+`ol.vips` starts from a secure default: libvips operations marked as
+untrusted are blocked during initialization. If you handle untrusted data,
+keep
+xref:api/ol-vips.adoc#allow-untrusted-operations-BANG-[`v/allow-untrusted-operations!`]
+off unless you have a specific trusted-input path that needs those loaders.
+
+If you need tighter control over which loaders are present at all, prefer
+shipping a custom libvips build and loading it with `-Dol.vips.native.preload`
+instead of relying on a broader system installation.
+
+See also: xref:security.adoc[Security Policy].
+
+== Sanity-check images before expensive processing
+
+Open the image, inspect cheap metadata first, and reject inputs that are too
+large or unsuitable for your main pipeline.
+
+[source,clojure]
+----
+(with-open [image (v/from-file "upload.jpg" {:access :sequential})]
+  (let [width      (v/width image)
+        height     (v/height image)
+        interlaced (v/field image "interlaced" false)]
+    (when (> (* width height) 100000000)
+      (throw (ex-info "image too large" {:width width :height height})))
+    (when interlaced
+      (throw (ex-info "progressive images are not allowed" {})))))
+----
+
+This is especially useful for defending against decompression bombs and for
+keeping progressive or interlaced inputs away from latency-sensitive paths.
+In practice that usually means checking
+xref:api/ol-vips.adoc#width[`v/width`],
+xref:api/ol-vips.adoc#height[`v/height`], and
+xref:api/ol-vips.adoc#field[`v/field`] before you start expensive work.
+
+== Tune the Linux allocator for long-running glibc services
+
+On glibc-based Linux systems, long-running multithreaded image workloads can
+benefit from an alternative allocator such as
+https://github.com/jemalloc/jemalloc[jemalloc]. The default allocator often
+performs poorly for long-running, multithreaded processes with frequent small
+allocations, and switching allocators can reduce the off-heap footprint of the
+JVM when using libvips.
+
+This is an operating environment concern rather than an `ol.vips` API setting.
+On Linux that usually means configuring `LD_PRELOAD` before launching the JVM,
+not changing anything inside your image pipeline.
+
+The jemalloc project is also in a somewhat unsettled state. See
+https://jasone.github.io/2025/06/12/jemalloc-postmortem/[this postmortem] for
+background, and https://github.com/facebook/jemalloc[Facebook's fork] for one
+possible continuation point.
+
+Musl-based Linux systems and non-Linux runtimes are generally less affected by
+this specific issue.
+
+== Disable or tune the libvips operation cache for proxy workloads
+
+For image proxy workloads that process many unrelated images, the libvips
+operation cache is often not useful. Disable it entirely with
+xref:api/ol-vips.adoc#disable-operation-cache-BANG-[`v/disable-operation-cache!`]:
+
+[source,clojure]
+----
+(require '[ol.vips :as v])
+
+(v/init!)
+(v/disable-operation-cache!)
+----
+
+The cache is more useful when the same or very similar operation graphs are
+reused repeatedly in one process, for example a service that applies a small
+set of common transforms over and over. In that kind of workload, the defaults
+may be fine and you may not want to touch them.
+
+When you do need to tune it, think about the three limits separately:
+
+* `v/set-operation-cache-max!` limits how many recent operations libvips keeps.
+  Lower this when cache churn is high and you are not seeing reuse. Raise it
+  only if you have evidence that repeated operation graphs are being evicted too
+  aggressively.
+* `v/set-operation-cache-max-mem!` limits how much libvips-tracked memory can
+  accumulate before cached operations start getting dropped. Lower this when
+  you want cache eviction to happen earlier under memory pressure.
+* `v/set-operation-cache-max-files!` limits how many libvips-tracked file
+  descriptors can accumulate before cached operations start getting dropped.
+  Lower this when file handle pressure matters more than cache hit rate.
+
+Tune the cache limits directly like this:
+
+[source,clojure]
+----
+(v/set-operation-cache-max! 0)
+(v/set-operation-cache-max-mem! (* 32 1024 1024))
+(v/set-operation-cache-max-files! 32)
+
+(v/operation-cache-settings)
+;; => {:max 0, :size 0, :max-mem 33554432, :max-files 32}
+
+(v/tracked-resources)
+;; => {:mem 0, :mem-highwater 0, :allocs 0, :files 0}
+----
+
+xref:api/ol-vips.adoc#operation-cache-settings[`v/operation-cache-settings`]
+reports the current libvips cache limits and the current cache size.
+xref:api/ol-vips.adoc#tracked-resources[`v/tracked-resources`] reports
+libvips tracked memory, highwater memory, allocation count, and tracked file
+count.
+
+Those tracked counters are useful for observing trends, but they only include
+resources libvips tracks itself. Memory or file descriptors used inside
+external libraries may not be reflected there, so treat them as a lower bound
+rather than a complete process-wide accounting.

@@ -7,6 +7,7 @@ ____
 
 image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https://docs.outskirtslabs.com/ol.vips/next/]
 image:https://img.shields.io/badge/status-experimental-orange.svg[status: experimental,link=https://docs.outskirtslabs.com/open-source-vital-signs#experimental]
+image:https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Foutskirtslabs%2Fvips[alt=built with garnix,link=https://garnix.io/repo/outskirtslabs/vips]
 
 This package wraps the core functionality of the native
 https://github.com/libvips/libvips[libvips] image processing library by
@@ -172,20 +173,9 @@ you need to, simply use `ol.vips.codegen`.
 
 == Going to Production
 
-Before putting `ol.vips` on a production path, review the upstream libvips
-guidance for loader selection, untrusted input handling, image sanity
-checks, and long-running process tuning.
-
-If you are building an image proxy or another workload that processes many
-different images, libvips's operation cache is often not useful. You can
-disable it with `v/disable-operation-cache!`, or tune the related limits
-with `v/set-operation-cache-max!`, `v/set-operation-cache-max-mem!`, and
-`v/set-operation-cache-max-files!`. Use `v/operation-cache-settings` and
-`v/tracked-resources` to inspect the current limits and libvips tracked
-memory/file counters.
-
-See the libvips
-https://www.libvips.org/API/8.17/developer-checklist.html[Checklist for programmers using libvips].
+See https://docs.outskirtslabs.com/ol.vips/next/going-to-production[Going to Production]
+for production guidance on pipeline shape, sequential access, untrusted
+inputs, sanity checks, allocator tuning, and cache settings in `ol.vips`.
 
 == Examples
 

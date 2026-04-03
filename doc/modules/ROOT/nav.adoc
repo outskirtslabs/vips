@@ -1,4 +1,5 @@
 * xref:index.adoc[Home]
+* xref:going-to-production.adoc[Going to Production]
 * xref:changelog.adoc[Changelog]
 * xref:security.adoc[Security Policy]
 include::partial$api-nav.adoc[]
