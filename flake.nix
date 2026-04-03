@@ -45,11 +45,12 @@
             clojureLocker = (import "${clojure-nix-locker}/default.nix" { pkgs = lockerPkgs; }).lockfile {
               src = ./.;
               lockfile = "./deps-lock.json";
+              extraPrepInputs = [ pkgs.git ];
             };
           in
           pkgs.stdenv.mkDerivation {
-            pname = "TODO";
-            version = "0.0.TODO";
+            pname = "ol-vips";
+            version = "0.0.1";
             src = ./.;
             nativeBuildInputs = [
               clojure
@@ -60,14 +61,18 @@
             ];
             GIT_REV = gitRev;
             JAVA_HOME = jdkPackage.home;
+            LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+              pkgs.stdenv.cc.cc.lib
+            ];
             buildPhase = ''
               runHook preBuild
 
               source ${clojureLocker.shellEnv}
               export JAVA_HOME="${jdkPackage.home}"
               export JAVA_CMD="${jdkPackage}/bin/java"
+              export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dol.vips.native.cache-root=$TMPDIR/ol.vips-cache"
 
-              clojure -Srepro -M:kaocha
+              clojure -Srepro -M:dev:kaocha
               clojure -Srepro -T:build jar
 
               runHook postBuild
@@ -92,13 +97,15 @@
             clojureLocker = (import "${clojure-nix-locker}/default.nix" { pkgs = lockerPkgs; }).lockfile {
               src = ./.;
               lockfile = "./deps-lock.json";
+              extraPrepInputs = [ pkgs.git ];
             };
           in
           clojureLocker.commandLocker ''
             export HOME="$tmp/home"
+            export GITLIBS="$tmp/home/.gitlibs"
             unset CLJ_CACHE CLJ_CONFIG XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME
-            ${clojure}/bin/clojure -Srepro -X:deps prep
-            ${clojure}/bin/clojure -Srepro -P -M:kaocha
+            ${clojure}/bin/clojure -Srepro -X:deps prep :aliases "[:dev :kaocha]"
+            ${clojure}/bin/clojure -Srepro -P -M:dev:kaocha
             ${clojure}/bin/clojure -Srepro -P -T:build jar
           '';
       };
