@@ -265,3 +265,24 @@ Those tracked counters are useful for observing trends, but they only include
 resources libvips tracks itself. Memory or file descriptors used inside
 external libraries may not be reflected there, so treat them as a lower bound
 rather than a complete process-wide accounting.
+
+== Ship only the native bundle you need
+
+This is an `ol.vips`-specific deployment concern. The main library is small,
+but the companion native jars contain the bundled libvips binaries and their
+support libraries for a specific platform. Those jars are usually the largest
+part of an `ol.vips` deployment artifact.
+
+If you know the production target in advance, prefer packaging only the one
+native companion jar that matches that runtime platform. For example, a Linux
+x86-64 glibc deployment usually only needs
+`com.outskirtslabs/vips-native-linux-x86-64-gnu` on the classpath.
+
+Including several platform jars is useful for development, shared tooling, or
+distributing a generic application bundle. But for a single-platform deploy it
+usually just makes the image, container layer, or classpath larger without
+adding runtime value, since `ol.vips` will only load the bundle that matches
+the detected target platform.
+
+If possible, build separate deployment artifacts per target platform and keep
+each one trimmed to the matching native dependency set.
