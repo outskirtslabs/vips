@@ -2,8 +2,8 @@
   (:require
    [babashka.fs :as fs]
    [clojure.test :refer [deftest is testing]]
-   [ol.vips.introspect :as introspect]
-   [ol.vips.runtime :as runtime]
+   [ol.vips.impl.introspect :as introspect]
+   [ol.vips.impl.api :as runtime]
    [ol.vips :as v]))
 
 (def fixture-path

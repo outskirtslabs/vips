@@ -22,8 +22,8 @@
   )
 
 (comment
-  (require '[ol.vips.runtime :as rt]
-           '[ol.vips.introspect :as introspect])
+  (require '[ol.vips.impl.api :as rt]
+           '[ol.vips.impl.introspect :as introspect])
 
   (rt/ensure-initialized!)
 

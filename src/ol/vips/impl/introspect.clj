@@ -1,9 +1,9 @@
-(ns ol.vips.introspect
+(ns ^:no-doc ol.vips.impl.introspect
   (:require
    [clojure.string :as str]
    [coffi.layout :as layout]
    [coffi.mem :as mem]
-   [ol.vips.runtime :as runtime]))
+   [ol.vips.impl.api :as runtime]))
 
 (set! *warn-on-reflection* true)
 

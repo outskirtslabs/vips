@@ -4,8 +4,7 @@
    [clojure.pprint :as pprint]
    [clojure.string :as str]
    [ol.vips :as v]
-   [ol.vips.introspect :as introspect]
-   [ol.vips.types :as types]))
+   [ol.vips.impl.introspect :as introspect]))
 
 (set! *warn-on-reflection* true)
 
@@ -18,6 +17,9 @@
        (map (comp symbol name))
        set))
 
+(def ^:private supported-primitive-kinds
+  #{:string :boolean :int :uint :long :int64 :uint64 :double :enum :flags})
+
 (defn- kebab-name
   [value]
   (-> value
@@ -28,6 +30,13 @@
 (defn- operation-id
   [operation-name]
   (-> operation-name kebab-name keyword))
+
+(defn- enum-id
+  [type-name]
+  (-> type-name
+      (str/replace #"^Vips" "")
+      kebab-name
+      keyword))
 
 (defn- local-name
   [arg-name]
@@ -40,6 +49,93 @@
 (defn- symbol-name
   [value]
   (symbol (local-name value)))
+
+(defn- enum-reference
+  [type-name]
+  (str "ol.vips.enums/" (name (enum-id type-name))))
+
+(defn- image-type?
+  [{:keys [value-type]}]
+  (= "VipsImage" value-type))
+
+(defn- image-seq-type?
+  [{:keys [value-type]}]
+  (= "VipsArrayImage" value-type))
+
+(defn- float-seq-type?
+  [{:keys [value-type]}]
+  (= "VipsArrayDouble" value-type))
+
+(defn- supported-input?
+  [{:keys [kind] :as arg}]
+  (case kind
+    :object (image-type? arg)
+    :boxed (or (image-seq-type? arg)
+               (float-seq-type? arg))
+    (contains? supported-primitive-kinds kind)))
+
+(defn- supported-output?
+  [{:keys [kind] :as arg}]
+  (case kind
+    :object (image-type? arg)
+    (contains? supported-primitive-kinds kind)))
+
+(defn- public-type
+  [{:keys [kind value-type]}]
+  (cond
+    (= kind :object)
+    {:kind  :image
+     :label "image"}
+
+    (= kind :boxed)
+    (cond
+      (= value-type "VipsArrayImage")
+      {:kind  :image-seq
+       :label "seqable of image"}
+
+      (= value-type "VipsArrayDouble")
+      {:kind  :float-seq
+       :label "seqable of number"}
+
+      :else
+      {:kind  :unknown
+       :label "value"})
+
+    (= kind :string)
+    {:kind  :string
+     :label "string"}
+
+    (= kind :boolean)
+    {:kind  :boolean
+     :label "boolean"}
+
+    (contains? #{:int :uint :long :int64 :uint64} kind)
+    {:kind  :integer
+     :label "integer"}
+
+    (= kind :double)
+    {:kind  :float
+     :label "float"}
+
+    (= kind :enum)
+    {:kind      :enum
+     :label     "keyword"
+     :enum-id   (enum-id value-type)
+     :reference (enum-reference value-type)}
+
+    (= kind :flags)
+    {:kind  :flags
+     :label "integer flags"}
+
+    :else
+    {:kind  :unknown
+     :label "value"}))
+
+(defn- public-arg-spec
+  [{:keys [name blurb] :as arg}]
+  {:name  name
+   :blurb blurb
+   :type  (public-type arg)})
 
 (defn- input-args
   [operation]
@@ -63,13 +159,13 @@
   [operation]
   (->> (input-args operation)
        (remove :required?)
-       (filter types/supported-input?)
+       (filter supported-input?)
        vec))
 
 (defn- operation-supported?
   [operation]
-  (and (every? types/supported-input? (required-inputs operation))
-       (every? types/supported-output? (output-args operation))))
+  (and (every? supported-input? (required-inputs operation))
+       (every? supported-output? (output-args operation))))
 
 (defn- operation-spec
   [operation]
@@ -79,15 +175,15 @@
     {:id              (operation-id (:name operation))
      :operation-name  (:name operation)
      :description     (:description operation)
-     :required-inputs (mapv types/public-arg-spec required-inputs*)
-     :optional-inputs (mapv types/public-arg-spec optional-inputs*)
-     :outputs         (mapv types/public-arg-spec outputs*)}))
+     :required-inputs (mapv public-arg-spec required-inputs*)
+     :optional-inputs (mapv public-arg-spec optional-inputs*)
+     :outputs         (mapv public-arg-spec outputs*)}))
 
 (defn- enum-spec
   [type-name]
   (let [enum (introspect/describe-enum type-name)]
     (assoc (select-keys enum [:type-name :keyword->value :value->keyword])
-           :id (types/enum-id type-name)
+           :id (enum-id type-name)
            :values (-> enum :keyword->value keys sort vec))))
 
 (defn- arg-doc-line
@@ -250,7 +346,7 @@
                               'ol.vips.enums
                               (cond-> []
                                 exclude-clause (conj exclude-clause)
-                                true (conj '(:require [ol.vips.introspect :as introspect]))))]
+                                true (conj '(:require [ol.vips :as v]))))]
     (vec
      (concat
       [ns-form
@@ -273,12 +369,12 @@
        '(defn encode
           [enum-id value]
           (let [{:keys [type-name]} (describe enum-id)]
-            (introspect/encode-enum type-name value)))
+            (v/encode-enum type-name value)))
 
        '(defn decode
           [enum-id value]
           (let [{:keys [type-name]} (describe enum-id)]
-            (introspect/decode-enum type-name value)))]))))
+            (v/decode-enum type-name value)))]))))
 
 (defn- operation-forms
   [operation-specs]

@@ -4,8 +4,7 @@
    [clojure.java.io :as io]
    [clojure.java.shell :as shell]
    [clojure.test :refer [deftest is testing]]
-   [ol.vips.native.loader :as loader]
-   [ol.vips.native.platforms :as platforms])
+   [ol.vips.impl.loader :as loader])
   (:import
    [clojure.lang ExceptionInfo]
    [java.nio.file Files]))
@@ -32,23 +31,23 @@
 
 (deftest supported-platforms-remain-explicit
   (testing "the supported platform ids stay aligned with the platform table"
-    (is (= platforms/supported-platform-ids
-           (mapv :platform-id platforms/supported-platforms))))
+    (is (= loader/supported-platform-ids
+           (mapv :platform-id loader/supported-platforms))))
   (testing "platform lookup returns the matching descriptor"
     (is (= {:platform-id :linux-x86-64-gnu
             :os          :linux
             :arch        :x86-64
             :libc        :glibc}
-           (select-keys (platforms/platform :linux-x86-64-gnu)
+           (select-keys (loader/platform :linux-x86-64-gnu)
                         [:platform-id :os :arch :libc]))))
   (testing "unsupported platform ids fail with the supported set in ex-data"
     (let [error (try
-                  (platforms/platform :plan9-x86-64)
+                  (loader/platform :plan9-x86-64)
                   (catch ExceptionInfo ex
                     ex))]
       (is (instance? ExceptionInfo error))
       (is (= :plan9-x86-64 (:platform-id (ex-data error))))
-      (is (= platforms/supported-platform-ids
+      (is (= loader/supported-platform-ids
              (:supported (ex-data error)))))))
 
 (deftest os-and-arch-normalization
@@ -117,7 +116,7 @@
   (let [temp-native-root (str (Files/createTempDirectory
                                "ol-vips-native-test-"
                                (make-array java.nio.file.attribute.FileAttribute 0)))
-        platform         (platforms/platform :linux-x86-64-gnu)
+        platform         (loader/platform :linux-x86-64-gnu)
         deps-path        (io/file temp-native-root (:dir-name platform) "deps.edn")]
     (try
       (let [{:keys [exit err]} (shell/sh "clojure"
@@ -146,7 +145,7 @@
   (let [temp-native-root (str (Files/createTempDirectory
                                "ol-vips-native-test-"
                                (make-array java.nio.file.attribute.FileAttribute 0)))
-        platform         (platforms/platform :linux-x86-64-gnu)
+        platform         (loader/platform :linux-x86-64-gnu)
         deps-path        (io/file temp-native-root (:dir-name platform) "deps.edn")]
     (try
       (let [{:keys [exit err]} (shell/sh "clojure"

@@ -8,8 +8,7 @@
    [clojure.java.shell :as shell]
    [clojure.pprint :as pprint]
    [clojure.string :as str]
-   [clojure.tools.build.api :as b]
-   [ol.vips.native.platforms :as native.platforms])
+   [clojure.tools.build.api :as b])
   (:import
    [java.net URI URLEncoder]
    [java.net.http HttpClient HttpRequest HttpResponse$BodyHandlers]
@@ -31,6 +30,7 @@
 (def native-license-id "LGPL-3.0-or-later")
 (def native-license-url "https://spdx.org/licenses/LGPL-3.0-or-later.html")
 (def native-notice-file "THIRD-PARTY-NOTICES.md")
+(def platforms-data-file "src/ol/vips/impl/platforms.edn")
 
 (defn- git-origin-url []
   (try
@@ -104,12 +104,25 @@
                     {:value value
                      :type  (some-> value class .getName)}))))
 
+(defn- read-platforms
+  []
+  (edn/read-string (slurp platforms-data-file)))
+
+(defn- platform
+  [supported-platforms platform-id]
+  (or (some #(when (= platform-id (:platform-id %)) %) supported-platforms)
+      (throw (ex-info "Unsupported native platform"
+                      {:platform-id platform-id
+                       :supported   (mapv :platform-id supported-platforms)}))))
+
 (defn- selected-platforms
   [platforms]
-  (mapv native.platforms/platform
-        (if (seq platforms)
-          (map native-platform-id platforms)
-          native.platforms/supported-platform-ids)))
+  (let [supported-platforms    (read-platforms)
+        supported-platform-ids (mapv :platform-id supported-platforms)]
+    (mapv #(platform supported-platforms %)
+          (if (seq platforms)
+            (map native-platform-id platforms)
+            supported-platform-ids))))
 
 (defn- platform-dir
   [{:keys [dir-name]}]
@@ -385,7 +398,7 @@
                                                  " ("
                                                  (name (:platform-id platform))
                                                  ")")
-                               :license     {:id native-license-id
+                               :license     {:id  native-license-id
                                              :url native-license-url}
                                :notice-file native-notice-file
                                :version     companion-version}}}})
@@ -403,7 +416,7 @@
   (let [target-native-root (or native-root *native-root*)
         companion-version  (native-companion-version opts)]
     (binding [*native-root* target-native-root]
-      (doseq [platform native.platforms/supported-platforms]
+      (doseq [platform (read-platforms)]
         (let [deps-path (native-deps-file platform)
               content   (with-out-str (pprint/pprint (native-deps-data platform companion-version)))]
           (mkdirs! (platform-dir platform))
@@ -412,13 +425,13 @@
             (spit deps-path content)))))
     (println "synced native companion versions to" companion-version)
     {:version companion-version
-     :updated (mapv :platform-id native.platforms/supported-platforms)}))
+     :updated (mapv :platform-id (read-platforms))}))
 
 (defn clean [_]
   (b/delete {:path "target"}))
 
 (defn native-clean [_]
-  (doseq [platform native.platforms/supported-platforms]
+  (doseq [platform (read-platforms)]
     (b/delete {:path (platform-resources-dir platform)})
     (b/delete {:path (str (io/file (platform-dir platform) "target"))}))
   (b/delete {:path native-cache-root}))

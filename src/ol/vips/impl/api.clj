@@ -1,9 +1,10 @@
-(ns ol.vips.runtime
+(ns ^:no-doc ol.vips.impl.api
   (:require
+   [clojure.string :as str]
    [coffi.ffi :as ffi]
    [coffi.layout :as layout]
    [coffi.mem :as mem]
-   [ol.vips.native.loader :as loader])
+   [ol.vips.impl.loader :as loader])
   (:import
    [java.io InputStream OutputStream]
    [java.lang.foreign Arena]
@@ -177,7 +178,7 @@
 
 (defonce ^:private state* (atom nil))
 
-(defn- bind-symbols*
+(defn bind-symbols*
   [resolve-symbol]
   (reduce-kv
    (fn [native k [symbol-name arg-types return-type]]
@@ -189,15 +190,15 @@
    {}
    native-symbol-specs))
 
-(defn- last-error-message
+(defn last-error-message
   [native]
   (some-> ((:vips-error-buffer native)) not-empty))
 
-(defn- clear-error!
+(defn clear-error!
   [native]
   ((:vips-error-clear native)))
 
-(defn- throw-vips-error
+(defn throw-vips-error
   [native message data]
   (let [error-message (last-error-message native)]
     (clear-error! native)
@@ -205,7 +206,7 @@
                     (cond-> data
                       error-message (assoc :vips/error error-message))))))
 
-(defn- build-gtypes
+(defn build-gtypes
   [native]
   {:boolean      ((:g-type-from-name native) "gboolean")
    :boxed        ((:g-type-from-name native) "GBoxed")
@@ -224,7 +225,7 @@
    :array-image  ((:array-image-get-type native))
    :array-double ((:array-double-get-type native))})
 
-(defn- initialize-native-state
+(defn initialize-native-state
   [load-state]
   (let [native     (bind-symbols* (:resolve-symbol load-state))
         base-state (dissoc load-state :resolve-symbol)
@@ -264,6 +265,39 @@
 (defn version-string
   []
   (:version-string (ensure-initialized!)))
+
+(defn render-option-value
+  [value]
+  (cond
+    (keyword? value) (name value)
+    (string? value) value
+    (boolean? value) (if value "true" "false")
+    (sequential? value) (str/join " " (map render-option-value value))
+    :else (str value)))
+
+(defn render-option-string
+  [opts]
+  (when (seq opts)
+    (str "["
+         (->> opts
+              (sort-by (comp str key))
+              (map (fn [[k v]]
+                     (str (name k) "=" (render-option-value v))))
+              (str/join ","))
+         "]")))
+
+(defn append-options
+  [value opts]
+  (let [value         (str value)
+        option-string (render-option-string opts)]
+    (if-not option-string
+      value
+      (if (and (str/includes? value "[")
+               (str/ends-with? value "]"))
+        (str (subs value 0 (dec (count value)))
+             ","
+             (subs option-string 1))
+        (str value option-string)))))
 
 (defprotocol PointerBacked
   (pointer ^java.lang.foreign.MemorySegment [this]))
@@ -335,7 +369,7 @@
 
   Object
   (toString [_]
-    (str "#<ol.vips.runtime.ImageHandle " ptr ">")))
+    (str "#<ol.vips.impl.api.ImageHandle " ptr ">")))
 
 (deftype StreamBridge [ptr ^Arena arena stream callbacks ^AtomicReference failure-ref close-stream! ^AtomicBoolean closed?]
   PointerBacked
@@ -354,9 +388,9 @@
 
   Object
   (toString [_]
-    (str "#<ol.vips.runtime.StreamBridge " ptr ">")))
+    (str "#<ol.vips.impl.api.StreamBridge " ptr ">")))
 
-(defn- throw-stream-error
+(defn throw-stream-error
   [message data ^AtomicReference failure-ref]
   (let [native          (bindings)
         callback-error  (.get failure-ref)
@@ -369,7 +403,7 @@
                                              :stream/error-class (.getName (class callback-error))))
                     callback-error))))
 
-(defn- require-instance
+(defn require-instance
   [^Class expected value label]
   (when-not (instance? expected value)
     (throw (ex-info (str label " must be a " (.getName expected))
@@ -377,19 +411,19 @@
                      :value    value})))
   value)
 
-(defn- remember-stream-failure!
+(defn remember-stream-failure!
   [^AtomicReference failure-ref ^Throwable throwable]
   (.compareAndSet failure-ref nil throwable)
   throwable)
 
-(defn- close-quietly
+(defn close-quietly
   [closeable]
   (when closeable
     (try
       (.close ^java.lang.AutoCloseable closeable)
       (catch Throwable _))))
 
-(defn- connect-signal!
+(defn connect-signal!
   [ptr signal callback callback-type arena]
   (let [stub      (mem/serialize callback callback-type arena)
         signal-id ((bindings :g-signal-connect-data) ptr signal stub nil nil 0)]
@@ -400,11 +434,11 @@
     {:callback callback
      :stub     stub}))
 
-(defn- stream-failure-ref
+(defn stream-failure-ref
   [^StreamBridge bridge]
   (.failure-ref bridge))
 
-(defn- new-source-bridge
+(defn new-source-bridge
   [^InputStream stream]
   (let [arena       (Arena/ofShared)
         failure-ref (AtomicReference. nil)
@@ -443,7 +477,7 @@
         (close-quietly stream)
         (throw t)))))
 
-(defn- finish-output-stream!
+(defn finish-output-stream!
   [^OutputStream stream ^AtomicReference failure-ref]
   (try
     (.flush stream)
@@ -454,7 +488,7 @@
       (close-quietly stream)
       (int -1))))
 
-(defn- new-target-bridge
+(defn new-target-bridge
   [^OutputStream stream]
   (let [arena       (Arena/ofShared)
         failure-ref (AtomicReference. nil)
@@ -496,7 +530,7 @@
         (close-quietly stream)
         (throw t)))))
 
-(defn- wrap-image
+(defn wrap-image
   ([ptr]
    (wrap-image ptr nil))
   ([ptr keeper]
@@ -574,7 +608,7 @@
 (def ^:private c-string-max-bytes
   65536)
 
-(defn- ->byte-array
+(defn ->byte-array
   [value]
   (cond
     (instance? byte-array-class value) value
@@ -642,7 +676,7 @@
       (let [output-ptr  (mem/read-address buffer-ptr)
             output-size (mem/read-long size-ptr)]
         (try
-          (mem/read-bytes (mem/reinterpret output-ptr output-size) (int output-size))
+          (mem/read-bytes (mem/reinterpret output-ptr output-size) output-size)
           (finally
             ((bindings :g-free) output-ptr)))))))
 
@@ -692,7 +726,7 @@
   [image field-name]
   (not (zero? (image-field-type image field-name))))
 
-(defn- read-c-string
+(defn read-c-string
   [ptr]
   (.getString ^java.lang.foreign.MemorySegment
    (.reinterpret ^java.lang.foreign.MemorySegment ptr c-string-max-bytes)
@@ -741,7 +775,7 @@
              (finally
                ((bindings :g-free) value-ptr)))))))))
 
-(defn- image-int-field
+(defn image-int-field
   [image field-name]
   (with-open [arena (mem/confined-arena)]
     (let [out-ptr (mem/alloc-instance ::mem/int arena)
@@ -755,7 +789,7 @@
                           {:field (str field-name)}))
       (mem/read-int out-ptr))))
 
-(defn- image-double-field
+(defn image-double-field
   [image field-name]
   (with-open [arena (mem/confined-arena)]
     (let [out-ptr (mem/alloc-instance ::mem/double arena)
@@ -769,7 +803,7 @@
                           {:field (str field-name)}))
       (mem/read-double out-ptr))))
 
-(defn- image-string-field
+(defn image-string-field
   [image field-name]
   (with-open [arena (mem/confined-arena)]
     (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
@@ -783,7 +817,7 @@
                           {:field (str field-name)}))
       (read-c-string (mem/read-address out-ptr)))))
 
-(defn- image-array-int-field
+(defn image-array-int-field
   [image field-name]
   (with-open [arena (mem/confined-arena)]
     (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
@@ -809,7 +843,7 @@
                       (long (* idx slot-size))))
               (range count))))))
 
-(defn- image-array-double-field
+(defn image-array-double-field
   [image field-name]
   (with-open [arena (mem/confined-arena)]
     (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
@@ -835,7 +869,7 @@
                       (long (* idx slot-size))))
               (range count))))))
 
-(defn- image-blob-field
+(defn image-blob-field
   [image field-name]
   (with-open [arena (mem/confined-arena)]
     (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
@@ -851,7 +885,7 @@
                           {:field (str field-name)}))
       (let [data-ptr (mem/read-address out-ptr)
             length   (mem/read-long len-ptr)]
-        (mem/read-bytes (mem/reinterpret data-ptr length) (int length))))))
+        (mem/read-bytes (mem/reinterpret data-ptr length) length)))))
 
 (defn image-field
   ([image field-name]
@@ -877,7 +911,7 @@
                [field-name (image-field image field-name)]))
         (image-field-names image)))
 
-(defn- infer-field-type
+(defn infer-field-type
   [value]
   (cond
     (instance? byte-array-class value) :blob

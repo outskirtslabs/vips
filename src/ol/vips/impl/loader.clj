@@ -1,10 +1,9 @@
-(ns ol.vips.native.loader
+(ns ^:no-doc ol.vips.impl.loader
   (:require
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.string :as str]
-   [coffi.ffi :as ffi]
-   [ol.vips.native.platforms :as platforms])
+   [coffi.ffi :as ffi])
   (:import
    [java.io InputStream PushbackReader RandomAccessFile]
    [java.lang.foreign Arena SymbolLookup]
@@ -13,6 +12,27 @@
    [java.nio.file.attribute FileAttribute]))
 
 (set! *warn-on-reflection* true)
+
+(defn- read-platforms-resource
+  []
+  (with-open [reader (-> "ol/vips/impl/platforms.edn"
+                         io/resource
+                         io/reader
+                         PushbackReader.)]
+    (edn/read reader)))
+
+(def supported-platforms
+  (read-platforms-resource))
+
+(def supported-platform-ids
+  (mapv :platform-id supported-platforms))
+
+(defn platform
+  [platform-id]
+  (or (some #(when (= platform-id (:platform-id %)) %) supported-platforms)
+      (throw (ex-info "Unsupported native platform"
+                      {:platform-id platform-id
+                       :supported   supported-platform-ids}))))
 
 (defn- path-of
   ^Path [first-segment & more-segments]
@@ -146,7 +166,7 @@
         arch-name            (or (property-value "ol.vips.native.arch")
                                  (System/getProperty "os.arch"))]
     (if platform-id-override
-      (platforms/platform (keyword platform-id-override))
+      (platform (keyword platform-id-override))
       (let [os   (normalize-os os-name)
             arch (normalize-arch arch-name)
             libc (when (= :linux os)
@@ -160,12 +180,12 @@
                     (when (= [platform-os platform-arch platform-libc]
                              [os arch libc])
                       platform))
-                  platforms/supported-platforms)
+                  supported-platforms)
             (throw (ex-info "Unsupported native platform"
                             {:os        os
                              :arch      arch
                              :libc      libc
-                             :supported platforms/supported-platform-ids})))))))
+                             :supported supported-platform-ids})))))))
 
 (defn manifest-resource-path
   ([] (manifest-resource-path (:platform-id (detect-host-platform))))
