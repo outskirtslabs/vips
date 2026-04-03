@@ -45,7 +45,7 @@
 
 (deftest generated-operations-return-images-or-output-maps
   (testing "single-image wrappers return image handles directly"
-    (with-open [image   (v/image-from-file fixture-path)
+    (with-open [image   (v/from-file fixture-path)
                 rotated (ops/rotate image 90.0)
                 joined  (ops/join image rotated :horizontal {:shim 10})]
       (is (= {:width 3084 :height 2490 :has-alpha? false}
@@ -53,7 +53,7 @@
       (is (= {:width 5584 :height 2490 :has-alpha? false}
              (select-keys (v/metadata joined) [:width :height :has-alpha?])))))
   (testing "multi-output wrappers preserve additional outputs in a closeable result"
-    (with-open [image   (v/image-from-file fixture-path)
+    (with-open [image   (v/from-file fixture-path)
                 autorot (ops/autorot image)]
       (is (= #{:out :angle :flip} (set (keys autorot))))
       (is (keyword? (:angle autorot)))
@@ -63,10 +63,10 @@
 
 (deftest generated-array-operations-work
   (testing "generated boxed image-array operations delegate through call"
-    (with-open [a    (v/image-from-file fixture-path)
-                b    (v/image-from-file fixture-path)
-                c    (v/image-from-file fixture-path)
-                d    (v/image-from-file fixture-path)
+    (with-open [a    (v/from-file fixture-path)
+                b    (v/from-file fixture-path)
+                c    (v/from-file fixture-path)
+                d    (v/from-file fixture-path)
                 grid (ops/arrayjoin [a b c d]
                                     {:across 2
                                      :shim   10
@@ -77,7 +77,7 @@
 
 (deftest generated-operations-accept-result-maps
   (testing "generated wrappers accept prior operation result maps as image inputs"
-    (with-open [image (v/image-from-file fixture-path)]
+    (with-open [image (v/from-file fixture-path)]
       (with-open [autorot (ops/autorot image)
                   flipped (ops/flip autorot :horizontal)
                   joined  (ops/join autorot flipped :horizontal)]

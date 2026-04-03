@@ -277,7 +277,7 @@
     (with-open [img1 (v/from-file puppies-path)
                 img2 (v/from-file puppies-path {:shrink 2})
                 img3 (v/from-file (str puppies-path "[shrink=2]"))
-                img4 (v/image-from-file puppies-path)]
+                img4 (v/from-file puppies-path)]
       (is (= 518 (v/width img1)))
       (is (= 389 (v/height img1)))
       (is (= 3 (v/bands img1)))
@@ -465,7 +465,7 @@
 
 (deftest transforms
   (testing "rotate, colourspace, and flip compose through call"
-    (with-open [image   (v/image-from-file fixture-path)
+    (with-open [image   (v/from-file fixture-path)
                 rotated (v/call "rotate" {:in image :angle 90.0})
                 bw      (v/call "colourspace" {:in image :space :b-w})
                 flipped (v/call "flip" {:in image :direction :horizontal})]
@@ -476,7 +476,7 @@
       (is (= {:width 2490 :height 3084 :has-alpha? false}
              (select-keys (v/metadata flipped) [:width :height :has-alpha?])))))
   (testing "invalid enum keywords fail before entering libvips"
-    (with-open [image (v/image-from-file fixture-path)]
+    (with-open [image (v/from-file fixture-path)]
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"Unknown enum value"
                             (v/call "flip" {:in image :direction :sideways})))
@@ -486,18 +486,18 @@
 
 (deftest join-and-array-join
   (testing "join composes two images through the raw operation contract"
-    (with-open [left   (v/image-from-file fixture-path)
-                right  (v/image-from-file fixture-path)
+    (with-open [left   (v/from-file fixture-path)
+                right  (v/from-file fixture-path)
                 joined (v/call "join" {:in1       left
                                        :in2       right
                                        :direction :horizontal})]
       (is (= {:width 4980 :height 3084 :has-alpha? false}
              (select-keys (v/metadata joined) [:width :height :has-alpha?])))))
   (testing "arrayjoin accepts a collection of images plus layout options"
-    (with-open [a    (v/image-from-file fixture-path)
-                b    (v/image-from-file fixture-path)
-                c    (v/image-from-file fixture-path)
-                d    (v/image-from-file fixture-path)
+    (with-open [a    (v/from-file fixture-path)
+                b    (v/from-file fixture-path)
+                c    (v/from-file fixture-path)
+                d    (v/from-file fixture-path)
                 grid (v/call "arrayjoin" {:in     [a b c d]
                                           :across 2
                                           :shim   10
