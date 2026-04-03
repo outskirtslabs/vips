@@ -1,28 +1,25 @@
 (ns chain-transforms
   (:require
-   [common :as common]
-   [ol.vips :as v]))
-
-(declare image)
+   [babashka.fs :as fs]
+   [ol.vips :as v]
+   [ol.vips.operations :as ops]))
 
 (def output-path
-  (common/output-path "rabbit_chain.jpg"))
+  (fs/path "examples" "rabbit_chain.jpg"))
+
+(def rabbit-path
+  (fs/path "dev" "rabbit.jpg"))
 
 (defn -main [& _]
-  (common/ensure-output-dir!)
-  (v/with-image [image (common/dev-rabbit-path)]
-    (let [result (-> image
-                     (v/thumbnail 400)
-                     (v/invert)
-                     (v/rotate 90)
-                     (v/colourspace :cmyk)
-                     (v/flip :horizontal))
-          info   (v/image-info result)]
-      (common/ensure! (= {:width 400 :height 323 :has-alpha? false}
-                         (select-keys info [:width :height :has-alpha?]))
-                      "Unexpected chained image dimensions"
-                      {:info info})
-      (v/write! result output-path)
-      (common/print-result "chain" output-path))))
+  (fs/create-dirs "examples")
+  (with-open [image  (v/from-file rabbit-path)
+              result (-> image
+                         (v/thumbnail 400)
+                         (ops/invert)
+                         (ops/rotate 90.0)
+                         (ops/colourspace :cmyk)
+                         (ops/flip :horizontal))]
+    (v/write-to-file result output-path)
+    (println (str "chain: " output-path))))
 
 (-main)

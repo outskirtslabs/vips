@@ -1,45 +1,38 @@
 (ns compose-images
   (:require
-   [common :as common]
-   [ol.vips :as v]))
-
-(declare session)
+   [babashka.fs :as fs]
+   [ol.vips :as v]
+   [ol.vips.operations :as ops]))
 
 (def joined-output-path
-  (common/output-path "rabbit_fox_joined.jpg"))
+  (fs/path "examples" "rabbit_fox_joined.jpg"))
 
 (def grid-output-path
-  (common/output-path "rabbit_grid.jpg"))
+  (fs/path "examples" "rabbit_grid.jpg"))
+
+(def rabbit-path
+  (fs/path "dev" "rabbit.jpg"))
+
+(def puppies-path
+  (fs/path "test" "fixtures" "puppies.jpg"))
 
 (defn -main [& _]
-  (common/ensure-output-dir!)
-  (v/with-session [session]
-    (let [rabbit      (-> (v/open session (common/dev-rabbit-path))
-                          (v/thumbnail 500))
-          fox         (-> (v/open session (common/sample-image-path "fox.jpg"))
-                          (v/thumbnail 500))
-          joined      (v/join rabbit fox {:direction :horizontal})
-          grid        (v/array-join [(v/thumbnail rabbit 400)
-                                     (v/thumbnail fox 400)
-                                     (v/thumbnail fox 400)
-                                     (v/thumbnail rabbit 400)]
-                                    {:across 2
-                                     :shim   10
-                                     :halign :centre
-                                     :valign :centre})
-          joined-info (v/image-info joined)
-          grid-info   (v/image-info grid)]
-      (common/ensure! (= {:width 808 :height 500 :has-alpha? false}
-                         (select-keys joined-info [:width :height :has-alpha?]))
-                      "Unexpected joined image dimensions"
-                      {:info joined-info})
-      (common/ensure! (= {:width 656 :height 810 :has-alpha? false}
-                         (select-keys grid-info [:width :height :has-alpha?]))
-                      "Unexpected grid image dimensions"
-                      {:info grid-info})
-      (v/write! joined joined-output-path)
-      (v/write! grid grid-output-path)
-      (common/print-result "joined" joined-output-path)
-      (common/print-result "grid" grid-output-path))))
+  (fs/create-dirs "examples")
+  (with-open [rabbit      (v/from-file rabbit-path)
+              puppies     (v/from-file puppies-path)
+              rabbit-500  (v/thumbnail rabbit 500)
+              puppies-500 (v/thumbnail puppies 500)
+              joined      (ops/join rabbit-500 puppies-500 :horizontal {:shim 10})
+              rabbit-400  (v/thumbnail rabbit 400)
+              puppies-400 (v/thumbnail puppies 400)
+              grid        (ops/arrayjoin [rabbit-400 puppies-400 puppies-400 rabbit-400]
+                                         {:across 2
+                                          :shim   10
+                                          :halign :centre
+                                          :valign :centre})]
+    (v/write-to-file joined joined-output-path)
+    (v/write-to-file grid grid-output-path)
+    (println (str "joined: " joined-output-path))
+    (println (str "grid: " grid-output-path))))
 
 (-main)

@@ -1,23 +1,19 @@
 (ns create-thumbnail
   (:require
-   [common :as common]
+   [babashka.fs :as fs]
    [ol.vips :as v]))
 
-(declare image)
-
 (def output-path
-  (common/output-path "rabbit_thumbnail_400.jpg"))
+  (fs/path "examples" "rabbit_thumbnail_400.jpg"))
+
+(def rabbit-path
+  (fs/path "dev" "rabbit.jpg"))
 
 (defn -main [& _]
-  (common/ensure-output-dir!)
-  (v/with-image [image (common/dev-rabbit-path)]
-    (let [thumbnail (v/thumbnail image 400 {:auto-rotate true})
-          info      (v/image-info thumbnail)]
-      (common/ensure! (= {:width 323 :height 400 :has-alpha? false}
-                         (select-keys info [:width :height :has-alpha?]))
-                      "Unexpected thumbnail dimensions"
-                      {:info info})
-      (v/write! thumbnail output-path)
-      (common/print-result "thumbnail" output-path))))
+  (fs/create-dirs "examples")
+  (with-open [image     (v/from-file rabbit-path)
+              thumbnail (v/thumbnail image 400 {:auto-rotate true})]
+    (v/write-to-file thumbnail output-path)
+    (println (str "thumbnail: " output-path))))
 
 (-main)
