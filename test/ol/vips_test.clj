@@ -7,7 +7,8 @@
    [ol.vips.impl.api :as api]
    [ol.vips.operations :as ops])
   (:import
-   [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]))
+   [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]
+   [java.lang.foreign MemorySegment]))
 
 (def fixture-path
   (str (fs/path "dev" "rabbit.jpg")))
@@ -307,6 +308,94 @@
                 thumbnail (v/thumbnail image 400 {:auto-rotate true})]
       (is (= {:width 323 :height 400 :bands 3 :has-alpha? false}
              (select-keys (v/metadata thumbnail) [:width :height :bands :has-alpha?]))))))
+
+(deftest copy-memory-helper
+  (testing "copy-memory surfaces libvips native failures"
+    (let [calls         (atom [])
+          fake-bindings {:image-copy-memory (fn [_]
+                                              MemorySegment/NULL)
+                         :vips-error-buffer (fn []
+                                              "copy failed")
+                         :vips-error-clear  (fn []
+                                              (swap! calls conj :cleared))}]
+      (with-redefs [api/bindings     (fn
+                                       ([] fake-bindings)
+                                       ([k] (get fake-bindings k))
+                                       ([k not-found] (get fake-bindings k not-found)))
+                    api/image-handle (fn [_]
+                                       (reify api/PointerBacked
+                                         (pointer [_] MemorySegment/NULL)))]
+        (try
+          (api/copy-image-to-memory ::image)
+          (is false "Expected copy-image-to-memory to throw when libvips returns NULL")
+          (catch clojure.lang.ExceptionInfo ex
+            (is (= "Failed to copy image to memory" (.getMessage ex)))
+            (is (= "copy failed" (:vips/error (ex-data ex))))
+            (is (= [:cleared] @calls)))))))
+  (testing "copy-memory exposes a public helper that makes a private reusable image"
+    (let [copy-memory (ns-resolve 'ol.vips 'copy-memory)]
+      (is (some? copy-memory))
+      (when copy-memory
+        (with-open [original (v/from-file puppies-path)
+                    copied   (copy-memory original)
+                    before   (v/call "extract_area" {:input  copied
+                                                     :left   0
+                                                     :top    0
+                                                     :width  20
+                                                     :height 20})]
+          (let [original-avg (:out (v/call "avg" {:in before}))]
+            (ops/draw-rect copied [255 0 0] 0 0 20 20 {:fill true})
+            (with-open [copied-sample   (v/call "extract_area" {:input  copied
+                                                                :left   0
+                                                                :top    0
+                                                                :width  20
+                                                                :height 20})
+                        original-sample (v/call "extract_area" {:input  original
+                                                                :left   0
+                                                                :top    0
+                                                                :width  20
+                                                                :height 20})]
+              (is (not= original-avg (:out (v/call "avg" {:in copied-sample}))))
+              (is (= original-avg (:out (v/call "avg" {:in original-sample}))))))))))
+  (testing "copy-memory survives closing the source pipeline and preserves animated metadata"
+    (let [copy-memory (ns-resolve 'ol.vips 'copy-memory)]
+      (is (some? copy-memory))
+      (when copy-memory
+        (let [copied-still (with-open [base    (v/from-file puppies-path)
+                                       resized (ops/resize base 0.5)]
+                             (copy-memory resized))
+              copied-gif   (with-open [image (ops/gifload animated-gif-path {:n -1})]
+                             (copy-memory image))]
+          (try
+            (is (= {:width 259 :height 195 :bands 3 :has-alpha? false}
+                   (select-keys (v/metadata copied-still) [:width :height :bands :has-alpha?])))
+            (is (= {:width       85
+                    :height      385
+                    :pages       5
+                    :page-height 77
+                    :loop        32761
+                    :delay       [0 50 50 50 50]}
+                   (select-keys (v/metadata copied-gif)
+                                [:width :height :pages :page-height :loop :delay])))
+            (finally
+              (.close ^java.lang.AutoCloseable copied-gif)
+              (.close ^java.lang.AutoCloseable copied-still)))))))
+  (testing "copy-memory round-trips through save and reload like a normal image"
+    (let [copy-memory (ns-resolve 'ol.vips 'copy-memory)
+          tmp-path    (java.nio.file.Files/createTempFile "ol-vips-copy-memory-" ".png"
+                                                          (make-array java.nio.file.attribute.FileAttribute 0))]
+      (try
+        (is (some? copy-memory))
+        (when copy-memory
+          (with-open [copied (with-open [base    (v/from-file puppies-path)
+                                         resized (ops/resize base 0.5)]
+                               (copy-memory resized))]
+            (v/write-to-file copied tmp-path)
+            (with-open [roundtrip (v/from-file tmp-path)]
+              (is (= {:width 259 :height 195 :bands 3 :has-alpha? false}
+                     (select-keys (v/metadata roundtrip) [:width :height :bands :has-alpha?]))))))
+        (finally
+          (java.nio.file.Files/deleteIfExists tmp-path))))))
 
 (deftest image-result-maps-work-as-image-inputs
   (testing "public image helpers accept operation result maps with :out"

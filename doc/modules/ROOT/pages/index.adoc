@@ -9,13 +9,21 @@ image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https:/
 image:https://img.shields.io/badge/status-experimental-orange.svg[status: experimental,link=https://docs.outskirtslabs.com/open-source-vital-signs#experimental]
 image:https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Foutskirtslabs%2Fvips[alt=built with garnix,link=https://garnix.io/repo/outskirtslabs/vips]
 
-This package wraps the core functionality of the native
-https://github.com/libvips/libvips[libvips] image processing library by
-exposing all native image operations as data and functions to Clojure
-programs.
+`ol.vips` is a Clojure library for loading, transforming, and saving
+images with https://github.com/libvips/libvips[libvips]. Use it to
+build thumbnails and responsive image variants, convert formats, crop
+and resize uploads, compose images, read and write metadata, and run
+image pipelines from files, byte arrays, or streams.
 
-We use https://github.com/IGJoshua/coffi[coffi] with Java 22{plus}
-FFI/FFM (Project Panama) for efficient native bridging.
+If you have never used libvips before: it is a native image processing
+library designed for fast, memory-efficient image work. `ol.vips` gives
+Clojure programs access to that engine with a Clojure-first API,
+generated wrappers for the full libvips operation surface, and
+platform-native jars so you can use libvips from the JVM without
+building the native integration yourself.
+
+`ol.vips` uses https://github.com/IGJoshua/coffi[coffi] and requires Java
+22{plus} for FFI/FFM (Project Panama).
 
 Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#experimental[Experimental]*.
 
@@ -263,6 +271,9 @@ The dedicated animated helpers are:
 
 These helpers work best for uniform-height multipage inputs such as
 animated GIF/WebP strips and similarly-shaped TIFF/PDF inputs.
+
+For a deeper guide, see
+https://docs.outskirtslabs.com/ol.vips/next/multipage-and-animated-images[Multipage and Animated Images].
 
 === Image Loaders
 

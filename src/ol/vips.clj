@@ -156,6 +156,47 @@
                                    :width width}
                                   opts))))
 
+(defn copy-memory
+  "Materializes `image` into a private in-memory `VipsImage` and returns it as a
+  normal closeable image handle.
+
+  This is effectively a sink. Calling `copy-memory` forces libvips to evaluate
+  the current pipeline now, render the pixels into memory, and wrap that memory
+  in a new image handle. Unlike [[write-to-file]], [[write-to-buffer]], or
+  [[write-to-stream]], the result is still an image you can keep using in
+  downstream image operations.
+
+  This is useful when an intermediate image will be reused several times and you
+  do not want libvips to recompute the upstream pipeline for each branch. It is
+  also the explicit way to ask for a private memory-backed image before applying
+  mutating draw operations.
+
+  Behavior:
+
+  - Preserves the rendered image pixels and image metadata.
+  - Returns a new handle that remains usable after the source pipeline handles
+    have been closed.
+  - May avoid an extra copy if libvips determines the input is already a simple
+    readable memory image, in which case it can return another reference to the
+    existing image instead of allocating again.
+  - Trades CPU savings for higher memory use, so it is best reserved for
+    intermediates you know are reused often enough to justify retaining the
+    pixels.
+
+  Example:
+
+  ```clojure
+  (with-open [base   (v/from-file \"input.jpg\")
+              step   (-> base
+                         (ops/resize 0.5)
+                         (ops/sharpen))
+              cached (v/copy-memory step)]
+    (do-something cached)
+    (do-something-else cached))
+  ```"
+  [image]
+  (api/copy-image-to-memory image))
+
 (defn assoc-field
   ([image field-name value]
    (image/assoc-field image field-name value))

@@ -132,6 +132,7 @@
    :image-new-from-source          ["vips_image_new_from_source"
                                     [::mem/pointer ::mem/c-string ::mem/pointer]
                                     ::mem/pointer]
+   :image-copy-memory              ["vips_image_copy_memory" [::mem/pointer] ::mem/pointer]
    :image-write-to-buffer          ["vips_image_write_to_buffer"
                                     [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer]
                                     ::mem/int]
@@ -704,6 +705,15 @@
                            {}
                            (stream-failure-ref bridge)))
      (wrap-image image bridge))))
+
+(defn copy-image-to-memory
+  [image]
+  (let [copied ((bindings :image-copy-memory) (pointer (image-handle image)))]
+    (when (mem/null? copied)
+      (throw-vips-error (bindings)
+                        "Failed to copy image to memory"
+                        {}))
+    (wrap-image copied)))
 
 (defn write-image!
   [image sink]

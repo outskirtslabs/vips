@@ -109,9 +109,14 @@ and pass that handle to downstream operations instead of recalculating it.
   ...)
 ----
 
-`ol.vips` does not currently expose a dedicated "copy to memory" convenience
-helper, so cross-request reuse and persistence should usually live in your
-application cache rather than in the image graph itself.
+If you need to materialize a reused intermediate so libvips does not
+recalculate it, use xref:api/ol-vips.adoc#copy-memory[`v/copy-memory`]. This
+forces the current pipeline to render into a private in-memory image and
+returns another image handle you can fan out to several downstream operations
+or keep in an application cache for later reuse.
+
+This can trade CPU time for higher memory use, so it is best reserved for
+intermediates you know are reused often enough to justify the retained pixels.
 
 == Put large resizes early in the pipeline
 
