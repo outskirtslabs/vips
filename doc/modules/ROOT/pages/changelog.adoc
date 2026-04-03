@@ -1,0 +1,13 @@
+= Changelog
+
+All notable changes to this project will be documented in this file.
+
+This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
+
+== UNRELEASED
+
+== `v0.0.1` (2026-XX-XX)
+
+We haven't quite got here yet..
+
+Please report any problems and let me know if anything is unclear or inconvenient. Thank you.

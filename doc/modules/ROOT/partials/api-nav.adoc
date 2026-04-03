@@ -1,0 +1,5 @@
+* xref:api.adoc[API Reference]
+** xref:api/ol-vips.adoc[ol.vips]
+*** xref:api/ol-vips-codegen.adoc[codegen]
+*** xref:api/ol-vips-enums.adoc[enums]
+*** xref:api/ol-vips-operations.adoc[operations]

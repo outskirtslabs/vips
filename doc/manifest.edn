@@ -1,0 +1,17 @@
+{:manifest/version 1,
+ :project
+ {:id "ol.vips",
+  :coord "com.outskirtslabs/vips",
+  :description "Clojure bindings for libvips image processing library",
+  :license "EUPL-1.2",
+  :platforms [:clj],
+  :status :experimental,
+  :created "2025-05-29",
+  :version "0.0.1"},
+ :docs
+ {:component "ol.vips",
+  :title "ol.vips",
+  :version "next",
+  :prerelease true,
+  :start-path "doc"},
+ :repo {:url "https://github.com/outskirtslabs/vips"}}

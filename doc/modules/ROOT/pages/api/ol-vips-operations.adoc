@@ -1,0 +1,8173 @@
+= ol.vips.operations
+
+[#registry]
+== registry
+
+
+
+
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L10-L243[source,window=_blank]
+
+'''
+
+[#operations]
+== operations
+
+
+
+
+[source,clojure]
+----
+(operations)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L245-L245[source,window=_blank]
+
+'''
+
+[#describe]
+== describe
+
+
+
+
+[source,clojure]
+----
+(describe operation-id)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L247-L252[source,window=_blank]
+
+'''
+
+[#abs]
+== abs
+
+
+
+
+[source,clojure]
+----
+(abs input)
+----
+
+absolute value of an image
+
+Operation name: `abs`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L254-L270[source,window=_blank]
+
+'''
+
+[#add]
+== add
+
+
+
+
+[source,clojure]
+----
+(add left right)
+----
+
+add two images
+
+Operation name: `add`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L272-L289[source,window=_blank]
+
+'''
+
+[#addalpha]
+== addalpha
+
+
+
+
+[source,clojure]
+----
+(addalpha input)
+----
+
+append an alpha channel
+
+Operation name: `addalpha`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L291-L307[source,window=_blank]
+
+'''
+
+[#affine]
+== affine
+
+
+
+
+[source,clojure]
+----
+(affine input matrix)
+(affine input matrix opts)
+----
+
+affine transform of an image
+
+Operation name: `affine`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `matrix` -> `:matrix` (seqable of number): Transformation matrix
+
+Optional inputs:
+- `odx` -> `:odx` (float): Horizontal output displacement
+- `ody` -> `:ody` (float): Vertical output displacement
+- `idx` -> `:idx` (float): Horizontal input displacement
+- `idy` -> `:idy` (float): Vertical input displacement
+- `background` -> `:background` (seqable of number): Background value
+- `premultiplied` -> `:premultiplied` (boolean): Images have premultiplied alpha
+- `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L309-L333[source,window=_blank]
+
+'''
+
+[#arrayjoin]
+== arrayjoin
+
+
+
+
+[source,clojure]
+----
+(arrayjoin input)
+(arrayjoin input opts)
+----
+
+join an array of images
+
+Operation name: `arrayjoin`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (seqable of image): Array of input images
+
+Optional inputs:
+- `across` -> `:across` (integer): Number of images across grid
+- `shim` -> `:shim` (integer): Pixels between images
+- `background` -> `:background` (seqable of number): Colour for new pixels
+- `halign` -> `:halign` (keyword, see `ol.vips.enums/align`): Align on the left, centre or right
+- `valign` -> `:valign` (keyword, see `ol.vips.enums/align`): Align on the top, centre or bottom
+- `hspacing` -> `:hspacing` (integer): Horizontal spacing between images
+- `vspacing` -> `:vspacing` (integer): Vertical spacing between images
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L335-L358[source,window=_blank]
+
+'''
+
+[#autorot]
+== autorot
+
+
+
+
+[source,clojure]
+----
+(autorot input)
+----
+
+autorotate image by exif tag
+
+Operation name: `autorot`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Angle image was rotated by
+- `flip` -> `:flip` (boolean): Whether the image was flipped or not
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L360-L378[source,window=_blank]
+
+'''
+
+[#avg]
+== avg
+
+
+
+
+[source,clojure]
+----
+(avg input)
+----
+
+find image average
+
+Operation name: `avg`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (float): Output value
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L380-L396[source,window=_blank]
+
+'''
+
+[#bandbool]
+== bandbool
+
+
+
+
+[source,clojure]
+----
+(bandbool input boolean)
+----
+
+boolean operation across image bands
+
+Operation name: `bandbool`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `boolean` -> `:boolean` (keyword, see `ol.vips.enums/operation-boolean`): Boolean to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L398-L415[source,window=_blank]
+
+'''
+
+[#bandfold]
+== bandfold
+
+
+
+
+[source,clojure]
+----
+(bandfold input)
+(bandfold input opts)
+----
+
+fold up x axis into bands
+
+Operation name: `bandfold`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `factor` -> `:factor` (integer): Fold by this factor
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L417-L434[source,window=_blank]
+
+'''
+
+[#bandjoin]
+== bandjoin
+
+
+
+
+[source,clojure]
+----
+(bandjoin input)
+----
+
+bandwise join a set of images
+
+Operation name: `bandjoin`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (seqable of image): Array of input images
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L436-L452[source,window=_blank]
+
+'''
+
+[#bandjoin-const]
+== bandjoin-const
+
+
+
+
+[source,clojure]
+----
+(bandjoin-const input c)
+----
+
+append a constant band to an image
+
+Operation name: `bandjoin_const`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `c` -> `:c` (seqable of number): Array of constants to add
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L454-L471[source,window=_blank]
+
+'''
+
+[#bandmean]
+== bandmean
+
+
+
+
+[source,clojure]
+----
+(bandmean input)
+----
+
+band-wise average
+
+Operation name: `bandmean`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L473-L489[source,window=_blank]
+
+'''
+
+[#bandrank]
+== bandrank
+
+
+
+
+[source,clojure]
+----
+(bandrank input)
+(bandrank input opts)
+----
+
+band-wise rank of a set of images
+
+Operation name: `bandrank`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (seqable of image): Array of input images
+
+Optional inputs:
+- `index` -> `:index` (integer): Select this band element from sorted list
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L491-L508[source,window=_blank]
+
+'''
+
+[#bandunfold]
+== bandunfold
+
+
+
+
+[source,clojure]
+----
+(bandunfold input)
+(bandunfold input opts)
+----
+
+unfold image bands into x axis
+
+Operation name: `bandunfold`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `factor` -> `:factor` (integer): Unfold by this factor
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L510-L527[source,window=_blank]
+
+'''
+
+[#black]
+== black
+
+
+
+
+[source,clojure]
+----
+(black width height)
+(black width height opts)
+----
+
+make a black image
+
+Operation name: `black`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `bands` -> `:bands` (integer): Number of bands in image
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L529-L547[source,window=_blank]
+
+'''
+
+[#boolean]
+== boolean
+
+
+
+
+[source,clojure]
+----
+(boolean left right boolean)
+----
+
+boolean operation on two images
+
+Operation name: `boolean`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+- `boolean` -> `:boolean` (keyword, see `ol.vips.enums/operation-boolean`): Boolean to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L549-L567[source,window=_blank]
+
+'''
+
+[#boolean-const]
+== boolean-const
+
+
+
+
+[source,clojure]
+----
+(boolean-const input boolean c)
+----
+
+boolean operations against a constant
+
+Operation name: `boolean_const`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `boolean` -> `:boolean` (keyword, see `ol.vips.enums/operation-boolean`): Boolean to perform
+- `c` -> `:c` (seqable of number): Array of constants
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L569-L587[source,window=_blank]
+
+'''
+
+[#buildlut]
+== buildlut
+
+
+
+
+[source,clojure]
+----
+(buildlut input)
+----
+
+build a look-up table
+
+Operation name: `buildlut`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Matrix of XY coordinates
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L589-L605[source,window=_blank]
+
+'''
+
+[#byteswap]
+== byteswap
+
+
+
+
+[source,clojure]
+----
+(byteswap input)
+----
+
+byteswap an image
+
+Operation name: `byteswap`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L607-L623[source,window=_blank]
+
+'''
+
+[#cache]
+== cache
+
+
+
+
+[source,clojure]
+----
+(cache input)
+(cache input opts)
+----
+
+cache an image
+
+Operation name: `cache`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `max-tiles` -> `:max-tiles` (integer): Maximum number of tiles to cache
+- `tile-height` -> `:tile-height` (integer): Tile height in pixels
+- `tile-width` -> `:tile-width` (integer): Tile width in pixels
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L625-L644[source,window=_blank]
+
+'''
+
+[#canny]
+== canny
+
+
+
+
+[source,clojure]
+----
+(canny input)
+(canny input opts)
+----
+
+Canny edge detector
+
+Operation name: `canny`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `sigma` -> `:sigma` (float): Sigma of Gaussian
+- `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L646-L664[source,window=_blank]
+
+'''
+
+[#case]
+== case
+
+
+
+
+[source,clojure]
+----
+(case index cases)
+----
+
+use pixel values to pick cases from an array of images
+
+Operation name: `case`.
+
+Returns an image handle.
+
+Required inputs:
+- `index` -> `:index` (image): Index image
+- `cases` -> `:cases` (seqable of image): Array of case images
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L666-L683[source,window=_blank]
+
+'''
+
+[#cast]
+== cast
+
+
+
+
+[source,clojure]
+----
+(cast input format)
+(cast input format opts)
+----
+
+cast an image
+
+Operation name: `cast`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `format` -> `:format` (keyword, see `ol.vips.enums/band-format`): Format to cast to
+
+Optional inputs:
+- `shift` -> `:shift` (boolean): Shift integer values up and down
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L685-L703[source,window=_blank]
+
+'''
+
+[#clamp]
+== clamp
+
+
+
+
+[source,clojure]
+----
+(clamp input)
+(clamp input opts)
+----
+
+clamp values of an image
+
+Operation name: `clamp`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `min` -> `:min` (float): Minimum value
+- `max` -> `:max` (float): Maximum value
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L705-L723[source,window=_blank]
+
+'''
+
+[#cmc2-lch]
+== cmc2-lch
+
+
+
+
+[source,clojure]
+----
+(cmc2-lch input)
+----
+
+transform LCh to CMC
+
+Operation name: `CMC2LCh`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L725-L741[source,window=_blank]
+
+'''
+
+[#cmyk2-xyz]
+== cmyk2-xyz
+
+
+
+
+[source,clojure]
+----
+(cmyk2-xyz input)
+----
+
+transform CMYK to XYZ
+
+Operation name: `CMYK2XYZ`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L743-L759[source,window=_blank]
+
+'''
+
+[#colourspace]
+== colourspace
+
+
+
+
+[source,clojure]
+----
+(colourspace input space)
+(colourspace input space opts)
+----
+
+convert to a new colorspace
+
+Operation name: `colourspace`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `space` -> `:space` (keyword, see `ol.vips.enums/interpretation`): Destination color space
+
+Optional inputs:
+- `source-space` -> `:source-space` (keyword, see `ol.vips.enums/interpretation`): Source color space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L761-L779[source,window=_blank]
+
+'''
+
+[#compass]
+== compass
+
+
+
+
+[source,clojure]
+----
+(compass input mask)
+(compass input mask opts)
+----
+
+convolve with rotating mask
+
+Operation name: `compass`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `mask` -> `:mask` (image): Input matrix image
+
+Optional inputs:
+- `times` -> `:times` (integer): Rotate and convolve this many times
+- `angle` -> `:angle` (keyword, see `ol.vips.enums/angle45`): Rotate mask by this much between convolutions
+- `combine` -> `:combine` (keyword, see `ol.vips.enums/combine`): Combine convolution results like this
+- `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
+- `layers` -> `:layers` (integer): Use this many layers in approximation
+- `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L781-L804[source,window=_blank]
+
+'''
+
+[#complex]
+== complex
+
+
+
+
+[source,clojure]
+----
+(complex input cmplx)
+----
+
+perform a complex operation on an image
+
+Operation name: `complex`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `cmplx` -> `:cmplx` (keyword, see `ol.vips.enums/operation-complex`): Complex to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L806-L823[source,window=_blank]
+
+'''
+
+[#complex2]
+== complex2
+
+
+
+
+[source,clojure]
+----
+(complex2 left right cmplx)
+----
+
+complex binary operations on two images
+
+Operation name: `complex2`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+- `cmplx` -> `:cmplx` (keyword, see `ol.vips.enums/operation-complex2`): Binary complex operation to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L825-L843[source,window=_blank]
+
+'''
+
+[#complexform]
+== complexform
+
+
+
+
+[source,clojure]
+----
+(complexform left right)
+----
+
+form a complex image from two real images
+
+Operation name: `complexform`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L845-L862[source,window=_blank]
+
+'''
+
+[#complexget]
+== complexget
+
+
+
+
+[source,clojure]
+----
+(complexget input get)
+----
+
+get a component from a complex image
+
+Operation name: `complexget`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `get` -> `:get` (keyword, see `ol.vips.enums/operation-complexget`): Complex to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L864-L881[source,window=_blank]
+
+'''
+
+[#composite2]
+== composite2
+
+
+
+
+[source,clojure]
+----
+(composite2 base overlay mode)
+(composite2 base overlay mode opts)
+----
+
+blend a pair of images with a blend mode
+
+Operation name: `composite2`.
+
+Returns an image handle.
+
+Required inputs:
+- `base` -> `:base` (image): Base image
+- `overlay` -> `:overlay` (image): Overlay image
+- `mode` -> `:mode` (keyword, see `ol.vips.enums/blend-mode`): VipsBlendMode to join with
+
+Optional inputs:
+- `x` -> `:x` (integer): x position of overlay
+- `y` -> `:y` (integer): y position of overlay
+- `compositing-space` -> `:compositing-space` (keyword, see `ol.vips.enums/interpretation`): Composite images in this colour space
+- `premultiplied` -> `:premultiplied` (boolean): Images have premultiplied alpha
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L883-L905[source,window=_blank]
+
+'''
+
+[#conv]
+== conv
+
+
+
+
+[source,clojure]
+----
+(conv input mask)
+(conv input mask opts)
+----
+
+convolution operation
+
+Operation name: `conv`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `mask` -> `:mask` (image): Input matrix image
+
+Optional inputs:
+- `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
+- `layers` -> `:layers` (integer): Use this many layers in approximation
+- `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L907-L927[source,window=_blank]
+
+'''
+
+[#conva]
+== conva
+
+
+
+
+[source,clojure]
+----
+(conva input mask)
+(conva input mask opts)
+----
+
+approximate integer convolution
+
+Operation name: `conva`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `mask` -> `:mask` (image): Input matrix image
+
+Optional inputs:
+- `layers` -> `:layers` (integer): Use this many layers in approximation
+- `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L929-L948[source,window=_blank]
+
+'''
+
+[#convasep]
+== convasep
+
+
+
+
+[source,clojure]
+----
+(convasep input mask)
+(convasep input mask opts)
+----
+
+approximate separable integer convolution
+
+Operation name: `convasep`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `mask` -> `:mask` (image): Input matrix image
+
+Optional inputs:
+- `layers` -> `:layers` (integer): Use this many layers in approximation
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L950-L968[source,window=_blank]
+
+'''
+
+[#convf]
+== convf
+
+
+
+
+[source,clojure]
+----
+(convf input mask)
+----
+
+float convolution operation
+
+Operation name: `convf`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `mask` -> `:mask` (image): Input matrix image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L970-L987[source,window=_blank]
+
+'''
+
+[#convi]
+== convi
+
+
+
+
+[source,clojure]
+----
+(convi input mask)
+----
+
+int convolution operation
+
+Operation name: `convi`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `mask` -> `:mask` (image): Input matrix image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L989-L1006[source,window=_blank]
+
+'''
+
+[#convsep]
+== convsep
+
+
+
+
+[source,clojure]
+----
+(convsep input mask)
+(convsep input mask opts)
+----
+
+separable convolution operation
+
+Operation name: `convsep`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `mask` -> `:mask` (image): Input matrix image
+
+Optional inputs:
+- `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
+- `layers` -> `:layers` (integer): Use this many layers in approximation
+- `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1008-L1028[source,window=_blank]
+
+'''
+
+[#copy]
+== copy
+
+
+
+
+[source,clojure]
+----
+(copy input)
+(copy input opts)
+----
+
+copy an image
+
+Operation name: `copy`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `swap` -> `:swap` (boolean): Swap bytes in image between little and big-endian
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `bands` -> `:bands` (integer): Number of bands in image
+- `format` -> `:format` (keyword, see `ol.vips.enums/band-format`): Pixel format in image
+- `coding` -> `:coding` (keyword, see `ol.vips.enums/coding`): Pixel coding
+- `interpretation` -> `:interpretation` (keyword, see `ol.vips.enums/interpretation`): Pixel interpretation
+- `xres` -> `:xres` (float): Horizontal resolution in pixels/mm
+- `yres` -> `:yres` (float): Vertical resolution in pixels/mm
+- `xoffset` -> `:xoffset` (integer): Horizontal offset of origin
+- `yoffset` -> `:yoffset` (integer): Vertical offset of origin
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1030-L1057[source,window=_blank]
+
+'''
+
+[#countlines]
+== countlines
+
+
+
+
+[source,clojure]
+----
+(countlines input direction)
+----
+
+count lines in an image
+
+Operation name: `countlines`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Countlines left-right or up-down
+
+Optional inputs:
+- none
+
+Outputs:
+- `nolines` -> `:nolines` (float): Number of lines
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1059-L1076[source,window=_blank]
+
+'''
+
+[#csvload]
+== csvload
+
+
+
+
+[source,clojure]
+----
+(csvload filename)
+(csvload filename opts)
+----
+
+load csv
+
+Operation name: `csvload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `skip` -> `:skip` (integer): Skip this many lines at the start of the file
+- `lines` -> `:lines` (integer): Read this many lines from the file
+- `whitespace` -> `:whitespace` (string): Set of whitespace characters
+- `separator` -> `:separator` (string): Set of separator characters
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1078-L1106[source,window=_blank]
+
+'''
+
+[#csvsave]
+== csvsave
+
+
+
+
+[source,clojure]
+----
+(csvsave input filename)
+(csvsave input filename opts)
+----
+
+save image to csv
+
+Operation name: `csvsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `separator` -> `:separator` (string): Separator characters
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1108-L1131[source,window=_blank]
+
+'''
+
+[#d-e00]
+== d-e00
+
+
+
+
+[source,clojure]
+----
+(d-e00 left right)
+----
+
+calculate dE00
+
+Operation name: `dE00`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand input image
+- `right` -> `:right` (image): Right-hand input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1133-L1150[source,window=_blank]
+
+'''
+
+[#d-e76]
+== d-e76
+
+
+
+
+[source,clojure]
+----
+(d-e76 left right)
+----
+
+calculate dE76
+
+Operation name: `dE76`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand input image
+- `right` -> `:right` (image): Right-hand input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1152-L1169[source,window=_blank]
+
+'''
+
+[#d-ecmc]
+== d-ecmc
+
+
+
+
+[source,clojure]
+----
+(d-ecmc left right)
+----
+
+calculate dECMC
+
+Operation name: `dECMC`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand input image
+- `right` -> `:right` (image): Right-hand input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1171-L1188[source,window=_blank]
+
+'''
+
+[#deviate]
+== deviate
+
+
+
+
+[source,clojure]
+----
+(deviate input)
+----
+
+find image standard deviation
+
+Operation name: `deviate`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (float): Output value
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1190-L1206[source,window=_blank]
+
+'''
+
+[#divide]
+== divide
+
+
+
+
+[source,clojure]
+----
+(divide left right)
+----
+
+divide two images
+
+Operation name: `divide`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1208-L1225[source,window=_blank]
+
+'''
+
+[#draw-circle]
+== draw-circle
+
+
+
+
+[source,clojure]
+----
+(draw-circle image ink cx cy radius)
+(draw-circle image ink cx cy radius opts)
+----
+
+draw a circle on an image
+
+Operation name: `draw_circle`.
+
+Returns a result map.
+
+Required inputs:
+- `image` -> `:image` (image): Image to draw on
+- `ink` -> `:ink` (seqable of number): Color for pixels
+- `cx` -> `:cx` (integer): Centre of draw_circle
+- `cy` -> `:cy` (integer): Centre of draw_circle
+- `radius` -> `:radius` (integer): Radius in pixels
+
+Optional inputs:
+- `fill` -> `:fill` (boolean): Draw a solid object
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1227-L1248[source,window=_blank]
+
+'''
+
+[#draw-flood]
+== draw-flood
+
+
+
+
+[source,clojure]
+----
+(draw-flood image ink x y)
+(draw-flood image ink x y opts)
+----
+
+flood-fill an area
+
+Operation name: `draw_flood`.
+
+Returns a result map.
+
+Required inputs:
+- `image` -> `:image` (image): Image to draw on
+- `ink` -> `:ink` (seqable of number): Color for pixels
+- `x` -> `:x` (integer): DrawFlood start point
+- `y` -> `:y` (integer): DrawFlood start point
+
+Optional inputs:
+- `test` -> `:test` (image): Test pixels in this image
+- `equal` -> `:equal` (boolean): DrawFlood while equal to edge
+
+Outputs:
+- `left` -> `:left` (integer): Left edge of modified area
+- `top` -> `:top` (integer): Top edge of modified area
+- `width` -> `:width` (integer): Width of modified area
+- `height` -> `:height` (integer): Height of modified area
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1250-L1274[source,window=_blank]
+
+'''
+
+[#draw-image]
+== draw-image
+
+
+
+
+[source,clojure]
+----
+(draw-image image sub x y)
+(draw-image image sub x y opts)
+----
+
+paint an image into another image
+
+Operation name: `draw_image`.
+
+Returns a result map.
+
+Required inputs:
+- `image` -> `:image` (image): Image to draw on
+- `sub` -> `:sub` (image): Sub-image to insert into main image
+- `x` -> `:x` (integer): Draw image here
+- `y` -> `:y` (integer): Draw image here
+
+Optional inputs:
+- `mode` -> `:mode` (keyword, see `ol.vips.enums/combine-mode`): Combining mode
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1276-L1296[source,window=_blank]
+
+'''
+
+[#draw-line]
+== draw-line
+
+
+
+
+[source,clojure]
+----
+(draw-line image ink x1 y1 x2 y2)
+----
+
+draw a line on an image
+
+Operation name: `draw_line`.
+
+Returns a result map.
+
+Required inputs:
+- `image` -> `:image` (image): Image to draw on
+- `ink` -> `:ink` (seqable of number): Color for pixels
+- `x1` -> `:x1` (integer): Start of draw_line
+- `y1` -> `:y1` (integer): Start of draw_line
+- `x2` -> `:x2` (integer): End of draw_line
+- `y2` -> `:y2` (integer): End of draw_line
+
+Optional inputs:
+- none
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1298-L1319[source,window=_blank]
+
+'''
+
+[#draw-mask]
+== draw-mask
+
+
+
+
+[source,clojure]
+----
+(draw-mask image ink mask x y)
+----
+
+draw a mask on an image
+
+Operation name: `draw_mask`.
+
+Returns a result map.
+
+Required inputs:
+- `image` -> `:image` (image): Image to draw on
+- `ink` -> `:ink` (seqable of number): Color for pixels
+- `mask` -> `:mask` (image): Mask of pixels to draw
+- `x` -> `:x` (integer): Draw mask here
+- `y` -> `:y` (integer): Draw mask here
+
+Optional inputs:
+- none
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1321-L1341[source,window=_blank]
+
+'''
+
+[#draw-rect]
+== draw-rect
+
+
+
+
+[source,clojure]
+----
+(draw-rect image ink left top width height)
+(draw-rect image ink left top width height opts)
+----
+
+paint a rectangle on an image
+
+Operation name: `draw_rect`.
+
+Returns a result map.
+
+Required inputs:
+- `image` -> `:image` (image): Image to draw on
+- `ink` -> `:ink` (seqable of number): Color for pixels
+- `left` -> `:left` (integer): Rect to fill
+- `top` -> `:top` (integer): Rect to fill
+- `width` -> `:width` (integer): Rect to fill
+- `height` -> `:height` (integer): Rect to fill
+
+Optional inputs:
+- `fill` -> `:fill` (boolean): Draw a solid object
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1343-L1365[source,window=_blank]
+
+'''
+
+[#draw-smudge]
+== draw-smudge
+
+
+
+
+[source,clojure]
+----
+(draw-smudge image left top width height)
+----
+
+blur a rectangle on an image
+
+Operation name: `draw_smudge`.
+
+Returns a result map.
+
+Required inputs:
+- `image` -> `:image` (image): Image to draw on
+- `left` -> `:left` (integer): Rect to fill
+- `top` -> `:top` (integer): Rect to fill
+- `width` -> `:width` (integer): Rect to fill
+- `height` -> `:height` (integer): Rect to fill
+
+Optional inputs:
+- none
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1367-L1387[source,window=_blank]
+
+'''
+
+[#dzsave]
+== dzsave
+
+
+
+
+[source,clojure]
+----
+(dzsave input filename)
+(dzsave input filename opts)
+----
+
+save image to deepzoom file
+
+Operation name: `dzsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `dirname` -> `:dirname` (string): Directory name to save to
+- `imagename` -> `:imagename` (string): Image name
+- `layout` -> `:layout` (keyword, see `ol.vips.enums/foreign-dz-layout`): Directory layout
+- `suffix` -> `:suffix` (string): Filename suffix for tiles
+- `overlap` -> `:overlap` (integer): Tile overlap in pixels
+- `tile-size` -> `:tile-size` (integer): Tile size in pixels
+- `tile-height` -> `:tile-height` (integer): Tile height in pixels
+- `tile-width` -> `:tile-width` (integer): Tile width in pixels
+- `centre` -> `:centre` (boolean): Center image in tile
+- `depth` -> `:depth` (keyword, see `ol.vips.enums/foreign-dz-depth`): Pyramid depth
+- `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Rotate image during save
+- `container` -> `:container` (keyword, see `ol.vips.enums/foreign-dz-container`): Pyramid container type
+- `properties` -> `:properties` (boolean): Write a properties file to the output directory
+- `compression` -> `:compression` (integer): ZIP deflate compression level
+- `region-shrink` -> `:region-shrink` (keyword, see `ol.vips.enums/region-shrink`): Method to shrink regions
+- `skip-blanks` -> `:skip-blanks` (integer): Skip tiles which are nearly equal to the background
+- `id` -> `:id` (string): Resource ID
+- `q` -> `:Q` (integer): Q factor
+- `no-strip` -> `:no-strip` (boolean): Don't strip tile metadata
+- `basename` -> `:basename` (string): Base name to save to
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1389-L1431[source,window=_blank]
+
+'''
+
+[#embed]
+== embed
+
+
+
+
+[source,clojure]
+----
+(embed input x y width height)
+(embed input x y width height opts)
+----
+
+embed an image in a larger image
+
+Operation name: `embed`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `x` -> `:x` (integer): Left edge of input in output
+- `y` -> `:y` (integer): Top edge of input in output
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
+- `background` -> `:background` (seqable of number): Color for background pixels
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1433-L1455[source,window=_blank]
+
+'''
+
+[#extract-area]
+== extract-area
+
+
+
+
+[source,clojure]
+----
+(extract-area input left top width height)
+----
+
+extract an area from an image
+
+Operation name: `extract_area`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:input` (image): Input image
+- `left` -> `:left` (integer): Left edge of extract area
+- `top` -> `:top` (integer): Top edge of extract area
+- `width` -> `:width` (integer): Width of extract area
+- `height` -> `:height` (integer): Height of extract area
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1457-L1477[source,window=_blank]
+
+'''
+
+[#extract-band]
+== extract-band
+
+
+
+
+[source,clojure]
+----
+(extract-band input band)
+(extract-band input band opts)
+----
+
+extract band from an image
+
+Operation name: `extract_band`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `band` -> `:band` (integer): Band to extract
+
+Optional inputs:
+- `n` -> `:n` (integer): Number of bands to extract
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1479-L1497[source,window=_blank]
+
+'''
+
+[#eye]
+== eye
+
+
+
+
+[source,clojure]
+----
+(eye width height)
+(eye width height opts)
+----
+
+make an image showing the eye's spatial response
+
+Operation name: `eye`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `factor` -> `:factor` (float): Maximum spatial frequency
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1499-L1518[source,window=_blank]
+
+'''
+
+[#falsecolour]
+== falsecolour
+
+
+
+
+[source,clojure]
+----
+(falsecolour input)
+----
+
+false-color an image
+
+Operation name: `falsecolour`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1520-L1536[source,window=_blank]
+
+'''
+
+[#fastcor]
+== fastcor
+
+
+
+
+[source,clojure]
+----
+(fastcor input ref)
+----
+
+fast correlation
+
+Operation name: `fastcor`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `ref` -> `:ref` (image): Input reference image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1538-L1555[source,window=_blank]
+
+'''
+
+[#fill-nearest]
+== fill-nearest
+
+
+
+
+[source,clojure]
+----
+(fill-nearest input)
+----
+
+fill image zeros with nearest non-zero pixel
+
+Operation name: `fill_nearest`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Value of nearest non-zero pixel
+- `distance` -> `:distance` (image): Distance to nearest non-zero pixel
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1557-L1574[source,window=_blank]
+
+'''
+
+[#find-trim]
+== find-trim
+
+
+
+
+[source,clojure]
+----
+(find-trim input)
+(find-trim input opts)
+----
+
+search an image for non-edge areas
+
+Operation name: `find_trim`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to find_trim
+
+Optional inputs:
+- `threshold` -> `:threshold` (float): Object threshold
+- `background` -> `:background` (seqable of number): Color for background pixels
+- `line-art` -> `:line-art` (boolean): Enable line art mode
+
+Outputs:
+- `left` -> `:left` (integer): Left edge of image
+- `top` -> `:top` (integer): Top edge of extract area
+- `width` -> `:width` (integer): Width of extract area
+- `height` -> `:height` (integer): Height of extract area
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1576-L1598[source,window=_blank]
+
+'''
+
+[#flatten]
+== flatten
+
+
+
+
+[source,clojure]
+----
+(flatten input)
+(flatten input opts)
+----
+
+flatten alpha out of an image
+
+Operation name: `flatten`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `background` -> `:background` (seqable of number): Background value
+- `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1600-L1618[source,window=_blank]
+
+'''
+
+[#flip]
+== flip
+
+
+
+
+[source,clojure]
+----
+(flip input direction)
+----
+
+flip an image
+
+Operation name: `flip`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Direction to flip image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1620-L1637[source,window=_blank]
+
+'''
+
+[#float2rad]
+== float2rad
+
+
+
+
+[source,clojure]
+----
+(float2rad input)
+----
+
+transform float RGB to Radiance coding
+
+Operation name: `float2rad`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1639-L1655[source,window=_blank]
+
+'''
+
+[#fractsurf]
+== fractsurf
+
+
+
+
+[source,clojure]
+----
+(fractsurf width height fractal-dimension)
+----
+
+make a fractal surface
+
+Operation name: `fractsurf`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `fractal-dimension` -> `:fractal-dimension` (float): Fractal dimension
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1657-L1675[source,window=_blank]
+
+'''
+
+[#freqmult]
+== freqmult
+
+
+
+
+[source,clojure]
+----
+(freqmult input mask)
+----
+
+frequency-domain filtering
+
+Operation name: `freqmult`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `mask` -> `:mask` (image): Input mask image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1677-L1694[source,window=_blank]
+
+'''
+
+[#gamma]
+== gamma
+
+
+
+
+[source,clojure]
+----
+(gamma input)
+(gamma input opts)
+----
+
+gamma an image
+
+Operation name: `gamma`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `exponent` -> `:exponent` (float): Gamma factor
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1696-L1713[source,window=_blank]
+
+'''
+
+[#gaussblur]
+== gaussblur
+
+
+
+
+[source,clojure]
+----
+(gaussblur input sigma)
+(gaussblur input sigma opts)
+----
+
+gaussian blur
+
+Operation name: `gaussblur`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `sigma` -> `:sigma` (float): Sigma of Gaussian
+
+Optional inputs:
+- `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
+- `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1715-L1734[source,window=_blank]
+
+'''
+
+[#gaussmat]
+== gaussmat
+
+
+
+
+[source,clojure]
+----
+(gaussmat sigma min-ampl)
+(gaussmat sigma min-ampl opts)
+----
+
+make a gaussian image
+
+Operation name: `gaussmat`.
+
+Returns an image handle.
+
+Required inputs:
+- `sigma` -> `:sigma` (float): Sigma of Gaussian
+- `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
+
+Optional inputs:
+- `separable` -> `:separable` (boolean): Generate separable Gaussian
+- `integer` -> `:integer` (boolean): Generate integer Gaussian
+- `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Generate with this precision
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1736-L1756[source,window=_blank]
+
+'''
+
+[#gaussnoise]
+== gaussnoise
+
+
+
+
+[source,clojure]
+----
+(gaussnoise width height)
+(gaussnoise width height opts)
+----
+
+make a gaussnoise image
+
+Operation name: `gaussnoise`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `sigma` -> `:sigma` (float): Standard deviation of pixels in generated image
+- `mean` -> `:mean` (float): Mean of pixels in generated image
+- `seed` -> `:seed` (integer): Random number seed
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1758-L1778[source,window=_blank]
+
+'''
+
+[#gifload]
+== gifload
+
+
+
+
+[source,clojure]
+----
+(gifload filename)
+(gifload filename opts)
+----
+
+load GIF with libnsgif
+
+Operation name: `gifload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `n` -> `:n` (integer): Number of pages to load, -1 for all
+- `page` -> `:page` (integer): First page to load
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1780-L1806[source,window=_blank]
+
+'''
+
+[#gifsave]
+== gifsave
+
+
+
+
+[source,clojure]
+----
+(gifsave input filename)
+(gifsave input filename opts)
+----
+
+save as gif
+
+Operation name: `gifsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `dither` -> `:dither` (float): Amount of dithering
+- `effort` -> `:effort` (integer): Quantisation effort
+- `bitdepth` -> `:bitdepth` (integer): Number of bits per pixel
+- `interframe-maxerror` -> `:interframe-maxerror` (float): Maximum inter-frame error for transparency
+- `reuse` -> `:reuse` (boolean): Reuse palette from input
+- `interpalette-maxerror` -> `:interpalette-maxerror` (float): Maximum inter-palette error for palette reusage
+- `interlace` -> `:interlace` (boolean): Generate an interlaced (progressive) GIF
+- `reoptimise` -> `:reoptimise` (boolean): Reoptimise colour palettes
+- `keep-duplicate-frames` -> `:keep-duplicate-frames` (boolean): Keep duplicate frames in the output instead of combining them
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1808-L1839[source,window=_blank]
+
+'''
+
+[#globalbalance]
+== globalbalance
+
+
+
+
+[source,clojure]
+----
+(globalbalance input)
+(globalbalance input opts)
+----
+
+global balance an image mosaic
+
+Operation name: `globalbalance`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `gamma` -> `:gamma` (float): Image gamma
+- `int-output` -> `:int-output` (boolean): Integer output
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1841-L1859[source,window=_blank]
+
+'''
+
+[#gravity]
+== gravity
+
+
+
+
+[source,clojure]
+----
+(gravity input direction width height)
+(gravity input direction width height opts)
+----
+
+place an image within a larger image with a certain gravity
+
+Operation name: `gravity`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `direction` -> `:direction` (keyword, see `ol.vips.enums/compass-direction`): Direction to place image within width/height
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
+- `background` -> `:background` (seqable of number): Color for background pixels
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1861-L1882[source,window=_blank]
+
+'''
+
+[#grey]
+== grey
+
+
+
+
+[source,clojure]
+----
+(grey width height)
+(grey width height opts)
+----
+
+make a grey ramp image
+
+Operation name: `grey`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1884-L1902[source,window=_blank]
+
+'''
+
+[#grid]
+== grid
+
+
+
+
+[source,clojure]
+----
+(grid input tile-height across down)
+----
+
+grid an image
+
+Operation name: `grid`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `tile-height` -> `:tile-height` (integer): Chop into tiles this high
+- `across` -> `:across` (integer): Number of tiles across
+- `down` -> `:down` (integer): Number of tiles down
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1904-L1923[source,window=_blank]
+
+'''
+
+[#heifload]
+== heifload
+
+
+
+
+[source,clojure]
+----
+(heifload filename)
+(heifload filename opts)
+----
+
+load a HEIF image
+
+Operation name: `heifload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `page` -> `:page` (integer): First page to load
+- `n` -> `:n` (integer): Number of pages to load, -1 for all
+- `thumbnail` -> `:thumbnail` (boolean): Fetch thumbnail image
+- `autorotate` -> `:autorotate` (boolean): Rotate image using exif orientation
+- `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1925-L1954[source,window=_blank]
+
+'''
+
+[#heifsave]
+== heifsave
+
+
+
+
+[source,clojure]
+----
+(heifsave input filename)
+(heifsave input filename opts)
+----
+
+save image in HEIF format
+
+Operation name: `heifsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `q` -> `:Q` (integer): Q factor
+- `bitdepth` -> `:bitdepth` (integer): Number of bits per pixel
+- `lossless` -> `:lossless` (boolean): Enable lossless compression
+- `compression` -> `:compression` (keyword, see `ol.vips.enums/foreign-heif-compression`): Compression format
+- `effort` -> `:effort` (integer): CPU effort
+- `subsample-mode` -> `:subsample-mode` (keyword, see `ol.vips.enums/foreign-subsample`): Select chroma subsample operation mode
+- `speed` -> `:speed` (integer): CPU effort
+- `encoder` -> `:encoder` (keyword, see `ol.vips.enums/foreign-heif-encoder`): Select encoder to use
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1956-L1986[source,window=_blank]
+
+'''
+
+[#hist-cum]
+== hist-cum
+
+
+
+
+[source,clojure]
+----
+(hist-cum input)
+----
+
+form cumulative histogram
+
+Operation name: `hist_cum`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1988-L2004[source,window=_blank]
+
+'''
+
+[#hist-entropy]
+== hist-entropy
+
+
+
+
+[source,clojure]
+----
+(hist-entropy input)
+----
+
+estimate image entropy
+
+Operation name: `hist_entropy`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `input` -> `:in` (image): Input histogram image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (float): Output value
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2006-L2022[source,window=_blank]
+
+'''
+
+[#hist-equal]
+== hist-equal
+
+
+
+
+[source,clojure]
+----
+(hist-equal input)
+(hist-equal input opts)
+----
+
+histogram equalisation
+
+Operation name: `hist_equal`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `band` -> `:band` (integer): Equalise with this band
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2024-L2041[source,window=_blank]
+
+'''
+
+[#hist-find]
+== hist-find
+
+
+
+
+[source,clojure]
+----
+(hist-find input)
+(hist-find input opts)
+----
+
+find image histogram
+
+Operation name: `hist_find`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `band` -> `:band` (integer): Find histogram of band
+
+Outputs:
+- `out` -> `:out` (image): Output histogram
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2043-L2060[source,window=_blank]
+
+'''
+
+[#hist-find-indexed]
+== hist-find-indexed
+
+
+
+
+[source,clojure]
+----
+(hist-find-indexed input index)
+(hist-find-indexed input index opts)
+----
+
+find indexed image histogram
+
+Operation name: `hist_find_indexed`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `index` -> `:index` (image): Index image
+
+Optional inputs:
+- `combine` -> `:combine` (keyword, see `ol.vips.enums/combine`): Combine bins like this
+
+Outputs:
+- `out` -> `:out` (image): Output histogram
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2062-L2080[source,window=_blank]
+
+'''
+
+[#hist-find-ndim]
+== hist-find-ndim
+
+
+
+
+[source,clojure]
+----
+(hist-find-ndim input)
+(hist-find-ndim input opts)
+----
+
+find n-dimensional image histogram
+
+Operation name: `hist_find_ndim`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `bins` -> `:bins` (integer): Number of bins in each dimension
+
+Outputs:
+- `out` -> `:out` (image): Output histogram
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2082-L2099[source,window=_blank]
+
+'''
+
+[#hist-ismonotonic]
+== hist-ismonotonic
+
+
+
+
+[source,clojure]
+----
+(hist-ismonotonic input)
+----
+
+test for monotonicity
+
+Operation name: `hist_ismonotonic`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Input histogram image
+
+Optional inputs:
+- none
+
+Outputs:
+- `monotonic` -> `:monotonic` (boolean): true if in is monotonic
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2101-L2117[source,window=_blank]
+
+'''
+
+[#hist-local]
+== hist-local
+
+
+
+
+[source,clojure]
+----
+(hist-local input width height)
+(hist-local input width height opts)
+----
+
+local histogram equalisation
+
+Operation name: `hist_local`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `width` -> `:width` (integer): Window width in pixels
+- `height` -> `:height` (integer): Window height in pixels
+
+Optional inputs:
+- `max-slope` -> `:max-slope` (integer): Maximum slope (CLAHE)
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2119-L2138[source,window=_blank]
+
+'''
+
+[#hist-match]
+== hist-match
+
+
+
+
+[source,clojure]
+----
+(hist-match input ref)
+----
+
+match two histograms
+
+Operation name: `hist_match`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input histogram
+- `ref` -> `:ref` (image): Reference histogram
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2140-L2157[source,window=_blank]
+
+'''
+
+[#hist-norm]
+== hist-norm
+
+
+
+
+[source,clojure]
+----
+(hist-norm input)
+----
+
+normalise histogram
+
+Operation name: `hist_norm`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2159-L2175[source,window=_blank]
+
+'''
+
+[#hist-plot]
+== hist-plot
+
+
+
+
+[source,clojure]
+----
+(hist-plot input)
+----
+
+plot histogram
+
+Operation name: `hist_plot`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2177-L2193[source,window=_blank]
+
+'''
+
+[#hough-circle]
+== hough-circle
+
+
+
+
+[source,clojure]
+----
+(hough-circle input)
+(hough-circle input opts)
+----
+
+find hough circle transform
+
+Operation name: `hough_circle`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `scale` -> `:scale` (integer): Scale down dimensions by this factor
+- `min-radius` -> `:min-radius` (integer): Smallest radius to search for
+- `max-radius` -> `:max-radius` (integer): Largest radius to search for
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2195-L2214[source,window=_blank]
+
+'''
+
+[#hough-line]
+== hough-line
+
+
+
+
+[source,clojure]
+----
+(hough-line input)
+(hough-line input opts)
+----
+
+find hough line transform
+
+Operation name: `hough_line`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `width` -> `:width` (integer): Horizontal size of parameter space
+- `height` -> `:height` (integer): Vertical size of parameter space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2216-L2234[source,window=_blank]
+
+'''
+
+[#hsv2s-rgb]
+== hsv2s-rgb
+
+
+
+
+[source,clojure]
+----
+(hsv2s-rgb input)
+----
+
+transform HSV to sRGB
+
+Operation name: `HSV2sRGB`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2236-L2252[source,window=_blank]
+
+'''
+
+[#icc-export]
+== icc-export
+
+
+
+
+[source,clojure]
+----
+(icc-export input)
+(icc-export input opts)
+----
+
+output to device with ICC profile
+
+Operation name: `icc_export`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
+- `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+- `black-point-compensation` -> `:black-point-compensation` (boolean): Enable black point compensation
+- `output-profile` -> `:output-profile` (string): Filename to load output profile from
+- `depth` -> `:depth` (integer): Output device space depth in bits
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2254-L2275[source,window=_blank]
+
+'''
+
+[#icc-import]
+== icc-import
+
+
+
+
+[source,clojure]
+----
+(icc-import input)
+(icc-import input opts)
+----
+
+import from device with ICC profile
+
+Operation name: `icc_import`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
+- `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+- `black-point-compensation` -> `:black-point-compensation` (boolean): Enable black point compensation
+- `embedded` -> `:embedded` (boolean): Use embedded input profile, if available
+- `input-profile` -> `:input-profile` (string): Filename to load input profile from
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2277-L2298[source,window=_blank]
+
+'''
+
+[#icc-transform]
+== icc-transform
+
+
+
+
+[source,clojure]
+----
+(icc-transform input output-profile)
+(icc-transform input output-profile opts)
+----
+
+transform between devices with ICC profiles
+
+Operation name: `icc_transform`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `output-profile` -> `:output-profile` (string): Filename to load output profile from
+
+Optional inputs:
+- `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
+- `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+- `black-point-compensation` -> `:black-point-compensation` (boolean): Enable black point compensation
+- `embedded` -> `:embedded` (boolean): Use embedded input profile, if available
+- `input-profile` -> `:input-profile` (string): Filename to load input profile from
+- `depth` -> `:depth` (integer): Output device space depth in bits
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2300-L2323[source,window=_blank]
+
+'''
+
+[#identity]
+== identity
+
+
+
+
+[source,clojure]
+----
+(identity)
+(identity opts)
+----
+
+make a 1D image where pixel values are indexes
+
+Operation name: `identity`.
+
+Returns an image handle.
+
+Required inputs:
+- none
+
+Optional inputs:
+- `bands` -> `:bands` (integer): Number of bands in LUT
+- `ushort` -> `:ushort` (boolean): Create a 16-bit LUT
+- `size` -> `:size` (integer): Size of 16-bit LUT
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2325-L2344[source,window=_blank]
+
+'''
+
+[#ifthenelse]
+== ifthenelse
+
+
+
+
+[source,clojure]
+----
+(ifthenelse cond in1 in2)
+(ifthenelse cond in1 in2 opts)
+----
+
+ifthenelse an image
+
+Operation name: `ifthenelse`.
+
+Returns an image handle.
+
+Required inputs:
+- `cond` -> `:cond` (image): Condition input image
+- `in1` -> `:in1` (image): Source for TRUE pixels
+- `in2` -> `:in2` (image): Source for FALSE pixels
+
+Optional inputs:
+- `blend` -> `:blend` (boolean): Blend smoothly between then and else parts
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2346-L2365[source,window=_blank]
+
+'''
+
+[#insert]
+== insert
+
+
+
+
+[source,clojure]
+----
+(insert main sub x y)
+(insert main sub x y opts)
+----
+
+insert image @sub into @main at @x, @y
+
+Operation name: `insert`.
+
+Returns an image handle.
+
+Required inputs:
+- `main` -> `:main` (image): Main input image
+- `sub` -> `:sub` (image): Sub-image to insert into main image
+- `x` -> `:x` (integer): Left edge of sub in main
+- `y` -> `:y` (integer): Top edge of sub in main
+
+Optional inputs:
+- `expand` -> `:expand` (boolean): Expand output to hold all of both inputs
+- `background` -> `:background` (seqable of number): Color for new pixels
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2367-L2388[source,window=_blank]
+
+'''
+
+[#invert]
+== invert
+
+
+
+
+[source,clojure]
+----
+(invert input)
+----
+
+invert an image
+
+Operation name: `invert`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2390-L2406[source,window=_blank]
+
+'''
+
+[#invertlut]
+== invertlut
+
+
+
+
+[source,clojure]
+----
+(invertlut input)
+(invertlut input opts)
+----
+
+build an inverted look-up table
+
+Operation name: `invertlut`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Matrix of XY coordinates
+
+Optional inputs:
+- `size` -> `:size` (integer): LUT size to generate
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2408-L2425[source,window=_blank]
+
+'''
+
+[#join]
+== join
+
+
+
+
+[source,clojure]
+----
+(join in1 in2 direction)
+(join in1 in2 direction opts)
+----
+
+join a pair of images
+
+Operation name: `join`.
+
+Returns an image handle.
+
+Required inputs:
+- `in1` -> `:in1` (image): First input image
+- `in2` -> `:in2` (image): Second input image
+- `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Join left-right or up-down
+
+Optional inputs:
+- `expand` -> `:expand` (boolean): Expand output to hold all of both inputs
+- `shim` -> `:shim` (integer): Pixels between images
+- `background` -> `:background` (seqable of number): Colour for new pixels
+- `align` -> `:align` (keyword, see `ol.vips.enums/align`): Align on the low, centre or high coordinate edge
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2427-L2449[source,window=_blank]
+
+'''
+
+[#jpegload]
+== jpegload
+
+
+
+
+[source,clojure]
+----
+(jpegload filename)
+(jpegload filename opts)
+----
+
+load jpeg from file
+
+Operation name: `jpegload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `shrink` -> `:shrink` (integer): Shrink factor on load
+- `autorotate` -> `:autorotate` (boolean): Rotate image using exif orientation
+- `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2451-L2478[source,window=_blank]
+
+'''
+
+[#jpegsave]
+== jpegsave
+
+
+
+
+[source,clojure]
+----
+(jpegsave input filename)
+(jpegsave input filename opts)
+----
+
+save image to jpeg file
+
+Operation name: `jpegsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `q` -> `:Q` (integer): Q factor
+- `optimize-coding` -> `:optimize-coding` (boolean): Compute optimal Huffman coding tables
+- `interlace` -> `:interlace` (boolean): Generate an interlaced (progressive) jpeg
+- `no-subsample` -> `:no-subsample` (boolean): Disable chroma subsample
+- `trellis-quant` -> `:trellis-quant` (boolean): Apply trellis quantisation to each 8x8 block
+- `overshoot-deringing` -> `:overshoot-deringing` (boolean): Apply overshooting to samples with extreme values
+- `optimize-scans` -> `:optimize-scans` (boolean): Split spectrum of DCT coefficients into separate scans
+- `quant-table` -> `:quant-table` (integer): Use predefined quantization table with given index
+- `subsample-mode` -> `:subsample-mode` (keyword, see `ol.vips.enums/foreign-subsample`): Select chroma subsample operation mode
+- `restart-interval` -> `:restart-interval` (integer): Add restart markers every specified number of mcu
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2480-L2512[source,window=_blank]
+
+'''
+
+[#jpegsave-mime]
+== jpegsave-mime
+
+
+
+
+[source,clojure]
+----
+(jpegsave-mime input)
+(jpegsave-mime input opts)
+----
+
+save image to jpeg mime
+
+Operation name: `jpegsave_mime`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+
+Optional inputs:
+- `q` -> `:Q` (integer): Q factor
+- `optimize-coding` -> `:optimize-coding` (boolean): Compute optimal Huffman coding tables
+- `interlace` -> `:interlace` (boolean): Generate an interlaced (progressive) jpeg
+- `no-subsample` -> `:no-subsample` (boolean): Disable chroma subsample
+- `trellis-quant` -> `:trellis-quant` (boolean): Apply trellis quantisation to each 8x8 block
+- `overshoot-deringing` -> `:overshoot-deringing` (boolean): Apply overshooting to samples with extreme values
+- `optimize-scans` -> `:optimize-scans` (boolean): Split spectrum of DCT coefficients into separate scans
+- `quant-table` -> `:quant-table` (integer): Use predefined quantization table with given index
+- `subsample-mode` -> `:subsample-mode` (keyword, see `ol.vips.enums/foreign-subsample`): Select chroma subsample operation mode
+- `restart-interval` -> `:restart-interval` (integer): Add restart markers every specified number of mcu
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2514-L2545[source,window=_blank]
+
+'''
+
+[#lab-q2-lab]
+== lab-q2-lab
+
+
+
+
+[source,clojure]
+----
+(lab-q2-lab input)
+----
+
+unpack a LabQ image to float Lab
+
+Operation name: `LabQ2Lab`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2547-L2563[source,window=_blank]
+
+'''
+
+[#lab-q2-lab-s]
+== lab-q2-lab-s
+
+
+
+
+[source,clojure]
+----
+(lab-q2-lab-s input)
+----
+
+unpack a LabQ image to short Lab
+
+Operation name: `LabQ2LabS`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2565-L2581[source,window=_blank]
+
+'''
+
+[#lab-q2s-rgb]
+== lab-q2s-rgb
+
+
+
+
+[source,clojure]
+----
+(lab-q2s-rgb input)
+----
+
+convert a LabQ image to sRGB
+
+Operation name: `LabQ2sRGB`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2583-L2599[source,window=_blank]
+
+'''
+
+[#lab-s2-lab]
+== lab-s2-lab
+
+
+
+
+[source,clojure]
+----
+(lab-s2-lab input)
+----
+
+transform signed short Lab to float
+
+Operation name: `LabS2Lab`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2601-L2617[source,window=_blank]
+
+'''
+
+[#lab-s2-lab-q]
+== lab-s2-lab-q
+
+
+
+
+[source,clojure]
+----
+(lab-s2-lab-q input)
+----
+
+transform short Lab to LabQ coding
+
+Operation name: `LabS2LabQ`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2619-L2635[source,window=_blank]
+
+'''
+
+[#lab2-lab-q]
+== lab2-lab-q
+
+
+
+
+[source,clojure]
+----
+(lab2-lab-q input)
+----
+
+transform float Lab to LabQ coding
+
+Operation name: `Lab2LabQ`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2637-L2653[source,window=_blank]
+
+'''
+
+[#lab2-lab-s]
+== lab2-lab-s
+
+
+
+
+[source,clojure]
+----
+(lab2-lab-s input)
+----
+
+transform float Lab to signed short
+
+Operation name: `Lab2LabS`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2655-L2671[source,window=_blank]
+
+'''
+
+[#lab2-lch]
+== lab2-lch
+
+
+
+
+[source,clojure]
+----
+(lab2-lch input)
+----
+
+transform Lab to LCh
+
+Operation name: `Lab2LCh`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2673-L2689[source,window=_blank]
+
+'''
+
+[#lab2-xyz]
+== lab2-xyz
+
+
+
+
+[source,clojure]
+----
+(lab2-xyz input)
+(lab2-xyz input opts)
+----
+
+transform CIELAB to XYZ
+
+Operation name: `Lab2XYZ`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `temp` -> `:temp` (seqable of number): Color temperature
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2691-L2708[source,window=_blank]
+
+'''
+
+[#labelregions]
+== labelregions
+
+
+
+
+[source,clojure]
+----
+(labelregions input)
+----
+
+label regions in an image
+
+Operation name: `labelregions`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `mask` -> `:mask` (image): Mask of region labels
+- `segments` -> `:segments` (integer): Number of discrete contiguous regions
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2710-L2727[source,window=_blank]
+
+'''
+
+[#lch2-cmc]
+== lch2-cmc
+
+
+
+
+[source,clojure]
+----
+(lch2-cmc input)
+----
+
+transform LCh to CMC
+
+Operation name: `LCh2CMC`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2729-L2745[source,window=_blank]
+
+'''
+
+[#lch2-lab]
+== lch2-lab
+
+
+
+
+[source,clojure]
+----
+(lch2-lab input)
+----
+
+transform LCh to Lab
+
+Operation name: `LCh2Lab`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2747-L2763[source,window=_blank]
+
+'''
+
+[#linear]
+== linear
+
+
+
+
+[source,clojure]
+----
+(linear input a b)
+(linear input a b opts)
+----
+
+calculate (a * in + b)
+
+Operation name: `linear`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `a` -> `:a` (seqable of number): Multiply by this
+- `b` -> `:b` (seqable of number): Add this
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output should be uchar
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2765-L2784[source,window=_blank]
+
+'''
+
+[#linecache]
+== linecache
+
+
+
+
+[source,clojure]
+----
+(linecache input)
+(linecache input opts)
+----
+
+cache an image as a set of lines
+
+Operation name: `linecache`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `tile-height` -> `:tile-height` (integer): Tile height in pixels
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
+- `threaded` -> `:threaded` (boolean): Allow threaded access
+- `persistent` -> `:persistent` (boolean): Keep cache between evaluations
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2786-L2806[source,window=_blank]
+
+'''
+
+[#logmat]
+== logmat
+
+
+
+
+[source,clojure]
+----
+(logmat sigma min-ampl)
+(logmat sigma min-ampl opts)
+----
+
+make a Laplacian of Gaussian image
+
+Operation name: `logmat`.
+
+Returns an image handle.
+
+Required inputs:
+- `sigma` -> `:sigma` (float): Radius of Gaussian
+- `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
+
+Optional inputs:
+- `separable` -> `:separable` (boolean): Generate separable Gaussian
+- `integer` -> `:integer` (boolean): Generate integer Gaussian
+- `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Generate with this precision
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2808-L2828[source,window=_blank]
+
+'''
+
+[#mapim]
+== mapim
+
+
+
+
+[source,clojure]
+----
+(mapim input index)
+(mapim input index opts)
+----
+
+resample with a map image
+
+Operation name: `mapim`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `index` -> `:index` (image): Index pixels with this
+
+Optional inputs:
+- `background` -> `:background` (seqable of number): Background value
+- `premultiplied` -> `:premultiplied` (boolean): Images have premultiplied alpha
+- `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2830-L2850[source,window=_blank]
+
+'''
+
+[#maplut]
+== maplut
+
+
+
+
+[source,clojure]
+----
+(maplut input lut)
+(maplut input lut opts)
+----
+
+map an image though a lut
+
+Operation name: `maplut`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `lut` -> `:lut` (image): Look-up table image
+
+Optional inputs:
+- `band` -> `:band` (integer): Apply one-band lut to this band of in
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2852-L2870[source,window=_blank]
+
+'''
+
+[#mask-butterworth]
+== mask-butterworth
+
+
+
+
+[source,clojure]
+----
+(mask-butterworth width height order frequency-cutoff amplitude-cutoff)
+(mask-butterworth width height order frequency-cutoff amplitude-cutoff opts)
+----
+
+make a butterworth filter
+
+Operation name: `mask_butterworth`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `order` -> `:order` (float): Filter order
+- `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+- `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2872-L2896[source,window=_blank]
+
+'''
+
+[#mask-butterworth-band]
+== mask-butterworth-band
+
+
+
+
+[source,clojure]
+----
+(mask-butterworth-band width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff)
+(mask-butterworth-band width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff opts)
+----
+
+make a butterworth_band filter
+
+Operation name: `mask_butterworth_band`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `order` -> `:order` (float): Filter order
+- `frequency-cutoff-x` -> `:frequency-cutoff-x` (float): Frequency cutoff x
+- `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
+- `radius` -> `:radius` (float): Radius of circle
+- `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2898-L2924[source,window=_blank]
+
+'''
+
+[#mask-butterworth-ring]
+== mask-butterworth-ring
+
+
+
+
+[source,clojure]
+----
+(mask-butterworth-ring width height order frequency-cutoff amplitude-cutoff ringwidth)
+(mask-butterworth-ring width height order frequency-cutoff amplitude-cutoff ringwidth opts)
+----
+
+make a butterworth ring filter
+
+Operation name: `mask_butterworth_ring`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `order` -> `:order` (float): Filter order
+- `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+- `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
+- `ringwidth` -> `:ringwidth` (float): Ringwidth
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2926-L2951[source,window=_blank]
+
+'''
+
+[#mask-fractal]
+== mask-fractal
+
+
+
+
+[source,clojure]
+----
+(mask-fractal width height fractal-dimension)
+(mask-fractal width height fractal-dimension opts)
+----
+
+make fractal filter
+
+Operation name: `mask_fractal`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `fractal-dimension` -> `:fractal-dimension` (float): Fractal dimension
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2953-L2975[source,window=_blank]
+
+'''
+
+[#mask-gaussian]
+== mask-gaussian
+
+
+
+
+[source,clojure]
+----
+(mask-gaussian width height frequency-cutoff amplitude-cutoff)
+(mask-gaussian width height frequency-cutoff amplitude-cutoff opts)
+----
+
+make a gaussian filter
+
+Operation name: `mask_gaussian`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+- `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2977-L3000[source,window=_blank]
+
+'''
+
+[#mask-gaussian-band]
+== mask-gaussian-band
+
+
+
+
+[source,clojure]
+----
+(mask-gaussian-band width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff)
+(mask-gaussian-band width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff opts)
+----
+
+make a gaussian filter
+
+Operation name: `mask_gaussian_band`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `frequency-cutoff-x` -> `:frequency-cutoff-x` (float): Frequency cutoff x
+- `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
+- `radius` -> `:radius` (float): Radius of circle
+- `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3002-L3027[source,window=_blank]
+
+'''
+
+[#mask-gaussian-ring]
+== mask-gaussian-ring
+
+
+
+
+[source,clojure]
+----
+(mask-gaussian-ring width height frequency-cutoff amplitude-cutoff ringwidth)
+(mask-gaussian-ring width height frequency-cutoff amplitude-cutoff ringwidth opts)
+----
+
+make a gaussian ring filter
+
+Operation name: `mask_gaussian_ring`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+- `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
+- `ringwidth` -> `:ringwidth` (float): Ringwidth
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3029-L3053[source,window=_blank]
+
+'''
+
+[#mask-ideal]
+== mask-ideal
+
+
+
+
+[source,clojure]
+----
+(mask-ideal width height frequency-cutoff)
+(mask-ideal width height frequency-cutoff opts)
+----
+
+make an ideal filter
+
+Operation name: `mask_ideal`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3055-L3077[source,window=_blank]
+
+'''
+
+[#mask-ideal-band]
+== mask-ideal-band
+
+
+
+
+[source,clojure]
+----
+(mask-ideal-band width height frequency-cutoff-x frequency-cutoff-y radius)
+(mask-ideal-band width height frequency-cutoff-x frequency-cutoff-y radius opts)
+----
+
+make an ideal band filter
+
+Operation name: `mask_ideal_band`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `frequency-cutoff-x` -> `:frequency-cutoff-x` (float): Frequency cutoff x
+- `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
+- `radius` -> `:radius` (float): Radius of circle
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3079-L3103[source,window=_blank]
+
+'''
+
+[#mask-ideal-ring]
+== mask-ideal-ring
+
+
+
+
+[source,clojure]
+----
+(mask-ideal-ring width height frequency-cutoff ringwidth)
+(mask-ideal-ring width height frequency-cutoff ringwidth opts)
+----
+
+make an ideal ring filter
+
+Operation name: `mask_ideal_ring`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
+- `ringwidth` -> `:ringwidth` (float): Ringwidth
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `nodc` -> `:nodc` (boolean): Remove DC component
+- `reject` -> `:reject` (boolean): Invert the sense of the filter
+- `optical` -> `:optical` (boolean): Rotate quadrants to optical space
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3105-L3128[source,window=_blank]
+
+'''
+
+[#match]
+== match
+
+
+
+
+[source,clojure]
+----
+(match ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2)
+(match ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 opts)
+----
+
+first-order match of two images
+
+Operation name: `match`.
+
+Returns an image handle.
+
+Required inputs:
+- `ref` -> `:ref` (image): Reference image
+- `sec` -> `:sec` (image): Secondary image
+- `xr1` -> `:xr1` (integer): Position of first reference tie-point
+- `yr1` -> `:yr1` (integer): Position of first reference tie-point
+- `xs1` -> `:xs1` (integer): Position of first secondary tie-point
+- `ys1` -> `:ys1` (integer): Position of first secondary tie-point
+- `xr2` -> `:xr2` (integer): Position of second reference tie-point
+- `yr2` -> `:yr2` (integer): Position of second reference tie-point
+- `xs2` -> `:xs2` (integer): Position of second secondary tie-point
+- `ys2` -> `:ys2` (integer): Position of second secondary tie-point
+
+Optional inputs:
+- `hwindow` -> `:hwindow` (integer): Half window size
+- `harea` -> `:harea` (integer): Half area size
+- `search` -> `:search` (boolean): Search to improve tie-points
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3130-L3158[source,window=_blank]
+
+'''
+
+[#math]
+== math
+
+
+
+
+[source,clojure]
+----
+(math input math)
+----
+
+apply a math operation to an image
+
+Operation name: `math`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `math` -> `:math` (keyword, see `ol.vips.enums/operation-math`): Math to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3160-L3177[source,window=_blank]
+
+'''
+
+[#math2]
+== math2
+
+
+
+
+[source,clojure]
+----
+(math2 left right math2)
+----
+
+binary math operations
+
+Operation name: `math2`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+- `math2` -> `:math2` (keyword, see `ol.vips.enums/operation-math2`): Math to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3179-L3197[source,window=_blank]
+
+'''
+
+[#math2-const]
+== math2-const
+
+
+
+
+[source,clojure]
+----
+(math2-const input math2 c)
+----
+
+binary math operations with a constant
+
+Operation name: `math2_const`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `math2` -> `:math2` (keyword, see `ol.vips.enums/operation-math2`): Math to perform
+- `c` -> `:c` (seqable of number): Array of constants
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3199-L3217[source,window=_blank]
+
+'''
+
+[#matrixinvert]
+== matrixinvert
+
+
+
+
+[source,clojure]
+----
+(matrixinvert input)
+----
+
+invert a matrix
+
+Operation name: `matrixinvert`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): An square matrix
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output matrix
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3219-L3235[source,window=_blank]
+
+'''
+
+[#matrixload]
+== matrixload
+
+
+
+
+[source,clojure]
+----
+(matrixload filename)
+(matrixload filename opts)
+----
+
+load matrix
+
+Operation name: `matrixload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3237-L3261[source,window=_blank]
+
+'''
+
+[#matrixmultiply]
+== matrixmultiply
+
+
+
+
+[source,clojure]
+----
+(matrixmultiply left right)
+----
+
+multiply two matrices
+
+Operation name: `matrixmultiply`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): First matrix to multiply
+- `right` -> `:right` (image): Second matrix to multiply
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output matrix
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3263-L3280[source,window=_blank]
+
+'''
+
+[#matrixprint]
+== matrixprint
+
+
+
+
+[source,clojure]
+----
+(matrixprint input)
+(matrixprint input opts)
+----
+
+print matrix
+
+Operation name: `matrixprint`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+
+Optional inputs:
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3282-L3303[source,window=_blank]
+
+'''
+
+[#matrixsave]
+== matrixsave
+
+
+
+
+[source,clojure]
+----
+(matrixsave input filename)
+(matrixsave input filename opts)
+----
+
+save image to matrix
+
+Operation name: `matrixsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3305-L3327[source,window=_blank]
+
+'''
+
+[#maxpair]
+== maxpair
+
+
+
+
+[source,clojure]
+----
+(maxpair left right)
+----
+
+maximum of a pair of images
+
+Operation name: `maxpair`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3329-L3346[source,window=_blank]
+
+'''
+
+[#measure]
+== measure
+
+
+
+
+[source,clojure]
+----
+(measure input h v)
+(measure input h v opts)
+----
+
+measure a set of patches on a color chart
+
+Operation name: `measure`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Image to measure
+- `h` -> `:h` (integer): Number of patches across chart
+- `v` -> `:v` (integer): Number of patches down chart
+
+Optional inputs:
+- `left` -> `:left` (integer): Left edge of extract area
+- `top` -> `:top` (integer): Top edge of extract area
+- `width` -> `:width` (integer): Width of extract area
+- `height` -> `:height` (integer): Height of extract area
+
+Outputs:
+- `out` -> `:out` (image): Output array of statistics
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3348-L3370[source,window=_blank]
+
+'''
+
+[#merge]
+== merge
+
+
+
+
+[source,clojure]
+----
+(merge ref sec direction dx dy)
+(merge ref sec direction dx dy opts)
+----
+
+merge two images
+
+Operation name: `merge`.
+
+Returns an image handle.
+
+Required inputs:
+- `ref` -> `:ref` (image): Reference image
+- `sec` -> `:sec` (image): Secondary image
+- `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Horizontal or vertical merge
+- `dx` -> `:dx` (integer): Horizontal displacement from sec to ref
+- `dy` -> `:dy` (integer): Vertical displacement from sec to ref
+
+Optional inputs:
+- `mblend` -> `:mblend` (integer): Maximum blend size
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3372-L3393[source,window=_blank]
+
+'''
+
+[#minpair]
+== minpair
+
+
+
+
+[source,clojure]
+----
+(minpair left right)
+----
+
+minimum of a pair of images
+
+Operation name: `minpair`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3395-L3412[source,window=_blank]
+
+'''
+
+[#morph]
+== morph
+
+
+
+
+[source,clojure]
+----
+(morph input mask morph)
+----
+
+morphology operation
+
+Operation name: `morph`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `mask` -> `:mask` (image): Input matrix image
+- `morph` -> `:morph` (keyword, see `ol.vips.enums/operation-morphology`): Morphological operation to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3414-L3432[source,window=_blank]
+
+'''
+
+[#mosaic]
+== mosaic
+
+
+
+
+[source,clojure]
+----
+(mosaic ref sec direction xref yref xsec ysec)
+(mosaic ref sec direction xref yref xsec ysec opts)
+----
+
+mosaic two images
+
+Operation name: `mosaic`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `ref` -> `:ref` (image): Reference image
+- `sec` -> `:sec` (image): Secondary image
+- `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Horizontal or vertical mosaic
+- `xref` -> `:xref` (integer): Position of reference tie-point
+- `yref` -> `:yref` (integer): Position of reference tie-point
+- `xsec` -> `:xsec` (integer): Position of secondary tie-point
+- `ysec` -> `:ysec` (integer): Position of secondary tie-point
+
+Optional inputs:
+- `hwindow` -> `:hwindow` (integer): Half window size
+- `harea` -> `:harea` (integer): Half area size
+- `mblend` -> `:mblend` (integer): Maximum blend size
+- `bandno` -> `:bandno` (integer): Band to search for features on
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `dx0` -> `:dx0` (integer): Detected integer offset
+- `dy0` -> `:dy0` (integer): Detected integer offset
+- `scale1` -> `:scale1` (float): Detected scale
+- `angle1` -> `:angle1` (float): Detected rotation
+- `dy1` -> `:dy1` (float): Detected first-order displacement
+- `dx1` -> `:dx1` (float): Detected first-order displacement
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3434-L3466[source,window=_blank]
+
+'''
+
+[#mosaic1]
+== mosaic1
+
+
+
+
+[source,clojure]
+----
+(mosaic1 ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2)
+(mosaic1 ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 opts)
+----
+
+first-order mosaic of two images
+
+Operation name: `mosaic1`.
+
+Returns an image handle.
+
+Required inputs:
+- `ref` -> `:ref` (image): Reference image
+- `sec` -> `:sec` (image): Secondary image
+- `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Horizontal or vertical mosaic
+- `xr1` -> `:xr1` (integer): Position of first reference tie-point
+- `yr1` -> `:yr1` (integer): Position of first reference tie-point
+- `xs1` -> `:xs1` (integer): Position of first secondary tie-point
+- `ys1` -> `:ys1` (integer): Position of first secondary tie-point
+- `xr2` -> `:xr2` (integer): Position of second reference tie-point
+- `yr2` -> `:yr2` (integer): Position of second reference tie-point
+- `xs2` -> `:xs2` (integer): Position of second secondary tie-point
+- `ys2` -> `:ys2` (integer): Position of second secondary tie-point
+
+Optional inputs:
+- `hwindow` -> `:hwindow` (integer): Half window size
+- `harea` -> `:harea` (integer): Half area size
+- `search` -> `:search` (boolean): Search to improve tie-points
+- `mblend` -> `:mblend` (integer): Maximum blend size
+- `bandno` -> `:bandno` (integer): Band to search for features on
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3468-L3499[source,window=_blank]
+
+'''
+
+[#msb]
+== msb
+
+
+
+
+[source,clojure]
+----
+(msb input)
+(msb input opts)
+----
+
+pick most-significant byte from an image
+
+Operation name: `msb`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `band` -> `:band` (integer): Band to msb
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3501-L3518[source,window=_blank]
+
+'''
+
+[#multiply]
+== multiply
+
+
+
+
+[source,clojure]
+----
+(multiply left right)
+----
+
+multiply two images
+
+Operation name: `multiply`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3520-L3537[source,window=_blank]
+
+'''
+
+[#percent]
+== percent
+
+
+
+
+[source,clojure]
+----
+(percent input percent)
+----
+
+find threshold for percent of pixels
+
+Operation name: `percent`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `percent` -> `:percent` (float): Percent of pixels
+
+Optional inputs:
+- none
+
+Outputs:
+- `threshold` -> `:threshold` (integer): Threshold above which lie percent of pixels
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3539-L3556[source,window=_blank]
+
+'''
+
+[#perlin]
+== perlin
+
+
+
+
+[source,clojure]
+----
+(perlin width height)
+(perlin width height opts)
+----
+
+make a perlin noise image
+
+Operation name: `perlin`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `cell-size` -> `:cell-size` (integer): Size of Perlin cells
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `seed` -> `:seed` (integer): Random number seed
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3558-L3578[source,window=_blank]
+
+'''
+
+[#phasecor]
+== phasecor
+
+
+
+
+[source,clojure]
+----
+(phasecor input in2)
+----
+
+calculate phase correlation
+
+Operation name: `phasecor`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `in2` -> `:in2` (image): Second input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3580-L3597[source,window=_blank]
+
+'''
+
+[#pngload]
+== pngload
+
+
+
+
+[source,clojure]
+----
+(pngload filename)
+(pngload filename opts)
+----
+
+load png from file
+
+Operation name: `pngload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3599-L3624[source,window=_blank]
+
+'''
+
+[#pngsave]
+== pngsave
+
+
+
+
+[source,clojure]
+----
+(pngsave input filename)
+(pngsave input filename opts)
+----
+
+save image to file as PNG
+
+Operation name: `pngsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `compression` -> `:compression` (integer): Compression factor
+- `interlace` -> `:interlace` (boolean): Interlace image
+- `filter` -> `:filter` (integer flags): libspng row filter flag(s)
+- `palette` -> `:palette` (boolean): Quantise to 8bpp palette
+- `colours` -> `:colours` (integer): Max number of palette colours
+- `q` -> `:Q` (integer): Quantisation quality
+- `dither` -> `:dither` (float): Amount of dithering
+- `bitdepth` -> `:bitdepth` (integer): Write as a 1, 2, 4, 8 or 16 bit image
+- `effort` -> `:effort` (integer): Quantisation CPU effort
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3626-L3657[source,window=_blank]
+
+'''
+
+[#premultiply]
+== premultiply
+
+
+
+
+[source,clojure]
+----
+(premultiply input)
+(premultiply input opts)
+----
+
+premultiply image alpha
+
+Operation name: `premultiply`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3659-L3676[source,window=_blank]
+
+'''
+
+[#prewitt]
+== prewitt
+
+
+
+
+[source,clojure]
+----
+(prewitt input)
+----
+
+Prewitt edge detector
+
+Operation name: `prewitt`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3678-L3694[source,window=_blank]
+
+'''
+
+[#profile]
+== profile
+
+
+
+
+[source,clojure]
+----
+(profile input)
+----
+
+find image profiles
+
+Operation name: `profile`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `columns` -> `:columns` (image): First non-zero pixel in column
+- `rows` -> `:rows` (image): First non-zero pixel in row
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3696-L3713[source,window=_blank]
+
+'''
+
+[#project]
+== project
+
+
+
+
+[source,clojure]
+----
+(project input)
+----
+
+find image projections
+
+Operation name: `project`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `columns` -> `:columns` (image): Sums of columns
+- `rows` -> `:rows` (image): Sums of rows
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3715-L3732[source,window=_blank]
+
+'''
+
+[#quadratic]
+== quadratic
+
+
+
+
+[source,clojure]
+----
+(quadratic input coeff)
+----
+
+resample an image with a quadratic transform
+
+Operation name: `quadratic`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `coeff` -> `:coeff` (image): Coefficient matrix
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3734-L3751[source,window=_blank]
+
+'''
+
+[#rad2float]
+== rad2float
+
+
+
+
+[source,clojure]
+----
+(rad2float input)
+----
+
+unpack Radiance coding to float RGB
+
+Operation name: `rad2float`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3753-L3769[source,window=_blank]
+
+'''
+
+[#rank]
+== rank
+
+
+
+
+[source,clojure]
+----
+(rank input width height index)
+----
+
+rank filter
+
+Operation name: `rank`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `width` -> `:width` (integer): Window width in pixels
+- `height` -> `:height` (integer): Window height in pixels
+- `index` -> `:index` (integer): Select pixel at index
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3771-L3790[source,window=_blank]
+
+'''
+
+[#rawload]
+== rawload
+
+
+
+
+[source,clojure]
+----
+(rawload filename width height bands)
+(rawload filename width height bands opts)
+----
+
+load raw data from a file
+
+Operation name: `rawload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `bands` -> `:bands` (integer): Number of bands in image
+
+Optional inputs:
+- `offset` -> `:offset` (integer): Offset in bytes from start of file
+- `format` -> `:format` (keyword, see `ol.vips.enums/band-format`): Pixel format in image
+- `interpretation` -> `:interpretation` (keyword, see `ol.vips.enums/interpretation`): Pixel interpretation
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3792-L3822[source,window=_blank]
+
+'''
+
+[#rawsave]
+== rawsave
+
+
+
+
+[source,clojure]
+----
+(rawsave input filename)
+(rawsave input filename opts)
+----
+
+save image to raw file
+
+Operation name: `rawsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3824-L3846[source,window=_blank]
+
+'''
+
+[#recomb]
+== recomb
+
+
+
+
+[source,clojure]
+----
+(recomb input m)
+----
+
+linear recombination with matrix
+
+Operation name: `recomb`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `m` -> `:m` (image): Matrix of coefficients
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3848-L3865[source,window=_blank]
+
+'''
+
+[#reduce]
+== reduce
+
+
+
+
+[source,clojure]
+----
+(reduce input xshrink hshrink yshrink vshrink)
+(reduce input xshrink hshrink yshrink vshrink opts)
+----
+
+reduce an image
+
+Operation name: `reduce`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `xshrink` -> `:xshrink` (float): Horizontal shrink factor
+- `hshrink` -> `:hshrink` (float): Horizontal shrink factor
+- `yshrink` -> `:yshrink` (float): Vertical shrink factor
+- `vshrink` -> `:vshrink` (float): Vertical shrink factor
+
+Optional inputs:
+- `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
+- `gap` -> `:gap` (float): Reducing gap
+- `centre` -> `:centre` (boolean): Use centre sampling convention
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3867-L3890[source,window=_blank]
+
+'''
+
+[#reduceh]
+== reduceh
+
+
+
+
+[source,clojure]
+----
+(reduceh input xshrink hshrink)
+(reduceh input xshrink hshrink opts)
+----
+
+shrink an image horizontally
+
+Operation name: `reduceh`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `xshrink` -> `:xshrink` (float): Horizontal shrink factor
+- `hshrink` -> `:hshrink` (float): Horizontal shrink factor
+
+Optional inputs:
+- `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
+- `gap` -> `:gap` (float): Reducing gap
+- `centre` -> `:centre` (boolean): Use centre sampling convention
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3892-L3913[source,window=_blank]
+
+'''
+
+[#reducev]
+== reducev
+
+
+
+
+[source,clojure]
+----
+(reducev input yshrink vshrink)
+(reducev input yshrink vshrink opts)
+----
+
+shrink an image vertically
+
+Operation name: `reducev`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `yshrink` -> `:yshrink` (float): Vertical shrink factor
+- `vshrink` -> `:vshrink` (float): Vertical shrink factor
+
+Optional inputs:
+- `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
+- `gap` -> `:gap` (float): Reducing gap
+- `centre` -> `:centre` (boolean): Use centre sampling convention
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3915-L3936[source,window=_blank]
+
+'''
+
+[#relational]
+== relational
+
+
+
+
+[source,clojure]
+----
+(relational left right relational)
+----
+
+relational operation on two images
+
+Operation name: `relational`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+- `relational` -> `:relational` (keyword, see `ol.vips.enums/operation-relational`): Relational to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3938-L3956[source,window=_blank]
+
+'''
+
+[#relational-const]
+== relational-const
+
+
+
+
+[source,clojure]
+----
+(relational-const input relational c)
+----
+
+relational operations against a constant
+
+Operation name: `relational_const`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `relational` -> `:relational` (keyword, see `ol.vips.enums/operation-relational`): Relational to perform
+- `c` -> `:c` (seqable of number): Array of constants
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3958-L3976[source,window=_blank]
+
+'''
+
+[#remainder]
+== remainder
+
+
+
+
+[source,clojure]
+----
+(remainder left right)
+----
+
+remainder after integer division of two images
+
+Operation name: `remainder`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3978-L3995[source,window=_blank]
+
+'''
+
+[#remainder-const]
+== remainder-const
+
+
+
+
+[source,clojure]
+----
+(remainder-const input c)
+----
+
+remainder after integer division of an image and a constant
+
+Operation name: `remainder_const`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `c` -> `:c` (seqable of number): Array of constants
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3997-L4014[source,window=_blank]
+
+'''
+
+[#remosaic]
+== remosaic
+
+
+
+
+[source,clojure]
+----
+(remosaic input old-str new-str)
+----
+
+rebuild an mosaiced image
+
+Operation name: `remosaic`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `old-str` -> `:old-str` (string): Search for this string
+- `new-str` -> `:new-str` (string): And swap for this string
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4016-L4034[source,window=_blank]
+
+'''
+
+[#replicate]
+== replicate
+
+
+
+
+[source,clojure]
+----
+(replicate input across down)
+----
+
+replicate an image
+
+Operation name: `replicate`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `across` -> `:across` (integer): Repeat this many times horizontally
+- `down` -> `:down` (integer): Repeat this many times vertically
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4036-L4054[source,window=_blank]
+
+'''
+
+[#resize]
+== resize
+
+
+
+
+[source,clojure]
+----
+(resize input scale)
+(resize input scale opts)
+----
+
+resize an image
+
+Operation name: `resize`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `scale` -> `:scale` (float): Scale image by this factor
+
+Optional inputs:
+- `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
+- `gap` -> `:gap` (float): Reducing gap
+- `centre` -> `:centre` (boolean): Use centre sampling convention
+- `vscale` -> `:vscale` (float): Vertical scale image by this factor
+- `idx` -> `:idx` (float): Horizontal input displacement
+- `idy` -> `:idy` (float): Vertical input displacement
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4056-L4079[source,window=_blank]
+
+'''
+
+[#rot]
+== rot
+
+
+
+
+[source,clojure]
+----
+(rot input angle)
+----
+
+rotate an image
+
+Operation name: `rot`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Angle to rotate image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4081-L4098[source,window=_blank]
+
+'''
+
+[#rot45]
+== rot45
+
+
+
+
+[source,clojure]
+----
+(rot45 input)
+(rot45 input opts)
+----
+
+rotate an image
+
+Operation name: `rot45`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `angle` -> `:angle` (keyword, see `ol.vips.enums/angle45`): Angle to rotate image
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4100-L4117[source,window=_blank]
+
+'''
+
+[#rotate]
+== rotate
+
+
+
+
+[source,clojure]
+----
+(rotate input angle)
+(rotate input angle opts)
+----
+
+rotate an image by a number of degrees
+
+Operation name: `rotate`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `angle` -> `:angle` (float): Rotate clockwise by this many degrees
+
+Optional inputs:
+- `background` -> `:background` (seqable of number): Background value
+- `odx` -> `:odx` (float): Horizontal output displacement
+- `ody` -> `:ody` (float): Vertical output displacement
+- `idx` -> `:idx` (float): Horizontal input displacement
+- `idy` -> `:idy` (float): Vertical input displacement
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4119-L4141[source,window=_blank]
+
+'''
+
+[#round]
+== round
+
+
+
+
+[source,clojure]
+----
+(round input round)
+----
+
+perform a round function on an image
+
+Operation name: `round`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `round` -> `:round` (keyword, see `ol.vips.enums/operation-round`): Rounding operation to perform
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4143-L4160[source,window=_blank]
+
+'''
+
+[#s-rgb2-hsv]
+== s-rgb2-hsv
+
+
+
+
+[source,clojure]
+----
+(s-rgb2-hsv input)
+----
+
+transform sRGB to HSV
+
+Operation name: `sRGB2HSV`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4162-L4178[source,window=_blank]
+
+'''
+
+[#s-rgb2sc-rgb]
+== s-rgb2sc-rgb
+
+
+
+
+[source,clojure]
+----
+(s-rgb2sc-rgb input)
+----
+
+convert an sRGB image to scRGB
+
+Operation name: `sRGB2scRGB`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4180-L4196[source,window=_blank]
+
+'''
+
+[#sc-rgb2-bw]
+== sc-rgb2-bw
+
+
+
+
+[source,clojure]
+----
+(sc-rgb2-bw input)
+(sc-rgb2-bw input opts)
+----
+
+convert scRGB to BW
+
+Operation name: `scRGB2BW`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `depth` -> `:depth` (integer): Output device space depth in bits
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4198-L4215[source,window=_blank]
+
+'''
+
+[#sc-rgb2-xyz]
+== sc-rgb2-xyz
+
+
+
+
+[source,clojure]
+----
+(sc-rgb2-xyz input)
+----
+
+transform scRGB to XYZ
+
+Operation name: `scRGB2XYZ`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4217-L4233[source,window=_blank]
+
+'''
+
+[#sc-rgb2s-rgb]
+== sc-rgb2s-rgb
+
+
+
+
+[source,clojure]
+----
+(sc-rgb2s-rgb input)
+(sc-rgb2s-rgb input opts)
+----
+
+convert scRGB to sRGB
+
+Operation name: `scRGB2sRGB`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `depth` -> `:depth` (integer): Output device space depth in bits
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4235-L4252[source,window=_blank]
+
+'''
+
+[#scale]
+== scale
+
+
+
+
+[source,clojure]
+----
+(scale input)
+(scale input opts)
+----
+
+scale an image to uchar
+
+Operation name: `scale`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `exp` -> `:exp` (float): Exponent for log scale
+- `log` -> `:log` (boolean): Log scale
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4254-L4272[source,window=_blank]
+
+'''
+
+[#scharr]
+== scharr
+
+
+
+
+[source,clojure]
+----
+(scharr input)
+----
+
+Scharr edge detector
+
+Operation name: `scharr`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4274-L4290[source,window=_blank]
+
+'''
+
+[#sdf]
+== sdf
+
+
+
+
+[source,clojure]
+----
+(sdf width height shape)
+(sdf width height shape opts)
+----
+
+create an SDF image
+
+Operation name: `sdf`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+- `shape` -> `:shape` (keyword, see `ol.vips.enums/sdf-shape`): SDF shape to create
+
+Optional inputs:
+- `r` -> `:r` (float): Radius
+- `a` -> `:a` (seqable of number): Point a
+- `b` -> `:b` (seqable of number): Point b
+- `corners` -> `:corners` (seqable of number): Corner radii
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4292-L4314[source,window=_blank]
+
+'''
+
+[#sequential]
+== sequential
+
+
+
+
+[source,clojure]
+----
+(sequential input)
+(sequential input opts)
+----
+
+check sequential access
+
+Operation name: `sequential`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `trace` -> `:trace` (boolean): Trace pixel requests
+- `tile-height` -> `:tile-height` (integer): Tile height in pixels
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4316-L4335[source,window=_blank]
+
+'''
+
+[#sharpen]
+== sharpen
+
+
+
+
+[source,clojure]
+----
+(sharpen input)
+(sharpen input opts)
+----
+
+unsharp masking for print
+
+Operation name: `sharpen`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `radius` -> `:radius` (integer): Radius of Gaussian
+- `sigma` -> `:sigma` (float): Sigma of Gaussian
+- `x1` -> `:x1` (float): Flat/jaggy threshold
+- `y2` -> `:y2` (float): Maximum brightening
+- `y3` -> `:y3` (float): Maximum darkening
+- `m1` -> `:m1` (float): Slope for flat areas
+- `m2` -> `:m2` (float): Slope for jaggy areas
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4337-L4360[source,window=_blank]
+
+'''
+
+[#shrink]
+== shrink
+
+
+
+
+[source,clojure]
+----
+(shrink input xshrink hshrink yshrink vshrink)
+(shrink input xshrink hshrink yshrink vshrink opts)
+----
+
+shrink an image
+
+Operation name: `shrink`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `xshrink` -> `:xshrink` (float): Horizontal shrink factor
+- `hshrink` -> `:hshrink` (float): Horizontal shrink factor
+- `yshrink` -> `:yshrink` (float): Vertical shrink factor
+- `vshrink` -> `:vshrink` (float): Vertical shrink factor
+
+Optional inputs:
+- `ceil` -> `:ceil` (boolean): Round-up output dimensions
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4362-L4383[source,window=_blank]
+
+'''
+
+[#shrinkh]
+== shrinkh
+
+
+
+
+[source,clojure]
+----
+(shrinkh input xshrink hshrink)
+(shrinkh input xshrink hshrink opts)
+----
+
+shrink an image horizontally
+
+Operation name: `shrinkh`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `xshrink` -> `:xshrink` (integer): Horizontal shrink factor
+- `hshrink` -> `:hshrink` (integer): Horizontal shrink factor
+
+Optional inputs:
+- `ceil` -> `:ceil` (boolean): Round-up output dimensions
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4385-L4404[source,window=_blank]
+
+'''
+
+[#shrinkv]
+== shrinkv
+
+
+
+
+[source,clojure]
+----
+(shrinkv input yshrink vshrink)
+(shrinkv input yshrink vshrink opts)
+----
+
+shrink an image vertically
+
+Operation name: `shrinkv`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `yshrink` -> `:yshrink` (integer): Vertical shrink factor
+- `vshrink` -> `:vshrink` (integer): Vertical shrink factor
+
+Optional inputs:
+- `ceil` -> `:ceil` (boolean): Round-up output dimensions
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4406-L4425[source,window=_blank]
+
+'''
+
+[#sign]
+== sign
+
+
+
+
+[source,clojure]
+----
+(sign input)
+----
+
+unit vector of pixel
+
+Operation name: `sign`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4427-L4443[source,window=_blank]
+
+'''
+
+[#similarity]
+== similarity
+
+
+
+
+[source,clojure]
+----
+(similarity input)
+(similarity input opts)
+----
+
+similarity transform of an image
+
+Operation name: `similarity`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+
+Optional inputs:
+- `scale` -> `:scale` (float): Scale by this factor
+- `angle` -> `:angle` (float): Rotate clockwise by this many degrees
+- `background` -> `:background` (seqable of number): Background value
+- `odx` -> `:odx` (float): Horizontal output displacement
+- `ody` -> `:ody` (float): Vertical output displacement
+- `idx` -> `:idx` (float): Horizontal input displacement
+- `idy` -> `:idy` (float): Vertical input displacement
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4445-L4468[source,window=_blank]
+
+'''
+
+[#sines]
+== sines
+
+
+
+
+[source,clojure]
+----
+(sines width height)
+(sines width height opts)
+----
+
+make a 2D sine wave
+
+Operation name: `sines`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+- `hfreq` -> `:hfreq` (float): Horizontal spatial frequency
+- `vfreq` -> `:vfreq` (float): Vertical spatial frequency
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4470-L4490[source,window=_blank]
+
+'''
+
+[#smartcrop]
+== smartcrop
+
+
+
+
+[source,clojure]
+----
+(smartcrop input width height)
+(smartcrop input width height opts)
+----
+
+extract an area from an image
+
+Operation name: `smartcrop`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `input` -> `:input` (image): Input image
+- `width` -> `:width` (integer): Width of extract area
+- `height` -> `:height` (integer): Height of extract area
+
+Optional inputs:
+- `interesting` -> `:interesting` (keyword, see `ol.vips.enums/interesting`): How to measure interestingness
+- `premultiplied` -> `:premultiplied` (boolean): Input image already has premultiplied alpha
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `attention-x` -> `:attention-x` (integer): Horizontal position of attention centre
+- `attention-y` -> `:attention-y` (integer): Vertical position of attention centre
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4492-L4514[source,window=_blank]
+
+'''
+
+[#sobel]
+== sobel
+
+
+
+
+[source,clojure]
+----
+(sobel input)
+----
+
+Sobel edge detector
+
+Operation name: `sobel`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4516-L4532[source,window=_blank]
+
+'''
+
+[#spcor]
+== spcor
+
+
+
+
+[source,clojure]
+----
+(spcor input ref)
+----
+
+spatial correlation
+
+Operation name: `spcor`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `ref` -> `:ref` (image): Input reference image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4534-L4551[source,window=_blank]
+
+'''
+
+[#spectrum]
+== spectrum
+
+
+
+
+[source,clojure]
+----
+(spectrum input)
+----
+
+make displayable power spectrum
+
+Operation name: `spectrum`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4553-L4569[source,window=_blank]
+
+'''
+
+[#stats]
+== stats
+
+
+
+
+[source,clojure]
+----
+(stats input)
+----
+
+find many image stats
+
+Operation name: `stats`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output array of statistics
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4571-L4587[source,window=_blank]
+
+'''
+
+[#stdif]
+== stdif
+
+
+
+
+[source,clojure]
+----
+(stdif input width height)
+(stdif input width height opts)
+----
+
+statistical difference
+
+Operation name: `stdif`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+- `width` -> `:width` (integer): Window width in pixels
+- `height` -> `:height` (integer): Window height in pixels
+
+Optional inputs:
+- `s0` -> `:s0` (float): New deviation
+- `b` -> `:b` (float): Weight of new deviation
+- `m0` -> `:m0` (float): New mean
+- `a` -> `:a` (float): Weight of new mean
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4589-L4611[source,window=_blank]
+
+'''
+
+[#subsample]
+== subsample
+
+
+
+
+[source,clojure]
+----
+(subsample input xfac yfac)
+(subsample input xfac yfac opts)
+----
+
+subsample an image
+
+Operation name: `subsample`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:input` (image): Input image
+- `xfac` -> `:xfac` (integer): Horizontal subsample factor
+- `yfac` -> `:yfac` (integer): Vertical subsample factor
+
+Optional inputs:
+- `point` -> `:point` (boolean): Point sample
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4613-L4632[source,window=_blank]
+
+'''
+
+[#subtract]
+== subtract
+
+
+
+
+[source,clojure]
+----
+(subtract left right)
+----
+
+subtract two images
+
+Operation name: `subtract`.
+
+Returns an image handle.
+
+Required inputs:
+- `left` -> `:left` (image): Left-hand image argument
+- `right` -> `:right` (image): Right-hand image argument
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4634-L4651[source,window=_blank]
+
+'''
+
+[#sum]
+== sum
+
+
+
+
+[source,clojure]
+----
+(sum input)
+----
+
+sum an array of images
+
+Operation name: `sum`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (seqable of image): Array of input images
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4653-L4669[source,window=_blank]
+
+'''
+
+[#svgload]
+== svgload
+
+
+
+
+[source,clojure]
+----
+(svgload filename)
+(svgload filename opts)
+----
+
+load SVG with rsvg
+
+Operation name: `svgload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `dpi` -> `:dpi` (float): Render at this DPI
+- `scale` -> `:scale` (float): Scale output by this factor
+- `unlimited` -> `:unlimited` (boolean): Allow SVG of any size
+- `stylesheet` -> `:stylesheet` (string): Custom CSS
+- `high-bitdepth` -> `:high-bitdepth` (boolean): Enable scRGB 128-bit output (32-bit per channel)
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4671-L4700[source,window=_blank]
+
+'''
+
+[#switch]
+== switch
+
+
+
+
+[source,clojure]
+----
+(switch tests)
+----
+
+find the index of the first non-zero pixel in tests
+
+Operation name: `switch`.
+
+Returns an image handle.
+
+Required inputs:
+- `tests` -> `:tests` (seqable of image): Table of images to test
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4702-L4718[source,window=_blank]
+
+'''
+
+[#system]
+== system
+
+
+
+
+[source,clojure]
+----
+(system cmd-format)
+(system cmd-format opts)
+----
+
+run an external command
+
+Operation name: `system`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `cmd-format` -> `:cmd-format` (string): Command to run
+
+Optional inputs:
+- `input` -> `:in` (seqable of image): Array of input images
+- `out-format` -> `:out-format` (string): Format for output filename
+- `in-format` -> `:in-format` (string): Format for input filename
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `log` -> `:log` (string): Command log
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4720-L4740[source,window=_blank]
+
+'''
+
+[#text]
+== text
+
+
+
+
+[source,clojure]
+----
+(text text)
+(text text opts)
+----
+
+make a text image
+
+Operation name: `text`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `text` -> `:text` (string): Text to render
+
+Optional inputs:
+- `font` -> `:font` (string): Font to render with
+- `width` -> `:width` (integer): Maximum image width in pixels
+- `height` -> `:height` (integer): Maximum image height in pixels
+- `align` -> `:align` (keyword, see `ol.vips.enums/align`): Align on the low, centre or high edge
+- `justify` -> `:justify` (boolean): Justify lines
+- `dpi` -> `:dpi` (integer): DPI to render at
+- `spacing` -> `:spacing` (integer): Line spacing
+- `fontfile` -> `:fontfile` (string): Load this font file
+- `rgba` -> `:rgba` (boolean): Enable RGBA output
+- `wrap` -> `:wrap` (keyword, see `ol.vips.enums/text-wrap`): Wrap lines on word or character boundaries
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `autofit-dpi` -> `:autofit-dpi` (integer): DPI selected by autofit
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4742-L4769[source,window=_blank]
+
+'''
+
+[#thumbnail]
+== thumbnail
+
+
+
+
+[source,clojure]
+----
+(thumbnail filename width)
+(thumbnail filename width opts)
+----
+
+generate thumbnail from file
+
+Operation name: `thumbnail`.
+
+Returns an image handle.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to read from
+- `width` -> `:width` (integer): Size to this width
+
+Optional inputs:
+- `height` -> `:height` (integer): Size to this height
+- `size` -> `:size` (keyword, see `ol.vips.enums/size`): Only upsize, only downsize, or both
+- `no-rotate` -> `:no-rotate` (boolean): Don't use orientation tags to rotate image upright
+- `crop` -> `:crop` (keyword, see `ol.vips.enums/interesting`): Reduce to fill target rectangle, then crop
+- `linear` -> `:linear` (boolean): Reduce in linear light
+- `input-profile` -> `:input-profile` (string): Fallback input profile
+- `output-profile` -> `:output-profile` (string): Fallback output profile
+- `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `auto-rotate` -> `:auto-rotate` (boolean): Use orientation tags to rotate image upright
+- `import-profile` -> `:import-profile` (string): Fallback import profile
+- `export-profile` -> `:export-profile` (string): Fallback export profile
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4771-L4800[source,window=_blank]
+
+'''
+
+[#thumbnail-image]
+== thumbnail-image
+
+
+
+
+[source,clojure]
+----
+(thumbnail-image input width)
+(thumbnail-image input width opts)
+----
+
+generate thumbnail from image
+
+Operation name: `thumbnail_image`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image argument
+- `width` -> `:width` (integer): Size to this width
+
+Optional inputs:
+- `height` -> `:height` (integer): Size to this height
+- `size` -> `:size` (keyword, see `ol.vips.enums/size`): Only upsize, only downsize, or both
+- `no-rotate` -> `:no-rotate` (boolean): Don't use orientation tags to rotate image upright
+- `crop` -> `:crop` (keyword, see `ol.vips.enums/interesting`): Reduce to fill target rectangle, then crop
+- `linear` -> `:linear` (boolean): Reduce in linear light
+- `input-profile` -> `:input-profile` (string): Fallback input profile
+- `output-profile` -> `:output-profile` (string): Fallback output profile
+- `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `auto-rotate` -> `:auto-rotate` (boolean): Use orientation tags to rotate image upright
+- `import-profile` -> `:import-profile` (string): Fallback import profile
+- `export-profile` -> `:export-profile` (string): Fallback export profile
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4802-L4831[source,window=_blank]
+
+'''
+
+[#tiffload]
+== tiffload
+
+
+
+
+[source,clojure]
+----
+(tiffload filename)
+(tiffload filename opts)
+----
+
+load tiff from file
+
+Operation name: `tiffload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `page` -> `:page` (integer): First page to load
+- `n` -> `:n` (integer): Number of pages to load, -1 for all
+- `autorotate` -> `:autorotate` (boolean): Rotate image using orientation tag
+- `subifd` -> `:subifd` (integer): Subifd index
+- `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4833-L4862[source,window=_blank]
+
+'''
+
+[#tiffsave]
+== tiffsave
+
+
+
+
+[source,clojure]
+----
+(tiffsave input filename)
+(tiffsave input filename opts)
+----
+
+save image to tiff file
+
+Operation name: `tiffsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `compression` -> `:compression` (keyword, see `ol.vips.enums/foreign-tiff-compression`): Compression for this file
+- `q` -> `:Q` (integer): Q factor
+- `predictor` -> `:predictor` (keyword, see `ol.vips.enums/foreign-tiff-predictor`): Compression prediction
+- `tile` -> `:tile` (boolean): Write a tiled tiff
+- `tile-width` -> `:tile-width` (integer): Tile width in pixels
+- `tile-height` -> `:tile-height` (integer): Tile height in pixels
+- `pyramid` -> `:pyramid` (boolean): Write a pyramidal tiff
+- `miniswhite` -> `:miniswhite` (boolean): Use 0 for white in 1-bit images
+- `bitdepth` -> `:bitdepth` (integer): Write as a 1, 2, 4 or 8 bit image
+- `resunit` -> `:resunit` (keyword, see `ol.vips.enums/foreign-tiff-resunit`): Resolution unit
+- `xres` -> `:xres` (float): Horizontal resolution in pixels/mm
+- `yres` -> `:yres` (float): Vertical resolution in pixels/mm
+- `bigtiff` -> `:bigtiff` (boolean): Write a bigtiff image
+- `properties` -> `:properties` (boolean): Write a properties document to IMAGEDESCRIPTION
+- `region-shrink` -> `:region-shrink` (keyword, see `ol.vips.enums/region-shrink`): Method to shrink regions
+- `level` -> `:level` (integer): Deflate (1-9, default 6) or ZSTD (1-22, default 9) compression level
+- `lossless` -> `:lossless` (boolean): Enable WEBP lossless mode
+- `depth` -> `:depth` (keyword, see `ol.vips.enums/foreign-dz-depth`): Pyramid depth
+- `subifd` -> `:subifd` (boolean): Save pyr layers as sub-IFDs
+- `premultiply` -> `:premultiply` (boolean): Save with premultiplied alpha
+- `rgbjpeg` -> `:rgbjpeg` (boolean): Output RGB JPEG rather than YCbCr
+- `squash` -> `:squash` (boolean): Squash images down to 1 bit
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4864-L4908[source,window=_blank]
+
+'''
+
+[#tilecache]
+== tilecache
+
+
+
+
+[source,clojure]
+----
+(tilecache input)
+(tilecache input opts)
+----
+
+cache an image as a set of tiles
+
+Operation name: `tilecache`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `tile-width` -> `:tile-width` (integer): Tile width in pixels
+- `tile-height` -> `:tile-height` (integer): Tile height in pixels
+- `max-tiles` -> `:max-tiles` (integer): Maximum number of tiles to cache
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
+- `threaded` -> `:threaded` (boolean): Allow threaded access
+- `persistent` -> `:persistent` (boolean): Keep cache between evaluations
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4910-L4932[source,window=_blank]
+
+'''
+
+[#tonelut]
+== tonelut
+
+
+
+
+[source,clojure]
+----
+(tonelut)
+(tonelut opts)
+----
+
+build a look-up table
+
+Operation name: `tonelut`.
+
+Returns an image handle.
+
+Required inputs:
+- none
+
+Optional inputs:
+- `in-max` -> `:in-max` (integer): Size of LUT to build
+- `out-max` -> `:out-max` (integer): Maximum value in output LUT
+- `lb` -> `:Lb` (float): Lowest value in output
+- `lw` -> `:Lw` (float): Highest value in output
+- `ps` -> `:Ps` (float): Position of shadow
+- `pm` -> `:Pm` (float): Position of mid-tones
+- `ph` -> `:Ph` (float): Position of highlights
+- `s` -> `:S` (float): Adjust shadows by this much
+- `m` -> `:M` (float): Adjust mid-tones by this much
+- `h` -> `:H` (float): Adjust highlights by this much
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4934-L4960[source,window=_blank]
+
+'''
+
+[#transpose3d]
+== transpose3d
+
+
+
+
+[source,clojure]
+----
+(transpose3d input)
+(transpose3d input opts)
+----
+
+transpose3d an image
+
+Operation name: `transpose3d`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `page-height` -> `:page-height` (integer): Height of each input page
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4962-L4979[source,window=_blank]
+
+'''
+
+[#unpremultiply]
+== unpremultiply
+
+
+
+
+[source,clojure]
+----
+(unpremultiply input)
+(unpremultiply input opts)
+----
+
+unpremultiply image alpha
+
+Operation name: `unpremultiply`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
+- `alpha-band` -> `:alpha-band` (integer): Unpremultiply with this alpha
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4981-L4999[source,window=_blank]
+
+'''
+
+[#vipsload]
+== vipsload
+
+
+
+
+[source,clojure]
+----
+(vipsload filename)
+(vipsload filename opts)
+----
+
+load vips from file
+
+Operation name: `vipsload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5001-L5025[source,window=_blank]
+
+'''
+
+[#vipssave]
+== vipssave
+
+
+
+
+[source,clojure]
+----
+(vipssave input filename)
+(vipssave input filename opts)
+----
+
+save image to file in vips format
+
+Operation name: `vipssave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5027-L5049[source,window=_blank]
+
+'''
+
+[#webpload]
+== webpload
+
+
+
+
+[source,clojure]
+----
+(webpload filename)
+(webpload filename opts)
+----
+
+load webp from file
+
+Operation name: `webpload`.
+
+Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+Required inputs:
+- `filename` -> `:filename` (string): Filename to load from
+
+Optional inputs:
+- `page` -> `:page` (integer): First page to load
+- `n` -> `:n` (integer): Number of pages to load, -1 for all
+- `scale` -> `:scale` (float): Factor to scale by
+- `shrink` -> `:shrink` (integer): Shrink factor on load
+- `memory` -> `:memory` (boolean): Force open via memory
+- `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+- `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+- `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+- `sequential` -> `:sequential` (boolean): Sequential read only
+- `fail` -> `:fail` (boolean): Fail on first warning
+- `disc` -> `:disc` (boolean): Open to disc
+
+Outputs:
+- `out` -> `:out` (image): Output image
+- `flags` -> `:flags` (integer flags): Flags for this file
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5051-L5079[source,window=_blank]
+
+'''
+
+[#webpsave]
+== webpsave
+
+
+
+
+[source,clojure]
+----
+(webpsave input filename)
+(webpsave input filename opts)
+----
+
+save as WebP
+
+Operation name: `webpsave`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+- `filename` -> `:filename` (string): Filename to save to
+
+Optional inputs:
+- `q` -> `:Q` (integer): Q factor
+- `lossless` -> `:lossless` (boolean): Enable lossless compression
+- `preset` -> `:preset` (keyword, see `ol.vips.enums/foreign-webp-preset`): Preset for lossy compression
+- `smart-subsample` -> `:smart-subsample` (boolean): Enable high quality chroma subsampling
+- `near-lossless` -> `:near-lossless` (boolean): Enable preprocessing in lossless mode (uses Q)
+- `alpha-q` -> `:alpha-q` (integer): Change alpha plane fidelity for lossy compression
+- `min-size` -> `:min-size` (boolean): Optimise for minimum size
+- `kmin` -> `:kmin` (integer): Minimum number of frames between key frames
+- `kmax` -> `:kmax` (integer): Maximum number of frames between key frames
+- `effort` -> `:effort` (integer): Level of CPU effort to reduce file size
+- `target-size` -> `:target-size` (integer): Desired target size in bytes
+- `reduction-effort` -> `:reduction-effort` (integer): Level of CPU effort to reduce file size
+- `mixed` -> `:mixed` (boolean): Allow mixed encoding (might reduce file size)
+- `smart-deblock` -> `:smart-deblock` (boolean): Enable auto-adjusting of the deblocking filter
+- `passes` -> `:passes` (integer): Number of entropy-analysis passes (in [1..10])
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5081-L5118[source,window=_blank]
+
+'''
+
+[#webpsave-mime]
+== webpsave-mime
+
+
+
+
+[source,clojure]
+----
+(webpsave-mime input)
+(webpsave-mime input opts)
+----
+
+save image to webp mime
+
+Operation name: `webpsave_mime`.
+
+Returns a result map.
+
+Required inputs:
+- `input` -> `:in` (image): Image to save
+
+Optional inputs:
+- `q` -> `:Q` (integer): Q factor
+- `lossless` -> `:lossless` (boolean): Enable lossless compression
+- `preset` -> `:preset` (keyword, see `ol.vips.enums/foreign-webp-preset`): Preset for lossy compression
+- `smart-subsample` -> `:smart-subsample` (boolean): Enable high quality chroma subsampling
+- `near-lossless` -> `:near-lossless` (boolean): Enable preprocessing in lossless mode (uses Q)
+- `alpha-q` -> `:alpha-q` (integer): Change alpha plane fidelity for lossy compression
+- `min-size` -> `:min-size` (boolean): Optimise for minimum size
+- `kmin` -> `:kmin` (integer): Minimum number of frames between key frames
+- `kmax` -> `:kmax` (integer): Maximum number of frames between key frames
+- `effort` -> `:effort` (integer): Level of CPU effort to reduce file size
+- `target-size` -> `:target-size` (integer): Desired target size in bytes
+- `reduction-effort` -> `:reduction-effort` (integer): Level of CPU effort to reduce file size
+- `mixed` -> `:mixed` (boolean): Allow mixed encoding (might reduce file size)
+- `smart-deblock` -> `:smart-deblock` (boolean): Enable auto-adjusting of the deblocking filter
+- `passes` -> `:passes` (integer): Number of entropy-analysis passes (in [1..10])
+- `keep` -> `:keep` (integer flags): Which metadata to retain
+- `background` -> `:background` (seqable of number): Background value
+- `page-height` -> `:page-height` (integer): Set page height for multipage save
+- `profile` -> `:profile` (string): Filename of ICC profile to embed
+- `strip` -> `:strip` (boolean): Strip all metadata from image
+
+Outputs:
+- none
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5120-L5156[source,window=_blank]
+
+'''
+
+[#worley]
+== worley
+
+
+
+
+[source,clojure]
+----
+(worley width height)
+(worley width height opts)
+----
+
+make a worley noise image
+
+Operation name: `worley`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `cell-size` -> `:cell-size` (integer): Size of Worley cells
+- `seed` -> `:seed` (integer): Random number seed
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5158-L5177[source,window=_blank]
+
+'''
+
+[#wrap]
+== wrap
+
+
+
+
+[source,clojure]
+----
+(wrap input)
+(wrap input opts)
+----
+
+wrap image origin
+
+Operation name: `wrap`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `x` -> `:x` (integer): Left edge of input in output
+- `y` -> `:y` (integer): Top edge of input in output
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5179-L5197[source,window=_blank]
+
+'''
+
+[#xyz]
+== xyz
+
+
+
+
+[source,clojure]
+----
+(xyz width height)
+(xyz width height opts)
+----
+
+make an image where pixel values are coordinates
+
+Operation name: `xyz`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `csize` -> `:csize` (integer): Size of third dimension
+- `dsize` -> `:dsize` (integer): Size of fourth dimension
+- `esize` -> `:esize` (integer): Size of fifth dimension
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5199-L5219[source,window=_blank]
+
+'''
+
+[#xyz2-cmyk]
+== xyz2-cmyk
+
+
+
+
+[source,clojure]
+----
+(xyz2-cmyk input)
+----
+
+transform XYZ to CMYK
+
+Operation name: `XYZ2CMYK`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5221-L5237[source,window=_blank]
+
+'''
+
+[#xyz2-lab]
+== xyz2-lab
+
+
+
+
+[source,clojure]
+----
+(xyz2-lab input)
+(xyz2-lab input opts)
+----
+
+transform XYZ to Lab
+
+Operation name: `XYZ2Lab`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- `temp` -> `:temp` (seqable of number): Colour temperature
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5239-L5256[source,window=_blank]
+
+'''
+
+[#xyz2-yxy]
+== xyz2-yxy
+
+
+
+
+[source,clojure]
+----
+(xyz2-yxy input)
+----
+
+transform XYZ to Yxy
+
+Operation name: `XYZ2Yxy`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5258-L5274[source,window=_blank]
+
+'''
+
+[#xyz2sc-rgb]
+== xyz2sc-rgb
+
+
+
+
+[source,clojure]
+----
+(xyz2sc-rgb input)
+----
+
+transform XYZ to scRGB
+
+Operation name: `XYZ2scRGB`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5276-L5292[source,window=_blank]
+
+'''
+
+[#yxy2-xyz]
+== yxy2-xyz
+
+
+
+
+[source,clojure]
+----
+(yxy2-xyz input)
+----
+
+transform Yxy to XYZ
+
+Operation name: `Yxy2XYZ`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:in` (image): Input image
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5294-L5310[source,window=_blank]
+
+'''
+
+[#zone]
+== zone
+
+
+
+
+[source,clojure]
+----
+(zone width height)
+(zone width height opts)
+----
+
+make a zone plate
+
+Operation name: `zone`.
+
+Returns an image handle.
+
+Required inputs:
+- `width` -> `:width` (integer): Image width in pixels
+- `height` -> `:height` (integer): Image height in pixels
+
+Optional inputs:
+- `uchar` -> `:uchar` (boolean): Output an unsigned char image
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5312-L5330[source,window=_blank]
+
+'''
+
+[#zoom]
+== zoom
+
+
+
+
+[source,clojure]
+----
+(zoom input xfac yfac)
+----
+
+zoom an image
+
+Operation name: `zoom`.
+
+Returns an image handle.
+
+Required inputs:
+- `input` -> `:input` (image): Input image
+- `xfac` -> `:xfac` (integer): Horizontal zoom factor
+- `yfac` -> `:yfac` (integer): Vertical zoom factor
+
+Optional inputs:
+- none
+
+Outputs:
+- `out` -> `:out` (image): Output image
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5332-L5350[source,window=_blank]

@@ -1,0 +1,691 @@
+= ol.vips
+
+[#init-BANG-]
+== init!
+
+
+
+
+[source,clojure]
+----
+(init!)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L9-L11[source,window=_blank]
+
+'''
+
+[#operations]
+== operations
+
+
+
+
+[source,clojure]
+----
+(operations)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L13-L15[source,window=_blank]
+
+'''
+
+[#operation-info]
+== operation-info
+
+
+
+
+[source,clojure]
+----
+(operation-info operation-name)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L17-L19[source,window=_blank]
+
+'''
+
+[#encode-enum]
+== encode-enum
+
+
+
+
+[source,clojure]
+----
+(encode-enum enum-type-name value)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L21-L23[source,window=_blank]
+
+'''
+
+[#decode-enum]
+== decode-enum
+
+
+
+
+[source,clojure]
+----
+(decode-enum enum-type-name value)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L25-L27[source,window=_blank]
+
+'''
+
+[#call-BANG-]
+== call!
+
+
+
+
+[source,clojure]
+----
+(call! operation-name opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L29-L31[source,window=_blank]
+
+'''
+
+[#from-file]
+== from-file
+
+
+
+
+[source,clojure]
+----
+(from-file path)
+(from-file path opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L33-L37[source,window=_blank]
+
+'''
+
+[#image-from-file]
+== image-from-file
+
+
+
+
+[source,clojure]
+----
+(image-from-file path)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L39-L41[source,window=_blank]
+
+'''
+
+[#write-to-file]
+== write-to-file
+
+
+
+
+[source,clojure]
+----
+(write-to-file image sink)
+(write-to-file image sink opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L43-L47[source,window=_blank]
+
+'''
+
+[#from-buffer]
+== from-buffer
+
+
+
+
+[source,clojure]
+----
+(from-buffer source)
+(from-buffer source opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L49-L53[source,window=_blank]
+
+'''
+
+[#from-stream]
+== from-stream
+
+
+
+
+[source,clojure]
+----
+(from-stream source)
+(from-stream source opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L55-L59[source,window=_blank]
+
+'''
+
+[#write-to-buffer]
+== write-to-buffer
+
+
+
+
+[source,clojure]
+----
+(write-to-buffer image suffix)
+(write-to-buffer image suffix opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L61-L65[source,window=_blank]
+
+'''
+
+[#write-to-stream]
+== write-to-stream
+
+
+
+
+[source,clojure]
+----
+(write-to-stream image sink suffix)
+(write-to-stream image sink suffix opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L67-L71[source,window=_blank]
+
+'''
+
+[#metadata]
+== metadata
+
+
+
+
+[source,clojure]
+----
+(metadata image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L73-L75[source,window=_blank]
+
+'''
+
+[#field]
+== field
+
+
+
+
+[source,clojure]
+----
+(field image field-name)
+(field image field-name not-found)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L77-L81[source,window=_blank]
+
+'''
+
+[#field-as-string]
+== field-as-string
+
+
+
+
+[source,clojure]
+----
+(field-as-string image field-name)
+(field-as-string image field-name not-found)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L83-L87[source,window=_blank]
+
+'''
+
+[#field-names]
+== field-names
+
+
+
+
+[source,clojure]
+----
+(field-names image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L89-L91[source,window=_blank]
+
+'''
+
+[#headers]
+== headers
+
+
+
+
+[source,clojure]
+----
+(headers image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L93-L95[source,window=_blank]
+
+'''
+
+[#has-field-QMARK-]
+== has-field?
+
+
+
+
+[source,clojure]
+----
+(has-field? image field-name)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L97-L99[source,window=_blank]
+
+'''
+
+[#width]
+== width
+
+
+
+
+[source,clojure]
+----
+(width image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L101-L103[source,window=_blank]
+
+'''
+
+[#height]
+== height
+
+
+
+
+[source,clojure]
+----
+(height image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L105-L107[source,window=_blank]
+
+'''
+
+[#bands]
+== bands
+
+
+
+
+[source,clojure]
+----
+(bands image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L109-L111[source,window=_blank]
+
+'''
+
+[#has-alpha-QMARK-]
+== has-alpha?
+
+
+
+
+[source,clojure]
+----
+(has-alpha? image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L113-L115[source,window=_blank]
+
+'''
+
+[#shape]
+== shape
+
+
+
+
+[source,clojure]
+----
+(shape image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L117-L121[source,window=_blank]
+
+'''
+
+[#thumbnail]
+== thumbnail
+
+
+
+
+[source,clojure]
+----
+(thumbnail image width)
+(thumbnail image width opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L123-L129[source,window=_blank]
+
+'''
+
+[#assoc-field]
+== assoc-field
+
+
+
+
+[source,clojure]
+----
+(assoc-field image field-name value)
+(assoc-field image field-name value opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L131-L135[source,window=_blank]
+
+'''
+
+[#update-field]
+== update-field
+
+
+
+
+[source,clojure]
+----
+(update-field image field-name f & args)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L137-L139[source,window=_blank]
+
+'''
+
+[#dissoc-field]
+== dissoc-field
+
+
+
+
+[source,clojure]
+----
+(dissoc-field image field-name)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L141-L143[source,window=_blank]
+
+'''
+
+[#pages]
+== pages
+
+
+
+
+[source,clojure]
+----
+(pages image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L145-L147[source,window=_blank]
+
+'''
+
+[#page-height]
+== page-height
+
+
+
+
+[source,clojure]
+----
+(page-height image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L149-L151[source,window=_blank]
+
+'''
+
+[#page-delays]
+== page-delays
+
+
+
+
+[source,clojure]
+----
+(page-delays image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L153-L155[source,window=_blank]
+
+'''
+
+[#loop-count]
+== loop-count
+
+
+
+
+[source,clojure]
+----
+(loop-count image)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L157-L159[source,window=_blank]
+
+'''
+
+[#assoc-pages]
+== assoc-pages
+
+
+
+
+[source,clojure]
+----
+(assoc-pages image page-count)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L161-L163[source,window=_blank]
+
+'''
+
+[#assoc-page-height]
+== assoc-page-height
+
+
+
+
+[source,clojure]
+----
+(assoc-page-height image frame-height)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L165-L167[source,window=_blank]
+
+'''
+
+[#assoc-page-delays]
+== assoc-page-delays
+
+
+
+
+[source,clojure]
+----
+(assoc-page-delays image delays)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L169-L171[source,window=_blank]
+
+'''
+
+[#assoc-loop-count]
+== assoc-loop-count
+
+
+
+
+[source,clojure]
+----
+(assoc-loop-count image loop-value)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L173-L175[source,window=_blank]
+
+'''
+
+[#extract-area-pages]
+== extract-area-pages
+
+
+
+
+[source,clojure]
+----
+(extract-area-pages image left top width height)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L177-L179[source,window=_blank]
+
+'''
+
+[#embed-pages]
+== embed-pages
+
+
+
+
+[source,clojure]
+----
+(embed-pages image x y width height)
+(embed-pages image x y width height opts)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L181-L185[source,window=_blank]
+
+'''
+
+[#rot-pages]
+== rot-pages
+
+
+
+
+[source,clojure]
+----
+(rot-pages image angle)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L187-L189[source,window=_blank]
+
+'''
+
+[#assemble-pages]
+== assemble-pages
+
+
+
+
+[source,clojure]
+----
+(assemble-pages frames)
+(assemble-pages frames {:keys [loop delay] :as _opts})
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L191-L195[source,window=_blank]

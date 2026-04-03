@@ -1,0 +1,21 @@
+= API Reference
+
+This release publishes 4 namespaces.
+
+[cols="1,3",options="header",stripes=hover]
+|===
+| Namespace | Summary
+
+| xref:api/ol-vips.adoc[`ol.vips`]
+| -
+
+| xref:api/ol-vips-codegen.adoc[`ol.vips.codegen`]
+| -
+
+| xref:api/ol-vips-enums.adoc[`ol.vips.enums`]
+| -
+
+| xref:api/ol-vips-operations.adoc[`ol.vips.operations`]
+| -
+
+|===

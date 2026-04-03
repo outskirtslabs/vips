@@ -1,12 +1,14 @@
 {:deps  {outskirtslabs/bb-tasks
          {:git/url "https://github.com/outskirtslabs/bb-tasks"
           :git/sha "e868e28b18a0496ec4d39878f0307cb1df17da22"}}
+ :pods  {clj-kondo/clj-kondo {:version "2026.01.19"}}
  :paths []
  :tasks {:requires
          ([babashka.fs :as fs]
           [clojure.string :as str]
           [clojure.pprint :refer [print-table]]
           [babashka.tasks :refer [shell]]
+          [ol.bb-tasks.gen-docs :as gen-docs]
           [ol.bb-tasks.publish-clojars :as publish-clojars])
 
          :init
@@ -92,6 +94,10 @@
           :task (do
                   (clojure "-M:dev" "-m" "ol.vips.codegen")
                   (shell "cljfmt" "--quiet" "-v" "fix" "src/ol/vips/enums.clj" "src/ol/vips/operations.clj"))}
+
+         gen-docs
+         {:doc  "Generate all Antora documentation"
+          :task (gen-docs/generate!)}
 
          native:update
          {:doc  "Download and stage native resources for the selected platforms"

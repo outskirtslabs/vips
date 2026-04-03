@@ -1,0 +1,33 @@
+= ol.vips.codegen
+
+[#generate-BANG-]
+== generate!
+
+
+
+
+[source,clojure]
+----
+(generate!)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L406-L431[source,window=_blank]
+
+'''
+
+[#-main]
+== -main
+
+
+
+
+[source,clojure]
+----
+(-main & _args)
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L433-L439[source,window=_blank]

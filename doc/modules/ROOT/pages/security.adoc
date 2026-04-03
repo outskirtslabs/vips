@@ -1,0 +1,5 @@
+= Security
+
+Please report vulnerabilities through https://github.com/outskirtslabs/vips/security/advisories[GitHub Security Advisories].
+
+For general policy and support expectations, see https://docs.outskirtslabs.com/security-policy[Outskirts Labs Security Policy].
