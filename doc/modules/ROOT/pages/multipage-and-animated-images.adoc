@@ -1,0 +1,152 @@
+= Multipage and Animated Images
+
+This page adapts the upstream libvips guide for `ol.vips`. The original
+reference is
+https://www.libvips.org/API/8.17/multipage-and-animated-images.html[Multipage and animated images].
+
+libvips represents animated and multipage images as one tall image plus
+metadata describing how that strip should be interpreted. In `ol.vips`, the
+main metadata fields are
+xref:api/ol-vips.adoc#pages[`v/pages`],
+xref:api/ol-vips.adoc#page-height[`v/page-height`],
+xref:api/ol-vips.adoc#page-delays[`v/page-delays`], and
+xref:api/ol-vips.adoc#loop-count[`v/loop-count`].
+
+This model works best when every page or frame has the same dimensions. That
+is common for animated GIF and WebP, and also for some TIFF or PDF inputs. If
+page sizes vary, read and process them one at a time instead of treating the
+file as one uniform strip.
+
+== Reading multipage images
+
+By default, libvips usually reads only the first page or frame. Pass `{:n -1}`
+to load every page, or use `{:page ... :n ...}` to load a single page or a
+range.
+
+[source,clojure]
+----
+(require '[ol.vips :as v]
+         '[ol.vips.operations :as ops])
+
+(with-open [image (ops/gifload "test/fixtures/cogs.gif" {:n -1})]
+  (select-keys (v/metadata image)
+               [:width :height :pages :page-height :loop :delay]))
+;; => {:width 85
+;;     :height 385
+;;     :pages 5
+;;     :page-height 77
+;;     :loop 32761
+;;     :delay [0 50 50 50 50]}
+----
+
+Points to note:
+
+* xref:api/ol-vips-operations.adoc#gifload[`ops/gifload`] with `{:n -1}` loads
+  every frame in the animation.
+* `:page-height` is the height of one frame within the strip.
+* `:pages * :page-height == :height` for uniform-height images.
+* `:loop` is the loop count for animated formats.
+* `:delay` is a vector of frame delays in milliseconds.
+
+You can also load a subset of frames:
+
+[source,clojure]
+----
+(with-open [two-frames (ops/gifload "test/fixtures/cogs.gif" {:page 2 :n 2})]
+  (select-keys (v/metadata two-frames) [:height :pages :page-height]))
+----
+
+Be careful interpreting metadata on partial loads. The loaded strip height
+reflects the selected range, but some loaders can still preserve source
+metadata such as the original total `n-pages`. For frame slicing logic, rely on
+the loaded image dimensions together with `page-height`, not only on the
+reported source page count.
+
+The same loader options apply to other multipage-capable loaders such as
+xref:api/ol-vips-operations.adoc#webpload[`ops/webpload`] and
+xref:api/ol-vips-operations.adoc#tiffload[`ops/tiffload`], or to the generic
+xref:api/ol-vips.adoc#from-file[`v/from-file`] path when you want format
+autodetection.
+
+For PDF input, remember that `ol.vips` blocks libvips operations marked as
+untrusted during initialization. If you have a trusted PDF input path and need
+to load it, opt in first with
+xref:api/ol-vips.adoc#allow-untrusted-operations-BANG-[`v/allow-untrusted-operations!`].
+
+== Writing multipage images
+
+If an image already has the right strip layout and metadata, writing an
+animated or multipage image is just a normal save. For example, you can load a
+GIF animation and write it back as animated WebP:
+
+[source,clojure]
+----
+(with-open [image (ops/gifload "test/fixtures/cogs.gif" {:n -1})]
+  (v/write-to-file image "cogs.webp"))
+----
+
+That works because the loaded image already carries the `n-pages`,
+`page-height`, `loop`, and `delay` metadata that the saver needs.
+
+The same pattern applies to multipage TIFF output with
+xref:api/ol-vips-operations.adoc#tiffsave[`ops/tiffsave`] or
+to generic saves through xref:api/ol-vips.adoc#write-to-file[`v/write-to-file`]
+when libvips can infer the target format from the filename.
+
+== Building an animation from frames
+
+The upstream libvips examples build a vertical strip and then set metadata by
+hand. In `ol.vips`, prefer
+xref:api/ol-vips.adoc#assemble-pages[`v/assemble-pages`] when you already have
+a sequence of equal-sized frames. It joins the frames into one strip and sets
+the page metadata for you.
+
+[source,clojure]
+----
+(require '[ol.vips :as v]
+         '[ol.vips.operations :as ops])
+
+(with-open [base     (v/from-file "test/fixtures/puppies.jpg")
+            frame-a  (ops/extract-area base 0 0 40 30)
+            frame-b  (ops/extract-area base 10 10 40 30)
+            frame-c  (ops/extract-area base 20 20 40 30)
+            animated (v/assemble-pages [frame-a frame-b frame-c]
+                                       {:loop  2
+                                        :delay [80 120 160]})]
+  (v/write-to-file animated "puppies.gif")
+  (select-keys (v/metadata animated)
+               [:width :height :pages :page-height :loop :delay]))
+----
+
+If you already have a tall strip and need to annotate or adjust it, use
+xref:api/ol-vips.adoc#assoc-pages[`v/assoc-pages`],
+xref:api/ol-vips.adoc#assoc-page-height[`v/assoc-page-height`],
+xref:api/ol-vips.adoc#assoc-page-delays[`v/assoc-page-delays`], and
+xref:api/ol-vips.adoc#assoc-loop-count[`v/assoc-loop-count`].
+
+== Applying operations page by page
+
+For uniform-height multipage images, the page-aware helpers apply ordinary
+operations frame by frame and keep the metadata consistent.
+
+[source,clojure]
+----
+(with-open [image   (ops/gifload "test/fixtures/cogs.gif" {:n -1})
+            cropped (v/extract-area-pages image 10 7 50 50)
+            turned  (v/rot-pages cropped :d90)
+            looped  (v/assoc-loop-count turned 2)]
+  (v/write-to-file looped "cogs-turned.gif")
+  (select-keys (v/metadata looped)
+               [:width :height :pages :page-height :loop :delay]))
+----
+
+The main helpers are:
+
+* xref:api/ol-vips.adoc#extract-area-pages[`v/extract-area-pages`]
+* xref:api/ol-vips.adoc#embed-pages[`v/embed-pages`]
+* xref:api/ol-vips.adoc#rot-pages[`v/rot-pages`]
+* xref:api/ol-vips.adoc#assemble-pages[`v/assemble-pages`]
+
+For single-page inputs, these helpers fall back to the ordinary single-image
+behavior. For true multipage work, they assume that the image can be divided
+cleanly into equal-height pages.

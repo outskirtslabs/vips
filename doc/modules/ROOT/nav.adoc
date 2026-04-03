@@ -1,5 +1,6 @@
 * xref:index.adoc[Home]
 * xref:going-to-production.adoc[Going to Production]
+* xref:multipage-and-animated-images.adoc[Multipage and Animated Images]
 * xref:changelog.adoc[Changelog]
 * xref:security.adoc[Security Policy]
 include::partial$api-nav.adoc[]
