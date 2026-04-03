@@ -429,66 +429,233 @@
   (api/copy-image-to-memory image))
 
 (defn assoc-field
+  "Returns a new image with the libvips field named by `field-name` set to `value`.
+
+  `assoc-field` is immutable at the API level: it leaves `image` unchanged and
+  returns a new image handle with the updated header or metadata field.
+
+  Arity 4 accepts an options map.
+
+  Options:
+
+  | key     | description                                                                                            |
+  |---------|--------------------------------------------------------------------------------------------------------|
+  | `:type` | Explicit libvips field type to use when `value` is ambiguous, such as `:array-int` for integer vectors |
+
+  Header fields such as `\"xres\"` and `\"yres\"` are updated as real libvips
+  header values so they survive save and reload. Custom metadata fields are
+  copied onto a fresh image header and can be read back with [[field]] or
+  [[headers]].
+
+  Example:
+
+  ```clojure
+  (with-open [image  (v/from-file \"input.jpg\")
+              tagged (-> image
+                         (v/assoc-field \"xres\" 10.0)
+                         (v/assoc-field \"delay\" [10 20 30] {:type :array-int}))]
+    [(v/field tagged \"xres\")
+     (v/field tagged \"delay\")])
+  ```"
   ([image field-name value]
    (image/assoc-field image field-name value))
   ([image field-name value opts]
    (image/assoc-field image field-name value opts)))
 
 (defn update-field
+  "Returns a new image with `field-name` updated by applying `f` to its current value.
+
+  This is the functional update variant of [[assoc-field]]. The current field
+  value is read with [[field]] and passed to `f` along with any extra `args`.
+  The result becomes the new field value on the returned image.
+
+  Example:
+
+  ```clojure
+  (with-open [image   (v/from-file \"input.jpg\")
+              tagged  (v/assoc-field image \"custom-int\" 42)
+              updated (v/update-field tagged \"custom-int\" inc)]
+    (v/field updated \"custom-int\"))
+  ;; => 43
+  ```"
   [image field-name f & args]
   (apply image/update-field image field-name f args))
 
 (defn dissoc-field
+  "Returns a new image with the libvips field named by `field-name` removed.
+
+  This leaves `image` unchanged and removes the field from a copied image
+  header. It is most useful for stripping attached metadata fields that should
+  not be preserved downstream.
+
+  Example:
+
+  ```clojure
+  (with-open [image    (v/from-file \"input.jpg\")
+              tagged   (v/assoc-field image \"custom-string\" \"hello\")
+              stripped (v/dissoc-field tagged \"custom-string\")]
+    (v/field stripped \"custom-string\"))
+  ;; => nil
+  ```"
   [image field-name]
   (image/dissoc-field image field-name))
 
 (defn pages
+  "Returns the animated page count from `image`, or `nil` when it is absent.
+
+  This reads the libvips `\"n-pages\"` field directly. For ordinary single-page
+  images that field is usually missing, so `pages` commonly returns `nil`."
   [image]
   (image/pages image))
 
 (defn page-height
+  "Returns the per-frame height for an animated image, or `nil` when it is absent.
+
+  libvips stores animated images as frames stacked vertically in one image.
+  `page-height` is the height of each logical frame."
   [image]
   (image/page-height image))
 
 (defn page-delays
+  "Returns the animated frame delay vector from `image`, or `nil` when it is absent.
+
+  Delay values are returned as integers in the same order as the frames."
   [image]
   (image/page-delays image))
 
 (defn loop-count
+  "Returns the animated loop count from `image`, or `nil` when it is absent.
+
+  A loop count of `0` means loop forever when the target format supports that
+  convention."
   [image]
   (image/loop-count image))
 
 (defn assoc-pages
+  "Returns a new image with animated page count metadata set to `page-count`.
+
+  `page-count` must be a positive integer. This updates the libvips
+  `\"n-pages\"` field on a copied image header and leaves `image` unchanged."
   [image page-count]
   (image/assoc-pages image page-count))
 
 (defn assoc-page-height
+  "Returns a new image with animated frame height metadata set to `frame-height`.
+
+  `frame-height` must be a positive integer. This updates the libvips
+  `\"page-height\"` field on a copied image header and leaves `image`
+  unchanged."
   [image frame-height]
   (image/assoc-page-height image frame-height))
 
 (defn assoc-page-delays
+  "Returns a new image with animated frame delay metadata set to `delays`.
+
+  `delays` must be a non-empty sequence of integers. When `image` already has
+  an explicit page count, the number of delay entries must match it.
+
+  This writes the libvips `\"delay\"` field with the correct array type and
+  leaves `image` unchanged."
   [image delays]
   (image/assoc-page-delays image delays))
 
 (defn assoc-loop-count
+  "Returns a new image with animated loop count metadata set to `loop-value`.
+
+  `loop-value` must be a non-negative integer. `0` means loop forever for
+  formats that use that convention. This leaves `image` unchanged."
   [image loop-value]
   (image/assoc-loop-count image loop-value))
 
 (defn extract-area-pages
+  "Extracts the same rectangle from each frame of `image`.
+
+  For animated images, this crops every logical frame independently and returns
+  a reassembled animated image with `:pages`, `:page-height`, `:loop`, and
+  `:delay` preserved. For ordinary single-page images, this behaves like the
+  normal libvips `extract_area` operation.
+
+  Example:
+
+  ```clojure
+  (with-open [image   (ops/gifload \"input.gif\" {:n -1})
+              cropped (v/extract-area-pages image 10 7 50 50)]
+    (select-keys (v/metadata cropped) [:width :height :pages :page-height]))
+  ```"
   [image left top width height]
   (image/extract-area-pages image left top width height))
 
 (defn embed-pages
+  "Embeds each frame of `image` into a new canvas and returns the result.
+
+  For animated images, this applies libvips `embed` to every frame and then
+  reassembles the result while preserving animation metadata such as `:loop`
+  and `:delay`. For ordinary single-page images, this behaves like the normal
+  libvips `embed` operation.
+
+  Arity 6 accepts the same options map passed to libvips `embed`.
+
+  Options:
+
+  | key           | description                                                               |
+  |---------------|---------------------------------------------------------------------------|
+  | `:extend`     | How pixels outside the source image are filled, for example `:background` |
+  | `:background` | Background band values used when `:extend` is `:background`               |
+
+  Example:
+
+  ```clojure
+  (with-open [image  (ops/gifload \"input.gif\" {:n -1})
+              framed (v/embed-pages image 8 8 70 70 {:extend :background
+                                                     :background [0 0 0 0]})]
+    (v/page-height framed))
+  ```"
   ([image x y width height]
    (image/embed-pages image x y width height))
   ([image x y width height opts]
    (image/embed-pages image x y width height opts)))
 
 (defn rot-pages
+  "Rotates each frame of `image` by `angle`.
+
+  For animated images, this applies libvips `rot` to each frame and
+  reassembles the result with updated frame geometry and preserved animation
+  metadata. For ordinary single-page images, this behaves like the normal
+  libvips `rot` operation.
+
+  `angle` accepts the normalized enum keywords from [[ol.vips.enums/angle]],
+  such as `:d90`, `:d180`, or `:d270`."
   [image angle]
   (image/rot-pages image angle))
 
 (defn assemble-pages
+  "Stacks `frames` into one animated image and annotates the result as multi-page.
+
+  `frames` must be a non-empty collection of images. Each input image becomes
+  one animation frame. All frames must have the same width and height. The
+  returned image has `:pages` set to the number of frames and `:page-height`
+  set to the height of each input frame.
+
+  Arity 2 accepts an options map.
+
+  Options:
+
+  | key      | description                                               |
+  |----------|-----------------------------------------------------------|
+  | `:loop`  | Animated loop count as a non-negative integer             |
+  | `:delay` | Non-empty sequence of integer frame delays, one per frame |
+
+  `assemble-pages` requires at least one frame. When `:delay` is provided, its
+  entry count must match the number of frames.
+
+  Example:
+
+  ```clojure
+  (with-open [animated (v/assemble-pages [frame-a frame-b frame-c]
+                                         {:loop 2
+                                          :delay [80 120 160]})]
+    (select-keys (v/metadata animated) [:pages :page-height :loop :delay]))
+  ```"
   ([frames]
    (image/assemble-pages frames))
   ([frames {:keys [loop delay] :as _opts}]
