@@ -183,6 +183,7 @@
    :target-custom-new              ["vips_target_custom_new" [] ::mem/pointer]
    :vips-error-buffer              ["vips_error_buffer" [] ::mem/c-string]
    :vips-error-clear               ["vips_error_clear" [] ::mem/void]
+   :vips-operation-block-set       ["vips_operation_block_set" [::mem/c-string ::mem/int] ::mem/void]
    :vips-block-untrusted-set       ["vips_block_untrusted_set" [::mem/int] ::mem/void]
    :vips-init                      ["vips_init" [::mem/c-string] ::mem/int]
    :vips-shutdown                  ["vips_shutdown" [] ::mem/void]
@@ -238,9 +239,9 @@
    :array-image  ((:array-image-get-type native))
    :array-double ((:array-double-get-type native))})
 
-(defn- set-block-untrusted-operations!
-  [native state]
-  ((:vips-block-untrusted-set native) (if state 1 0)))
+(defn- apply-block-untrusted-operations!
+  [native blocked?]
+  ((:vips-block-untrusted-set native) (if blocked? 1 0)))
 
 (defn initialize-native-state
   [load-state]
@@ -251,7 +252,7 @@
                      (throw-vips-error native
                                        "Failed to initialize libvips"
                                        {:exit-code init-code}))
-        _          (set-block-untrusted-operations! native true)
+        _          (apply-block-untrusted-operations! native true)
         version    ((:vips-version-string native))]
     (merge base-state
            {:bindings                    native
@@ -268,11 +269,11 @@
               (reset! state* state)
               state)))))
 
-(defn allow-untrusted-operations!
-  []
+(defn set-block-untrusted-operations!
+  [blocked?]
   (let [current-state (ensure-initialized!)
-        next-state    (assoc current-state :block-untrusted-operations? false)]
-    (set-block-untrusted-operations! (:bindings current-state) false)
+        next-state    (assoc current-state :block-untrusted-operations? (boolean blocked?))]
+    (apply-block-untrusted-operations! (:bindings current-state) (boolean blocked?))
     (when (identical? @state* current-state)
       (reset! state* next-state))
     next-state))
@@ -285,6 +286,12 @@
 (defn gtypes
   []
   (:gtypes (ensure-initialized!)))
+
+(defn set-operation-block!
+  [name blocked?]
+  ((bindings :vips-operation-block-set) (str name) (if blocked? 1 0))
+  {:name     (str name)
+   :blocked? (boolean blocked?)})
 
 (defn operation-cache-settings
   []

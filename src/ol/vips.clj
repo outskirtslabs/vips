@@ -10,9 +10,40 @@
   []
   (api/ensure-initialized!))
 
-(defn allow-untrusted-operations!
-  []
-  (api/allow-untrusted-operations!))
+(defn set-block-untrusted-operations!
+  "Set whether libvips operations tagged as untrusted are blocked at runtime.
+
+  This is the direct wrapper around libvips `vips_block_untrusted_set`.
+  Pass `blocked?` as `true` to restore the secure default and block operations
+  libvips has marked as untrusted. Pass `false` to allow them to run.
+
+  Returns the current runtime state map."
+  [blocked?]
+  (api/set-block-untrusted-operations! blocked?))
+
+(defn set-operation-block!
+  "Set the block state for a libvips operation class hierarchy.
+
+  `name` should be a libvips operation class name such as `\"VipsForeignLoad\"`
+  or `\"VipsForeignLoadJpeg\"`. libvips applies the block state at that point in
+  the class hierarchy and to all descendants. This is the direct wrapper around
+  libvips `vips_operation_block_set`.
+
+  Pass `blocked?` as `true` to block that class hierarchy, or `false` to allow
+  it.
+
+  Example:
+
+  ```clojure
+  (v/set-operation-block! \"VipsForeignLoad\" true)
+  (v/set-operation-block! \"VipsForeignLoadJpeg\" false)
+  ```
+
+  That blocks all loaders except the JPEG loader family.
+
+  Returns `{:name <string> :blocked? <boolean>}`."
+  [name blocked?]
+  (api/set-operation-block! name blocked?))
 
 (defn operation-cache-settings
   []

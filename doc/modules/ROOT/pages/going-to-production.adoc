@@ -130,8 +130,32 @@ This reduces the amount of pixel data that later stages need to touch.
 `ol.vips` starts from a secure default: libvips operations marked as
 untrusted are blocked during initialization. If you handle untrusted data,
 keep
-xref:api/ol-vips.adoc#allow-untrusted-operations-BANG-[`v/allow-untrusted-operations!`]
-off unless you have a specific trusted-input path that needs those loaders.
+xref:api/ol-vips.adoc#set-block-untrusted-operations-BANG-[`v/set-block-untrusted-operations!`]
+set to `true` unless you have a specific trusted-input path that needs those
+loaders.
+
+If you need direct control over that default, use
+xref:api/ol-vips.adoc#set-block-untrusted-operations-BANG-[`v/set-block-untrusted-operations!`].
+Passing `true` restores the default secure posture, and passing `false`
+allows operations libvips has marked as untrusted.
+
+libvips also has a lower-level class-hierarchy blocker, exposed as
+xref:api/ol-vips.adoc#set-operation-block-BANG-[`v/set-operation-block!`].
+This lets you block broad families of operations and selectively re-enable the
+ subset you trust. For example, to allow only JPEG loaders:
+
+[source,clojure]
+----
+(require '[ol.vips :as v])
+
+(v/set-block-untrusted-operations! true)
+(v/set-operation-block! "VipsForeignLoad" true)
+(v/set-operation-block! "VipsForeignLoadJpeg" false)
+----
+
+After those calls, libvips will only load JPEGs from the foreign-loader
+hierarchy. This is useful when you need tighter runtime control without
+building a custom libvips binary.
 
 If you need tighter control over which loaders are present at all, prefer
 shipping a custom libvips build and loading it with `-Dol.vips.native.preload`

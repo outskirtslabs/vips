@@ -283,9 +283,9 @@ forwards to the selected loader. When you need format-specific behavior,
 use the generated loader operations in `ol.vips.operations`, such as
 `ops/jpegload`.
 
-`ol.vips` blocks libvips operations marked as untrusted by default. This
-can block loaders with a larger attack surface, such as PDF or
-ImageMagick-backed formats.
+`ol.vips` blocks libvips operations marked as untrusted by default. This can
+block loaders with a larger attack surface, such as PDF or ImageMagick-backed
+formats.
 
 If you trust your input and need those operations, opt in explicitly
 before loading that data:
@@ -295,7 +295,7 @@ before loading that data:
 (require '[ol.vips :as v]
          '[ol.vips.operations :as ops])
 
-(v/allow-untrusted-operations!)
+(v/set-block-untrusted-operations! false)
 
 (with-open [image (ops/pdfload "document.pdf")]
   (v/metadata image))

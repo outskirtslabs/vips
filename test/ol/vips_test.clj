@@ -57,17 +57,57 @@
           (is (not (zero? (first @calls))))
           (is (true? (:block-untrusted-operations? state))))))))
 
-(deftest allow-untrusted-operations-override
-  (testing "the runtime exposes an explicit override for trusted environments"
-    (let [calls   (atom [])
-          current {:bindings                    {:vips-block-untrusted-set
-                                                 (fn [state]
-                                                   (swap! calls conj state))}
-                   :block-untrusted-operations? true}]
-      (with-redefs [api/ensure-initialized! (fn [] current)]
-        (let [state (v/allow-untrusted-operations!)]
-          (is (= [0] @calls))
-          (is (false? (:block-untrusted-operations? state))))))))
+(deftest operation-block-controls
+  (testing "the runtime exposes the direct untrusted block setter"
+    (let [calls                (atom [])
+          set-block-untrusted! (ns-resolve 'ol.vips 'set-block-untrusted-operations!)
+          current              {:bindings                    {:vips-block-untrusted-set
+                                                              (fn [state]
+                                                                (swap! calls conj state))}
+                                :block-untrusted-operations? false}]
+      (is (some? set-block-untrusted!))
+      (when set-block-untrusted!
+        (with-redefs [api/ensure-initialized! (fn [] current)]
+          (let [state (set-block-untrusted! true)]
+            (is (= [1] @calls))
+            (is (true? (:block-untrusted-operations? state))))))))
+  (testing "the runtime exposes fine-grained operation blocking by class name"
+    (let [calls                (atom [])
+          set-operation-block! (ns-resolve 'ol.vips 'set-operation-block!)
+          fake-bindings        {:vips-operation-block-set (fn [name state]
+                                                            (swap! calls conj [name state]))}]
+      (is (some? set-operation-block!))
+      (when set-operation-block!
+        (with-redefs [api/bindings (fn
+                                     ([] fake-bindings)
+                                     ([k] (get fake-bindings k))
+                                     ([k not-found] (get fake-bindings k not-found)))]
+          (is (= {:name "VipsForeignLoad" :blocked? true}
+                 (set-operation-block! "VipsForeignLoad" true)))
+          (is (= {:name "VipsForeignLoadJpeg" :blocked? false}
+                 (set-operation-block! "VipsForeignLoadJpeg" false)))
+          (is (= [["VipsForeignLoad" 1]
+                  ["VipsForeignLoadJpeg" 0]]
+                 @calls))))))
+  (testing "fine-grained operation blocking can allow only selected loader families"
+    (let [set-block-untrusted! (ns-resolve 'ol.vips 'set-block-untrusted-operations!)
+          set-operation-block! (ns-resolve 'ol.vips 'set-operation-block!)]
+      (is (some? set-block-untrusted!))
+      (is (some? set-operation-block!))
+      (when (and set-block-untrusted! set-operation-block!)
+        (set-block-untrusted! true)
+        (set-operation-block! "VipsForeignLoad" true)
+        (set-operation-block! "VipsForeignLoadJpeg" false)
+        (try
+          (with-open [jpg (v/from-file puppies-path)]
+            (is (= {:width 518 :height 389 :bands 3 :has-alpha? false}
+                   (select-keys (v/metadata jpg) [:width :height :bands :has-alpha?]))))
+          (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                                #"Failed to open image"
+                                (v/from-file alpha-band-path)))
+          (finally
+            (set-operation-block! "VipsForeignLoad" false)
+            (set-block-untrusted! true)))))))
 
 (deftest operation-cache-controls
   (testing "the public runtime exposes cache limits and a disable helper"

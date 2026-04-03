@@ -71,7 +71,8 @@ autodetection.
 For PDF input, remember that `ol.vips` blocks libvips operations marked as
 untrusted during initialization. If you have a trusted PDF input path and need
 to load it, opt in first with
-xref:api/ol-vips.adoc#allow-untrusted-operations-BANG-[`v/allow-untrusted-operations!`].
+xref:api/ol-vips.adoc#set-block-untrusted-operations-BANG-[`v/set-block-untrusted-operations!`]
+set to `false`.
 
 == Writing multipage images
 
