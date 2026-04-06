@@ -16,17 +16,28 @@
 (def animated-output-path
   (fs/path output-root "cogs_rotated.gif"))
 
+
+(def dominant-palette-output-path
+  (fs/path output-root "puppies_dominant_palette.png"))
+
 (defn- run-example!
-  [script-path]
-  (shell/sh "clojure" "-M:dev" script-path))
+  [script-path & args]
+  (apply shell/sh
+         "clojure"
+         "-M:dev"
+         script-path
+         (concat (when (seq args) ["--"])
+                 (map str args))))
 
 (defn- capture-example-outputs
   []
   (into {}
-        (map (fn [path]
-               [path (when (fs/exists? path)
-                       (java.nio.file.Files/readAllBytes path))])
-             [metadata-output-path animated-output-path])))
+        (for [path [metadata-output-path
+                    animated-output-path
+                    image-diff-output-path
+                    dominant-palette-output-path]]
+          [path (when (fs/exists? path)
+                  (java.nio.file.Files/readAllBytes path))])))
 
 (defn- cleanup-example-outputs!
   [original-outputs]
@@ -39,7 +50,9 @@
 
 (deftest runnable-examples
   (let [original-outputs (capture-example-outputs)]
-    (doseq [path [metadata-output-path animated-output-path]]
+    (doseq [path [metadata-output-path
+                  animated-output-path
+                  image-diff-output-path]]
       (fs/delete-if-exists path))
     (try
       (testing "metadata example is runnable and writes the intended persisted headers"
@@ -64,5 +77,20 @@
             (is (= 5 (v/pages image)))
             (is (= 70 (v/page-height image)))
             (is (= 2 (v/loop-count image))))))
+
+
+(deftest dominant-palette-example
+  (let [original-outputs (capture-example-outputs)]
+    (fs/delete-if-exists dominant-palette-output-path)
+    (try
+      (let [{:keys [exit out err]} (run-example! "examples/palette_extractor.clj")]
+        (is (zero? exit) (str out err))
+        (is (fs/exists? dominant-palette-output-path))
+        (is (str/includes? out "top 6 dominant colors:"))
+        (is (str/includes? out "channel means (stats):"))
+        (is (str/includes? out "palette preview:"))
+        (with-open [image (v/from-file dominant-palette-output-path)]
+          (is (= {:width 518 :height 469 :has-alpha? false}
+                 (select-keys (v/metadata image) [:width :height :has-alpha?])))))
       (finally
         (cleanup-example-outputs! original-outputs)))))
