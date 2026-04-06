@@ -12,7 +12,10 @@
   (:import
    [java.net URI URLEncoder]
    [java.net.http HttpClient HttpRequest HttpResponse$BodyHandlers]
-   [java.nio.file Files]))
+   [java.nio.charset StandardCharsets]
+   [java.nio.file Files]
+   [java.security MessageDigest]
+   [java.util HexFormat]))
 
 (def project (-> (edn/read-string (slurp "deps.edn")) :aliases :neil :project))
 (def lib (:name project))
@@ -284,13 +287,25 @@
   (io/copy (io/file source) (io/file target))
   target)
 
+(defn- bundle-sha256
+  [package-dir library-files]
+  (let [digest (MessageDigest/getInstance "SHA-256")
+        hex    (HexFormat/of)]
+    (doseq [relative-path (sort library-files)]
+      (.update digest (.getBytes (str relative-path "\u0000") StandardCharsets/UTF_8))
+      (.update digest
+               (Files/readAllBytes (.toPath (io/file package-dir relative-path))))
+      (.update digest (byte-array 1)))
+    (.formatHex hex (.digest digest))))
+
 (defn- manifest-data
-  [platform sharp-version tarball-url versions-data library-files]
+  [platform sharp-version tarball-url versions-data library-files bundle-sha256]
   {:platform-id   (:platform-id platform)
    :artifact-name (:artifact-name platform)
    :sharp-package (:sharp-package platform)
    :sharp-version sharp-version
    :vips-version  (get versions-data "vips")
+   :bundle-sha256 bundle-sha256
    :libc          (:libc platform)
    :os            (:os platform)
    :arch          (:arch platform)
@@ -369,7 +384,12 @@
                                     slurp
                                     json/read-str)
                   library-files (native-library-files package-dir)
-                  manifest      (manifest-data platform sharp-version tarball-url versions-data library-files)
+                  manifest      (manifest-data platform
+                                               sharp-version
+                                               tarball-url
+                                               versions-data
+                                               library-files
+                                               (bundle-sha256 package-dir library-files))
                   resource-root (platform-resource-root platform)]
               (validate-upstream-package! platform package-dir versions-data library-files)
               (b/delete {:path (platform-resources-dir platform)})

@@ -97,6 +97,7 @@
   (let [manifest {:platform-id   :linux-x86-64-gnu
                   :vips-version  "8.17.3"
                   :sharp-version "1.2.4"
+                  :bundle-sha256 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
                   :library-files ["lib/libvips-cpp.so.8.17.3"]}]
     (testing "manifest resource paths follow the classpath contract"
       (is (= "ol/vips/native/linux-x86-64-gnu/manifest.edn"
@@ -106,11 +107,49 @@
         (is (= "/tmp/ol-vips-cache"
                (str (loader/default-cache-root))))))
     (testing "extraction roots are deterministic"
-      (is (= "/tmp/ol.vips/linux-x86-64-gnu/8.17.3-1.2.4"
+      (is (= "/tmp/ol.vips/linux-x86-64-gnu/8.17.3-0123456789ab"
              (str (loader/extraction-root "/tmp/ol.vips" manifest)))))
+    (testing "bundle hashes are required for extraction roots"
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #":bundle-sha256"
+                            (loader/extraction-root "/tmp/ol.vips"
+                                                    (dissoc manifest :bundle-sha256)))))
     (testing "extracted library paths derive from the manifest order"
-      (is (= ["/tmp/ol.vips/linux-x86-64-gnu/8.17.3-1.2.4/lib/libvips-cpp.so.8.17.3"]
+      (is (= ["/tmp/ol.vips/linux-x86-64-gnu/8.17.3-0123456789ab/lib/libvips-cpp.so.8.17.3"]
              (loader/extracted-library-paths "/tmp/ol.vips" manifest))))))
+
+(deftest extract-libraries-reuses-complete-cache-roots
+  (let [cache-root  (str (Files/createTempDirectory
+                          "ol-vips-cache-"
+                          (make-array java.nio.file.attribute.FileAttribute 0)))
+        source-root (str (Files/createTempDirectory
+                          "ol-vips-source-"
+                          (make-array java.nio.file.attribute.FileAttribute 0)))
+        manifest    {:platform-id   :linux-x86-64-gnu
+                     :vips-version  "8.17.3"
+                     :sharp-version "1.2.4"
+                     :bundle-sha256 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+                     :library-files ["lib/libvips-cpp.so.8.17.3"]}
+        relative    (first (:library-files manifest))
+        source-file (io/file source-root relative)]
+    (try
+      (.mkdirs (.getParentFile source-file))
+      (spit source-file "first")
+      (with-redefs [loader/resource-url (fn [_ _]
+                                          (.toURL (.toURI source-file)))]
+        (let [extracted-file (io/file (str (loader/extraction-root cache-root manifest))
+                                      relative)]
+          (loader/extract-libraries! cache-root manifest)
+          (is (= "first" (slurp extracted-file)))
+          (spit source-file "second")
+          (loader/extract-libraries! cache-root manifest)
+          (is (= "first" (slurp extracted-file)))))
+      (finally
+        (doseq [root  [cache-root source-root]
+                :let  [file (io/file root)]
+                :when (.exists file)]
+          (doseq [child (reverse (file-seq file))]
+            (.delete ^java.io.File child)))))))
 
 (deftest sync-native-versions-composes-companion-version-from-sharp-release-and-revision
   (let [temp-native-root (str (Files/createTempDirectory

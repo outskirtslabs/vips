@@ -1,4 +1,6 @@
 {:vips-version "8.17.3",
+ :bundle-sha256
+ "05adb3ce21718173caaa90626d350e2472c2e96095d54acba3bb13be11e16192",
  :arch :aarch64,
  :source-url
  "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.2.4.tgz",

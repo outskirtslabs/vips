@@ -1,4 +1,6 @@
 {:vips-version "8.17.3",
+ :bundle-sha256
+ "1323247b0af90cc372ae7a79b9c5f4cd3c68ee152627641effa5e6f5deb4fe96",
  :arch :x86-64,
  :source-url
  "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz",

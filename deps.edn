@@ -33,5 +33,5 @@
                               :status                  :experimental
                               :description             "Clojure bindings for libvips image processing library"
                               :sharp-vips-version      "1.2.4"
-                              :native-version-revision 1
+                              :native-version-revision 2
                               :version                 "0.0.1"}}}}

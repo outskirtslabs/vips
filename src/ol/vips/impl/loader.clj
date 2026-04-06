@@ -8,7 +8,9 @@
    [java.io InputStream PushbackReader RandomAccessFile]
    [java.lang.foreign Arena SymbolLookup]
    [java.net URL]
-   [java.nio.file CopyOption Files Path Paths StandardCopyOption]
+   [java.nio.channels FileChannel]
+   [java.nio.file CopyOption Files OpenOption Path Paths StandardCopyOption
+    StandardOpenOption]
    [java.nio.file.attribute FileAttribute]))
 
 (set! *warn-on-reflection* true)
@@ -90,6 +92,10 @@
 (defn- mkdirs!
   ^Path [path]
   (Files/createDirectories ^Path path (make-array FileAttribute 0)))
+
+(defn- path-exists?
+  [^Path path]
+  (Files/exists path (make-array java.nio.file.LinkOption 0)))
 
 (defn- copy!
   [^InputStream in ^Path target]
@@ -227,6 +233,22 @@
          vec)
     ["vips-cpp" "vips"]))
 
+(defn- manifest-bundle-sha256
+  [manifest]
+  (or (:bundle-sha256 manifest)
+      (throw (ex-info "Native manifest is missing :bundle-sha256"
+                      {:manifest (select-keys manifest
+                                              [:platform-id
+                                               :artifact-name
+                                               :sharp-package
+                                               :sharp-version
+                                               :vips-version
+                                               :source-url])}))))
+
+(defn- bundle-hash-prefix
+  [manifest]
+  (subs (manifest-bundle-sha256 manifest) 0 12))
+
 (defn extraction-root
   ([manifest]
    (extraction-root (default-cache-root) manifest))
@@ -234,7 +256,56 @@
    (absolute-path
     (path-of cache-root
              (name (:platform-id manifest))
-             (str (:vips-version manifest) "-" (:sharp-version manifest))))))
+             (str (:vips-version manifest) "-" (bundle-hash-prefix manifest))))))
+
+(defn- extraction-complete?
+  [cache-root manifest]
+  (let [root (extraction-root cache-root manifest)]
+    (every? (fn [relative-path]
+              (path-exists? (path-of root relative-path)))
+            (:library-files manifest))))
+
+(defn- delete-tree!
+  [path]
+  (let [root (io/file (str path))]
+    (when (.exists root)
+      (doseq [child (reverse (file-seq root))]
+        (Files/deleteIfExists (.toPath ^java.io.File child))))))
+
+(defn- extraction-lock-path
+  ^Path [cache-root manifest]
+  (let [^Path root (extraction-root cache-root manifest)]
+    (path-of (or (.getParent root) root)
+             (str (.getFileName root) ".lock"))))
+
+(defn- with-extraction-lock
+  [cache-root manifest f]
+  (let [^Path lock-path (extraction-lock-path cache-root manifest)
+        open-options    (into-array OpenOption [StandardOpenOption/CREATE
+                                                StandardOpenOption/WRITE])]
+    (mkdirs! (or (.getParent lock-path) lock-path))
+    (with-open [channel (FileChannel/open lock-path open-options)
+                _lock   (.lock channel)]
+      (f))))
+
+(defn- stage-libraries!
+  [cache-root manifest]
+  (let [^Path root   (extraction-root cache-root manifest)
+        parent       (or (.getParent root) root)
+        staging-root (Files/createTempDirectory parent
+                                                (str (.getFileName root) ".staging-")
+                                                (make-array FileAttribute 0))]
+    (try
+      (doseq [relative-path (:library-files manifest)]
+        (with-open [in (io/input-stream (resource-url (:platform-id manifest) relative-path))]
+          (copy! in (path-of staging-root relative-path))))
+      (when (path-exists? root)
+        (delete-tree! root))
+      (Files/move staging-root root (make-array CopyOption 0))
+      root
+      (finally
+        (when (path-exists? staging-root)
+          (delete-tree! staging-root))))))
 
 (defn extracted-library-paths
   ([manifest]
@@ -248,11 +319,11 @@
   ([]
    (extract-libraries! (default-cache-root) (read-manifest)))
   ([cache-root manifest]
+   (with-extraction-lock cache-root manifest
+     (fn []
+       (when-not (extraction-complete? cache-root manifest)
+         (stage-libraries! cache-root manifest))))
    (let [root (extraction-root cache-root manifest)]
-     (mkdirs! root)
-     (doseq [relative-path (:library-files manifest)]
-       (with-open [in (io/input-stream (resource-url (:platform-id manifest) relative-path))]
-         (copy! in (path-of root relative-path))))
      {:platform-id     (:platform-id manifest)
       :manifest        manifest
       :cache-root      (path-string (absolute-path cache-root))
