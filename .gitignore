@@ -23,3 +23,4 @@ native/*/resources/
 native/*/target/
 target/native-cache/
 examples/sicp*png
+examples/funcgeo*png

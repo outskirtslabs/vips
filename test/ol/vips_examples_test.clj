@@ -37,6 +37,27 @@
 (def sicp-05-square-limit-output-path
   (fs/path output-root "sicp-piclang-05-square-limit.png"))
 
+(def funcgeo2-01-fish-output-path
+  (fs/path output-root "funcgeo2-fish-01-fish.png"))
+
+(def funcgeo2-02-fish-over-output-path
+  (fs/path output-root "funcgeo2-fish-02-fish-over.png"))
+
+(def funcgeo2-03-t-tile-output-path
+  (fs/path output-root "funcgeo2-fish-03-t-tile.png"))
+
+(def funcgeo2-04-u-tile-output-path
+  (fs/path output-root "funcgeo2-fish-04-u-tile.png"))
+
+(def funcgeo2-05-side-output-path
+  (fs/path output-root "funcgeo2-fish-05-side.png"))
+
+(def funcgeo2-06-corner-output-path
+  (fs/path output-root "funcgeo2-fish-06-corner.png"))
+
+(def funcgeo2-07-square-limit-output-path
+  (fs/path output-root "funcgeo2-fish-07-square-limit.png"))
+
 (defn- run-example!
   [script-path & args]
   (apply shell/sh
@@ -57,7 +78,14 @@
                     sicp-02-george4-output-path
                     sicp-03-right-split-output-path
                     sicp-04-corner-split-output-path
-                    sicp-05-square-limit-output-path]]
+                    sicp-05-square-limit-output-path
+                    funcgeo2-01-fish-output-path
+                    funcgeo2-02-fish-over-output-path
+                    funcgeo2-03-t-tile-output-path
+                    funcgeo2-04-u-tile-output-path
+                    funcgeo2-05-side-output-path
+                    funcgeo2-06-corner-output-path
+                    funcgeo2-07-square-limit-output-path]]
           [path (when (fs/exists? path)
                   (java.nio.file.Files/readAllBytes path))])))
 
@@ -182,6 +210,57 @@
           (is (< (:out (ops/avg george4)) 255.0))
           (is (< (:out (ops/avg right-split)) 255.0))
           (is (< (:out (ops/avg corner-split)) 255.0))
+          (is (< (:out (ops/avg square-limit)) 255.0))))
+      (finally
+        (cleanup-example-outputs! original-outputs)))))
+
+(deftest funcgeo2-fish-example
+  (let [original-outputs (capture-example-outputs)]
+    (doseq [path [funcgeo2-01-fish-output-path
+                  funcgeo2-02-fish-over-output-path
+                  funcgeo2-03-t-tile-output-path
+                  funcgeo2-04-u-tile-output-path
+                  funcgeo2-05-side-output-path
+                  funcgeo2-06-corner-output-path
+                  funcgeo2-07-square-limit-output-path]]
+      (fs/delete-if-exists path))
+    (try
+      (let [{:keys [exit out err]} (run-example! "examples/funcgeo2_fish.clj")]
+        (is (zero? exit) (str out err))
+        (is (str/includes? out "01-fish:"))
+        (is (str/includes? out "02-fish-over:"))
+        (is (str/includes? out "03-t-tile:"))
+        (is (str/includes? out "04-u-tile:"))
+        (is (str/includes? out "05-side:"))
+        (is (str/includes? out "06-corner:"))
+        (is (str/includes? out "07-square-limit:"))
+        (with-open [fish         (v/from-file funcgeo2-01-fish-output-path)
+                    fish-over    (v/from-file funcgeo2-02-fish-over-output-path)
+                    t-tile       (v/from-file funcgeo2-03-t-tile-output-path)
+                    u-tile       (v/from-file funcgeo2-04-u-tile-output-path)
+                    side         (v/from-file funcgeo2-05-side-output-path)
+                    corner       (v/from-file funcgeo2-06-corner-output-path)
+                    square-limit (v/from-file funcgeo2-07-square-limit-output-path)]
+          (is (= {:width 652 :height 448 :has-alpha? false}
+                 (select-keys (v/metadata fish) [:width :height :has-alpha?])))
+          (is (= {:width 652 :height 448 :has-alpha? false}
+                 (select-keys (v/metadata fish-over) [:width :height :has-alpha?])))
+          (is (= {:width 752 :height 648 :has-alpha? false}
+                 (select-keys (v/metadata t-tile) [:width :height :has-alpha?])))
+          (is (= {:width 852 :height 852 :has-alpha? false}
+                 (select-keys (v/metadata u-tile) [:width :height :has-alpha?])))
+          (is (= {:width 500 :height 512 :has-alpha? false}
+                 (select-keys (v/metadata side) [:width :height :has-alpha?])))
+          (is (= {:width 500 :height 512 :has-alpha? false}
+                 (select-keys (v/metadata corner) [:width :height :has-alpha?])))
+          (is (= {:width 1248 :height 1248 :has-alpha? false}
+                 (select-keys (v/metadata square-limit) [:width :height :has-alpha?])))
+          (is (< (:out (ops/avg fish)) 255.0))
+          (is (< (:out (ops/avg fish-over)) 255.0))
+          (is (< (:out (ops/avg t-tile)) 255.0))
+          (is (< (:out (ops/avg u-tile)) 255.0))
+          (is (< (:out (ops/avg side)) 255.0))
+          (is (< (:out (ops/avg corner)) 255.0))
           (is (< (:out (ops/avg square-limit)) 255.0))))
       (finally
         (cleanup-example-outputs! original-outputs)))))
