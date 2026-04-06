@@ -31,6 +31,16 @@
                      :expected [:number]
                      :value    value}))))
 
+(defn require-finite-number
+  [value label]
+  (let [value (require-number value label)]
+    (if (Double/isFinite (double value))
+      value
+      (throw (ex-info (str label " must be a finite number")
+                      {:label    label
+                       :expected [:finite-number]
+                       :value    value})))))
+
 (defn require-integer
   [value label]
   (if (integer? value)
@@ -1153,7 +1163,7 @@
          image-ptr  (pointer (image-handle image))]
      (case type
        :int ((bindings :image-set-int) image-ptr field-name (int (require-int32 value "image field value")))
-       :double ((bindings :image-set-double) image-ptr field-name (double (require-number value "image field value")))
+       :double ((bindings :image-set-double) image-ptr field-name (double (require-finite-number value "image field value")))
        :string ((bindings :image-set-string) image-ptr field-name (require-java-string value "image field value"))
        :blob (let [data (->byte-array value "image field value")]
                ((bindings :image-set-blob-copy) image-ptr field-name data (alength ^bytes data)))
@@ -1177,7 +1187,7 @@
                            (doseq [[idx item] (map-indexed vector values)]
                              (mem/write-double data
                                                (* idx (mem/size-of ::mem/double))
-                                               (double (require-number item "image field value"))))
+                                               (double (require-finite-number item "image field value"))))
                            ((bindings :image-set-array-double) image-ptr field-name data count))))
        (throw (ex-info "Unsupported image metadata type"
                        {:field field-name

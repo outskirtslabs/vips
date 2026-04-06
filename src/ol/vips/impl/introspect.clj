@@ -256,14 +256,20 @@
             (finally
               ((:area-unref native) boxed))))))))
 
-(defn- numeric-seq?
+(defn- finite-numeric-seq?
   [value]
   (and (sequential? value)
-       (every? number? value)))
+       (every? (fn [item]
+                 (try
+                   (runtime/require-finite-number item "boxed double array value")
+                   true
+                   (catch Throwable _
+                     false)))
+               value)))
 
 (defn- encode-array-double
   [native numbers gvalue]
-  (let [numbers (vec numbers)]
+  (let [numbers (mapv #(runtime/require-finite-number % "boxed double array value") numbers)]
     (with-open [arena (mem/confined-arena)]
       (let [values (double-array (map double numbers))
             data   (mem/alloc (* (count numbers) (mem/size-of ::mem/double))
@@ -291,9 +297,9 @@
                                        {:kind       :boxed
                                         :value-type value-type
                                         :value      value})))
-    "VipsArrayDouble" (if (numeric-seq? value)
+    "VipsArrayDouble" (if (finite-numeric-seq? value)
                         (encode-array-double native value gvalue)
-                        (throw (ex-info "Expected a sequential collection of numbers"
+                        (throw (ex-info "Expected a sequential collection of finite numbers"
                                         {:kind       :boxed
                                          :value-type value-type
                                          :value      value})))
@@ -325,7 +331,7 @@
     :uint64 ((:g-value-set-uint64 native)
              gvalue
              (unchecked-long (runtime/require-uint64 value (str "Operation argument `" name "`"))))
-    :double ((:g-value-set-double native) gvalue (double (runtime/require-number value (str "Operation argument `" name "`"))))
+    :double ((:g-value-set-double native) gvalue (double (runtime/require-finite-number value (str "Operation argument `" name "`"))))
     :enum ((:g-value-set-enum native)
            gvalue
            (int (runtime/require-int32 (encode-enum value-type value) (str "Operation argument `" name "`"))))

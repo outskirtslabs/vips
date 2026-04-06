@@ -1,6 +1,7 @@
 (ns ol.vips-test
   (:require
    [babashka.fs :as fs]
+   [clojure.java.shell :as shell]
    [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
    [ol.vips :as v]
@@ -27,6 +28,10 @@
 
 (defonce runtime-state
   (v/init!))
+
+(defn- fatal-criticals-child
+  [expr]
+  (shell/sh "env" "G_DEBUG=fatal-criticals" "clojure" "-M:dev" "-e" expr))
 
 (deftest public-operation-surface
   (testing "the public namespace exposes the minimal low-level API"
@@ -481,11 +486,17 @@
                             #"image field value must be a number"
                             (v/assoc-field image "custom-double" :bad {:type :double})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must be a finite number"
+                            (v/assoc-field image "custom-double" ##NaN {:type :double})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"image field value must be an integer"
                             (v/assoc-field image "delay" [1 :bad 3] {:type :array-int})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"image field value must be a number"
                             (v/assoc-field image "weights" [1.0 :bad 3.0] {:type :array-double})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must be a finite number"
+                            (v/assoc-field image "weights" [1.0 ##Inf 3.0] {:type :array-double})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"image field value must be an integer"
                             (v/assoc-field image "custom-blob" [:bad] {:type :blob})))
@@ -665,6 +676,9 @@
                             #"xres"
                             (v/call "copy" {:in image :xres :high})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"xres.*finite number"
+                            (v/call "copy" {:in image :xres ##NaN})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"skip-blanks"
                             (v/call "dzsave" {:in image :filename "ignored.dz" :skip-blanks :bad})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
@@ -675,7 +689,10 @@
                             (v/call "copy" {:in image :width 999999999999999999999999N})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"keep.*32-bit unsigned integer"
-                            (v/call "pngsave" {:in image :filename "ignored.png" :keep 999999999999999999999999N})))))
+                            (v/call "pngsave" {:in image :filename "ignored.png" :keep 999999999999999999999999N})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"finite numbers"
+                            (v/call "embed" {:in image :x 0 :y 0 :width 20 :height 20 :background [##NaN 0.0 0.0]})))))
   (testing "invalid argument names fail before entering libvips"
     (with-open [image (v/from-file fixture-path)]
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
@@ -685,6 +702,19 @@
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"operation name"
                           (v/call :copy {})))))
+
+(deftest non-finite-doubles-are-rejected-before-glib-property-validation
+  (testing "non-finite gdouble values do not abort under fatal GLib criticals"
+    (let [copy-xres  (fatal-criticals-child
+                      "(require 'ol.vips) (try (with-open [img (ol.vips/from-file \"dev/rabbit.jpg\") out (ol.vips/call \"copy\" {:in img :xres ##NaN})] (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))))")
+          assoc-xres (fatal-criticals-child
+                      "(require 'ol.vips) (try (with-open [img (ol.vips/from-file \"dev/rabbit.jpg\")] (ol.vips/assoc-field img \"xres\" ##Inf) (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))))")]
+      (is (zero? (:exit copy-xres)))
+      (is (zero? (:exit assoc-xres)))
+      (is (re-find #"ExceptionInfo" (:out copy-xres)))
+      (is (re-find #"finite number" (:out copy-xres)))
+      (is (re-find #"ExceptionInfo" (:out assoc-xres)))
+      (is (re-find #"finite number" (:out assoc-xres))))))
 
 (deftest join-and-array-join
   (testing "join composes two images through the raw operation contract"
