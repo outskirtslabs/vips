@@ -302,11 +302,13 @@
                      :value      value}))))
 
 (defn- encode-value
-  [native {:keys [kind value-type]} value gvalue]
+  [native {:keys [kind value-type name]} value gvalue]
   (case kind
     :object ((:g-value-set-object native) gvalue (runtime/pointer (runtime/image-handle value)))
     :boxed (encode-boxed-value native value-type value gvalue)
-    :string ((:g-value-set-string native) gvalue (str value))
+    :string ((:g-value-set-string native)
+             gvalue
+             (runtime/require-java-string value (str "Operation argument `" name "`")))
     :boolean ((:g-value-set-boolean native) gvalue (if value 1 0))
     :int ((:g-value-set-int native) gvalue (int value))
     :uint ((:g-value-set-uint native) gvalue (int value))

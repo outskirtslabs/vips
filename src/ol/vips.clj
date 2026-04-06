@@ -234,8 +234,8 @@
 (defn from-file
   "Opens an image from `path` and returns a closeable image handle.
 
-  `path` can be a string, `java.nio.file.Path`, or anything else coercible to a
-  path string. Arity 2 appends `opts` in libvips option-string form. The
+  `path` can be a string, `java.nio.file.Path`, `java.io.File`, or another
+  `CharSequence`. Arity 2 appends `opts` in libvips option-string form. The
   available option keys depend on the loader libvips selects for that path.
 
   To discover loader-specific options like `:shrink`, see the generated
@@ -254,11 +254,11 @@
    (api/open-image (api/append-options path opts))))
 
 (defn write-to-file
-  "Writes `image` to `sink` and returns `image`.
+  "Writes `image` to `path` and returns `image`.
 
-  libvips infers the saver from the sink path or extension. Arity 3 appends
+  libvips infers the saver from the path or extension. Arity 3 appends
   `opts` in libvips option-string form. The available option keys depend on
-  the saver libvips selects for that sink.
+  the saver libvips selects for that path.
 
   To discover saver-specific options, see the generated wrappers in
   [[ol.vips.operations]], for example [[ol.vips.operations/pngsave]] or
@@ -268,10 +268,10 @@
   ```clojure
   (v/write-to-file image \"output.png\" {:compression 9})
   ```"
-  ([image sink]
-   (api/write-image! image sink))
-  ([image sink opts]
-   (api/write-image! image (api/append-options sink opts))))
+  ([image path]
+   (api/write-image! image path))
+  ([image path opts]
+   (api/write-image! image (api/append-options path opts))))
 
 (defn from-buffer
   "Opens an image from in-memory bytes and returns a closeable image handle.

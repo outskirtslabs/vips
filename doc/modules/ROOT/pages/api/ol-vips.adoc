@@ -429,8 +429,8 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L206-L232[s
 
 Opens an image from `path` and returns a closeable image handle.
 
-`path` can be a string, `java.nio.file.Path`, or anything else coercible to a
-path string. Arity 2 appends `opts` in libvips option-string form. The
+`path` can be a string, `java.nio.file.Path`, `java.io.File`, or another
+`CharSequence`. Arity 2 appends `opts` in libvips option-string form. The
 available option keys depend on the loader libvips selects for that path.
 
 To discover loader-specific options like `:shrink`, see the generated
@@ -458,15 +458,15 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L234-L254[s
 
 [source,clojure]
 ----
-(write-to-file image sink)
-(write-to-file image sink opts)
+(write-to-file image path)
+(write-to-file image path opts)
 ----
 
-Writes `image` to `sink` and returns `image`.
+Writes `image` to `path` and returns `image`.
 
-libvips infers the saver from the sink path or extension. Arity 3 appends
+libvips infers the saver from the path or extension. Arity 3 appends
 `opts` in libvips option-string form. The available option keys depend on
-the saver libvips selects for that sink.
+the saver libvips selects for that path.
 
 To discover saver-specific options, see the generated wrappers in
 xref:api/ol-vips-operations.adoc[`ol.vips.operations`], for example xref:api/ol-vips-operations.adoc#pngsave[`ol.vips.operations/pngsave`] or

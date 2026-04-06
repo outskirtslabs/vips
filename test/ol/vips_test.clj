@@ -333,6 +333,44 @@
         (is (> (alength ^bytes bin1) (alength ^bytes bin2)))
         (is (> (alength ^bytes bin3) (alength ^bytes bin4)))))))
 
+(deftest invalid-native-string-inputs-are-rejected
+  (testing "generic string operation arguments reject non-string values before native"
+    (let [error (try
+                  (v/call "text" {:text :not-a-string})
+                  (catch clojure.lang.ExceptionInfo ex
+                    ex))]
+      (is (instance? clojure.lang.ExceptionInfo error))
+      (is (re-find #"text" (.getMessage error)))
+      (is (= :not-a-string (:value (ex-data error))))))
+  (testing "public file helpers reject invalid sink and source values before native"
+    (with-open [image (v/from-file puppies-path)]
+      (let [sink-error   (try
+                           (v/write-to-file image {:not "a path"})
+                           (catch clojure.lang.ExceptionInfo ex
+                             ex))
+            source-error (try
+                           (v/from-file {:not "a path"})
+                           (catch clojure.lang.ExceptionInfo ex
+                             ex))]
+        (is (instance? clojure.lang.ExceptionInfo sink-error))
+        (is (instance? clojure.lang.ExceptionInfo source-error))
+        (is (= {:not "a path"} (:value (ex-data sink-error))))
+        (is (= {:not "a path"} (:value (ex-data source-error)))))))
+  (testing "generated filename operations reject invalid filename values before native"
+    (with-open [image (ops/black 1 1)]
+      (let [thumbnail-error (try
+                              (ops/thumbnail {:not "a path"} 10)
+                              (catch clojure.lang.ExceptionInfo ex
+                                ex))
+            rawsave-error   (try
+                              (ops/rawsave image {:not "a path"})
+                              (catch clojure.lang.ExceptionInfo ex
+                                ex))]
+        (is (instance? clojure.lang.ExceptionInfo thumbnail-error))
+        (is (instance? clojure.lang.ExceptionInfo rawsave-error))
+        (is (= {:not "a path"} (:value (ex-data thumbnail-error))))
+        (is (= {:not "a path"} (:value (ex-data rawsave-error))))))))
+
 (deftest alpha-and-shape-helpers
   (testing "alpha and shape match the public image helpers"
     (with-open [jpg (v/from-file puppies-path)

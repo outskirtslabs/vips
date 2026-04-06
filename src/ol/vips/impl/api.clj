@@ -6,8 +6,9 @@
    [coffi.mem :as mem]
    [ol.vips.impl.loader :as loader])
   (:import
-   [java.io InputStream OutputStream]
+   [java.io File InputStream OutputStream]
    [java.lang.foreign Arena]
+   [java.nio.file Path]
    [java.util.concurrent.atomic AtomicBoolean AtomicReference]))
 
 (set! *warn-on-reflection* true)
@@ -331,6 +332,27 @@
      :allocs        ((:vips-tracked-get-allocs native))
      :files         ((:vips-tracked-get-files native))}))
 
+(defn require-java-string
+  [value label]
+  (cond
+    (string? value)
+    value
+
+    (instance? Path value)
+    (str value)
+
+    (instance? File value)
+    (.getPath ^File value)
+
+    (instance? CharSequence value)
+    (str value)
+
+    :else
+    (throw (ex-info (str label " must be a string, java.nio.file.Path, java.io.File, or CharSequence")
+                    {:label    label
+                     :expected [:string :path :file :char-sequence]
+                     :value    value}))))
+
 (defn render-option-value
   [value]
   (cond
@@ -353,7 +375,7 @@
 
 (defn append-options
   [value opts]
-  (let [value         (str value)
+  (let [value         (require-java-string value "option target")
         option-string (render-option-string opts)]
     (if-not option-string
       value
@@ -656,7 +678,7 @@
 
 (defn open-image
   [source]
-  (let [path  (str source)
+  (let [path  (require-java-string source "from-file source")
         image ((bindings :image-new-from-file) path nil)]
     (when (mem/null? image)
       (throw-vips-error (bindings)
@@ -723,13 +745,13 @@
     (wrap-image copied)))
 
 (defn write-image!
-  [image sink]
-  (let [path (str sink)
+  [image path]
+  (let [path (require-java-string path "write-to-file path")
         code ((bindings :image-write-to-file) (pointer (image-handle image)) path nil)]
     (when-not (zero? code)
       (throw-vips-error (bindings)
                         "Failed to write image"
-                        {:sink path}))
+                        {:path path}))
     image))
 
 (defn write-image-to-buffer
