@@ -8,6 +8,7 @@ end-to-end scripts, see the examples in https://github.com/outskirtslabs/vips/tr
 * https://github.com/outskirtslabs/vips/blob/main/examples/compose_images.clj[`examples/compose_images.clj`] joins two images and builds a small grid with `join` and `arrayjoin`.
 * https://github.com/outskirtslabs/vips/blob/main/examples/bytes_and_streams.clj[`examples/bytes_and_streams.clj`] reads image bytes into memory, streams them through libvips, and writes the result back out.
 * https://github.com/outskirtslabs/vips/blob/main/examples/http_stream_fetch.clj[`examples/http_stream_fetch.clj`] streams an HTTP response body into libvips and saves a transformed result.
+* https://github.com/outskirtslabs/vips/blob/main/examples/image_diff.clj[`examples/image_diff.clj`] compares two same-sized images, thresholds the absolute difference, and composites a red highlight overlay onto the changed pixels.
 * https://github.com/outskirtslabs/vips/blob/main/examples/palette_extractor.clj[`examples/palette_extractor.clj`] extracts the top dominant colors from an image with `hist_find_ndim`, prints channel stats from `stats`, and renders a swatch strip below the source image.
 * https://github.com/outskirtslabs/vips/blob/main/examples/metadata_roundtrip.clj[`examples/metadata_roundtrip.clj`] reads and writes metadata fields before saving an image.
 * https://github.com/outskirtslabs/vips/blob/main/examples/animated_gif.clj[`examples/animated_gif.clj`] loads every GIF frame, transforms each page, and writes an animated result.

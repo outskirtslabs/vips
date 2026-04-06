@@ -16,6 +16,8 @@
 (def animated-output-path
   (fs/path output-root "cogs_rotated.gif"))
 
+(def image-diff-output-path
+  (fs/path output-root "gradient_diff_overlay.png"))
 
 (def dominant-palette-output-path
   (fs/path output-root "puppies_dominant_palette.png"))
@@ -78,6 +80,36 @@
             (is (= 70 (v/page-height image)))
             (is (= 2 (v/loop-count image))))))
 
+      (testing "image diff example is runnable and writes a highlighted overlay"
+        (let [before-path (fs/path output-root "gradient_before.png")
+              after-path  (fs/path output-root "gradient_after.png")]
+          (try
+            (with-open [before (v/from-file "test/fixtures/gradient.png")
+                        after  (ops/flip before :horizontal)]
+              (v/write-to-file before before-path)
+              (v/write-to-file after after-path))
+            (let [{:keys [exit out err]} (run-example! "examples/image_diff.clj"
+                                                       before-path
+                                                       after-path
+                                                       image-diff-output-path)]
+              (is (zero? exit) (str out err))
+              (is (fs/exists? image-diff-output-path))
+              (is (str/includes? out "mean absolute difference:"))
+              (is (str/includes? out "highlight coverage:"))
+              (is (str/includes? out "diff overlay:"))
+              (with-open [after  (v/from-file after-path)
+                          diffed (v/from-file image-diff-output-path)
+                          delta  (-> (ops/subtract (ops/cast diffed :float)
+                                                   (ops/cast after :float))
+                                     (ops/abs)
+                                     (ops/bandmean))]
+                (is (= (v/shape after) (v/shape diffed)))
+                (is (pos? (:out (ops/avg delta))))))
+            (finally
+              (fs/delete-if-exists before-path)
+              (fs/delete-if-exists after-path)))))
+      (finally
+        (cleanup-example-outputs! original-outputs)))))
 
 (deftest dominant-palette-example
   (let [original-outputs (capture-example-outputs)]
