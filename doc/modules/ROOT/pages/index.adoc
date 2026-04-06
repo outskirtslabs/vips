@@ -38,7 +38,7 @@ target platform.
 ----
 ;; deps.edn
 {:deps {com.outskirtslabs/vips {:git/url "https://github.com/outskirtslabs/vips.git"
-                                :git/sha "46789851fa8d749517bb7e09ea4e7340e1b757ec"}
+                                :git/sha "d3c7f1ddc2e9eb3a6734f8894e1d8fe41b9c420f"}
         ;; change the following based on your runtime platform
         com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.2.4-2"}}}
 ----
