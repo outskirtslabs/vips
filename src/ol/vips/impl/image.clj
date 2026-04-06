@@ -33,7 +33,7 @@
   ([image field-name value]
    (assoc-field image field-name value {}))
   ([image field-name value opts]
-   (let [field-name (str field-name)]
+   (let [field-name (api/require-field-name field-name)]
      (if (contains? copy-header-fields field-name)
        (introspect/call-operation "copy" {:in                  (api/image-handle image)
                                           (keyword field-name) value})

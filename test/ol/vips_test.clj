@@ -70,7 +70,10 @@
         (with-redefs [api/ensure-initialized! (fn [] current)]
           (let [state (set-block-untrusted! true)]
             (is (= [1] @calls))
-            (is (true? (:block-untrusted-operations? state))))))))
+            (is (true? (:block-untrusted-operations? state))))
+          (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                                #"blocked\? must be a boolean"
+                                (set-block-untrusted! :yes)))))))
   (testing "the runtime exposes fine-grained operation blocking by class name"
     (let [calls                (atom [])
           set-operation-block! (ns-resolve 'ol.vips 'set-operation-block!)
@@ -86,6 +89,9 @@
                  (set-operation-block! "VipsForeignLoad" true)))
           (is (= {:name "VipsForeignLoadJpeg" :blocked? false}
                  (set-operation-block! "VipsForeignLoadJpeg" false)))
+          (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                                #"blocked\? must be a boolean"
+                                (set-operation-block! "VipsForeignLoad" :no)))
           (is (= [["VipsForeignLoad" 1]
                   ["VipsForeignLoadJpeg" 0]]
                  @calls))))))
@@ -369,7 +375,61 @@
         (is (instance? clojure.lang.ExceptionInfo thumbnail-error))
         (is (instance? clojure.lang.ExceptionInfo rawsave-error))
         (is (= {:not "a path"} (:value (ex-data thumbnail-error))))
-        (is (= {:not "a path"} (:value (ex-data rawsave-error))))))))
+        (is (= {:not "a path"} (:value (ex-data rawsave-error)))))))
+  (testing "buffer and stream saver suffixes reject invalid values before native"
+    (with-open [image (v/from-file puppies-path)]
+      (let [buffer-error (try
+                           (v/write-to-buffer image {:not "a suffix"})
+                           (catch clojure.lang.ExceptionInfo ex
+                             ex))
+            stream-error (try
+                           (v/write-to-stream image (java.io.ByteArrayOutputStream.) {:not "a suffix"})
+                           (catch clojure.lang.ExceptionInfo ex
+                             ex))]
+        (is (instance? clojure.lang.ExceptionInfo buffer-error))
+        (is (instance? clojure.lang.ExceptionInfo stream-error))
+        (is (= {:not "a suffix"} (:value (ex-data buffer-error))))
+        (is (= {:not "a suffix"} (:value (ex-data stream-error)))))))
+  (testing "option strings reject unsupported values before native"
+    (with-open [image (v/from-file puppies-path)]
+      (let [load-error (try
+                         (v/from-file puppies-path {:access {:not "valid"}})
+                         (catch clojure.lang.ExceptionInfo ex
+                           ex))
+            save-error (try
+                         (v/write-to-buffer image ".png" {:compression {:not "valid"}})
+                         (catch clojure.lang.ExceptionInfo ex
+                           ex))]
+        (is (instance? clojure.lang.ExceptionInfo load-error))
+        (is (instance? clojure.lang.ExceptionInfo save-error))
+        (is (= {:not "valid"} (:value (ex-data load-error))))
+        (is (= {:not "valid"} (:value (ex-data save-error)))))))
+  (testing "metadata field names and explicit string values reject invalid values before native"
+    (with-open [image (v/from-file puppies-path)]
+      (let [field-error  (try
+                           (v/field image {:not "a field"})
+                           (catch clojure.lang.ExceptionInfo ex
+                             ex))
+            assoc-error  (try
+                           (v/assoc-field image {:not "a field"} "value")
+                           (catch clojure.lang.ExceptionInfo ex
+                             ex))
+            value-error  (try
+                           (v/assoc-field image "custom-field" {:not "a string"} {:type :string})
+                           (catch clojure.lang.ExceptionInfo ex
+                             ex))
+            dissoc-error (try
+                           (v/dissoc-field image {:not "a field"})
+                           (catch clojure.lang.ExceptionInfo ex
+                             ex))]
+        (is (instance? clojure.lang.ExceptionInfo field-error))
+        (is (instance? clojure.lang.ExceptionInfo assoc-error))
+        (is (instance? clojure.lang.ExceptionInfo value-error))
+        (is (instance? clojure.lang.ExceptionInfo dissoc-error))
+        (is (= {:not "a field"} (:value (ex-data field-error))))
+        (is (= {:not "a field"} (:value (ex-data assoc-error))))
+        (is (= {:not "a string"} (:value (ex-data value-error))))
+        (is (= {:not "a field"} (:value (ex-data dissoc-error))))))))
 
 (deftest alpha-and-shape-helpers
   (testing "alpha and shape match the public image helpers"
@@ -519,7 +579,15 @@
                             (v/call "flip" {:in image :direction :sideways})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"Unknown enum value"
-                            (v/call "colourspace" {:in image :space :sepia}))))))
+                            (v/call "colourspace" {:in image :space :sepia})))))
+  (testing "invalid booleans fail before entering libvips"
+    (with-open [image (v/from-file fixture-path)]
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"auto-rotate"
+                            (ops/thumbnail fixture-path 400 {:auto-rotate :yes})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"swap"
+                            (v/call "copy" {:in image :swap :yes}))))))
 
 (deftest join-and-array-join
   (testing "join composes two images through the raw operation contract"

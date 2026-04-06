@@ -309,7 +309,9 @@
     :string ((:g-value-set-string native)
              gvalue
              (runtime/require-java-string value (str "Operation argument `" name "`")))
-    :boolean ((:g-value-set-boolean native) gvalue (if value 1 0))
+    :boolean ((:g-value-set-boolean native)
+              gvalue
+              (if (runtime/require-boolean value (str "Operation argument `" name "`")) 1 0))
     :int ((:g-value-set-int native) gvalue (int value))
     :uint ((:g-value-set-uint native) gvalue (int value))
     :long ((:g-value-set-long native) gvalue (long value))

@@ -270,11 +270,47 @@
               (reset! state* state)
               state)))))
 
+(defn require-boolean
+  [value label]
+  (if (boolean? value)
+    value
+    (throw (ex-info (str label " must be a boolean")
+                    {:label    label
+                     :expected [:boolean]
+                     :value    value}))))
+
+(defn coerce-java-string
+  [value]
+  (cond
+    (string? value)
+    value
+
+    (instance? Path value)
+    (str value)
+
+    (instance? File value)
+    (.getPath ^File value)
+
+    (instance? CharSequence value)
+    (str value)
+
+    :else
+    nil))
+
+(defn require-java-string
+  [value label]
+  (or (coerce-java-string value)
+      (throw (ex-info (str label " must be a string, java.nio.file.Path, java.io.File, or CharSequence")
+                      {:label    label
+                       :expected [:string :path :file :char-sequence]
+                       :value    value}))))
+
 (defn set-block-untrusted-operations!
   [blocked?]
-  (let [current-state (ensure-initialized!)
-        next-state    (assoc current-state :block-untrusted-operations? (boolean blocked?))]
-    (apply-block-untrusted-operations! (:bindings current-state) (boolean blocked?))
+  (let [blocked?      (require-boolean blocked? "blocked?")
+        current-state (ensure-initialized!)
+        next-state    (assoc current-state :block-untrusted-operations? blocked?)]
+    (apply-block-untrusted-operations! (:bindings current-state) blocked?)
     (when (identical? @state* current-state)
       (reset! state* next-state))
     next-state))
@@ -290,9 +326,11 @@
 
 (defn set-operation-block!
   [name blocked?]
-  ((bindings :vips-operation-block-set) (str name) (if blocked? 1 0))
-  {:name     (str name)
-   :blocked? (boolean blocked?)})
+  (let [name     (require-java-string name "operation block name")
+        blocked? (require-boolean blocked? "blocked?")]
+    ((bindings :vips-operation-block-set) name (if blocked? 1 0))
+    {:name     name
+     :blocked? blocked?}))
 
 (defn operation-cache-settings
   []
@@ -332,35 +370,25 @@
      :allocs        ((:vips-tracked-get-allocs native))
      :files         ((:vips-tracked-get-files native))}))
 
-(defn require-java-string
-  [value label]
-  (cond
-    (string? value)
-    value
-
-    (instance? Path value)
-    (str value)
-
-    (instance? File value)
-    (.getPath ^File value)
-
-    (instance? CharSequence value)
-    (str value)
-
-    :else
-    (throw (ex-info (str label " must be a string, java.nio.file.Path, java.io.File, or CharSequence")
-                    {:label    label
-                     :expected [:string :path :file :char-sequence]
-                     :value    value}))))
-
-(defn render-option-value
+(defn coerce-option-value
   [value]
   (cond
     (keyword? value) (name value)
-    (string? value) value
+    (some? (coerce-java-string value)) (require-java-string value "option value")
     (boolean? value) (if value "true" "false")
-    (sequential? value) (str/join " " (map render-option-value value))
-    :else (str value)))
+    (number? value) (str value)
+    (sequential? value) (str/join " " (map coerce-option-value value))
+    :else (throw (ex-info "Option value must be a keyword, string, java.nio.file.Path, java.io.File, CharSequence, boolean, number, or sequential collection of those"
+                          {:expected [:keyword :string :path :file :char-sequence :boolean :number :sequential]
+                           :value    value}))))
+
+(defn require-field-name
+  [value]
+  (require-java-string value "image field name"))
+
+(defn render-option-value
+  [value]
+  (coerce-option-value value))
 
 (defn render-option-string
   [opts]
@@ -757,11 +785,12 @@
 (defn write-image-to-buffer
   [image suffix]
   (with-open [arena (mem/confined-arena)]
-    (let [buffer-ptr (mem/alloc-instance ::mem/pointer arena)
+    (let [suffix     (require-java-string suffix "write-to-buffer suffix")
+          buffer-ptr (mem/alloc-instance ::mem/pointer arena)
           size-ptr   (mem/alloc-instance ::size-t arena)
           code       ((bindings :image-write-to-buffer)
                       (pointer (image-handle image))
-                      (str suffix)
+                      suffix
                       buffer-ptr
                       size-ptr
                       nil)]
@@ -780,14 +809,15 @@
   [image sink suffix]
   (let [stream (require-instance OutputStream sink "write-to-stream sink")]
     (with-open [^StreamBridge bridge (new-target-bridge stream)]
-      (let [code ((bindings :image-write-to-target)
-                  (pointer (image-handle image))
-                  (str suffix)
-                  (pointer bridge)
-                  nil)]
+      (let [suffix (require-java-string suffix "write-to-stream suffix")
+            code   ((bindings :image-write-to-target)
+                    (pointer (image-handle image))
+                    suffix
+                    (pointer bridge)
+                    nil)]
         (when-not (zero? code)
           (throw-stream-error "Failed to write image to stream"
-                              {:suffix (str suffix)}
+                              {:suffix suffix}
                               (stream-failure-ref bridge)))
         image))))
 
@@ -816,7 +846,8 @@
 
 (defn image-field-type
   [image field-name]
-  ((bindings :image-get-typeof) (pointer (image-handle image)) (str field-name)))
+  (let [field-name (require-field-name field-name)]
+    ((bindings :image-get-typeof) (pointer (image-handle image)) field-name)))
 
 (defn image-has-field?
   [image field-name]
@@ -853,135 +884,142 @@
   ([image field-name]
    (image-field-as-string image field-name missing-field-sentinel))
   ([image field-name not-found]
-   (if-not (image-has-field? image field-name)
-     (if (identical? not-found missing-field-sentinel) nil not-found)
-     (with-open [arena (mem/confined-arena)]
-       (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
-             code    ((bindings :image-get-as-string)
-                      (pointer (image-handle image))
-                      (str field-name)
-                      out-ptr)]
-         (when-not (zero? code)
-           (throw-vips-error (bindings)
-                             "Failed to read image metadata field as string"
-                             {:field (str field-name)}))
-         (let [value-ptr (mem/read-address out-ptr)]
-           (try
-             (read-c-string value-ptr)
-             (finally
-               ((bindings :g-free) value-ptr)))))))))
+   (let [field-name (require-field-name field-name)]
+     (if-not (image-has-field? image field-name)
+       (if (identical? not-found missing-field-sentinel) nil not-found)
+       (with-open [arena (mem/confined-arena)]
+         (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+               code    ((bindings :image-get-as-string)
+                        (pointer (image-handle image))
+                        field-name
+                        out-ptr)]
+           (when-not (zero? code)
+             (throw-vips-error (bindings)
+                               "Failed to read image metadata field as string"
+                               {:field field-name}))
+           (let [value-ptr (mem/read-address out-ptr)]
+             (try
+               (read-c-string value-ptr)
+               (finally
+                 ((bindings :g-free) value-ptr))))))))))
 
 (defn image-int-field
   [image field-name]
-  (with-open [arena (mem/confined-arena)]
-    (let [out-ptr (mem/alloc-instance ::mem/int arena)
-          code    ((bindings :image-get-int)
-                   (pointer (image-handle image))
-                   (str field-name)
-                   out-ptr)]
-      (when-not (zero? code)
-        (throw-vips-error (bindings)
-                          "Failed to read integer image metadata field"
-                          {:field (str field-name)}))
-      (mem/read-int out-ptr))))
+  (let [field-name (require-field-name field-name)]
+    (with-open [arena (mem/confined-arena)]
+      (let [out-ptr (mem/alloc-instance ::mem/int arena)
+            code    ((bindings :image-get-int)
+                     (pointer (image-handle image))
+                     field-name
+                     out-ptr)]
+        (when-not (zero? code)
+          (throw-vips-error (bindings)
+                            "Failed to read integer image metadata field"
+                            {:field field-name}))
+        (mem/read-int out-ptr)))))
 
 (defn image-double-field
   [image field-name]
-  (with-open [arena (mem/confined-arena)]
-    (let [out-ptr (mem/alloc-instance ::mem/double arena)
-          code    ((bindings :image-get-double)
-                   (pointer (image-handle image))
-                   (str field-name)
-                   out-ptr)]
-      (when-not (zero? code)
-        (throw-vips-error (bindings)
-                          "Failed to read double image metadata field"
-                          {:field (str field-name)}))
-      (mem/read-double out-ptr))))
+  (let [field-name (require-field-name field-name)]
+    (with-open [arena (mem/confined-arena)]
+      (let [out-ptr (mem/alloc-instance ::mem/double arena)
+            code    ((bindings :image-get-double)
+                     (pointer (image-handle image))
+                     field-name
+                     out-ptr)]
+        (when-not (zero? code)
+          (throw-vips-error (bindings)
+                            "Failed to read double image metadata field"
+                            {:field field-name}))
+        (mem/read-double out-ptr)))))
 
 (defn image-string-field
   [image field-name]
-  (with-open [arena (mem/confined-arena)]
-    (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
-          code    ((bindings :image-get-string)
-                   (pointer (image-handle image))
-                   (str field-name)
-                   out-ptr)]
-      (when-not (zero? code)
-        (throw-vips-error (bindings)
-                          "Failed to read string image metadata field"
-                          {:field (str field-name)}))
-      (read-c-string (mem/read-address out-ptr)))))
+  (let [field-name (require-field-name field-name)]
+    (with-open [arena (mem/confined-arena)]
+      (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+            code    ((bindings :image-get-string)
+                     (pointer (image-handle image))
+                     field-name
+                     out-ptr)]
+        (when-not (zero? code)
+          (throw-vips-error (bindings)
+                            "Failed to read string image metadata field"
+                            {:field field-name}))
+        (read-c-string (mem/read-address out-ptr))))))
 
 (defn image-array-int-field
   [image field-name]
-  (with-open [arena (mem/confined-arena)]
-    (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
-          n-ptr   (mem/alloc-instance ::mem/int arena)
-          code    ((bindings :image-get-array-int)
-                   (pointer (image-handle image))
-                   (str field-name)
-                   out-ptr
-                   n-ptr)]
-      (when-not (zero? code)
-        (throw-vips-error (bindings)
-                          "Failed to read integer-array image metadata field"
-                          {:field (str field-name)}))
-      (let [count     (mem/read-int n-ptr)
-            data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
-                       (mem/read-address out-ptr)
-                                    (* count (mem/size-of ::mem/int)))
-            slot-size (mem/size-of ::mem/int)]
-        (mapv (fn [idx]
-                (.get ^java.lang.foreign.MemorySegment
-                 data-ptr
-                      java.lang.foreign.ValueLayout/JAVA_INT
-                      (long (* idx slot-size))))
-              (range count))))))
+  (let [field-name (require-field-name field-name)]
+    (with-open [arena (mem/confined-arena)]
+      (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+            n-ptr   (mem/alloc-instance ::mem/int arena)
+            code    ((bindings :image-get-array-int)
+                     (pointer (image-handle image))
+                     field-name
+                     out-ptr
+                     n-ptr)]
+        (when-not (zero? code)
+          (throw-vips-error (bindings)
+                            "Failed to read integer-array image metadata field"
+                            {:field field-name}))
+        (let [count     (mem/read-int n-ptr)
+              data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
+                         (mem/read-address out-ptr)
+                                      (* count (mem/size-of ::mem/int)))
+              slot-size (mem/size-of ::mem/int)]
+          (mapv (fn [idx]
+                  (.get ^java.lang.foreign.MemorySegment
+                   data-ptr
+                        java.lang.foreign.ValueLayout/JAVA_INT
+                        (long (* idx slot-size))))
+                (range count)))))))
 
 (defn image-array-double-field
   [image field-name]
-  (with-open [arena (mem/confined-arena)]
-    (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
-          n-ptr   (mem/alloc-instance ::mem/int arena)
-          code    ((bindings :image-get-array-double)
-                   (pointer (image-handle image))
-                   (str field-name)
-                   out-ptr
-                   n-ptr)]
-      (when-not (zero? code)
-        (throw-vips-error (bindings)
-                          "Failed to read double-array image metadata field"
-                          {:field (str field-name)}))
-      (let [count     (mem/read-int n-ptr)
-            data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
-                       (mem/read-address out-ptr)
-                                    (* count (mem/size-of ::mem/double)))
-            slot-size (mem/size-of ::mem/double)]
-        (mapv (fn [idx]
-                (.get ^java.lang.foreign.MemorySegment
-                 data-ptr
-                      java.lang.foreign.ValueLayout/JAVA_DOUBLE
-                      (long (* idx slot-size))))
-              (range count))))))
+  (let [field-name (require-field-name field-name)]
+    (with-open [arena (mem/confined-arena)]
+      (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+            n-ptr   (mem/alloc-instance ::mem/int arena)
+            code    ((bindings :image-get-array-double)
+                     (pointer (image-handle image))
+                     field-name
+                     out-ptr
+                     n-ptr)]
+        (when-not (zero? code)
+          (throw-vips-error (bindings)
+                            "Failed to read double-array image metadata field"
+                            {:field field-name}))
+        (let [count     (mem/read-int n-ptr)
+              data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
+                         (mem/read-address out-ptr)
+                                      (* count (mem/size-of ::mem/double)))
+              slot-size (mem/size-of ::mem/double)]
+          (mapv (fn [idx]
+                  (.get ^java.lang.foreign.MemorySegment
+                   data-ptr
+                        java.lang.foreign.ValueLayout/JAVA_DOUBLE
+                        (long (* idx slot-size))))
+                (range count)))))))
 
 (defn image-blob-field
   [image field-name]
-  (with-open [arena (mem/confined-arena)]
-    (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
-          len-ptr (mem/alloc-instance ::size-t arena)
-          code    ((bindings :image-get-blob)
-                   (pointer (image-handle image))
-                   (str field-name)
-                   out-ptr
-                   len-ptr)]
-      (when-not (zero? code)
-        (throw-vips-error (bindings)
-                          "Failed to read blob image metadata field"
-                          {:field (str field-name)}))
-      (let [data-ptr (mem/read-address out-ptr)
-            length   (mem/read-long len-ptr)]
-        (mem/read-bytes (mem/reinterpret data-ptr length) length)))))
+  (let [field-name (require-field-name field-name)]
+    (with-open [arena (mem/confined-arena)]
+      (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+            len-ptr (mem/alloc-instance ::size-t arena)
+            code    ((bindings :image-get-blob)
+                     (pointer (image-handle image))
+                     field-name
+                     out-ptr
+                     len-ptr)]
+        (when-not (zero? code)
+          (throw-vips-error (bindings)
+                            "Failed to read blob image metadata field"
+                            {:field field-name}))
+        (let [data-ptr (mem/read-address out-ptr)
+              length   (mem/read-long len-ptr)]
+          (mem/read-bytes (mem/reinterpret data-ptr length) length))))))
 
 (defn image-field
   ([image field-name]
@@ -1011,7 +1049,7 @@
   [value]
   (cond
     (instance? byte-array-class value) :blob
-    (string? value) :string
+    (some? (coerce-java-string value)) :string
     (integer? value) :int
     (number? value) :double
     (and (sequential? value) (every? integer? value)) :array-int
@@ -1023,13 +1061,13 @@
   ([image field-name value]
    (image-assoc-field! image field-name value {}))
   ([image field-name value {:keys [type]}]
-   (let [field-name (str field-name)
+   (let [field-name (require-field-name field-name)
          type       (or type (infer-field-type value))
          image-ptr  (pointer (image-handle image))]
      (case type
        :int ((bindings :image-set-int) image-ptr field-name (int value))
        :double ((bindings :image-set-double) image-ptr field-name (double value))
-       :string ((bindings :image-set-string) image-ptr field-name (str value))
+       :string ((bindings :image-set-string) image-ptr field-name (require-java-string value "image field value"))
        :blob (let [data (->byte-array value)]
                ((bindings :image-set-blob-copy) image-ptr field-name data (alength ^bytes data)))
        :array-int (let [values (vec value)
@@ -1058,5 +1096,5 @@
 
 (defn image-dissoc-field!
   [image field-name]
-  ((bindings :image-remove) (pointer (image-handle image)) (str field-name))
+  ((bindings :image-remove) (pointer (image-handle image)) (require-field-name field-name))
   image)
