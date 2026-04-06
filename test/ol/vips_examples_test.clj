@@ -22,6 +22,21 @@
 (def dominant-palette-output-path
   (fs/path output-root "puppies_dominant_palette.png"))
 
+(def sicp-01-george-output-path
+  (fs/path output-root "sicp-piclang-01-george.png"))
+
+(def sicp-02-george4-output-path
+  (fs/path output-root "sicp-piclang-02-george4.png"))
+
+(def sicp-03-right-split-output-path
+  (fs/path output-root "sicp-piclang-03-right-split.png"))
+
+(def sicp-04-corner-split-output-path
+  (fs/path output-root "sicp-piclang-04-corner-split.png"))
+
+(def sicp-05-square-limit-output-path
+  (fs/path output-root "sicp-piclang-05-square-limit.png"))
+
 (defn- run-example!
   [script-path & args]
   (apply shell/sh
@@ -37,7 +52,12 @@
         (for [path [metadata-output-path
                     animated-output-path
                     image-diff-output-path
-                    dominant-palette-output-path]]
+                    dominant-palette-output-path
+                    sicp-01-george-output-path
+                    sicp-02-george4-output-path
+                    sicp-03-right-split-output-path
+                    sicp-04-corner-split-output-path
+                    sicp-05-square-limit-output-path]]
           [path (when (fs/exists? path)
                   (java.nio.file.Files/readAllBytes path))])))
 
@@ -124,5 +144,44 @@
         (with-open [image (v/from-file dominant-palette-output-path)]
           (is (= {:width 518 :height 469 :has-alpha? false}
                  (select-keys (v/metadata image) [:width :height :has-alpha?])))))
+      (finally
+        (cleanup-example-outputs! original-outputs)))))
+
+(deftest sicp-picture-language-example
+  (let [original-outputs (capture-example-outputs)]
+    (doseq [path [sicp-01-george-output-path
+                  sicp-02-george4-output-path
+                  sicp-03-right-split-output-path
+                  sicp-04-corner-split-output-path
+                  sicp-05-square-limit-output-path]]
+      (fs/delete-if-exists path))
+    (try
+      (let [{:keys [exit out err]} (run-example! "examples/sicp_picture_lang.clj")]
+        (is (zero? exit) (str out err))
+        (is (str/includes? out "01-george:"))
+        (is (str/includes? out "02-george4:"))
+        (is (str/includes? out "03-right-split:"))
+        (is (str/includes? out "04-corner-split:"))
+        (is (str/includes? out "05-square-limit:"))
+        (with-open [george       (v/from-file sicp-01-george-output-path)
+                    george4      (v/from-file sicp-02-george4-output-path)
+                    right-split  (v/from-file sicp-03-right-split-output-path)
+                    corner-split (v/from-file sicp-04-corner-split-output-path)
+                    square-limit (v/from-file sicp-05-square-limit-output-path)]
+          (is (= {:width 640 :height 640 :has-alpha? false}
+                 (select-keys (v/metadata george) [:width :height :has-alpha?])))
+          (is (= {:width 640 :height 640 :has-alpha? false}
+                 (select-keys (v/metadata george4) [:width :height :has-alpha?])))
+          (is (= {:width 600 :height 600 :has-alpha? false}
+                 (select-keys (v/metadata right-split) [:width :height :has-alpha?])))
+          (is (= {:width 600 :height 600 :has-alpha? false}
+                 (select-keys (v/metadata corner-split) [:width :height :has-alpha?])))
+          (is (= {:width 600 :height 600 :has-alpha? false}
+                 (select-keys (v/metadata square-limit) [:width :height :has-alpha?])))
+          (is (< (:out (ops/avg george)) 255.0))
+          (is (< (:out (ops/avg george4)) 255.0))
+          (is (< (:out (ops/avg right-split)) 255.0))
+          (is (< (:out (ops/avg corner-split)) 255.0))
+          (is (< (:out (ops/avg square-limit)) 255.0))))
       (finally
         (cleanup-example-outputs! original-outputs)))))
