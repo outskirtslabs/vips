@@ -41,6 +41,10 @@
              (v/decode-enum "VipsDirection"
                             (v/encode-enum "VipsDirection" :horizontal))))
       (is (= "flip" (:name flip))))))
+(testing "operation lookup rejects invalid operation names before native"
+  (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                        #"operation name"
+                        (v/operation-info :copy))))
 
 (deftest initialization-blocks-untrusted-operations-by-default
   (testing "runtime initialization blocks libvips operations marked as untrusted"
@@ -140,7 +144,25 @@
         (is (= {:max 12 :size 3 :max-mem 4096 :max-files 100}
                (v/set-operation-cache-max-mem! 4096)))
         (is (= {:max 12 :size 3 :max-mem 4096 :max-files 8}
-               (v/set-operation-cache-max-files! 8)))))))
+               (v/set-operation-cache-max-files! 8)))
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"cache max must be an integer"
+                              (v/set-operation-cache-max! {:not "an int"})))
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"cache max-mem must be an integer"
+                              (v/set-operation-cache-max-mem! {:not "an int"})))
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"cache max-files must be an integer"
+                              (v/set-operation-cache-max-files! {:not "an int"})))
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"cache max must fit in a 32-bit signed integer"
+                              (v/set-operation-cache-max! 999999999999999999999999N)))
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"cache max-mem must fit in a 64-bit unsigned integer"
+                              (v/set-operation-cache-max-mem! 999999999999999999999999N)))
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"cache max-files must fit in a 32-bit signed integer"
+                              (v/set-operation-cache-max-files! 999999999999999999999999N)))))))
 
 (deftest tracked-resource-stats
   (testing "the public runtime exposes libvips tracked resource counters"
@@ -299,7 +321,13 @@
         (is (= (v/width img1) (* 2 (v/width img2)))))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"Failed to open image from buffer"
-                            (v/from-buffer (byte-array 0))))))
+                            (v/from-buffer (byte-array 0))))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"from-buffer source must be an integer"
+                            (v/from-buffer [:bad])))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"from-buffer source must contain integers in byte range"
+                            (v/from-buffer [256])))))
   (testing "write-to-file supports option maps and suffix options"
     (let [path1 (java.nio.file.Files/createTempFile "ol-vips-" ".png"
                                                     (make-array java.nio.file.attribute.FileAttribute 0))
@@ -404,6 +432,20 @@
         (is (instance? clojure.lang.ExceptionInfo save-error))
         (is (= {:not "valid"} (:value (ex-data load-error))))
         (is (= {:not "valid"} (:value (ex-data save-error)))))))
+  (testing "option names reject unsupported values before native"
+    (with-open [image (v/from-file puppies-path)]
+      (let [load-error (try
+                         (v/from-file puppies-path {[:bad] 1})
+                         (catch clojure.lang.ExceptionInfo ex
+                           ex))
+            save-error (try
+                         (v/write-to-buffer image ".png" {[:bad] 1})
+                         (catch clojure.lang.ExceptionInfo ex
+                           ex))]
+        (is (instance? clojure.lang.ExceptionInfo load-error))
+        (is (instance? clojure.lang.ExceptionInfo save-error))
+        (is (= [:bad] (:value (ex-data load-error))))
+        (is (= [:bad] (:value (ex-data save-error)))))))
   (testing "metadata field names and explicit string values reject invalid values before native"
     (with-open [image (v/from-file puppies-path)]
       (let [field-error  (try
@@ -429,7 +471,33 @@
         (is (= {:not "a field"} (:value (ex-data field-error))))
         (is (= {:not "a field"} (:value (ex-data assoc-error))))
         (is (= {:not "a string"} (:value (ex-data value-error))))
-        (is (= {:not "a field"} (:value (ex-data dissoc-error))))))))
+        (is (= {:not "a field"} (:value (ex-data dissoc-error)))))))
+  (testing "metadata numeric values reject invalid values before native"
+    (with-open [image (v/from-file puppies-path)]
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must be an integer"
+                            (v/assoc-field image "custom-int" :bad {:type :int})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must be a number"
+                            (v/assoc-field image "custom-double" :bad {:type :double})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must be an integer"
+                            (v/assoc-field image "delay" [1 :bad 3] {:type :array-int})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must be a number"
+                            (v/assoc-field image "weights" [1.0 :bad 3.0] {:type :array-double})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must be an integer"
+                            (v/assoc-field image "custom-blob" [:bad] {:type :blob})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must contain integers in byte range"
+                            (v/assoc-field image "custom-blob" [256] {:type :blob})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must fit in a 32-bit signed integer"
+                            (v/assoc-field image "custom-int" 999999999999999999999999N {:type :int})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"image field value must fit in a 32-bit signed integer"
+                            (v/assoc-field image "delay" [999999999999999999999999N] {:type :array-int}))))))
 
 (deftest alpha-and-shape-helpers
   (testing "alpha and shape match the public image helpers"
@@ -587,7 +655,36 @@
                             (ops/thumbnail fixture-path 400 {:auto-rotate :yes})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"swap"
-                            (v/call "copy" {:in image :swap :yes}))))))
+                            (v/call "copy" {:in image :swap :yes})))))
+  (testing "invalid numeric arguments fail before entering libvips"
+    (with-open [image (v/from-file fixture-path)]
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"width"
+                            (v/call "copy" {:in image :width :wide})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"xres"
+                            (v/call "copy" {:in image :xres :high})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"skip-blanks"
+                            (v/call "dzsave" {:in image :filename "ignored.dz" :skip-blanks :bad})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"keep"
+                            (v/call "pngsave" {:in image :filename "ignored.png" :keep -1})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"width.*32-bit signed integer"
+                            (v/call "copy" {:in image :width 999999999999999999999999N})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"keep.*32-bit unsigned integer"
+                            (v/call "pngsave" {:in image :filename "ignored.png" :keep 999999999999999999999999N})))))
+  (testing "invalid argument names fail before entering libvips"
+    (with-open [image (v/from-file fixture-path)]
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"operation argument name"
+                            (v/call "copy" {:in image [:bad] 1})))))
+  (testing "invalid operation names fail before entering libvips"
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                          #"operation name"
+                          (v/call :copy {})))))
 
 (deftest join-and-array-join
   (testing "join composes two images through the raw operation contract"

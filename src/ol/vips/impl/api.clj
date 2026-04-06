@@ -13,6 +13,111 @@
 
 (set! *warn-on-reflection* true)
 
+(defn require-boolean
+  [value label]
+  (if (boolean? value)
+    value
+    (throw (ex-info (str label " must be a boolean")
+                    {:label    label
+                     :expected [:boolean]
+                     :value    value}))))
+
+(defn require-number
+  [value label]
+  (if (number? value)
+    value
+    (throw (ex-info (str label " must be a number")
+                    {:label    label
+                     :expected [:number]
+                     :value    value}))))
+
+(defn require-integer
+  [value label]
+  (if (integer? value)
+    value
+    (throw (ex-info (str label " must be an integer")
+                    {:label    label
+                     :expected [:integer]
+                     :value    value}))))
+
+(defn require-integer-range
+  [value label minimum maximum range-description]
+  (let [value (require-integer value label)]
+    (if (<= minimum value maximum)
+      value
+      (throw (ex-info (str label " must fit in " range-description)
+                      {:label    label
+                       :expected [:integer :range]
+                       :range    range-description
+                       :minimum  minimum
+                       :maximum  maximum
+                       :value    value})))))
+
+;; These bounds match GLib fixed-width integer types like guint/guint64,
+;; not platform-sized C integer aliases such as glong.
+(def ^:private uint32-max
+  4294967295N)
+
+(def ^:private uint64-max
+  18446744073709551615N)
+
+(defn require-int32
+  [value label]
+  (require-integer-range value label Integer/MIN_VALUE Integer/MAX_VALUE "a 32-bit signed integer"))
+
+(defn require-uint32
+  [value label]
+  (require-integer-range value label 0 uint32-max "a 32-bit unsigned integer"))
+
+(defn require-int64
+  [value label]
+  (require-integer-range value label Long/MIN_VALUE Long/MAX_VALUE "a 64-bit signed integer"))
+
+(defn require-uint64
+  [value label]
+  (require-integer-range value label 0 uint64-max "a 64-bit unsigned integer"))
+
+(defn coerce-java-string
+  [value]
+  (cond
+    (string? value)
+    value
+
+    (instance? Path value)
+    (str value)
+
+    (instance? File value)
+    (.getPath ^File value)
+
+    (instance? CharSequence value)
+    (str value)
+
+    :else
+    nil))
+
+(defn require-java-string
+  [value label]
+  (or (coerce-java-string value)
+      (throw (ex-info (str label " must be a string, java.nio.file.Path, java.io.File, or CharSequence")
+                      {:label    label
+                       :expected [:string :path :file :char-sequence]
+                       :value    value}))))
+
+(defn coerce-name-string
+  [value]
+  (cond
+    (string? value) value
+    (instance? clojure.lang.Named value) (name value)
+    :else nil))
+
+(defn require-name-string
+  [value label]
+  (or (coerce-name-string value)
+      (throw (ex-info (str label " must be a string, keyword, or symbol")
+                      {:label    label
+                       :expected [:string :keyword :symbol]
+                       :value    value}))))
+
 (mem/defalias ::g-type ::mem/long)
 (mem/defalias ::size-t ::mem/long)
 
@@ -270,41 +375,6 @@
               (reset! state* state)
               state)))))
 
-(defn require-boolean
-  [value label]
-  (if (boolean? value)
-    value
-    (throw (ex-info (str label " must be a boolean")
-                    {:label    label
-                     :expected [:boolean]
-                     :value    value}))))
-
-(defn coerce-java-string
-  [value]
-  (cond
-    (string? value)
-    value
-
-    (instance? Path value)
-    (str value)
-
-    (instance? File value)
-    (.getPath ^File value)
-
-    (instance? CharSequence value)
-    (str value)
-
-    :else
-    nil))
-
-(defn require-java-string
-  [value label]
-  (or (coerce-java-string value)
-      (throw (ex-info (str label " must be a string, java.nio.file.Path, java.io.File, or CharSequence")
-                      {:label    label
-                       :expected [:string :path :file :char-sequence]
-                       :value    value}))))
-
 (defn set-block-untrusted-operations!
   [blocked?]
   (let [blocked?      (require-boolean blocked? "blocked?")
@@ -342,19 +412,22 @@
 
 (defn set-operation-cache-max!
   [max]
-  (let [native (bindings)]
+  (let [native (bindings)
+        max    (require-int32 max "cache max")]
     ((:vips-cache-set-max native) max)
     (operation-cache-settings)))
 
 (defn set-operation-cache-max-mem!
   [max-mem]
-  (let [native (bindings)]
+  (let [native  (bindings)
+        max-mem (unchecked-long (require-uint64 max-mem "cache max-mem"))]
     ((:vips-cache-set-max-mem native) max-mem)
     (operation-cache-settings)))
 
 (defn set-operation-cache-max-files!
   [max-files]
-  (let [native (bindings)]
+  (let [native    (bindings)
+        max-files (require-int32 max-files "cache max-files")]
     ((:vips-cache-set-max-files native) max-files)
     (operation-cache-settings)))
 
@@ -397,7 +470,9 @@
          (->> opts
               (sort-by (comp str key))
               (map (fn [[k v]]
-                     (str (name k) "=" (render-option-value v))))
+                     (str (require-name-string k "option name")
+                          "="
+                          (render-option-value v))))
               (str/join ","))
          "]")))
 
@@ -724,18 +799,30 @@
   65536)
 
 (defn ->byte-array
-  [value]
-  (cond
-    (instance? byte-array-class value) value
-    (sequential? value) (byte-array (map byte value))
-    :else (throw (ex-info "Expected image bytes"
-                          {:value value}))))
+  ([value]
+   (->byte-array value "image bytes"))
+  ([value label]
+   (cond
+     (instance? byte-array-class value) value
+     (sequential? value) (byte-array (map (fn [item]
+                                            (let [item (require-integer item label)]
+                                              (cond
+                                                (<= -128 item 127) (byte item)
+                                                (<= 0 item 255) (unchecked-byte item)
+                                                :else (throw (ex-info (str label " must contain integers in byte range")
+                                                                      {:label    label
+                                                                       :expected [:byte-range]
+                                                                       :value    item})))))
+                                          value))
+     :else (throw (ex-info "Expected image bytes"
+                           {:label label
+                            :value value})))))
 
 (defn open-image-from-buffer
   ([source]
    (open-image-from-buffer source ""))
   ([source option-string]
-   (let [data   (->byte-array source)
+   (let [data   (->byte-array source "from-buffer source")
          arena  (Arena/ofShared)
          size   (alength ^bytes data)
          buffer (mem/alloc size 1 arena)
@@ -1065,10 +1152,10 @@
          type       (or type (infer-field-type value))
          image-ptr  (pointer (image-handle image))]
      (case type
-       :int ((bindings :image-set-int) image-ptr field-name (int value))
-       :double ((bindings :image-set-double) image-ptr field-name (double value))
+       :int ((bindings :image-set-int) image-ptr field-name (int (require-int32 value "image field value")))
+       :double ((bindings :image-set-double) image-ptr field-name (double (require-number value "image field value")))
        :string ((bindings :image-set-string) image-ptr field-name (require-java-string value "image field value"))
-       :blob (let [data (->byte-array value)]
+       :blob (let [data (->byte-array value "image field value")]
                ((bindings :image-set-blob-copy) image-ptr field-name data (alength ^bytes data)))
        :array-int (let [values (vec value)
                         count  (count values)]
@@ -1077,7 +1164,9 @@
                                             (mem/align-of ::mem/int)
                                             arena)]
                         (doseq [[idx item] (map-indexed vector values)]
-                          (mem/write-int data (* idx (mem/size-of ::mem/int)) (int item)))
+                          (mem/write-int data
+                                         (* idx (mem/size-of ::mem/int))
+                                         (int (require-int32 item "image field value"))))
                         ((bindings :image-set-array-int) image-ptr field-name data count))))
        :array-double (let [values (vec value)
                            count  (count values)]
@@ -1086,7 +1175,9 @@
                                                (mem/align-of ::mem/double)
                                                arena)]
                            (doseq [[idx item] (map-indexed vector values)]
-                             (mem/write-double data (* idx (mem/size-of ::mem/double)) (double item)))
+                             (mem/write-double data
+                                               (* idx (mem/size-of ::mem/double))
+                                               (double (require-number item "image field value"))))
                            ((bindings :image-set-array-double) image-ptr field-name data count))))
        (throw (ex-info "Unsupported image metadata type"
                        {:field field-name

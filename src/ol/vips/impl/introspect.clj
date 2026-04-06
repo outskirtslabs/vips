@@ -98,7 +98,8 @@
 
 (defn- operation-handle
   [operation-name]
-  (let [op ((runtime/bindings :operation-new) operation-name)]
+  (let [operation-name (runtime/require-java-string operation-name "operation name")
+        op             ((runtime/bindings :operation-new) operation-name)]
     (when (mem/null? op)
       (throw (ex-info "Unknown libvips operation"
                       {:operation operation-name})))
@@ -312,14 +313,25 @@
     :boolean ((:g-value-set-boolean native)
               gvalue
               (if (runtime/require-boolean value (str "Operation argument `" name "`")) 1 0))
-    :int ((:g-value-set-int native) gvalue (int value))
-    :uint ((:g-value-set-uint native) gvalue (int value))
-    :long ((:g-value-set-long native) gvalue (long value))
-    :int64 ((:g-value-set-int64 native) gvalue (long value))
-    :uint64 ((:g-value-set-uint64 native) gvalue (long value))
-    :double ((:g-value-set-double native) gvalue (double value))
-    :enum ((:g-value-set-enum native) gvalue (int (encode-enum value-type value)))
-    :flags ((:g-value-set-flags native) gvalue (int value))
+    :int ((:g-value-set-int native) gvalue (int (runtime/require-int32 value (str "Operation argument `" name "`"))))
+    :uint ((:g-value-set-uint native)
+           gvalue
+           (unchecked-int (runtime/require-uint32 value (str "Operation argument `" name "`"))))
+    ;; We currently support only 64-bit platforms, so treating glong like a
+    ;; 64-bit signed integer is correct for the target matrix. If that changes,
+    ;; derive this bound from the native layout instead of assuming int64.
+    :long ((:g-value-set-long native) gvalue (long (runtime/require-int64 value (str "Operation argument `" name "`"))))
+    :int64 ((:g-value-set-int64 native) gvalue (long (runtime/require-int64 value (str "Operation argument `" name "`"))))
+    :uint64 ((:g-value-set-uint64 native)
+             gvalue
+             (unchecked-long (runtime/require-uint64 value (str "Operation argument `" name "`"))))
+    :double ((:g-value-set-double native) gvalue (double (runtime/require-number value (str "Operation argument `" name "`"))))
+    :enum ((:g-value-set-enum native)
+           gvalue
+           (int (runtime/require-int32 (encode-enum value-type value) (str "Operation argument `" name "`"))))
+    :flags ((:g-value-set-flags native)
+            gvalue
+            (unchecked-int (runtime/require-uint32 value (str "Operation argument `" name "`"))))
     (throw (ex-info "Unsupported operation argument type"
                     {:kind       kind
                      :value-type value-type
@@ -356,7 +368,7 @@
       (let [{:keys [args]} (describe-operation operation-name)
             arg-by-name    (into {} (map (juxt :name identity) args))]
         (doseq [[k v] opts]
-          (let [arg-name (name k)
+          (let [arg-name (runtime/require-name-string k "operation argument name")
                 arg      (get arg-by-name arg-name)]
             (when-not arg
               (throw (ex-info "Unknown operation argument"
