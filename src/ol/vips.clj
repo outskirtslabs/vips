@@ -185,8 +185,7 @@
   "Encodes a Clojure enum value for a libvips enum type.
 
   `enum-type-name` should be a libvips GType name such as `\"VipsDirection\"`.
-  Pass a keyword like `:horizontal` to get the corresponding integer value.
-  Integer values pass through unchanged."
+  Pass a keyword like `:horizontal` or a valid enum integer value."
   [enum-type-name value]
   (introspect/encode-enum enum-type-name value))
 
@@ -251,7 +250,7 @@
   ([path]
    (api/open-image path))
   ([path opts]
-   (api/open-image (api/append-options path opts))))
+   (api/open-image path opts)))
 
 (defn write-to-file
   "Writes `image` to `path` and returns `image`.
@@ -271,7 +270,7 @@
   ([image path]
    (api/write-image! image path))
   ([image path opts]
-   (api/write-image! image (api/append-options path opts))))
+   (api/write-image! image path opts)))
 
 (defn from-buffer
   "Opens an image from in-memory bytes and returns a closeable image handle.
@@ -285,7 +284,7 @@
   ([source]
    (api/open-image-from-buffer source))
   ([source opts]
-   (api/open-image-from-buffer source (api/append-options "" opts))))
+   (api/open-image-from-buffer source opts)))
 
 (defn from-stream
   "Opens an image from an `InputStream` and returns a closeable image handle.
@@ -303,7 +302,7 @@
   ([is]
    (api/open-image-from-stream is))
   ([is opts]
-   (api/open-image-from-stream is (api/append-options "" opts))))
+   (api/open-image-from-stream is opts)))
 
 (defn write-to-buffer
   "Encodes `image` and returns the result as a byte array.
@@ -318,7 +317,7 @@
   ([image suffix]
    (api/write-image-to-buffer image suffix))
   ([image suffix opts]
-   (api/write-image-to-buffer image (api/append-options suffix opts))))
+   (api/write-image-to-buffer image suffix opts)))
 
 (defn write-to-stream
   "Encodes `image` to an `OutputStream` and returns `image`.
@@ -335,7 +334,7 @@
   ([image os suffix]
    (api/write-image-to-stream image os suffix))
   ([image os suffix opts]
-   (api/write-image-to-stream image os (api/append-options suffix opts))))
+   (api/write-image-to-stream image os suffix opts)))
 
 (defn metadata
   "Returns a curated metadata map for `image`.

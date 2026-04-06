@@ -137,6 +137,64 @@
      [[:g-type ::mem/long]
       [:data [::mem/array ::mem/long 2]]]]))
 
+(mem/defalias ::g-type-instance
+  (layout/with-c-layout
+    [::mem/struct
+     [[:g-class ::mem/pointer]]]))
+
+(mem/defalias ::g-param-spec
+  (layout/with-c-layout
+    [::mem/struct
+     [[:g-type-instance ::g-type-instance]
+      [:name ::mem/pointer]
+      [:flags ::mem/int]
+      [:value-type ::g-type]
+      [:owner-type ::g-type]
+      [:nick ::mem/pointer]
+      [:blurb ::mem/pointer]
+      [:qdata ::mem/pointer]
+      [:ref-count ::mem/int]
+      [:param-id ::mem/int]]]))
+
+(mem/defalias ::g-param-spec-int
+  (layout/with-c-layout
+    [::mem/struct
+     [[:parent-instance ::g-param-spec]
+      [:minimum ::mem/int]
+      [:maximum ::mem/int]
+      [:default-value ::mem/int]]]))
+
+(mem/defalias ::g-enum-value
+  (layout/with-c-layout
+    [::mem/struct
+     [[:value ::mem/int]
+      [:value-name ::mem/c-string]
+      [:value-nick ::mem/c-string]]]))
+
+(mem/defalias ::g-enum-class
+  (layout/with-c-layout
+    [::mem/struct
+     [[:g-type-class ::mem/pointer]
+      [:minimum ::mem/int]
+      [:maximum ::mem/int]
+      [:n-values ::mem/int]
+      [:values ::mem/pointer]]]))
+
+(mem/defalias ::g-flags-value
+  (layout/with-c-layout
+    [::mem/struct
+     [[:value ::mem/int]
+      [:value-name ::mem/c-string]
+      [:value-nick ::mem/c-string]]]))
+
+(mem/defalias ::g-flags-class
+  (layout/with-c-layout
+    [::mem/struct
+     [[:g-type-class ::mem/pointer]
+      [:mask ::mem/int]
+      [:n-values ::mem/int]
+      [:values ::mem/pointer]]]))
+
 (def ^:private source-read-callback-type
   [::ffi/fn [::mem/pointer ::mem/pointer ::mem/long ::mem/pointer] ::mem/long :raw-fn? true])
 
@@ -248,6 +306,12 @@
    :image-new-from-source          ["vips_image_new_from_source"
                                     [::mem/pointer ::mem/c-string ::mem/pointer]
                                     ::mem/pointer]
+   :foreign-find-load              ["vips_foreign_find_load" [::mem/c-string] ::mem/c-string]
+   :foreign-find-load-buffer       ["vips_foreign_find_load_buffer" [::mem/pointer ::size-t] ::mem/c-string]
+   :foreign-find-load-source       ["vips_foreign_find_load_source" [::mem/pointer] ::mem/c-string]
+   :foreign-find-save              ["vips_foreign_find_save" [::mem/c-string] ::mem/c-string]
+   :foreign-find-save-buffer       ["vips_foreign_find_save_buffer" [::mem/c-string] ::mem/c-string]
+   :foreign-find-save-target       ["vips_foreign_find_save_target" [::mem/c-string] ::mem/c-string]
    :image-copy-memory              ["vips_image_copy_memory" [::mem/pointer] ::mem/pointer]
    :image-write-to-buffer          ["vips_image_write_to_buffer"
                                     [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer]
@@ -307,6 +371,11 @@
    :vips-version-string            ["vips_version_string" [] ::mem/c-string]})
 
 (defonce ^:private state* (atom nil))
+(defonce ^:private type-value-cache* (atom nil))
+
+(def ^:private vips-argument-required 1)
+(def ^:private vips-argument-input 16)
+(def ^:private vips-argument-output 32)
 
 (defn bind-symbols*
   [resolve-symbol]
@@ -404,6 +473,237 @@
   []
   (:gtypes (ensure-initialized!)))
 
+(defn type-name
+  [gtype]
+  ((bindings :g-type-name) gtype))
+
+(defn type-fundamental
+  [gtype]
+  ((bindings :g-type-fundamental) gtype))
+
+(defn- bit-set?
+  [value flag]
+  (not (zero? (bit-and value flag))))
+
+(defn- enum-keyword
+  [value-nick value-name]
+  (-> (or value-nick value-name)
+      str/lower-case
+      (str/replace #"^vips[_-]?" "")
+      (str/replace #"[^a-z0-9]+" "-")
+      (str/replace #"(^-+|-+$)" "")
+      keyword))
+
+(defn unsigned-int32
+  [value]
+  (bit-and 0xffffffff (long value)))
+
+(defn classify-gtype
+  [gtype]
+  (let [gtypes      (gtypes)
+        fundamental (type-fundamental gtype)]
+    (cond
+      (= gtype (:string gtypes)) :string
+      (= gtype (:boolean gtypes)) :boolean
+      (= gtype (:int gtypes)) :int
+      (= gtype (:uint gtypes)) :uint
+      (= gtype (:long gtypes)) :long
+      (= gtype (:int64 gtypes)) :int64
+      (= gtype (:uint64 gtypes)) :uint64
+      (= gtype (:double gtypes)) :double
+      (= fundamental (:enum gtypes)) :enum
+      (= fundamental (:flags gtypes)) :flags
+      (= fundamental (:boxed gtypes)) :boxed
+      (= fundamental (:object gtypes)) :object
+      :else :unknown)))
+
+(defn- deserialize-struct
+  [ptr type]
+  (mem/deserialize (mem/reinterpret ptr (mem/size-of type)) type))
+
+(defn- describe-argument
+  [native op name pspec-ptr]
+  (let [flags      ((:object-get-arg-flags native) op name)
+        priority   ((:object-get-arg-priority native) op name)
+        value-type (:value-type (deserialize-struct pspec-ptr ::g-param-spec))
+        kind       (classify-gtype value-type)]
+    (cond-> {:name       name
+             :blurb      ((:param-spec-get-blurb native) pspec-ptr)
+             :flags      flags
+             :gtype      value-type
+             :kind       kind
+             :value-type (type-name value-type)
+             :priority   priority
+             :input?     (bit-set? flags vips-argument-input)
+             :output?    (bit-set? flags vips-argument-output)
+             :required?  (bit-set? flags vips-argument-required)}
+      (= :int kind)
+      (merge (select-keys (deserialize-struct pspec-ptr ::g-param-spec-int)
+                          [:minimum :maximum])))))
+
+(defn open-operation
+  [operation-name]
+  (let [operation-name (require-java-string operation-name "operation name")
+        op             ((bindings :operation-new) operation-name)]
+    (when (mem/null? op)
+      (throw (ex-info "Unknown libvips operation"
+                      {:operation operation-name})))
+    op))
+
+(defn operation-arguments
+  [operation-name]
+  (ensure-initialized!)
+  (let [argument-map (bindings :argument-map)
+        op           (open-operation operation-name)]
+    (try
+      (let [args (volatile! [])]
+        (argument-map op
+                      (fn [_object pspec-ptr _arg-class-ptr _instance _user-data _extra]
+                        (let [name ((bindings :param-spec-get-name) pspec-ptr)]
+                          (vswap! args conj (describe-argument (bindings) op name pspec-ptr)))
+                        mem/null)
+                      mem/null
+                      mem/null)
+        (->> @args
+             (sort-by (juxt (complement :required?) :priority))
+             vec))
+      (finally
+        ((bindings :g-object-unref) op)))))
+
+(defn operation-info
+  [operation-name]
+  (ensure-initialized!)
+  (let [op (open-operation operation-name)]
+    (try
+      {:name        operation-name
+       :description ((bindings :object-get-description) op)
+       :args        (operation-arguments operation-name)}
+      (finally
+        ((bindings :g-object-unref) op)))))
+
+(defn- discover-value-types
+  []
+  (ensure-initialized!)
+  (let [enum-type  (:enum (gtypes))
+        flags-type (:flags (gtypes))]
+    (with-open [arena (mem/confined-arena)]
+      (let [slot-size                                                                                                 (mem/size-of ::g-type)
+            discover-children
+            (fn [fundamental class-type value-type build-entry]
+              (let [count-ptr (mem/alloc-instance ::mem/int arena)
+                    children  ((bindings :g-type-children) fundamental count-ptr)
+                    count     (mem/read-int count-ptr)
+                    children* (mem/reinterpret children (* count slot-size))]
+                (into {}
+                      (for [index (range count)
+                            :let  [offset     (* index slot-size)
+                                   child-type (mem/read-long (mem/slice children* offset slot-size))
+                                   type-name   (type-name child-type)
+                                   class-ptr   ((bindings :g-type-class-ref) child-type)]
+                            :when (and type-name (not (mem/null? class-ptr)))]
+                        (try
+                          (let [class*      (mem/reinterpret class-ptr (mem/size-of class-type))
+                                value-class (mem/deserialize class* class-type)
+                                n-values    (:n-values value-class)
+                                value-size  (mem/size-of value-type)
+                                values*     (mem/reinterpret (:values value-class) (* n-values value-size))
+                                entries     (into {}
+                                                  (for [i     (range n-values)
+                                                        :let  [entry (mem/deserialize
+                                                                      (mem/slice values* (* i value-size) value-size)
+                                                                      value-type)
+                                                               keyword (enum-keyword (:value-nick entry)
+                                                                                     (:value-name entry))]
+                                                        :when (not= keyword :last)]
+                                                    [keyword (unsigned-int32 (:value entry))]))]
+                            [type-name (build-entry type-name value-class entries)])
+                          (finally
+                            ((bindings :g-type-class-unref) class-ptr)))))))]
+        (merge
+         (discover-children enum-type
+                            ::g-enum-class
+                            ::g-enum-value
+                            (fn [type-name _ entries]
+                              {:type-name      type-name
+                               :kind           :enum
+                               :keyword->value entries
+                               :value->keyword (into {} (map (fn [[k v]] [v k]) entries))}))
+         (discover-children flags-type
+                            ::g-flags-class
+                            ::g-flags-value
+                            (fn [type-name flags-class entries]
+                              {:type-name      type-name
+                               :kind           :flags
+                               :keyword->value entries
+                               :value->keyword (into {} (map (fn [[k v]] [v k]) entries))
+                               :mask           (unsigned-int32 (:mask flags-class))})))))))
+
+(defn- type-value-registry
+  []
+  (or @type-value-cache*
+      (let [registry (discover-value-types)]
+        (reset! type-value-cache* registry)
+        registry)))
+
+(defn describe-enum
+  [enum-type-name]
+  (or (let [entry (get (type-value-registry) enum-type-name)]
+        (when (= :enum (:kind entry))
+          entry))
+      (throw (ex-info "Unknown enum type"
+                      {:enum-type enum-type-name}))))
+
+(defn describe-flags
+  [flags-type-name]
+  (or (let [entry (get (type-value-registry) flags-type-name)]
+        (when (= :flags (:kind entry))
+          entry))
+      (throw (ex-info "Unknown flags type"
+                      {:flags-type flags-type-name}))))
+
+(defn encode-enum
+  [enum-type-name value]
+  (if (integer? value)
+    (or (get-in (describe-enum enum-type-name) [:value->keyword (unsigned-int32 value)])
+        (throw (ex-info "Unknown enum integer"
+                        {:enum-type enum-type-name
+                         :value     value})))
+    (or (get-in (describe-enum enum-type-name) [:keyword->value value])
+        (throw (ex-info "Unknown enum value"
+                        {:enum-type enum-type-name
+                         :value     value})))))
+
+(defn decode-enum
+  [enum-type-name value]
+  (or (get-in (describe-enum enum-type-name) [:value->keyword value])
+      (throw (ex-info "Unknown enum integer"
+                      {:enum-type enum-type-name
+                       :value     value}))))
+
+(defn encode-flags
+  [flags-type-name value]
+  (let [value          (unsigned-int32 (require-uint32 value (str "Flags argument `" flags-type-name "`")))
+        {:keys [mask]} (describe-flags flags-type-name)
+        unknown        (bit-and value (bit-xor 0xffffffff mask))]
+    (if (zero? unknown)
+      value
+      (throw (ex-info "Unknown flags bits"
+                      {:flags-type flags-type-name
+                       :value      value
+                       :mask       mask
+                       :unknown    unknown})))))
+
+(defn require-param-spec-int-range
+  [{:keys [name minimum maximum]} value]
+  (if (<= minimum value maximum)
+    value
+    (throw (ex-info (str "Operation argument `" name "` must be between " minimum " and " maximum)
+                    {:argument name
+                     :expected [:integer :range]
+                     :minimum  minimum
+                     :maximum  maximum
+                     :value    value}))))
+
 (defn set-operation-block!
   [name blocked?]
   (let [name     (require-java-string name "operation block name")
@@ -498,6 +798,88 @@
              ","
              (subs option-string 1))
         (str value option-string)))))
+
+(defn maybe-find-load-operation-name
+  [source]
+  (let [native         (bindings)
+        source         (require-java-string source "from-file source")
+        operation-name ((:foreign-find-load native) source)]
+    (when-not operation-name
+      (clear-error! native))
+    operation-name))
+
+(defn maybe-find-save-operation-name
+  [path]
+  (let [native         (bindings)
+        path           (require-java-string path "write-to-file path")
+        operation-name ((:foreign-find-save native) path)]
+    (when-not operation-name
+      (clear-error! native))
+    operation-name))
+
+(defn maybe-find-save-buffer-operation-name
+  [suffix]
+  (let [native         (bindings)
+        suffix         (require-java-string suffix "write-to-buffer suffix")
+        operation-name ((:foreign-find-save-buffer native) suffix)]
+    (when-not operation-name
+      (clear-error! native))
+    operation-name))
+
+(defn maybe-find-save-target-operation-name
+  [suffix]
+  (let [native         (bindings)
+        suffix         (require-java-string suffix "write-to-stream suffix")
+        operation-name ((:foreign-find-save-target native) suffix)]
+    (when-not operation-name
+      (clear-error! native))
+    operation-name))
+
+(def ^:private helper-option-integer-pattern
+  #"^[+-]?\d+$")
+
+(defn- helper-option-value
+  [{:keys [kind]} value]
+  (cond
+    (and (= :int kind) (integer? value))
+    value
+
+    (and (= :flags kind) (integer? value))
+    value
+
+    (and (#{:int :flags} kind)
+         (string? value)
+         (re-matches helper-option-integer-pattern value))
+    (bigint value)
+
+    :else
+    nil))
+
+(defn validate-helper-option-values!
+  [operation-name option-values]
+  (when (seq option-values)
+    (let [arg-by-name (into {} (map (juxt :name identity) (operation-arguments operation-name)))]
+      (doseq [[k raw-value] option-values
+              :let          [arg-name (require-name-string k "option name")
+                             arg      (get arg-by-name arg-name)
+                             value    (and arg (helper-option-value arg raw-value))]
+              :when         value]
+        (case (:kind arg)
+          :int (let [label (str "Operation argument `" (:name arg) "`")
+                     value (require-int32 value label)
+                     value (if (and (some? (:minimum arg)) (some? (:maximum arg)))
+                             (require-param-spec-int-range arg value)
+                             value)]
+                 value)
+          :flags (encode-flags (:value-type arg) value)
+          nil)))))
+
+(defn validate-helper-target-options!
+  [find-operation target label opts]
+  (when (seq opts)
+    (let [target (require-java-string target label)]
+      (when-let [operation-name (find-operation target)]
+        (validate-helper-option-values! operation-name opts)))))
 
 (defprotocol PointerBacked
   (pointer ^java.lang.foreign.MemorySegment [this]))
@@ -638,8 +1020,8 @@
   [^StreamBridge bridge]
   (.failure-ref bridge))
 
-(defn new-source-bridge
-  [^InputStream stream]
+(defn- new-source-bridge*
+  [^InputStream stream close-stream!]
   (let [arena       (Arena/ofShared)
         failure-ref (AtomicReference. nil)
         ptr         ((bindings :source-custom-new))]
@@ -669,13 +1051,47 @@
                        stream
                        [(:callback read-signal) (:stub read-signal)]
                        failure-ref
-                       #(close-quietly stream)
+                       close-stream!
                        (AtomicBoolean. false)))
       (catch Throwable t
         ((bindings :g-object-unref) ptr)
         (.close arena)
-        (close-quietly stream)
+        (close-stream!)
         (throw t)))))
+
+(defn new-source-bridge
+  [^InputStream stream]
+  (new-source-bridge* stream #(close-quietly stream)))
+
+(def ^:private stream-validation-mark-limit
+  Integer/MAX_VALUE)
+
+(defn rewindable-input-stream
+  [source]
+  (let [stream (require-instance InputStream source "from-stream source")]
+    (if (.markSupported ^InputStream stream)
+      stream
+      (java.io.BufferedInputStream. stream))))
+
+(defn maybe-find-load-source-operation-name
+  [^InputStream source]
+  (let [native (bindings)]
+    (.mark source stream-validation-mark-limit)
+    (try
+      (let [operation-name (with-open [^StreamBridge bridge (new-source-bridge* source (fn []))]
+                             ((:foreign-find-load-source native) (pointer bridge)))]
+        (when-not operation-name
+          (clear-error! native))
+        operation-name)
+      (finally
+        (.reset source)))))
+
+(defn validated-stream-source
+  [source opts]
+  (let [stream (rewindable-input-stream source)]
+    (when-let [operation-name (maybe-find-load-source-operation-name stream)]
+      (validate-helper-option-values! operation-name opts))
+    stream))
 
 (defn finish-output-stream!
   [^OutputStream stream ^AtomicReference failure-ref]
@@ -771,14 +1187,6 @@
     (throw (ex-info "Expected an image handle or operation result map"
                     {:value value}))))
 
-(defn type-name
-  [gtype]
-  ((bindings :g-type-name) gtype))
-
-(defn type-fundamental
-  [gtype]
-  ((bindings :g-type-fundamental) gtype))
-
 (defn with-gvalue
   [gtype f]
   (with-open [arena (mem/confined-arena)]
@@ -790,14 +1198,23 @@
           ((bindings :g-value-unset) value))))))
 
 (defn open-image
-  [source]
-  (let [path  (require-java-string source "from-file source")
-        image ((bindings :image-new-from-file) path nil)]
-    (when (mem/null? image)
-      (throw-vips-error (bindings)
-                        "Failed to open image"
-                        {:source path}))
-    (wrap-image image)))
+  ([source]
+   (let [path  (require-java-string source "from-file source")
+         image ((bindings :image-new-from-file) path nil)]
+     (when (mem/null? image)
+       (throw-vips-error (bindings)
+                         "Failed to open image"
+                         {:source path}))
+     (wrap-image image)))
+  ([source opts]
+   (validate-helper-target-options! maybe-find-load-operation-name source "from-file source" opts)
+   (let [path  (append-options source opts)
+         image ((bindings :image-new-from-file) path nil)]
+     (when (mem/null? image)
+       (throw-vips-error (bindings)
+                         "Failed to open image"
+                         {:source path}))
+     (wrap-image image))))
 
 (def ^:private byte-array-class
   (class (byte-array 0)))
@@ -828,37 +1245,61 @@
                            {:label label
                             :value value})))))
 
+(defn maybe-find-load-buffer-operation-name
+  [source]
+  (let [native (bindings)
+        data   (->byte-array source "from-buffer source")]
+    (with-open [arena (mem/confined-arena)]
+      (let [size   (alength ^bytes data)
+            buffer (mem/alloc size 1 arena)]
+        (mem/write-bytes buffer size data)
+        (let [operation-name ((:foreign-find-load-buffer native) buffer size)]
+          (when-not operation-name
+            (clear-error! native))
+          operation-name)))))
+
+(defn- open-image-from-buffer*
+  [source option-string]
+  (let [data   (->byte-array source "from-buffer source")
+        arena  (Arena/ofShared)
+        size   (alength ^bytes data)
+        buffer (mem/alloc size 1 arena)
+        image  (do
+                 (mem/write-bytes buffer size data)
+                 ((bindings :image-new-from-buffer) buffer size option-string nil))]
+    (when (mem/null? image)
+      (.close arena)
+      (throw-vips-error (bindings)
+                        "Failed to open image from buffer"
+                        {:byte-count size}))
+    (wrap-image image arena)))
+
 (defn open-image-from-buffer
   ([source]
-   (open-image-from-buffer source ""))
-  ([source option-string]
-   (let [data   (->byte-array source "from-buffer source")
-         arena  (Arena/ofShared)
-         size   (alength ^bytes data)
-         buffer (mem/alloc size 1 arena)
-         image  (do
-                  (mem/write-bytes buffer size data)
-                  ((bindings :image-new-from-buffer) buffer size option-string nil))]
-     (when (mem/null? image)
-       (.close arena)
-       (throw-vips-error (bindings)
-                         "Failed to open image from buffer"
-                         {:byte-count size}))
-     (wrap-image image arena))))
+   (open-image-from-buffer* source ""))
+  ([source opts]
+   (when-let [operation-name (maybe-find-load-buffer-operation-name source)]
+     (validate-helper-option-values! operation-name opts))
+   (open-image-from-buffer* source (append-options "" opts))))
+
+(defn- open-image-from-stream*
+  [source option-string]
+  (let [stream (require-instance InputStream source "from-stream source")
+        bridge (new-source-bridge stream)
+        image  ((bindings :image-new-from-source) (pointer bridge) (or option-string "") nil)]
+    (when (mem/null? image)
+      (.close ^java.lang.AutoCloseable bridge)
+      (throw-stream-error "Failed to open image from stream"
+                          {}
+                          (stream-failure-ref bridge)))
+    (wrap-image image bridge)))
 
 (defn open-image-from-stream
   ([source]
-   (open-image-from-stream source ""))
-  ([source option-string]
-   (let [stream (require-instance InputStream source "from-stream source")
-         bridge (new-source-bridge stream)
-         image  ((bindings :image-new-from-source) (pointer bridge) (or option-string "") nil)]
-     (when (mem/null? image)
-       (.close ^java.lang.AutoCloseable bridge)
-       (throw-stream-error "Failed to open image from stream"
-                           {}
-                           (stream-failure-ref bridge)))
-     (wrap-image image bridge))))
+   (open-image-from-stream* source ""))
+  ([source opts]
+   (open-image-from-stream* (validated-stream-source source opts)
+                            (append-options "" opts))))
 
 (defn copy-image-to-memory
   [image]
@@ -870,53 +1311,99 @@
     (wrap-image copied)))
 
 (defn write-image!
-  [image path]
-  (let [path (require-java-string path "write-to-file path")
-        code ((bindings :image-write-to-file) (pointer (image-handle image)) path nil)]
-    (when-not (zero? code)
-      (throw-vips-error (bindings)
-                        "Failed to write image"
-                        {:path path}))
-    image))
+  ([image path]
+   (let [path (require-java-string path "write-to-file path")
+         code ((bindings :image-write-to-file) (pointer (image-handle image)) path nil)]
+     (when-not (zero? code)
+       (throw-vips-error (bindings)
+                         "Failed to write image"
+                         {:path path}))
+     image))
+  ([image path opts]
+   (validate-helper-target-options! maybe-find-save-operation-name path "write-to-file path" opts)
+   (let [path (append-options path opts)
+         code ((bindings :image-write-to-file) (pointer (image-handle image)) path nil)]
+     (when-not (zero? code)
+       (throw-vips-error (bindings)
+                         "Failed to write image"
+                         {:path path}))
+     image)))
 
 (defn write-image-to-buffer
-  [image suffix]
-  (with-open [arena (mem/confined-arena)]
-    (let [suffix     (require-java-string suffix "write-to-buffer suffix")
-          buffer-ptr (mem/alloc-instance ::mem/pointer arena)
-          size-ptr   (mem/alloc-instance ::size-t arena)
-          code       ((bindings :image-write-to-buffer)
-                      (pointer (image-handle image))
-                      suffix
-                      buffer-ptr
-                      size-ptr
-                      nil)]
-      (when-not (zero? code)
-        (throw-vips-error (bindings)
-                          "Failed to write image to buffer"
-                          {:suffix suffix}))
-      (let [output-ptr  (mem/read-address buffer-ptr)
-            output-size (mem/read-long size-ptr)]
-        (try
-          (mem/read-bytes (mem/reinterpret output-ptr output-size) output-size)
-          (finally
-            ((bindings :g-free) output-ptr)))))))
+  ([image suffix]
+   (with-open [arena (mem/confined-arena)]
+     (let [suffix     (require-java-string suffix "write-to-buffer suffix")
+           buffer-ptr (mem/alloc-instance ::mem/pointer arena)
+           size-ptr   (mem/alloc-instance ::size-t arena)
+           code       ((bindings :image-write-to-buffer)
+                       (pointer (image-handle image))
+                       suffix
+                       buffer-ptr
+                       size-ptr
+                       nil)]
+       (when-not (zero? code)
+         (throw-vips-error (bindings)
+                           "Failed to write image to buffer"
+                           {:suffix suffix}))
+       (let [output-ptr  (mem/read-address buffer-ptr)
+             output-size (mem/read-long size-ptr)]
+         (try
+           (mem/read-bytes (mem/reinterpret output-ptr output-size) output-size)
+           (finally
+             ((bindings :g-free) output-ptr)))))))
+  ([image suffix opts]
+   (validate-helper-target-options! maybe-find-save-buffer-operation-name suffix "write-to-buffer suffix" opts)
+   (with-open [arena (mem/confined-arena)]
+     (let [suffix     (append-options suffix opts)
+           buffer-ptr (mem/alloc-instance ::mem/pointer arena)
+           size-ptr   (mem/alloc-instance ::size-t arena)
+           code       ((bindings :image-write-to-buffer)
+                       (pointer (image-handle image))
+                       suffix
+                       buffer-ptr
+                       size-ptr
+                       nil)]
+       (when-not (zero? code)
+         (throw-vips-error (bindings)
+                           "Failed to write image to buffer"
+                           {:suffix suffix}))
+       (let [output-ptr  (mem/read-address buffer-ptr)
+             output-size (mem/read-long size-ptr)]
+         (try
+           (mem/read-bytes (mem/reinterpret output-ptr output-size) output-size)
+           (finally
+             ((bindings :g-free) output-ptr))))))))
 
 (defn write-image-to-stream
-  [image sink suffix]
-  (let [stream (require-instance OutputStream sink "write-to-stream sink")]
-    (with-open [^StreamBridge bridge (new-target-bridge stream)]
-      (let [suffix (require-java-string suffix "write-to-stream suffix")
-            code   ((bindings :image-write-to-target)
-                    (pointer (image-handle image))
-                    suffix
-                    (pointer bridge)
-                    nil)]
-        (when-not (zero? code)
-          (throw-stream-error "Failed to write image to stream"
-                              {:suffix suffix}
-                              (stream-failure-ref bridge)))
-        image))))
+  ([image sink suffix]
+   (let [stream (require-instance OutputStream sink "write-to-stream sink")]
+     (with-open [^StreamBridge bridge (new-target-bridge stream)]
+       (let [suffix (require-java-string suffix "write-to-stream suffix")
+             code   ((bindings :image-write-to-target)
+                     (pointer (image-handle image))
+                     suffix
+                     (pointer bridge)
+                     nil)]
+         (when-not (zero? code)
+           (throw-stream-error "Failed to write image to stream"
+                               {:suffix suffix}
+                               (stream-failure-ref bridge)))
+         image))))
+  ([image sink suffix opts]
+   (validate-helper-target-options! maybe-find-save-target-operation-name suffix "write-to-stream suffix" opts)
+   (let [stream (require-instance OutputStream sink "write-to-stream sink")]
+     (with-open [^StreamBridge bridge (new-target-bridge stream)]
+       (let [suffix (append-options suffix opts)
+             code   ((bindings :image-write-to-target)
+                     (pointer (image-handle image))
+                     suffix
+                     (pointer bridge)
+                     nil)]
+         (when-not (zero? code)
+           (throw-stream-error "Failed to write image to stream"
+                               {:suffix suffix}
+                               (stream-failure-ref bridge)))
+         image)))))
 
 (defn image-width
   [image]

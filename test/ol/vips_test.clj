@@ -658,7 +658,13 @@
                             (v/call "flip" {:in image :direction :sideways})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"Unknown enum value"
-                            (v/call "colourspace" {:in image :space :sepia})))))
+                            (v/call "colourspace" {:in image :space :sepia})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"Unknown enum integer"
+                            (v/call "flip" {:in image :direction 999999})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"Unknown enum integer"
+                            (v/call "flip" {:in image :direction -1})))))
   (testing "invalid booleans fail before entering libvips"
     (with-open [image (v/from-file fixture-path)]
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
@@ -682,14 +688,20 @@
                             #"skip-blanks"
                             (v/call "dzsave" {:in image :filename "ignored.dz" :skip-blanks :bad})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                            #"keep"
+                            #"32-bit unsigned integer"
                             (v/call "pngsave" {:in image :filename "ignored.png" :keep -1})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"width.*32-bit signed integer"
                             (v/call "copy" {:in image :width 999999999999999999999999N})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                            #"keep.*32-bit unsigned integer"
+                            #"shrink.*between 1 and 8"
+                            (v/call "jpegload" {:filename fixture-path :shrink 2147483647})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"32-bit unsigned integer"
                             (v/call "pngsave" {:in image :filename "ignored.png" :keep 999999999999999999999999N})))
+      (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                            #"Unknown flags bits"
+                            (v/call "pngsave" {:in image :filename "ignored.png" :keep 2147483647})))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
                             #"finite numbers"
                             (v/call "embed" {:in image :x 0 :y 0 :width 20 :height 20 :background [##NaN 0.0 0.0]})))))
@@ -715,6 +727,44 @@
       (is (re-find #"finite number" (:out copy-xres)))
       (is (re-find #"ExceptionInfo" (:out assoc-xres)))
       (is (re-find #"finite number" (:out assoc-xres))))))
+
+(deftest invalid-enums-and-flags-are-rejected-before-glib-property-validation
+  (testing "invalid integer enums and flags do not abort under fatal GLib criticals"
+    (let [bad-enum  (fatal-criticals-child
+                     "(require 'ol.vips) (try (with-open [img (ol.vips/from-file \"dev/rabbit.jpg\") out (ol.vips/call \"flip\" {:in img :direction 999999})] (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))))")
+          bad-flags (fatal-criticals-child
+                     "(require 'ol.vips) (try (with-open [img (ol.vips/from-file \"dev/rabbit.jpg\") out (ol.vips/call \"pngsave\" {:in img :filename \"ignored.png\" :keep 2147483647})] (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))))")]
+      (is (zero? (:exit bad-enum)))
+      (is (zero? (:exit bad-flags)))
+      (is (re-find #"ExceptionInfo" (:out bad-enum)))
+      (is (re-find #"Unknown enum integer" (:out bad-enum)))
+      (is (re-find #"ExceptionInfo" (:out bad-flags)))
+      (is (re-find #"Unknown flags bits" (:out bad-flags))))))
+
+(deftest invalid-helper-options-are-rejected-before-glib-property-validation
+  (testing "helper loader and saver options do not abort under fatal GLib criticals"
+    (let [generic-load     (fatal-criticals-child
+                            "(require 'ol.vips) (try (with-open [img (ol.vips/call \"jpegload\" {:filename \"dev/rabbit.jpg\" :shrink 2147483647})] (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))))")
+          file-load-opts   (fatal-criticals-child
+                            "(require 'ol.vips) (try (with-open [img (ol.vips/from-file \"dev/rabbit.jpg\" {:shrink 2147483647})] (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))))")
+          buffer-load-opts (fatal-criticals-child
+                            "(require 'ol.vips) (try (let [bytes (java.nio.file.Files/readAllBytes (java.nio.file.Path/of \"dev/rabbit.jpg\" (make-array String 0)))] (with-open [img (ol.vips/from-buffer bytes {:shrink 2147483647})] (println :unexpected-ok))) (catch Throwable t (println (class t)) (println (.getMessage t))))")
+          stream-load-opts (fatal-criticals-child
+                            "(require 'ol.vips) (try (with-open [in (java.io.FileInputStream. \"dev/rabbit.jpg\") img (ol.vips/from-stream in {:shrink 2147483647})] (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))))")
+          file-save-opts   (fatal-criticals-child
+                            "(require 'ol.vips) (let [tmp (java.nio.file.Files/createTempFile \"ol-vips-helper-\" \".png\" (make-array java.nio.file.attribute.FileAttribute 0))] (try (with-open [img (ol.vips/from-file \"dev/rabbit.jpg\")] (ol.vips/write-to-file img tmp {:keep 2147483647}) (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))) (finally (java.nio.file.Files/deleteIfExists tmp))))")
+          buffer-save-opts (fatal-criticals-child
+                            "(require 'ol.vips) (try (with-open [img (ol.vips/from-file \"dev/rabbit.jpg\")] (ol.vips/write-to-buffer img \".png\" {:keep 2147483647}) (println :unexpected-ok)) (catch Throwable t (println (class t)) (println (.getMessage t))))")
+          stream-save-opts (fatal-criticals-child
+                            "(require 'ol.vips) (try (let [out (java.io.ByteArrayOutputStream.)] (with-open [img (ol.vips/from-file \"dev/rabbit.jpg\")] (ol.vips/write-to-stream img out \".png\" {:keep 2147483647}) (println :unexpected-ok))) (catch Throwable t (println (class t)) (println (.getMessage t))))")]
+      (doseq [child [generic-load file-load-opts buffer-load-opts stream-load-opts
+                     file-save-opts buffer-save-opts stream-save-opts]]
+        (is (zero? (:exit child)))
+        (is (re-find #"ExceptionInfo" (:out child))))
+      (doseq [child [generic-load file-load-opts buffer-load-opts stream-load-opts]]
+        (is (re-find #"between 1 and 8" (:out child))))
+      (doseq [child [file-save-opts buffer-save-opts stream-save-opts]]
+        (is (re-find #"Unknown flags bits" (:out child)))))))
 
 (deftest join-and-array-join
   (testing "join composes two images through the raw operation contract"
