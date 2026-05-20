@@ -630,6 +630,42 @@
         (is (= {:width 2490 :height 3084 :has-alpha? false}
                (select-keys (v/metadata flipped) [:width :height :has-alpha?])))))))
 
+(deftest closed-image-handles-are-rejected-before-native-calls
+  (testing "public helpers reject a closed image handle"
+    (let [image (v/from-file fixture-path)]
+      (try
+        (.close image)
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"closed image handle"
+                              (v/width image)))
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"closed image handle"
+                              (v/write-to-buffer image ".png")))
+        (finally
+          (.close ^java.lang.AutoCloseable image)))))
+  (testing "operation result maps reject closed :out image handles"
+    (let [image (v/from-file fixture-path)]
+      (try
+        (.close image)
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"closed image handle"
+                              (v/write-to-buffer {:out image} ".png")))
+        (finally
+          (.close ^java.lang.AutoCloseable image))))))
+
+(deftest mutable-draw-operations-reject-closed-images
+  (testing "draw-image rejects closed sub-images"
+    (with-open [base  (ops/black 2 2 {:bands 3})
+                image (v/copy-memory base)]
+      (let [sub-image (ops/black 1 1 {:bands 3})]
+        (try
+          (.close sub-image)
+          (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                                #"closed image handle"
+                                (ops/draw-image image sub-image 0 0)))
+          (finally
+            (.close ^java.lang.AutoCloseable sub-image)))))))
+
 (deftest single-image-operations-return-image-handles
   (testing "single-image operation results can be used directly in with-open"
     (with-open [image   (v/from-file fixture-path)

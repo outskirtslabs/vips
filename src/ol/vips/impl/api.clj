@@ -938,9 +938,17 @@
   (toString [_]
     (str result-map)))
 
+(defn- throw-closed-image-handle
+  []
+  (throw (ex-info "Cannot use closed image handle"
+                  {:type :ol.vips/closed-image-handle})))
+
 (deftype ImageHandle [ptr ^AtomicBoolean closed? keeper]
   PointerBacked
-  (pointer [_] ptr)
+  (pointer [_]
+    (if (.get closed?)
+      (throw-closed-image-handle)
+      ptr))
 
   java.lang.AutoCloseable
   (close [_]

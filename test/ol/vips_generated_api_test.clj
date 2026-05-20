@@ -102,6 +102,26 @@
       (is (= {:width 4990 :height 6178 :has-alpha? false}
              (select-keys (v/metadata grid) [:width :height :has-alpha?]))))))
 
+(deftest generated-array-operations-reject-closed-image-handles
+  (testing "generated image-array wrappers reject closed handles"
+    (let [image (ops/black 1 1 {:bands 3})]
+      (try
+        (.close image)
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"closed image handle"
+                              (ops/arrayjoin [image])))
+        (finally
+          (.close ^java.lang.AutoCloseable image)))))
+  (testing "generated image-array wrappers reject closed handles inside result maps"
+    (let [image (ops/black 1 1 {:bands 3})]
+      (try
+        (.close image)
+        (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                              #"closed image handle"
+                              (ops/arrayjoin [{:out image}])))
+        (finally
+          (.close ^java.lang.AutoCloseable image))))))
+
 (deftest generated-operations-accept-result-maps
   (testing "generated wrappers accept prior operation result maps as image inputs"
     (with-open [image (v/from-file fixture-path)]
