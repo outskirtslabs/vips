@@ -587,7 +587,7 @@
   (let [enum-type  (:enum (gtypes))
         flags-type (:flags (gtypes))]
     (with-open [arena (mem/confined-arena)]
-      (let [slot-size                                                                                                 (mem/size-of ::g-type)
+      (let [slot-size (mem/size-of ::g-type)
             discover-children
             (fn [fundamental class-type value-type build-entry]
               (let [count-ptr (mem/alloc-instance ::mem/int arena)

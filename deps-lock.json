@@ -855,6 +855,12 @@
     "org/clojure/clojure/1.12.4/clojure-1.12.4.pom": {
       "sha256": "c51879062e41ff9f21afa0e409b199ffe9f2a3c6ae722cdfec5fd9dba05e4172"
     },
+    "org/clojure/clojure/1.12.5/clojure-1.12.5.jar": {
+      "sha256": "dfdee131460216a84fef22e537bb0d0579965f8f70338d748323dff26f8e5a8b"
+    },
+    "org/clojure/clojure/1.12.5/clojure-1.12.5.pom": {
+      "sha256": "278c51d977c1968493d8d4cb0c5c60e2cb2550d60485c3813cf161e56af68858"
+    },
     "org/clojure/core.async/1.8.741/core.async-1.8.741.jar": {
       "sha256": "288489a4f0e580f43e1913cba842b32959ef01e2d1bc3a01db2e97c79c9c655a"
     },
