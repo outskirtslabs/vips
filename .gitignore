@@ -24,3 +24,5 @@ native/*/target/
 target/native-cache/
 examples/sicp*png
 examples/funcgeo*png
+.pi
+.ralph
