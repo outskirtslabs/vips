@@ -1660,8 +1660,13 @@
        :int ((bindings :image-set-int) image-ptr field-name (int (require-int32 value "image field value")))
        :double ((bindings :image-set-double) image-ptr field-name (double (require-finite-number value "image field value")))
        :string ((bindings :image-set-string) image-ptr field-name (require-java-string value "image field value"))
-       :blob (let [data (->byte-array value "image field value")]
-               ((bindings :image-set-blob-copy) image-ptr field-name data (alength ^bytes data)))
+       :blob (let [data (->byte-array value "image field value")
+                   size (alength ^bytes data)]
+               (with-open [arena (mem/confined-arena)]
+                 (let [buffer (mem/alloc (max 1 size) 1 arena)]
+                   (when (pos? size)
+                     (mem/write-bytes buffer size data))
+                   ((bindings :image-set-blob-copy) image-ptr field-name buffer size))))
        :array-int (let [values (vec value)
                         count  (count values)]
                     (with-open [arena (mem/confined-arena)]
