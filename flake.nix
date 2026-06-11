@@ -4,7 +4,7 @@
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # tracks nixpkgs unstable branch
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    devenv.url = "https://flakehub.com/f/ramblurr/nix-devenv/*";
+    devenv.url = "github:ramblurr/nix-devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
     clojure-nix-locker.url = "github:bevuta/clojure-nix-locker";
     clojure-nix-locker.inputs.nixpkgs.follows = "nixpkgs";
