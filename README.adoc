@@ -7,7 +7,7 @@ ____
 
 image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https://docs.outskirtslabs.com/ol.vips/next/]
 image:https://img.shields.io/badge/status-experimental-orange.svg[status: experimental,link=https://docs.outskirtslabs.com/open-source-vital-signs#experimental]
-image:https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Foutskirtslabs%2Fvips[alt=built with garnix,link=https://garnix.io/repo/outskirtslabs/vips]
+image:https://ci.outskirtslabs.com/repos/github/outskirtslabs/vips/badge.svg[alt=nixbot,link=https://ci.outskirtslabs.com/repos/github/outskirtslabs/vips]
 
 `ol.vips` is a Clojure library for loading, transforming, and saving
 images with https://github.com/libvips/libvips[libvips]. Use it to
