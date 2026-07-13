@@ -10,11 +10,17 @@ The Clojure source and build logic in this repo remain EUPL-1.2. The native comp
 
 ## Update Flow
 
-1. Set `:sharp-vips-version` and `:native-version-revision` in [../deps.edn]
+1. Set `:libvips-version`, `:sharp-vips-version`, and `:native-version-revision` in [../deps.edn].
 2. Run `bb native:update` to stage the selected `sharp-libvips` platform resources for that upstream release.
 3. Run `bb jar:native` to build the companion jars.
 
+The updater rejects a `sharp-libvips` package when its bundled libvips version
+does not match `:libvips-version`.
+
 By default these tasks operate on every platform directory under `native/`.
+The staged `resources/` trees are generated build inputs and are intentionally
+gitignored. The jar and publish tasks run the staging step themselves, so a
+clean checkout does not need to contain every platform payload in advance.
 
 You can pass one or more platform ids to limit the run, for example:
 

@@ -1,12 +1,12 @@
-{:vips-version "8.17.3",
+{:vips-version "8.18.3",
  :bundle-sha256
- "05adb3ce21718173caaa90626d350e2472c2e96095d54acba3bb13be11e16192",
+ "d052511d451fd9e0d8450eb2ae7b63761b15c8a840411433b8a65f03933fbac9",
  :arch :aarch64,
  :source-url
- "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.2.4.tgz",
+ "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.3.2.tgz",
  :libc nil,
- :sharp-version "1.2.4",
- :library-files ["lib/libvips-cpp.8.17.3.dylib"],
+ :sharp-version "1.3.2",
+ :library-files ["lib/libvips-cpp.8.18.3.dylib"],
  :os :macos,
  :platform-id :macos-aarch64,
  :artifact-name "com.outskirtslabs/vips-native-macos-aarch64",

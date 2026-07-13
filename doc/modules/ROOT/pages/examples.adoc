@@ -117,7 +117,7 @@ before loading that data:
 ----
 
 Use that override only for trusted inputs. See the upstream
-https://www.libvips.org/API/8.17/func.block_untrusted_set.html[`vips_block_untrusted_set`
+https://www.libvips.org/API/8.18/func.block_untrusted_set.html[`vips_block_untrusted_set`
 documentation]. In libvips terms this is equivalent to calling
 `vips_block_untrusted_set(FALSE)` after initialization.
 

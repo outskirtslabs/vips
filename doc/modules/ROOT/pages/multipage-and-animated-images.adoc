@@ -2,7 +2,7 @@
 
 This page adapts the upstream libvips guide for `ol.vips`. The original
 reference is
-https://www.libvips.org/API/8.17/multipage-and-animated-images.html[Multipage and animated images].
+https://www.libvips.org/API/8.18/multipage-and-animated-images.html[Multipage and animated images].
 
 libvips represents animated and multipage images as one tall image plus
 metadata describing how that strip should be interpreted. In `ol.vips`, the

@@ -229,7 +229,7 @@
   [text]
   (->> (str/split text #"\n" -1)
        (map-indexed (fn [index line]
-                      (if (zero? index)
+                      (if (or (zero? index) (str/blank? line))
                         line
                         (str "  " line))))
        (str/join "\n")))

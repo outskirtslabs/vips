@@ -1,12 +1,12 @@
-{:vips-version "8.17.3",
+{:vips-version "8.18.3",
  :bundle-sha256
- "73077525c737eb9e938d19603d388c88ddd38acff001d7eb137d524142fea4c4",
+ "56dde56ff6ae6be876c2fa89a36f5d1dd08d8f5aa55d370811a10ee345c97e31",
  :arch :x86-64,
  :source-url
- "https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.2.4.tgz",
+ "https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.3.2.tgz",
  :libc :glibc,
- :sharp-version "1.2.4",
- :library-files ["lib/libvips-cpp.so.8.17.3"],
+ :sharp-version "1.3.2",
+ :library-files ["lib/libvips-cpp.so.8.18.3"],
  :os :linux,
  :platform-id :linux-x86-64-gnu,
  :artifact-name "com.outskirtslabs/vips-native-linux-x86-64-gnu",

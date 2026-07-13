@@ -17,8 +17,6 @@
 #define GIO_STATIC_COMPILATION 1
 #define GMODULE_STATIC_COMPILATION 1
 #define GI_STATIC_COMPILATION 1
-#define G_INTL_STATIC_COMPILATION 1
-#define FFI_STATIC_BUILD 1
 
 /* Specifies that GLib's g_print*() functions wrap the
  * system printf functions.  This is useful to know, for example,
@@ -114,8 +112,8 @@ typedef unsigned long long guintptr;
 #define G_GUINTPTR_FORMAT       "llu"
 
 #define GLIB_MAJOR_VERSION 2
-#define GLIB_MINOR_VERSION 86
-#define GLIB_MICRO_VERSION 1
+#define GLIB_MINOR_VERSION 89
+#define GLIB_MICRO_VERSION 0
 
 #define G_OS_WIN32
 #define G_PLATFORM_WIN32

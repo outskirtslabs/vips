@@ -15,14 +15,23 @@
 (deftest runtime-initialization
   (testing "the runtime can initialize the packaged libvips bundle"
     (let [state runtime-state]
-      (is (= "8.17.3" (:version-string state)))
+      (is (= "8.18.3" (:version-string state)))
       (is (seq (:library-paths state)))
       (is (string? (:primary-library-path state))))))
 
 (deftest operation-catalog
   (testing "operation discovery exposes the nicknames needed by the example API"
     (let [ops-set (set (introspect/list-operations))]
-      (doseq [op ["thumbnail_image" "rotate" "colourspace" "flip" "join" "arrayjoin"]]
+      (doseq [op ["thumbnail_image"
+                  "rotate"
+                  "colourspace"
+                  "flip"
+                  "join"
+                  "arrayjoin"
+                  "Oklab2XYZ"
+                  "XYZ2Oklab"
+                  "uhdrload"
+                  "uhdrsave_buffer"]]
         (is (contains? ops-set op) (str "Missing operation nickname " op))))))
 
 (deftest operation-description

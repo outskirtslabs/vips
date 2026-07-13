@@ -4,7 +4,7 @@
 
 (ns ol.vips.enums
   "Generated enum descriptors for normalized libvips enum ids.
-  
+
   Use [[registry]] or the generated enum vars to inspect enum metadata. Use [[ol.vips/encode-enum]] and [[ol.vips/decode-enum]] to convert between keywords and the underlying libvips integer values."
   (:refer-clojure :exclude [extend]))
 
@@ -14,9 +14,9 @@
    :align                    {:type-name "VipsAlign", :keyword->value {:low 0, :centre 1, :high 2}, :value->keyword {0 :low, 1 :centre, 2 :high}, :id :align, :values [:centre :high :low]}
    :angle                    {:type-name "VipsAngle", :keyword->value {:d0 0, :d90 1, :d180 2, :d270 3}, :value->keyword {0 :d0, 1 :d90, 2 :d180, 3 :d270}, :id :angle, :values [:d0 :d180 :d270 :d90]}
    :angle45                  {:type-name "VipsAngle45", :keyword->value {:d0 0, :d45 1, :d90 2, :d135 3, :d180 4, :d225 5, :d270 6, :d315 7}, :value->keyword {0 :d0, 1 :d45, 2 :d90, 3 :d135, 4 :d180, 5 :d225, 6 :d270, 7 :d315}, :id :angle45, :values [:d0 :d135 :d180 :d225 :d270 :d315 :d45 :d90]}
-   :band-format              {:type-name "VipsBandFormat", :keyword->value {:notset -1, :double 8, :short 3, :ushort 2, :int 5, :uint 4, :float 6, :complex 7, :dpcomplex 9, :uchar 0, :char 1}, :value->keyword {0 :uchar, 7 :complex, 1 :char, 4 :uint, -1 :notset, 6 :float, 3 :short, 2 :ushort, 9 :dpcomplex, 5 :int, 8 :double}, :id :band-format, :values [:char :complex :double :dpcomplex :float :int :notset :short :uchar :uint :ushort]}
+   :band-format              {:type-name "VipsBandFormat", :keyword->value {:notset 4294967295, :double 8, :short 3, :ushort 2, :int 5, :uint 4, :float 6, :complex 7, :dpcomplex 9, :uchar 0, :char 1}, :value->keyword {0 :uchar, 7 :complex, 1 :char, 4 :uint, 4294967295 :notset, 6 :float, 3 :short, 2 :ushort, 9 :dpcomplex, 5 :int, 8 :double}, :id :band-format, :values [:char :complex :double :dpcomplex :float :int :notset :short :uchar :uint :ushort]}
    :blend-mode               {:type-name "VipsBlendMode", :keyword->value {:dest-in 8, :dest-over 7, :screen 15, :darken 17, :colour-dodge 19, :lighten 18, :dest-atop 10, :source 1, :atop 5, :colour-burn 20, :overlay 16, :xor 11, :out 4, :difference 23, :saturate 13, :exclusion 24, :hard-light 21, :multiply 14, :over 2, :add 12, :soft-light 22, :dest 6, :dest-out 9, :in 3, :clear 0}, :value->keyword {0 :clear, 7 :dest-over, 20 :colour-burn, 1 :source, 24 :exclusion, 4 :out, 15 :screen, 21 :hard-light, 13 :saturate, 22 :soft-light, 6 :dest, 17 :darken, 3 :in, 12 :add, 2 :over, 23 :difference, 19 :colour-dodge, 11 :xor, 9 :dest-out, 5 :atop, 14 :multiply, 16 :overlay, 10 :dest-atop, 18 :lighten, 8 :dest-in}, :id :blend-mode, :values [:add :atop :clear :colour-burn :colour-dodge :darken :dest :dest-atop :dest-in :dest-out :dest-over :difference :exclusion :hard-light :in :lighten :multiply :out :over :overlay :saturate :screen :soft-light :source :xor]}
-   :coding                   {:type-name "VipsCoding", :keyword->value {:error -1, :none 0, :labq 2, :rad 6}, :value->keyword {-1 :error, 0 :none, 2 :labq, 6 :rad}, :id :coding, :values [:error :labq :none :rad]}
+   :coding                   {:type-name "VipsCoding", :keyword->value {:error 4294967295, :none 0, :labq 2, :rad 6}, :value->keyword {4294967295 :error, 0 :none, 2 :labq, 6 :rad}, :id :coding, :values [:error :labq :none :rad]}
    :combine                  {:type-name "VipsCombine", :keyword->value {:max 0, :sum 1, :min 2}, :value->keyword {0 :max, 1 :sum, 2 :min}, :id :combine, :values [:max :min :sum]}
    :combine-mode             {:type-name "VipsCombineMode", :keyword->value {:set 0, :add 1}, :value->keyword {0 :set, 1 :add}, :id :combine-mode, :values [:add :set]}
    :compass-direction        {:type-name "VipsCompassDirection", :keyword->value {:west 4, :south 3, :north-west 8, :north-east 5, :east 2, :south-west 7, :south-east 6, :north 1, :centre 0}, :value->keyword {0 :centre, 7 :south-west, 1 :north, 4 :west, 6 :south-east, 3 :south, 2 :east, 5 :north-east, 8 :north-west}, :id :compass-direction, :values [:centre :east :north :north-east :north-west :south :south-east :south-west :west]}
@@ -35,7 +35,7 @@
    :foreign-webp-preset      {:type-name "VipsForeignWebpPreset", :keyword->value {:default 0, :picture 1, :photo 2, :drawing 3, :icon 4, :text 5}, :value->keyword {0 :default, 1 :picture, 2 :photo, 3 :drawing, 4 :icon, 5 :text}, :id :foreign-webp-preset, :values [:default :drawing :icon :photo :picture :text]}
    :intent                   {:type-name "VipsIntent", :keyword->value {:perceptual 0, :relative 1, :saturation 2, :absolute 3, :auto 32}, :value->keyword {0 :perceptual, 1 :relative, 2 :saturation, 3 :absolute, 32 :auto}, :id :intent, :values [:absolute :auto :perceptual :relative :saturation]}
    :interesting              {:type-name "VipsInteresting", :keyword->value {:none 0, :centre 1, :entropy 2, :attention 3, :low 4, :high 5, :all 6}, :value->keyword {0 :none, 1 :centre, 2 :entropy, 3 :attention, 4 :low, 5 :high, 6 :all}, :id :interesting, :values [:all :attention :centre :entropy :high :low :none]}
-   :interpretation           {:type-name "VipsInterpretation", :keyword->value {:xyz 12, :lab 13, :labs 21, :histogram 10, :fourier 24, :srgb 22, :grey16 26, :rgb 17, :cmyk 15, :hsv 29, :scrgb 28, :cmc 18, :matrix 27, :lch 19, :rgb16 25, :multiband 0, :error -1, :yxy 23, :labq 16, :b-w 1}, :value->keyword {0 :multiband, 27 :matrix, 1 :b-w, 24 :fourier, -1 :error, 15 :cmyk, 21 :labs, 13 :lab, 22 :srgb, 29 :hsv, 28 :scrgb, 25 :rgb16, 17 :rgb, 12 :xyz, 23 :yxy, 19 :lch, 26 :grey16, 16 :labq, 10 :histogram, 18 :cmc}, :id :interpretation, :values [:b-w :cmc :cmyk :error :fourier :grey16 :histogram :hsv :lab :labq :labs :lch :matrix :multiband :rgb :rgb16 :scrgb :srgb :xyz :yxy]}
+   :interpretation           {:type-name "VipsInterpretation", :keyword->value {:oklch 31, :xyz 12, :lab 13, :labs 21, :histogram 10, :fourier 24, :srgb 22, :grey16 26, :rgb 17, :cmyk 15, :hsv 29, :scrgb 28, :cmc 18, :matrix 27, :oklab 30, :lch 19, :rgb16 25, :multiband 0, :error 4294967295, :yxy 23, :labq 16, :b-w 1}, :value->keyword {0 :multiband, 27 :matrix, 1 :b-w, 24 :fourier, 15 :cmyk, 21 :labs, 31 :oklch, 13 :lab, 22 :srgb, 4294967295 :error, 29 :hsv, 28 :scrgb, 25 :rgb16, 17 :rgb, 12 :xyz, 23 :yxy, 19 :lch, 26 :grey16, 16 :labq, 30 :oklab, 10 :histogram, 18 :cmc}, :id :interpretation, :values [:b-w :cmc :cmyk :error :fourier :grey16 :histogram :hsv :lab :labq :labs :lch :matrix :multiband :oklab :oklch :rgb :rgb16 :scrgb :srgb :xyz :yxy]}
    :kernel                   {:type-name "VipsKernel", :keyword->value {:nearest 0, :linear 1, :cubic 2, :mitchell 3, :lanczos2 4, :lanczos3 5, :mks2013 6, :mks2021 7}, :value->keyword {0 :nearest, 1 :linear, 2 :cubic, 3 :mitchell, 4 :lanczos2, 5 :lanczos3, 6 :mks2013, 7 :mks2021}, :id :kernel, :values [:cubic :lanczos2 :lanczos3 :linear :mitchell :mks2013 :mks2021 :nearest]}
    :operation-boolean        {:type-name "VipsOperationBoolean", :keyword->value {:and 0, :or 1, :eor 2, :lshift 3, :rshift 4}, :value->keyword {0 :and, 1 :or, 2 :eor, 3 :lshift, 4 :rshift}, :id :operation-boolean, :values [:and :eor :lshift :or :rshift]}
    :operation-complex        {:type-name "VipsOperationComplex", :keyword->value {:polar 0, :rect 1, :conj 2}, :value->keyword {0 :polar, 1 :rect, 2 :conj}, :id :operation-complex, :values [:conj :polar :rect]}
@@ -55,9 +55,9 @@
 
 (def access
   "Generated enum descriptor for `VipsAccess`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:random`
   - `:sequential`
@@ -66,9 +66,9 @@
 
 (def align
   "Generated enum descriptor for `VipsAlign`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:centre`
   - `:high`
@@ -77,9 +77,9 @@
 
 (def angle
   "Generated enum descriptor for `VipsAngle`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:d0`
   - `:d180`
@@ -89,9 +89,9 @@
 
 (def angle45
   "Generated enum descriptor for `VipsAngle45`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:d0`
   - `:d135`
@@ -105,9 +105,9 @@
 
 (def band-format
   "Generated enum descriptor for `VipsBandFormat`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:char`
   - `:complex`
@@ -124,9 +124,9 @@
 
 (def blend-mode
   "Generated enum descriptor for `VipsBlendMode`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:add`
   - `:atop`
@@ -157,9 +157,9 @@
 
 (def coding
   "Generated enum descriptor for `VipsCoding`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:error`
   - `:labq`
@@ -169,9 +169,9 @@
 
 (def combine
   "Generated enum descriptor for `VipsCombine`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:max`
   - `:min`
@@ -180,9 +180,9 @@
 
 (def combine-mode
   "Generated enum descriptor for `VipsCombineMode`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:add`
   - `:set`"
@@ -190,9 +190,9 @@
 
 (def compass-direction
   "Generated enum descriptor for `VipsCompassDirection`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:centre`
   - `:east`
@@ -207,9 +207,9 @@
 
 (def direction
   "Generated enum descriptor for `VipsDirection`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:horizontal`
   - `:vertical`"
@@ -217,9 +217,9 @@
 
 (def extend
   "Generated enum descriptor for `VipsExtend`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:background`
   - `:black`
@@ -231,9 +231,9 @@
 
 (def fail-on
   "Generated enum descriptor for `VipsFailOn`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:error`
   - `:none`
@@ -243,9 +243,9 @@
 
 (def foreign-dz-container
   "Generated enum descriptor for `VipsForeignDzContainer`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:fs`
   - `:szi`
@@ -254,9 +254,9 @@
 
 (def foreign-dz-depth
   "Generated enum descriptor for `VipsForeignDzDepth`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:one`
   - `:onepixel`
@@ -265,9 +265,9 @@
 
 (def foreign-dz-layout
   "Generated enum descriptor for `VipsForeignDzLayout`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:dz`
   - `:google`
@@ -278,9 +278,9 @@
 
 (def foreign-heif-compression
   "Generated enum descriptor for `VipsForeignHeifCompression`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:av1`
   - `:avc`
@@ -290,9 +290,9 @@
 
 (def foreign-heif-encoder
   "Generated enum descriptor for `VipsForeignHeifEncoder`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:aom`
   - `:auto`
@@ -303,9 +303,9 @@
 
 (def foreign-subsample
   "Generated enum descriptor for `VipsForeignSubsample`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:auto`
   - `:off`
@@ -314,9 +314,9 @@
 
 (def foreign-tiff-compression
   "Generated enum descriptor for `VipsForeignTiffCompression`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:ccittfax4`
   - `:deflate`
@@ -331,9 +331,9 @@
 
 (def foreign-tiff-predictor
   "Generated enum descriptor for `VipsForeignTiffPredictor`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:float`
   - `:horizontal`
@@ -342,9 +342,9 @@
 
 (def foreign-tiff-resunit
   "Generated enum descriptor for `VipsForeignTiffResunit`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:cm`
   - `:inch`"
@@ -352,9 +352,9 @@
 
 (def foreign-webp-preset
   "Generated enum descriptor for `VipsForeignWebpPreset`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:default`
   - `:drawing`
@@ -366,9 +366,9 @@
 
 (def intent
   "Generated enum descriptor for `VipsIntent`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:absolute`
   - `:auto`
@@ -379,9 +379,9 @@
 
 (def interesting
   "Generated enum descriptor for `VipsInteresting`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:all`
   - `:attention`
@@ -394,9 +394,9 @@
 
 (def interpretation
   "Generated enum descriptor for `VipsInterpretation`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:b-w`
   - `:cmc`
@@ -412,6 +412,8 @@
   - `:lch`
   - `:matrix`
   - `:multiband`
+  - `:oklab`
+  - `:oklch`
   - `:rgb`
   - `:rgb16`
   - `:scrgb`
@@ -422,9 +424,9 @@
 
 (def kernel
   "Generated enum descriptor for `VipsKernel`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:cubic`
   - `:lanczos2`
@@ -438,9 +440,9 @@
 
 (def operation-boolean
   "Generated enum descriptor for `VipsOperationBoolean`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:and`
   - `:eor`
@@ -451,9 +453,9 @@
 
 (def operation-complex
   "Generated enum descriptor for `VipsOperationComplex`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:conj`
   - `:polar`
@@ -462,18 +464,18 @@
 
 (def operation-complex2
   "Generated enum descriptor for `VipsOperationComplex2`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:cross-phase`"
   (get registry :operation-complex2))
 
 (def operation-complexget
   "Generated enum descriptor for `VipsOperationComplexget`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:imag`
   - `:real`"
@@ -481,9 +483,9 @@
 
 (def operation-math
   "Generated enum descriptor for `VipsOperationMath`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:acos`
   - `:acosh`
@@ -505,9 +507,9 @@
 
 (def operation-math2
   "Generated enum descriptor for `VipsOperationMath2`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:atan2`
   - `:pow`
@@ -516,9 +518,9 @@
 
 (def operation-morphology
   "Generated enum descriptor for `VipsOperationMorphology`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:dilate`
   - `:erode`"
@@ -526,9 +528,9 @@
 
 (def operation-relational
   "Generated enum descriptor for `VipsOperationRelational`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:equal`
   - `:less`
@@ -540,9 +542,9 @@
 
 (def operation-round
   "Generated enum descriptor for `VipsOperationRound`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:ceil`
   - `:floor`
@@ -551,9 +553,9 @@
 
 (def pcs
   "Generated enum descriptor for `VipsPCS`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:lab`
   - `:xyz`"
@@ -561,9 +563,9 @@
 
 (def precision
   "Generated enum descriptor for `VipsPrecision`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:approximate`
   - `:float`
@@ -572,9 +574,9 @@
 
 (def region-shrink
   "Generated enum descriptor for `VipsRegionShrink`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:max`
   - `:mean`
@@ -586,9 +588,9 @@
 
 (def sdf-shape
   "Generated enum descriptor for `VipsSdfShape`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:box`
   - `:circle`
@@ -598,9 +600,9 @@
 
 (def size
   "Generated enum descriptor for `VipsSize`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:both`
   - `:down`
@@ -610,9 +612,9 @@
 
 (def text-wrap
   "Generated enum descriptor for `VipsTextWrap`.
-  
+
   Use this value directly or look it up in [[registry]] when you want the generated enum map.
-  
+
   Known values:
   - `:char`
   - `:none`

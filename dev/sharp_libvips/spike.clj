@@ -4,13 +4,13 @@
 
   Usage:
 
-    clojure -M:dev -m sharp-libvips.spike /abs/path/to/libvips-cpp.so.8.17.3
+    clojure -M:dev -m sharp-libvips.spike /abs/path/to/libvips-cpp.so.8.18.3
 
   Optional extra arguments are loaded first via `System/load`. This is useful
   on Nix-like systems where `libstdc++.so.6` is not on the default loader path:
 
     clojure -M:dev -m sharp-libvips.spike \\
-      /abs/path/to/libvips-cpp.so.8.17.3 \\
+      /abs/path/to/libvips-cpp.so.8.18.3 \\
       /abs/path/to/libstdc++.so.6"
   (:require
    [babashka.fs :as fs])

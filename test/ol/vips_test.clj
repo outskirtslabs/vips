@@ -39,7 +39,7 @@
           ops   (set (v/operations))
           flip  (v/operation-info "flip")]
       (is (identical? state (v/init!)))
-      (is (= "8.17.3" (:version-string state)))
+      (is (= "8.18.3" (:version-string state)))
       (is (contains? ops "rotate"))
       (is (contains? ops "arrayjoin"))
       (is (= :horizontal
@@ -56,7 +56,7 @@
     (let [calls (atom [])]
       (with-redefs [api/bind-symbols* (fn [_]
                                         {:vips-init                (fn [_] 0)
-                                         :vips-version-string      (fn [] "8.17.3")
+                                         :vips-version-string      (fn [] "8.18.3")
                                          :vips-block-untrusted-set (fn [state]
                                                                      (swap! calls conj state))})
                     api/build-gtypes  (fn [_] {:boolean :gboolean})]

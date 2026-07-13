@@ -72,6 +72,9 @@ depend on them directly. You can depend on one (or more) of those native
 deps, or provide your own libvips build with `-Dol.vips.native.preload`.
 You'll need to choose one.
 
+The published native companion jars bundle libvips 8.18.3 from
+`sharp-libvips` 1.3.2. The test suite runs against that bundle.
+
 This means that you can even use a custom libvips build or a newer
 version of libvips without having to wait for `ol.vips` to catch up
 (though I expect to keep it up to date). Any new or updated operations

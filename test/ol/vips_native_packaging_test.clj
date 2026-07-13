@@ -3,6 +3,7 @@
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.java.shell :as shell]
+   [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
    [ol.vips.impl.loader :as loader])
   (:import
@@ -28,6 +29,81 @@
                        (System/setProperty ~property value#)
                        (System/clearProperty ~property)))
                   pairs))))))
+
+(defn- native-resource-root
+  [{:keys [platform-id dir-name]}]
+  (io/file "native"
+           dir-name
+           "resources"
+           "ol"
+           "vips"
+           "native"
+           (name platform-id)))
+
+(defn- staged-native-platform?
+  [platform]
+  (.isFile (io/file (native-resource-root platform) "manifest.edn")))
+
+(defn- native-summary
+  [{:keys [platform-id dir-name] :as platform}]
+  (let [resource-root (native-resource-root platform)
+        manifest      (-> (io/file resource-root "manifest.edn") slurp edn/read-string)
+        project       (-> (io/file "native" dir-name "deps.edn")
+                          slurp
+                          edn/read-string
+                          (get-in [:aliases :neil :project]))]
+    [platform-id
+     {:vips-version     (:vips-version manifest)
+      :sharp-version    (:sharp-version manifest)
+      :artifact-version (:version project)
+      :missing-files    (->> (:library-files manifest)
+                             (remove #(.isFile (io/file resource-root %)))
+                             vec)}]))
+
+(defn- write-native-fixture!
+  ([native-root vips-version]
+   (write-native-fixture! native-root vips-version vips-version))
+  ([native-root manifest-vips-version upstream-vips-version]
+   (let [resource-root (io/file native-root
+                                "linux-x86-64-gnu"
+                                "resources"
+                                "ol"
+                                "vips"
+                                "native"
+                                "linux-x86-64-gnu")
+         library-path  "lib/libvips-cpp.so.8.18.3"
+         library-file  (io/file resource-root library-path)]
+     (.mkdirs (.getParentFile library-file))
+     (spit library-file "fixture")
+     (.mkdirs (io/file resource-root "upstream"))
+     (spit (io/file resource-root "upstream" "package.json") "{}")
+     (spit (io/file resource-root "upstream" "README.md") "fixture")
+     (spit (io/file resource-root "upstream" "versions.json")
+           (format "{\"vips\":\"%s\"}" upstream-vips-version))
+     (spit (io/file resource-root "manifest.edn")
+           (pr-str {:platform-id   :linux-x86-64-gnu
+                    :artifact-name "com.outskirtslabs/vips-native-linux-x86-64-gnu"
+                    :sharp-package "@img/sharp-libvips-linux-x64"
+                    :sharp-version "1.3.2"
+                    :vips-version  manifest-vips-version
+                    :bundle-sha256 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+                    :libc          :glibc
+                    :os            :linux
+                    :arch          :x86-64
+                    :library-files [library-path]
+                    :source-url    "https://registry.npmjs.org/test.tgz"})))))
+
+(defn- cached-native-fixture-current?
+  [native-root]
+  (shell/sh
+   "clojure"
+   "-M:build"
+   "-e"
+   (str "(load-file \"build.clj\") "
+        "(binding [build/*native-root* " (pr-str native-root) "] "
+        "(let [platform (#'build/platform (#'build/read-platforms) :linux-x86-64-gnu)] "
+        "(println (boolean (#'build/staged-manifest-up-to-date? "
+        "platform \"1.3.2\" \"https://registry.npmjs.org/test.tgz\")))))")))
 
 (deftest supported-platforms-remain-explicit
   (testing "the supported platform ids stay aligned with the platform table"
@@ -95,10 +171,10 @@
 
 (deftest manifest-and-cache-path-derivation
   (let [manifest {:platform-id   :linux-x86-64-gnu
-                  :vips-version  "8.17.3"
-                  :sharp-version "1.2.4"
+                  :vips-version  "8.18.3"
+                  :sharp-version "1.3.2"
                   :bundle-sha256 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-                  :library-files ["lib/libvips-cpp.so.8.17.3"]}]
+                  :library-files ["lib/libvips-cpp.so.8.18.3"]}]
     (testing "manifest resource paths follow the classpath contract"
       (is (= "ol/vips/native/linux-x86-64-gnu/manifest.edn"
              (loader/manifest-resource-path :linux-x86-64-gnu))))
@@ -107,7 +183,7 @@
         (is (= "/tmp/ol-vips-cache"
                (str (loader/default-cache-root))))))
     (testing "extraction roots are deterministic"
-      (is (= "/tmp/ol.vips/linux-x86-64-gnu/8.17.3-0123456789ab"
+      (is (= "/tmp/ol.vips/linux-x86-64-gnu/8.18.3-0123456789ab"
              (str (loader/extraction-root "/tmp/ol.vips" manifest)))))
     (testing "bundle hashes are required for extraction roots"
       (is (thrown-with-msg? clojure.lang.ExceptionInfo
@@ -115,7 +191,7 @@
                             (loader/extraction-root "/tmp/ol.vips"
                                                     (dissoc manifest :bundle-sha256)))))
     (testing "extracted library paths derive from the manifest order"
-      (is (= ["/tmp/ol.vips/linux-x86-64-gnu/8.17.3-0123456789ab/lib/libvips-cpp.so.8.17.3"]
+      (is (= ["/tmp/ol.vips/linux-x86-64-gnu/8.18.3-0123456789ab/lib/libvips-cpp.so.8.18.3"]
              (loader/extracted-library-paths "/tmp/ol.vips" manifest))))))
 
 (deftest extract-libraries-reuses-complete-cache-roots
@@ -126,10 +202,10 @@
                           "ol-vips-source-"
                           (make-array java.nio.file.attribute.FileAttribute 0)))
         manifest    {:platform-id   :linux-x86-64-gnu
-                     :vips-version  "8.17.3"
-                     :sharp-version "1.2.4"
+                     :vips-version  "8.18.3"
+                     :sharp-version "1.3.2"
                      :bundle-sha256 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-                     :library-files ["lib/libvips-cpp.so.8.17.3"]}
+                     :library-files ["lib/libvips-cpp.so.8.18.3"]}
         relative    (first (:library-files manifest))
         source-file (io/file source-root relative)]
     (try
@@ -168,9 +244,16 @@
                                          ":native-root"
                                          (pr-str temp-native-root))]
         (is (zero? exit) err)
-        (let [project (get-in (edn/read-string (slurp deps-path))
-                              [:aliases :neil :project])]
+        (let [generated-config (edn/read-string (slurp deps-path))
+              project          (get-in generated-config [:aliases :neil :project])
+              root-build-deps  (-> (slurp "deps.edn")
+                                   edn/read-string
+                                   (get-in [:aliases :build :deps])
+                                   (select-keys ['io.github.clojure/tools.build
+                                                 'slipset/deps-deploy]))]
           (is (= "1.2.3-4" (:version project)))
+          (is (= root-build-deps
+                 (get-in generated-config [:aliases :build :deps])))
           (is (= "LGPL-3.0-or-later" (get-in project [:license :id])))
           (is (= "THIRD-PARTY-NOTICES.md" (:notice-file project)))
           (is (= "Platform-native bundle for com.outskirtslabs/vips (linux-x86-64-gnu)"
@@ -195,9 +278,77 @@
         (is (zero? exit) err)
         (let [project (get-in (edn/read-string (slurp deps-path))
                               [:aliases :neil :project])]
-          (is (= "1.2.4-2" (:version project)))
+          (is (= "1.3.2-1" (:version project)))
           (is (= "LGPL-3.0-or-later" (get-in project [:license :id])))))
       (finally
         (when (.exists (io/file temp-native-root))
           (doseq [file (reverse (file-seq (io/file temp-native-root)))]
+            (.delete ^java.io.File file)))))))
+
+(deftest staged-native-bundles-match-supported-version
+  (testing "every staged platform bundles the declared stable libvips release"
+    (let [staged   (filter staged-native-platform? loader/supported-platforms)
+          actual   (into {} (map native-summary staged))
+          expected (into {}
+                         (map (fn [{:keys [platform-id]}]
+                                [platform-id
+                                 {:vips-version     "8.18.3"
+                                  :sharp-version    "1.3.2"
+                                  :artifact-version "1.3.2-1"
+                                  :missing-files    []}]))
+                         staged)]
+      (is (= expected actual)))))
+
+(deftest staged-native-version-validation
+  (let [native-root (str (Files/createTempDirectory
+                          "ol-vips-native-validation-"
+                          (make-array java.nio.file.attribute.FileAttribute 0)))
+        validate!   (fn []
+                      (shell/sh "clojure"
+                                "-T:build"
+                                "validate-native-resources"
+                                ":platforms"
+                                "[:linux-x86-64-gnu]"
+                                ":native-root"
+                                (pr-str native-root)))]
+    (try
+      (testing "the configured libvips version is accepted"
+        (write-native-fixture! native-root "8.18.3")
+        (let [{:keys [exit err]} (validate!)]
+          (is (zero? exit) err)))
+      (testing "older and unreleased libvips versions are rejected"
+        (doseq [version ["8.18.2" "8.19.0"]]
+          (write-native-fixture! native-root version)
+          (let [{:keys [exit err]} (validate!)]
+            (is (and (not (zero? exit))
+                     (str/includes? err "Unexpected libvips version")
+                     (str/includes? err version)
+                     (str/includes? err "8.18.3"))
+                err))))
+      (finally
+        (when (.exists (io/file native-root))
+          (doseq [file (reverse (file-seq (io/file native-root)))]
+            (.delete ^java.io.File file)))))))
+
+(deftest cached-native-staging-validates-both-version-sources
+  (let [native-root (str (Files/createTempDirectory
+                          "ol-vips-native-cache-validation-"
+                          (make-array java.nio.file.attribute.FileAttribute 0)))]
+    (try
+      (testing "a stale manifest is never accepted as current"
+        (write-native-fixture! native-root "8.18.2" "8.18.3")
+        (let [{:keys [exit out err]} (cached-native-fixture-current? native-root)]
+          (is (zero? exit) err)
+          (is (= "false" (last (str/split-lines out))))))
+      (testing "cached upstream metadata must match the configured libvips version"
+        (write-native-fixture! native-root "8.18.3" "8.18.2")
+        (let [{:keys [exit err]} (cached-native-fixture-current? native-root)]
+          (is (and (not (zero? exit))
+                   (str/includes? err "Unexpected libvips version")
+                   (str/includes? err "8.18.2")
+                   (str/includes? err "8.18.3"))
+              err)))
+      (finally
+        (when (.exists (io/file native-root))
+          (doseq [file (reverse (file-seq (io/file native-root)))]
             (.delete ^java.io.File file)))))))

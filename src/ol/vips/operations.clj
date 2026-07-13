@@ -4,7 +4,7 @@
 
 (ns ol.vips.operations
   "Generated libvips operation wrappers keyed by normalized operation id.
-  
+
   Inspect [[registry]] directly for generated operation metadata, then call the generated wrapper vars directly for typed access to supported libvips operations."
   (:refer-clojure :exclude [abs boolean case cast flatten identity merge reduce replicate])
   (:require [ol.vips :as v]))
@@ -90,7 +90,7 @@
    :grey                  {:id :grey, :operation-name "grey", :description "make a grey ramp image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :grid                  {:id :grid, :operation-name "grid", :description "grid an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "tile-height", :blurb "Chop into tiles this high", :type {:kind :integer, :label "integer"}} {:name "across", :blurb "Number of tiles across", :type {:kind :integer, :label "integer"}} {:name "down", :blurb "Number of tiles down", :type {:kind :integer, :label "integer"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :heifload              {:id :heifload, :operation-name "heifload", :description "load a HEIF image", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "page", :blurb "First page to load", :type {:kind :integer, :label "integer"}} {:name "n", :blurb "Number of pages to load, -1 for all", :type {:kind :integer, :label "integer"}} {:name "thumbnail", :blurb "Fetch thumbnail image", :type {:kind :boolean, :label "boolean"}} {:name "autorotate", :blurb "Rotate image using exif orientation", :type {:kind :boolean, :label "boolean"}} {:name "unlimited", :blurb "Remove all denial of service limits", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
-   :heifsave              {:id :heifsave, :operation-name "heifsave", :description "save image in HEIF format", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "bitdepth", :blurb "Number of bits per pixel", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "compression", :blurb "Compression format", :type {:kind :enum, :label "keyword", :enum-id :foreign-heif-compression, :reference "ol.vips.enums/foreign-heif-compression"}} {:name "effort", :blurb "CPU effort", :type {:kind :integer, :label "integer"}} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :type {:kind :enum, :label "keyword", :enum-id :foreign-subsample, :reference "ol.vips.enums/foreign-subsample"}} {:name "speed", :blurb "CPU effort", :type {:kind :integer, :label "integer"}} {:name "encoder", :blurb "Select encoder to use", :type {:kind :enum, :label "keyword", :enum-id :foreign-heif-encoder, :reference "ol.vips.enums/foreign-heif-encoder"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :heifsave              {:id :heifsave, :operation-name "heifsave", :description "save image in HEIF format", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "bitdepth", :blurb "Number of bits per pixel", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "compression", :blurb "Compression format", :type {:kind :enum, :label "keyword", :enum-id :foreign-heif-compression, :reference "ol.vips.enums/foreign-heif-compression"}} {:name "effort", :blurb "CPU effort", :type {:kind :integer, :label "integer"}} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :type {:kind :enum, :label "keyword", :enum-id :foreign-subsample, :reference "ol.vips.enums/foreign-subsample"}} {:name "speed", :blurb "CPU effort", :type {:kind :integer, :label "integer"}} {:name "encoder", :blurb "Select encoder to use", :type {:kind :enum, :label "keyword", :enum-id :foreign-heif-encoder, :reference "ol.vips.enums/foreign-heif-encoder"}} {:name "tune", :blurb "Tuning parameters", :type {:kind :string, :label "string"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
    :hist-cum              {:id :hist-cum, :operation-name "hist_cum", :description "form cumulative histogram", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :hist-entropy          {:id :hist-entropy, :operation-name "hist_entropy", :description "estimate image entropy", :required-inputs [{:name "in", :blurb "Input histogram image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output value", :type {:kind :float, :label "float"}}]}
    :hist-equal            {:id :hist-equal, :operation-name "hist_equal", :description "histogram equalisation", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "band", :blurb "Equalise with this band", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
@@ -115,7 +115,7 @@
    :invertlut             {:id :invertlut, :operation-name "invertlut", :description "build an inverted look-up table", :required-inputs [{:name "in", :blurb "Matrix of XY coordinates", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "size", :blurb "LUT size to generate", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :join                  {:id :join, :operation-name "join", :description "join a pair of images", :required-inputs [{:name "in1", :blurb "First input image", :type {:kind :image, :label "image"}} {:name "in2", :blurb "Second input image", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Join left-right or up-down", :type {:kind :enum, :label "keyword", :enum-id :direction, :reference "ol.vips.enums/direction"}}], :optional-inputs [{:name "expand", :blurb "Expand output to hold all of both inputs", :type {:kind :boolean, :label "boolean"}} {:name "shim", :blurb "Pixels between images", :type {:kind :integer, :label "integer"}} {:name "background", :blurb "Colour for new pixels", :type {:kind :float-seq, :label "seqable of number"}} {:name "align", :blurb "Align on the low, centre or high coordinate edge", :type {:kind :enum, :label "keyword", :enum-id :align, :reference "ol.vips.enums/align"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :jpegload              {:id :jpegload, :operation-name "jpegload", :description "load jpeg from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "shrink", :blurb "Shrink factor on load", :type {:kind :integer, :label "integer"}} {:name "autorotate", :blurb "Rotate image using exif orientation", :type {:kind :boolean, :label "boolean"}} {:name "unlimited", :blurb "Remove all denial of service limits", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
-   :jpegsave              {:id :jpegsave, :operation-name "jpegsave", :description "save image to jpeg file", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "optimize-coding", :blurb "Compute optimal Huffman coding tables", :type {:kind :boolean, :label "boolean"}} {:name "interlace", :blurb "Generate an interlaced (progressive) jpeg", :type {:kind :boolean, :label "boolean"}} {:name "no-subsample", :blurb "Disable chroma subsample", :type {:kind :boolean, :label "boolean"}} {:name "trellis-quant", :blurb "Apply trellis quantisation to each 8x8 block", :type {:kind :boolean, :label "boolean"}} {:name "overshoot-deringing", :blurb "Apply overshooting to samples with extreme values", :type {:kind :boolean, :label "boolean"}} {:name "optimize-scans", :blurb "Split spectrum of DCT coefficients into separate scans", :type {:kind :boolean, :label "boolean"}} {:name "quant-table", :blurb "Use predefined quantization table with given index", :type {:kind :integer, :label "integer"}} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :type {:kind :enum, :label "keyword", :enum-id :foreign-subsample, :reference "ol.vips.enums/foreign-subsample"}} {:name "restart-interval", :blurb "Add restart markers every specified number of mcu", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :jpegsave              {:id :jpegsave, :operation-name "jpegsave", :description "save as jpeg", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "optimize-coding", :blurb "Compute optimal Huffman coding tables", :type {:kind :boolean, :label "boolean"}} {:name "interlace", :blurb "Generate an interlaced (progressive) jpeg", :type {:kind :boolean, :label "boolean"}} {:name "no-subsample", :blurb "Disable chroma subsample", :type {:kind :boolean, :label "boolean"}} {:name "trellis-quant", :blurb "Apply trellis quantisation to each 8x8 block", :type {:kind :boolean, :label "boolean"}} {:name "overshoot-deringing", :blurb "Apply overshooting to samples with extreme values", :type {:kind :boolean, :label "boolean"}} {:name "optimize-scans", :blurb "Split spectrum of DCT coefficients into separate scans", :type {:kind :boolean, :label "boolean"}} {:name "quant-table", :blurb "Use predefined quantization table with given index", :type {:kind :integer, :label "integer"}} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :type {:kind :enum, :label "keyword", :enum-id :foreign-subsample, :reference "ol.vips.enums/foreign-subsample"}} {:name "restart-interval", :blurb "Add restart markers every specified number of mcu", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
    :jpegsave-mime         {:id :jpegsave-mime, :operation-name "jpegsave_mime", :description "save image to jpeg mime", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "optimize-coding", :blurb "Compute optimal Huffman coding tables", :type {:kind :boolean, :label "boolean"}} {:name "interlace", :blurb "Generate an interlaced (progressive) jpeg", :type {:kind :boolean, :label "boolean"}} {:name "no-subsample", :blurb "Disable chroma subsample", :type {:kind :boolean, :label "boolean"}} {:name "trellis-quant", :blurb "Apply trellis quantisation to each 8x8 block", :type {:kind :boolean, :label "boolean"}} {:name "overshoot-deringing", :blurb "Apply overshooting to samples with extreme values", :type {:kind :boolean, :label "boolean"}} {:name "optimize-scans", :blurb "Split spectrum of DCT coefficients into separate scans", :type {:kind :boolean, :label "boolean"}} {:name "quant-table", :blurb "Use predefined quantization table with given index", :type {:kind :integer, :label "integer"}} {:name "subsample-mode", :blurb "Select chroma subsample operation mode", :type {:kind :enum, :label "keyword", :enum-id :foreign-subsample, :reference "ol.vips.enums/foreign-subsample"}} {:name "restart-interval", :blurb "Add restart markers every specified number of mcu", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
    :lab-q2-lab            {:id :lab-q2-lab, :operation-name "LabQ2Lab", :description "unpack a LabQ image to float Lab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :lab-q2-lab-s          {:id :lab-q2-lab-s, :operation-name "LabQ2LabS", :description "unpack a LabQ image to short Lab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
@@ -162,11 +162,14 @@
    :mosaic1               {:id :mosaic1, :operation-name "mosaic1", :description "first-order mosaic of two images", :required-inputs [{:name "ref", :blurb "Reference image", :type {:kind :image, :label "image"}} {:name "sec", :blurb "Secondary image", :type {:kind :image, :label "image"}} {:name "direction", :blurb "Horizontal or vertical mosaic", :type {:kind :enum, :label "keyword", :enum-id :direction, :reference "ol.vips.enums/direction"}} {:name "xr1", :blurb "Position of first reference tie-point", :type {:kind :integer, :label "integer"}} {:name "yr1", :blurb "Position of first reference tie-point", :type {:kind :integer, :label "integer"}} {:name "xs1", :blurb "Position of first secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "ys1", :blurb "Position of first secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "xr2", :blurb "Position of second reference tie-point", :type {:kind :integer, :label "integer"}} {:name "yr2", :blurb "Position of second reference tie-point", :type {:kind :integer, :label "integer"}} {:name "xs2", :blurb "Position of second secondary tie-point", :type {:kind :integer, :label "integer"}} {:name "ys2", :blurb "Position of second secondary tie-point", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "hwindow", :blurb "Half window size", :type {:kind :integer, :label "integer"}} {:name "harea", :blurb "Half area size", :type {:kind :integer, :label "integer"}} {:name "search", :blurb "Search to improve tie-points", :type {:kind :boolean, :label "boolean"}} {:name "mblend", :blurb "Maximum blend size", :type {:kind :integer, :label "integer"}} {:name "bandno", :blurb "Band to search for features on", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :msb                   {:id :msb, :operation-name "msb", :description "pick most-significant byte from an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "band", :blurb "Band to msb", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :multiply              {:id :multiply, :operation-name "multiply", :description "multiply two images", :required-inputs [{:name "left", :blurb "Left-hand image argument", :type {:kind :image, :label "image"}} {:name "right", :blurb "Right-hand image argument", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :oklab2-oklch          {:id :oklab2-oklch, :operation-name "Oklab2Oklch", :description "transform Oklab to Oklch", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :oklab2-xyz            {:id :oklab2-xyz, :operation-name "Oklab2XYZ", :description "transform Oklab to XYZ", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :oklch2-oklab          {:id :oklch2-oklab, :operation-name "Oklch2Oklab", :description "transform Oklch to Oklab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :percent               {:id :percent, :operation-name "percent", :description "find threshold for percent of pixels", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "percent", :blurb "Percent of pixels", :type {:kind :float, :label "float"}}], :optional-inputs [], :outputs [{:name "threshold", :blurb "Threshold above which lie percent of pixels", :type {:kind :integer, :label "integer"}}]}
    :perlin                {:id :perlin, :operation-name "perlin", :description "make a perlin noise image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "cell-size", :blurb "Size of Perlin cells", :type {:kind :integer, :label "integer"}} {:name "uchar", :blurb "Output an unsigned char image", :type {:kind :boolean, :label "boolean"}} {:name "seed", :blurb "Random number seed", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :phasecor              {:id :phasecor, :operation-name "phasecor", :description "calculate phase correlation", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}} {:name "in2", :blurb "Second input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :pngload               {:id :pngload, :operation-name "pngload", :description "load png from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "unlimited", :blurb "Remove all denial of service limits", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
-   :pngsave               {:id :pngsave, :operation-name "pngsave", :description "save image to file as PNG", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "compression", :blurb "Compression factor", :type {:kind :integer, :label "integer"}} {:name "interlace", :blurb "Interlace image", :type {:kind :boolean, :label "boolean"}} {:name "filter", :blurb "libspng row filter flag(s)", :type {:kind :flags, :label "integer flags"}} {:name "palette", :blurb "Quantise to 8bpp palette", :type {:kind :boolean, :label "boolean"}} {:name "colours", :blurb "Max number of palette colours", :type {:kind :integer, :label "integer"}} {:name "Q", :blurb "Quantisation quality", :type {:kind :integer, :label "integer"}} {:name "dither", :blurb "Amount of dithering", :type {:kind :float, :label "float"}} {:name "bitdepth", :blurb "Write as a 1, 2, 4, 8 or 16 bit image", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Quantisation CPU effort", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :pngsave               {:id :pngsave, :operation-name "pngsave", :description "save image to file as png", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "compression", :blurb "Compression factor", :type {:kind :integer, :label "integer"}} {:name "interlace", :blurb "Interlace image", :type {:kind :boolean, :label "boolean"}} {:name "filter", :blurb "libpng row filter flag(s)", :type {:kind :flags, :label "integer flags"}} {:name "palette", :blurb "Quantise to 8bpp palette", :type {:kind :boolean, :label "boolean"}} {:name "colours", :blurb "Max number of palette colours", :type {:kind :integer, :label "integer"}} {:name "Q", :blurb "Quantisation quality", :type {:kind :integer, :label "integer"}} {:name "dither", :blurb "Amount of dithering", :type {:kind :float, :label "float"}} {:name "bitdepth", :blurb "Write as a 1, 2, 4, 8 or 16 bit image", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Quantisation CPU effort", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
    :premultiply           {:id :premultiply, :operation-name "premultiply", :description "premultiply image alpha", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "max-alpha", :blurb "Maximum value of alpha channel", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :prewitt               {:id :prewitt, :operation-name "prewitt", :description "Prewitt edge detector", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :profile               {:id :profile, :operation-name "profile", :description "find image profiles", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "columns", :blurb "First non-zero pixel in column", :type {:kind :image, :label "image"}} {:name "rows", :blurb "First non-zero pixel in row", :type {:kind :image, :label "image"}}]}
@@ -218,7 +221,7 @@
    :sum                   {:id :sum, :operation-name "sum", :description "sum an array of images", :required-inputs [{:name "in", :blurb "Array of input images", :type {:kind :image-seq, :label "seqable of image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :svgload               {:id :svgload, :operation-name "svgload", :description "load SVG with rsvg", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "dpi", :blurb "Render at this DPI", :type {:kind :float, :label "float"}} {:name "scale", :blurb "Scale output by this factor", :type {:kind :float, :label "float"}} {:name "unlimited", :blurb "Allow SVG of any size", :type {:kind :boolean, :label "boolean"}} {:name "stylesheet", :blurb "Custom CSS", :type {:kind :string, :label "string"}} {:name "high-bitdepth", :blurb "Enable scRGB 128-bit output (32-bit per channel)", :type {:kind :boolean, :label "boolean"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
    :switch                {:id :switch, :operation-name "switch", :description "find the index of the first non-zero pixel in tests", :required-inputs [{:name "tests", :blurb "Table of images to test", :type {:kind :image-seq, :label "seqable of image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
-   :system                {:id :system, :operation-name "system", :description "run an external command", :required-inputs [{:name "cmd-format", :blurb "Command to run", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "in", :blurb "Array of input images", :type {:kind :image-seq, :label "seqable of image"}} {:name "out-format", :blurb "Format for output filename", :type {:kind :string, :label "string"}} {:name "in-format", :blurb "Format for input filename", :type {:kind :string, :label "string"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "log", :blurb "Command log", :type {:kind :string, :label "string"}}]}
+   :system                {:id :system, :operation-name "system", :description "run an external command", :required-inputs [{:name "cmd-format", :blurb "Command to run", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "in", :blurb "Array of input images", :type {:kind :image-seq, :label "seqable of image"}} {:name "in-format", :blurb "Format for input filename", :type {:kind :string, :label "string"}} {:name "out-format", :blurb "Format for output filename", :type {:kind :string, :label "string"}} {:name "cache", :blurb "Cache this call", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "log", :blurb "Command log", :type {:kind :string, :label "string"}}]}
    :text                  {:id :text, :operation-name "text", :description "make a text image", :required-inputs [{:name "text", :blurb "Text to render", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "font", :blurb "Font to render with", :type {:kind :string, :label "string"}} {:name "width", :blurb "Maximum image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Maximum image height in pixels", :type {:kind :integer, :label "integer"}} {:name "align", :blurb "Align on the low, centre or high edge", :type {:kind :enum, :label "keyword", :enum-id :align, :reference "ol.vips.enums/align"}} {:name "justify", :blurb "Justify lines", :type {:kind :boolean, :label "boolean"}} {:name "dpi", :blurb "DPI to render at", :type {:kind :integer, :label "integer"}} {:name "spacing", :blurb "Line spacing", :type {:kind :integer, :label "integer"}} {:name "fontfile", :blurb "Load this font file", :type {:kind :string, :label "string"}} {:name "rgba", :blurb "Enable RGBA output", :type {:kind :boolean, :label "boolean"}} {:name "wrap", :blurb "Wrap lines on word or character boundaries", :type {:kind :enum, :label "keyword", :enum-id :text-wrap, :reference "ol.vips.enums/text-wrap"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "autofit-dpi", :blurb "DPI selected by autofit", :type {:kind :integer, :label "integer"}}]}
    :thumbnail             {:id :thumbnail, :operation-name "thumbnail", :description "generate thumbnail from file", :required-inputs [{:name "filename", :blurb "Filename to read from", :type {:kind :string, :label "string"}} {:name "width", :blurb "Size to this width", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "height", :blurb "Size to this height", :type {:kind :integer, :label "integer"}} {:name "size", :blurb "Only upsize, only downsize, or both", :type {:kind :enum, :label "keyword", :enum-id :size, :reference "ol.vips.enums/size"}} {:name "no-rotate", :blurb "Don't use orientation tags to rotate image upright", :type {:kind :boolean, :label "boolean"}} {:name "crop", :blurb "Reduce to fill target rectangle, then crop", :type {:kind :enum, :label "keyword", :enum-id :interesting, :reference "ol.vips.enums/interesting"}} {:name "linear", :blurb "Reduce in linear light", :type {:kind :boolean, :label "boolean"}} {:name "input-profile", :blurb "Fallback input profile", :type {:kind :string, :label "string"}} {:name "output-profile", :blurb "Fallback output profile", :type {:kind :string, :label "string"}} {:name "intent", :blurb "Rendering intent", :type {:kind :enum, :label "keyword", :enum-id :intent, :reference "ol.vips.enums/intent"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "auto-rotate", :blurb "Use orientation tags to rotate image upright", :type {:kind :boolean, :label "boolean"}} {:name "import-profile", :blurb "Fallback import profile", :type {:kind :string, :label "string"}} {:name "export-profile", :blurb "Fallback export profile", :type {:kind :string, :label "string"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :thumbnail-image       {:id :thumbnail-image, :operation-name "thumbnail_image", :description "generate thumbnail from image", :required-inputs [{:name "in", :blurb "Input image argument", :type {:kind :image, :label "image"}} {:name "width", :blurb "Size to this width", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "height", :blurb "Size to this height", :type {:kind :integer, :label "integer"}} {:name "size", :blurb "Only upsize, only downsize, or both", :type {:kind :enum, :label "keyword", :enum-id :size, :reference "ol.vips.enums/size"}} {:name "no-rotate", :blurb "Don't use orientation tags to rotate image upright", :type {:kind :boolean, :label "boolean"}} {:name "crop", :blurb "Reduce to fill target rectangle, then crop", :type {:kind :enum, :label "keyword", :enum-id :interesting, :reference "ol.vips.enums/interesting"}} {:name "linear", :blurb "Reduce in linear light", :type {:kind :boolean, :label "boolean"}} {:name "input-profile", :blurb "Fallback input profile", :type {:kind :string, :label "string"}} {:name "output-profile", :blurb "Fallback output profile", :type {:kind :string, :label "string"}} {:name "intent", :blurb "Rendering intent", :type {:kind :enum, :label "keyword", :enum-id :intent, :reference "ol.vips.enums/intent"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "auto-rotate", :blurb "Use orientation tags to rotate image upright", :type {:kind :boolean, :label "boolean"}} {:name "import-profile", :blurb "Fallback import profile", :type {:kind :string, :label "string"}} {:name "export-profile", :blurb "Fallback export profile", :type {:kind :string, :label "string"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
@@ -227,17 +230,21 @@
    :tilecache             {:id :tilecache, :operation-name "tilecache", :description "cache an image as a set of tiles", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "tile-width", :blurb "Tile width in pixels", :type {:kind :integer, :label "integer"}} {:name "tile-height", :blurb "Tile height in pixels", :type {:kind :integer, :label "integer"}} {:name "max-tiles", :blurb "Maximum number of tiles to cache", :type {:kind :integer, :label "integer"}} {:name "access", :blurb "Expected access pattern", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "threaded", :blurb "Allow threaded access", :type {:kind :boolean, :label "boolean"}} {:name "persistent", :blurb "Keep cache between evaluations", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :tonelut               {:id :tonelut, :operation-name "tonelut", :description "build a look-up table", :required-inputs [], :optional-inputs [{:name "in-max", :blurb "Size of LUT to build", :type {:kind :integer, :label "integer"}} {:name "out-max", :blurb "Maximum value in output LUT", :type {:kind :integer, :label "integer"}} {:name "Lb", :blurb "Lowest value in output", :type {:kind :float, :label "float"}} {:name "Lw", :blurb "Highest value in output", :type {:kind :float, :label "float"}} {:name "Ps", :blurb "Position of shadow", :type {:kind :float, :label "float"}} {:name "Pm", :blurb "Position of mid-tones", :type {:kind :float, :label "float"}} {:name "Ph", :blurb "Position of highlights", :type {:kind :float, :label "float"}} {:name "S", :blurb "Adjust shadows by this much", :type {:kind :float, :label "float"}} {:name "M", :blurb "Adjust mid-tones by this much", :type {:kind :float, :label "float"}} {:name "H", :blurb "Adjust highlights by this much", :type {:kind :float, :label "float"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :transpose3d           {:id :transpose3d, :operation-name "transpose3d", :description "transpose3d an image", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "page-height", :blurb "Height of each input page", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :uhdr2sc-rgb           {:id :uhdr2sc-rgb, :operation-name "uhdr2scRGB", :description "transform uhdr to scRGB", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :uhdrload              {:id :uhdrload, :operation-name "uhdrload", :description "load a UHDR image", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "shrink", :blurb "Shrink factor on load", :type {:kind :integer, :label "integer"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
+   :uhdrsave              {:id :uhdrsave, :operation-name "uhdrsave", :description "save image in UltraHDR format", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "gainmap-scale-factor", :blurb "The scale factor of base image to gainmap image", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
    :unpremultiply         {:id :unpremultiply, :operation-name "unpremultiply", :description "unpremultiply image alpha", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "max-alpha", :blurb "Maximum value of alpha channel", :type {:kind :float, :label "float"}} {:name "alpha-band", :blurb "Unpremultiply with this alpha", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :vipsload              {:id :vipsload, :operation-name "vipsload", :description "load vips from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
    :vipssave              {:id :vipssave, :operation-name "vipssave", :description "save image to file in vips format", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
    :webpload              {:id :webpload, :operation-name "webpload", :description "load webp from file", :required-inputs [{:name "filename", :blurb "Filename to load from", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "page", :blurb "First page to load", :type {:kind :integer, :label "integer"}} {:name "n", :blurb "Number of pages to load, -1 for all", :type {:kind :integer, :label "integer"}} {:name "scale", :blurb "Factor to scale by", :type {:kind :float, :label "float"}} {:name "shrink", :blurb "Shrink factor on load", :type {:kind :integer, :label "integer"}} {:name "memory", :blurb "Force open via memory", :type {:kind :boolean, :label "boolean"}} {:name "access", :blurb "Required access pattern for this file", :type {:kind :enum, :label "keyword", :enum-id :access, :reference "ol.vips.enums/access"}} {:name "fail-on", :blurb "Error level to fail on", :type {:kind :enum, :label "keyword", :enum-id :fail-on, :reference "ol.vips.enums/fail-on"}} {:name "revalidate", :blurb "Don't use a cached result for this operation", :type {:kind :boolean, :label "boolean"}} {:name "sequential", :blurb "Sequential read only", :type {:kind :boolean, :label "boolean"}} {:name "fail", :blurb "Fail on first warning", :type {:kind :boolean, :label "boolean"}} {:name "disc", :blurb "Open to disc", :type {:kind :boolean, :label "boolean"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}} {:name "flags", :blurb "Flags for this file", :type {:kind :flags, :label "integer flags"}}]}
-   :webpsave              {:id :webpsave, :operation-name "webpsave", :description "save as WebP", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "preset", :blurb "Preset for lossy compression", :type {:kind :enum, :label "keyword", :enum-id :foreign-webp-preset, :reference "ol.vips.enums/foreign-webp-preset"}} {:name "smart-subsample", :blurb "Enable high quality chroma subsampling", :type {:kind :boolean, :label "boolean"}} {:name "near-lossless", :blurb "Enable preprocessing in lossless mode (uses Q)", :type {:kind :boolean, :label "boolean"}} {:name "alpha-q", :blurb "Change alpha plane fidelity for lossy compression", :type {:kind :integer, :label "integer"}} {:name "min-size", :blurb "Optimise for minimum size", :type {:kind :boolean, :label "boolean"}} {:name "kmin", :blurb "Minimum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "kmax", :blurb "Maximum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "target-size", :blurb "Desired target size in bytes", :type {:kind :integer, :label "integer"}} {:name "reduction-effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "mixed", :blurb "Allow mixed encoding (might reduce file size)", :type {:kind :boolean, :label "boolean"}} {:name "smart-deblock", :blurb "Enable auto-adjusting of the deblocking filter", :type {:kind :boolean, :label "boolean"}} {:name "passes", :blurb "Number of entropy-analysis passes (in [1..10])", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
-   :webpsave-mime         {:id :webpsave-mime, :operation-name "webpsave_mime", :description "save image to webp mime", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "preset", :blurb "Preset for lossy compression", :type {:kind :enum, :label "keyword", :enum-id :foreign-webp-preset, :reference "ol.vips.enums/foreign-webp-preset"}} {:name "smart-subsample", :blurb "Enable high quality chroma subsampling", :type {:kind :boolean, :label "boolean"}} {:name "near-lossless", :blurb "Enable preprocessing in lossless mode (uses Q)", :type {:kind :boolean, :label "boolean"}} {:name "alpha-q", :blurb "Change alpha plane fidelity for lossy compression", :type {:kind :integer, :label "integer"}} {:name "min-size", :blurb "Optimise for minimum size", :type {:kind :boolean, :label "boolean"}} {:name "kmin", :blurb "Minimum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "kmax", :blurb "Maximum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "target-size", :blurb "Desired target size in bytes", :type {:kind :integer, :label "integer"}} {:name "reduction-effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "mixed", :blurb "Allow mixed encoding (might reduce file size)", :type {:kind :boolean, :label "boolean"}} {:name "smart-deblock", :blurb "Enable auto-adjusting of the deblocking filter", :type {:kind :boolean, :label "boolean"}} {:name "passes", :blurb "Number of entropy-analysis passes (in [1..10])", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :webpsave              {:id :webpsave, :operation-name "webpsave", :description "save as WebP", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}} {:name "filename", :blurb "Filename to save to", :type {:kind :string, :label "string"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "exact", :blurb "Preserve color values from transparent pixels", :type {:kind :boolean, :label "boolean"}} {:name "preset", :blurb "Preset for lossy compression", :type {:kind :enum, :label "keyword", :enum-id :foreign-webp-preset, :reference "ol.vips.enums/foreign-webp-preset"}} {:name "smart-subsample", :blurb "Enable high quality chroma subsampling", :type {:kind :boolean, :label "boolean"}} {:name "near-lossless", :blurb "Enable preprocessing in lossless mode (uses Q)", :type {:kind :boolean, :label "boolean"}} {:name "alpha-q", :blurb "Change alpha plane fidelity for lossy compression", :type {:kind :integer, :label "integer"}} {:name "min-size", :blurb "Optimise for minimum size", :type {:kind :boolean, :label "boolean"}} {:name "kmin", :blurb "Minimum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "kmax", :blurb "Maximum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "target-size", :blurb "Desired target size in bytes", :type {:kind :integer, :label "integer"}} {:name "reduction-effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "mixed", :blurb "Allow mixed encoding (might reduce file size)", :type {:kind :boolean, :label "boolean"}} {:name "smart-deblock", :blurb "Enable auto-adjusting of the deblocking filter", :type {:kind :boolean, :label "boolean"}} {:name "passes", :blurb "Number of entropy-analysis passes (in [1..10])", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
+   :webpsave-mime         {:id :webpsave-mime, :operation-name "webpsave_mime", :description "save image to webp mime", :required-inputs [{:name "in", :blurb "Image to save", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "Q", :blurb "Q factor", :type {:kind :integer, :label "integer"}} {:name "lossless", :blurb "Enable lossless compression", :type {:kind :boolean, :label "boolean"}} {:name "exact", :blurb "Preserve color values from transparent pixels", :type {:kind :boolean, :label "boolean"}} {:name "preset", :blurb "Preset for lossy compression", :type {:kind :enum, :label "keyword", :enum-id :foreign-webp-preset, :reference "ol.vips.enums/foreign-webp-preset"}} {:name "smart-subsample", :blurb "Enable high quality chroma subsampling", :type {:kind :boolean, :label "boolean"}} {:name "near-lossless", :blurb "Enable preprocessing in lossless mode (uses Q)", :type {:kind :boolean, :label "boolean"}} {:name "alpha-q", :blurb "Change alpha plane fidelity for lossy compression", :type {:kind :integer, :label "integer"}} {:name "min-size", :blurb "Optimise for minimum size", :type {:kind :boolean, :label "boolean"}} {:name "kmin", :blurb "Minimum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "kmax", :blurb "Maximum number of frames between key frames", :type {:kind :integer, :label "integer"}} {:name "effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "target-size", :blurb "Desired target size in bytes", :type {:kind :integer, :label "integer"}} {:name "reduction-effort", :blurb "Level of CPU effort to reduce file size", :type {:kind :integer, :label "integer"}} {:name "mixed", :blurb "Allow mixed encoding (might reduce file size)", :type {:kind :boolean, :label "boolean"}} {:name "smart-deblock", :blurb "Enable auto-adjusting of the deblocking filter", :type {:kind :boolean, :label "boolean"}} {:name "passes", :blurb "Number of entropy-analysis passes (in [1..10])", :type {:kind :integer, :label "integer"}} {:name "keep", :blurb "Which metadata to retain", :type {:kind :flags, :label "integer flags"}} {:name "background", :blurb "Background value", :type {:kind :float-seq, :label "seqable of number"}} {:name "page-height", :blurb "Set page height for multipage save", :type {:kind :integer, :label "integer"}} {:name "profile", :blurb "Filename of ICC profile to embed", :type {:kind :string, :label "string"}} {:name "strip", :blurb "Strip all metadata from image", :type {:kind :boolean, :label "boolean"}}], :outputs []}
    :worley                {:id :worley, :operation-name "worley", :description "make a worley noise image", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "cell-size", :blurb "Size of Worley cells", :type {:kind :integer, :label "integer"}} {:name "seed", :blurb "Random number seed", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :wrap                  {:id :wrap, :operation-name "wrap", :description "wrap image origin", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "x", :blurb "Left edge of input in output", :type {:kind :integer, :label "integer"}} {:name "y", :blurb "Top edge of input in output", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :xyz                   {:id :xyz, :operation-name "xyz", :description "make an image where pixel values are coordinates", :required-inputs [{:name "width", :blurb "Image width in pixels", :type {:kind :integer, :label "integer"}} {:name "height", :blurb "Image height in pixels", :type {:kind :integer, :label "integer"}}], :optional-inputs [{:name "csize", :blurb "Size of third dimension", :type {:kind :integer, :label "integer"}} {:name "dsize", :blurb "Size of fourth dimension", :type {:kind :integer, :label "integer"}} {:name "esize", :blurb "Size of fifth dimension", :type {:kind :integer, :label "integer"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :xyz2-cmyk             {:id :xyz2-cmyk, :operation-name "XYZ2CMYK", :description "transform XYZ to CMYK", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :xyz2-lab              {:id :xyz2-lab, :operation-name "XYZ2Lab", :description "transform XYZ to Lab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [{:name "temp", :blurb "Colour temperature", :type {:kind :float-seq, :label "seqable of number"}}], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
+   :xyz2-oklab            {:id :xyz2-oklab, :operation-name "XYZ2Oklab", :description "transform XYZ to Oklab", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :xyz2-yxy              {:id :xyz2-yxy, :operation-name "XYZ2Yxy", :description "transform XYZ to Yxy", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :xyz2sc-rgb            {:id :xyz2sc-rgb, :operation-name "XYZ2scRGB", :description "transform XYZ to scRGB", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
    :yxy2-xyz              {:id :yxy2-xyz, :operation-name "Yxy2XYZ", :description "transform Yxy to XYZ", :required-inputs [{:name "in", :blurb "Input image", :type {:kind :image, :label "image"}}], :optional-inputs [], :outputs [{:name "out", :blurb "Output image", :type {:kind :image, :label "image"}}]}
@@ -246,17 +253,17 @@
 
 (defn abs
   "absolute value of an image
-  
+
   Operation name: `abs`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -264,18 +271,18 @@
 
 (defn add
   "add two images
-  
+
   Operation name: `add`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -283,17 +290,17 @@
 
 (defn addalpha
   "append an alpha channel
-  
+
   Operation name: `addalpha`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -301,15 +308,15 @@
 
 (defn affine
   "affine transform of an image
-  
+
   Operation name: `affine`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `matrix` -> `:matrix` (seqable of number): Transformation matrix
-  
+
   Optional inputs:
   - `odx` -> `:odx` (float): Horizontal output displacement
   - `ody` -> `:ody` (float): Vertical output displacement
@@ -318,7 +325,7 @@
   - `background` -> `:background` (seqable of number): Background value
   - `premultiplied` -> `:premultiplied` (boolean): Images have premultiplied alpha
   - `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input matrix] (affine input matrix {}))
@@ -327,14 +334,14 @@
 
 (defn arrayjoin
   "join an array of images
-  
+
   Operation name: `arrayjoin`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (seqable of image): Array of input images
-  
+
   Optional inputs:
   - `across` -> `:across` (integer): Number of images across grid
   - `shim` -> `:shim` (integer): Pixels between images
@@ -343,7 +350,7 @@
   - `valign` -> `:valign` (keyword, see `ol.vips.enums/align`): Align on the top, centre or bottom
   - `hspacing` -> `:hspacing` (integer): Horizontal spacing between images
   - `vspacing` -> `:vspacing` (integer): Vertical spacing between images
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (arrayjoin input {}))
@@ -352,17 +359,17 @@
 
 (defn autorot
   "autorotate image by exif tag
-  
+
   Operation name: `autorot`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Angle image was rotated by
@@ -372,17 +379,17 @@
 
 (defn avg
   "find image average
-  
+
   Operation name: `avg`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (float): Output value"
   [input]
@@ -390,18 +397,18 @@
 
 (defn bandbool
   "boolean operation across image bands
-  
+
   Operation name: `bandbool`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `boolean` -> `:boolean` (keyword, see `ol.vips.enums/operation-boolean`): Boolean to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input boolean]
@@ -409,17 +416,17 @@
 
 (defn bandfold
   "fold up x axis into bands
-  
+
   Operation name: `bandfold`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `factor` -> `:factor` (integer): Fold by this factor
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (bandfold input {}))
@@ -428,17 +435,17 @@
 
 (defn bandjoin
   "bandwise join a set of images
-  
+
   Operation name: `bandjoin`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (seqable of image): Array of input images
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -446,18 +453,18 @@
 
 (defn bandjoin-const
   "append a constant band to an image
-  
+
   Operation name: `bandjoin_const`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `c` -> `:c` (seqable of number): Array of constants to add
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input c]
@@ -465,17 +472,17 @@
 
 (defn bandmean
   "band-wise average
-  
+
   Operation name: `bandmean`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -483,17 +490,17 @@
 
 (defn bandrank
   "band-wise rank of a set of images
-  
+
   Operation name: `bandrank`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (seqable of image): Array of input images
-  
+
   Optional inputs:
   - `index` -> `:index` (integer): Select this band element from sorted list
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (bandrank input {}))
@@ -502,17 +509,17 @@
 
 (defn bandunfold
   "unfold image bands into x axis
-  
+
   Operation name: `bandunfold`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `factor` -> `:factor` (integer): Unfold by this factor
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (bandunfold input {}))
@@ -521,18 +528,18 @@
 
 (defn black
   "make a black image
-  
+
   Operation name: `black`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `bands` -> `:bands` (integer): Number of bands in image
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (black width height {}))
@@ -541,19 +548,19 @@
 
 (defn boolean
   "boolean operation on two images
-  
+
   Operation name: `boolean`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
   - `boolean` -> `:boolean` (keyword, see `ol.vips.enums/operation-boolean`): Boolean to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right boolean]
@@ -561,19 +568,19 @@
 
 (defn boolean-const
   "boolean operations against a constant
-  
+
   Operation name: `boolean_const`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `boolean` -> `:boolean` (keyword, see `ol.vips.enums/operation-boolean`): Boolean to perform
   - `c` -> `:c` (seqable of number): Array of constants
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input boolean c]
@@ -581,17 +588,17 @@
 
 (defn buildlut
   "build a look-up table
-  
+
   Operation name: `buildlut`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Matrix of XY coordinates
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -599,17 +606,17 @@
 
 (defn byteswap
   "byteswap an image
-  
+
   Operation name: `byteswap`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -617,19 +624,19 @@
 
 (defn cache
   "cache an image
-  
+
   Operation name: `cache`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `max-tiles` -> `:max-tiles` (integer): Maximum number of tiles to cache
   - `tile-height` -> `:tile-height` (integer): Tile height in pixels
   - `tile-width` -> `:tile-width` (integer): Tile width in pixels
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (cache input {}))
@@ -638,18 +645,18 @@
 
 (defn canny
   "Canny edge detector
-  
+
   Operation name: `canny`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `sigma` -> `:sigma` (float): Sigma of Gaussian
   - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (canny input {}))
@@ -658,18 +665,18 @@
 
 (defn case
   "use pixel values to pick cases from an array of images
-  
+
   Operation name: `case`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `index` -> `:index` (image): Index image
   - `cases` -> `:cases` (seqable of image): Array of case images
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [index cases]
@@ -677,18 +684,18 @@
 
 (defn cast
   "cast an image
-  
+
   Operation name: `cast`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `format` -> `:format` (keyword, see `ol.vips.enums/band-format`): Format to cast to
-  
+
   Optional inputs:
   - `shift` -> `:shift` (boolean): Shift integer values up and down
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input format] (cast input format {}))
@@ -697,18 +704,18 @@
 
 (defn clamp
   "clamp values of an image
-  
+
   Operation name: `clamp`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `min` -> `:min` (float): Minimum value
   - `max` -> `:max` (float): Maximum value
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (clamp input {}))
@@ -717,17 +724,17 @@
 
 (defn cmc2-lch
   "transform LCh to CMC
-  
+
   Operation name: `CMC2LCh`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -735,17 +742,17 @@
 
 (defn cmyk2-xyz
   "transform CMYK to XYZ
-  
+
   Operation name: `CMYK2XYZ`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -753,18 +760,18 @@
 
 (defn colourspace
   "convert to a new colorspace
-  
+
   Operation name: `colourspace`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `space` -> `:space` (keyword, see `ol.vips.enums/interpretation`): Destination color space
-  
+
   Optional inputs:
   - `source-space` -> `:source-space` (keyword, see `ol.vips.enums/interpretation`): Source color space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input space] (colourspace input space {}))
@@ -773,15 +780,15 @@
 
 (defn compass
   "convolve with rotating mask
-  
+
   Operation name: `compass`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `mask` -> `:mask` (image): Input matrix image
-  
+
   Optional inputs:
   - `times` -> `:times` (integer): Rotate and convolve this many times
   - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle45`): Rotate mask by this much between convolutions
@@ -789,7 +796,7 @@
   - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
   - `layers` -> `:layers` (integer): Use this many layers in approximation
   - `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input mask] (compass input mask {}))
@@ -798,18 +805,18 @@
 
 (defn complex
   "perform a complex operation on an image
-  
+
   Operation name: `complex`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `cmplx` -> `:cmplx` (keyword, see `ol.vips.enums/operation-complex`): Complex to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input cmplx]
@@ -817,19 +824,19 @@
 
 (defn complex2
   "complex binary operations on two images
-  
+
   Operation name: `complex2`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
   - `cmplx` -> `:cmplx` (keyword, see `ol.vips.enums/operation-complex2`): Binary complex operation to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right cmplx]
@@ -837,18 +844,18 @@
 
 (defn complexform
   "form a complex image from two real images
-  
+
   Operation name: `complexform`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -856,18 +863,18 @@
 
 (defn complexget
   "get a component from a complex image
-  
+
   Operation name: `complexget`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `get` -> `:get` (keyword, see `ol.vips.enums/operation-complexget`): Complex to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input get]
@@ -875,22 +882,22 @@
 
 (defn composite2
   "blend a pair of images with a blend mode
-  
+
   Operation name: `composite2`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `base` -> `:base` (image): Base image
   - `overlay` -> `:overlay` (image): Overlay image
   - `mode` -> `:mode` (keyword, see `ol.vips.enums/blend-mode`): VipsBlendMode to join with
-  
+
   Optional inputs:
   - `x` -> `:x` (integer): x position of overlay
   - `y` -> `:y` (integer): y position of overlay
   - `compositing-space` -> `:compositing-space` (keyword, see `ol.vips.enums/interpretation`): Composite images in this colour space
   - `premultiplied` -> `:premultiplied` (boolean): Images have premultiplied alpha
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([base overlay mode] (composite2 base overlay mode {}))
@@ -899,20 +906,20 @@
 
 (defn conv
   "convolution operation
-  
+
   Operation name: `conv`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `mask` -> `:mask` (image): Input matrix image
-  
+
   Optional inputs:
   - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
   - `layers` -> `:layers` (integer): Use this many layers in approximation
   - `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input mask] (conv input mask {}))
@@ -921,19 +928,19 @@
 
 (defn conva
   "approximate integer convolution
-  
+
   Operation name: `conva`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `mask` -> `:mask` (image): Input matrix image
-  
+
   Optional inputs:
   - `layers` -> `:layers` (integer): Use this many layers in approximation
   - `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input mask] (conva input mask {}))
@@ -942,18 +949,18 @@
 
 (defn convasep
   "approximate separable integer convolution
-  
+
   Operation name: `convasep`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `mask` -> `:mask` (image): Input matrix image
-  
+
   Optional inputs:
   - `layers` -> `:layers` (integer): Use this many layers in approximation
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input mask] (convasep input mask {}))
@@ -962,18 +969,18 @@
 
 (defn convf
   "float convolution operation
-  
+
   Operation name: `convf`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `mask` -> `:mask` (image): Input matrix image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input mask]
@@ -981,18 +988,18 @@
 
 (defn convi
   "int convolution operation
-  
+
   Operation name: `convi`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `mask` -> `:mask` (image): Input matrix image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input mask]
@@ -1000,20 +1007,20 @@
 
 (defn convsep
   "separable convolution operation
-  
+
   Operation name: `convsep`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `mask` -> `:mask` (image): Input matrix image
-  
+
   Optional inputs:
   - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
   - `layers` -> `:layers` (integer): Use this many layers in approximation
   - `cluster` -> `:cluster` (integer): Cluster lines closer than this in approximation
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input mask] (convsep input mask {}))
@@ -1022,14 +1029,14 @@
 
 (defn copy
   "copy an image
-  
+
   Operation name: `copy`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `swap` -> `:swap` (boolean): Swap bytes in image between little and big-endian
   - `width` -> `:width` (integer): Image width in pixels
@@ -1042,7 +1049,7 @@
   - `yres` -> `:yres` (float): Vertical resolution in pixels/mm
   - `xoffset` -> `:xoffset` (integer): Horizontal offset of origin
   - `yoffset` -> `:yoffset` (integer): Vertical offset of origin
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (copy input {}))
@@ -1051,18 +1058,18 @@
 
 (defn countlines
   "count lines in an image
-  
+
   Operation name: `countlines`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Countlines left-right or up-down
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `nolines` -> `:nolines` (float): Number of lines"
   [input direction]
@@ -1070,14 +1077,14 @@
 
 (defn csvload
   "load csv
-  
+
   Operation name: `csvload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `skip` -> `:skip` (integer): Skip this many lines at the start of the file
   - `lines` -> `:lines` (integer): Read this many lines from the file
@@ -1090,7 +1097,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -1100,15 +1107,15 @@
 
 (defn csvsave
   "save image to csv
-  
+
   Operation name: `csvsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `separator` -> `:separator` (string): Separator characters
   - `keep` -> `:keep` (integer flags): Which metadata to retain
@@ -1116,7 +1123,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (csvsave input filename {}))
@@ -1125,18 +1132,18 @@
 
 (defn d-e00
   "calculate dE00
-  
+
   Operation name: `dE00`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand input image
   - `right` -> `:right` (image): Right-hand input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -1144,18 +1151,18 @@
 
 (defn d-e76
   "calculate dE76
-  
+
   Operation name: `dE76`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand input image
   - `right` -> `:right` (image): Right-hand input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -1163,18 +1170,18 @@
 
 (defn d-ecmc
   "calculate dECMC
-  
+
   Operation name: `dECMC`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand input image
   - `right` -> `:right` (image): Right-hand input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -1182,17 +1189,17 @@
 
 (defn deviate
   "find image standard deviation
-  
+
   Operation name: `deviate`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (float): Output value"
   [input]
@@ -1200,18 +1207,18 @@
 
 (defn divide
   "divide two images
-  
+
   Operation name: `divide`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -1219,21 +1226,21 @@
 
 (defn draw-circle
   "draw a circle on an image
-  
+
   Operation name: `draw_circle`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
   - `ink` -> `:ink` (seqable of number): Color for pixels
   - `cx` -> `:cx` (integer): Centre of draw_circle
   - `cy` -> `:cy` (integer): Centre of draw_circle
   - `radius` -> `:radius` (integer): Radius in pixels
-  
+
   Optional inputs:
   - `fill` -> `:fill` (boolean): Draw a solid object
-  
+
   Outputs:
   - none"
   ([image ink cx cy radius] (draw-circle image ink cx cy radius {}))
@@ -1242,21 +1249,21 @@
 
 (defn draw-flood
   "flood-fill an area
-  
+
   Operation name: `draw_flood`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
   - `ink` -> `:ink` (seqable of number): Color for pixels
   - `x` -> `:x` (integer): DrawFlood start point
   - `y` -> `:y` (integer): DrawFlood start point
-  
+
   Optional inputs:
   - `test` -> `:test` (image): Test pixels in this image
   - `equal` -> `:equal` (boolean): DrawFlood while equal to edge
-  
+
   Outputs:
   - `left` -> `:left` (integer): Left edge of modified area
   - `top` -> `:top` (integer): Top edge of modified area
@@ -1268,20 +1275,20 @@
 
 (defn draw-image
   "paint an image into another image
-  
+
   Operation name: `draw_image`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
   - `sub` -> `:sub` (image): Sub-image to insert into main image
   - `x` -> `:x` (integer): Draw image here
   - `y` -> `:y` (integer): Draw image here
-  
+
   Optional inputs:
   - `mode` -> `:mode` (keyword, see `ol.vips.enums/combine-mode`): Combining mode
-  
+
   Outputs:
   - none"
   ([image sub x y] (draw-image image sub x y {}))
@@ -1290,11 +1297,11 @@
 
 (defn draw-line
   "draw a line on an image
-  
+
   Operation name: `draw_line`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
   - `ink` -> `:ink` (seqable of number): Color for pixels
@@ -1302,10 +1309,10 @@
   - `y1` -> `:y1` (integer): Start of draw_line
   - `x2` -> `:x2` (integer): End of draw_line
   - `y2` -> `:y2` (integer): End of draw_line
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - none"
   [image ink x1 y1 x2 y2]
@@ -1313,21 +1320,21 @@
 
 (defn draw-mask
   "draw a mask on an image
-  
+
   Operation name: `draw_mask`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
   - `ink` -> `:ink` (seqable of number): Color for pixels
   - `mask` -> `:mask` (image): Mask of pixels to draw
   - `x` -> `:x` (integer): Draw mask here
   - `y` -> `:y` (integer): Draw mask here
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - none"
   [image ink mask x y]
@@ -1335,11 +1342,11 @@
 
 (defn draw-rect
   "paint a rectangle on an image
-  
+
   Operation name: `draw_rect`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
   - `ink` -> `:ink` (seqable of number): Color for pixels
@@ -1347,10 +1354,10 @@
   - `top` -> `:top` (integer): Rect to fill
   - `width` -> `:width` (integer): Rect to fill
   - `height` -> `:height` (integer): Rect to fill
-  
+
   Optional inputs:
   - `fill` -> `:fill` (boolean): Draw a solid object
-  
+
   Outputs:
   - none"
   ([image ink left top width height] (draw-rect image ink left top width height {}))
@@ -1359,21 +1366,21 @@
 
 (defn draw-smudge
   "blur a rectangle on an image
-  
+
   Operation name: `draw_smudge`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `image` -> `:image` (image): Image to draw on
   - `left` -> `:left` (integer): Rect to fill
   - `top` -> `:top` (integer): Rect to fill
   - `width` -> `:width` (integer): Rect to fill
   - `height` -> `:height` (integer): Rect to fill
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - none"
   [image left top width height]
@@ -1381,15 +1388,15 @@
 
 (defn dzsave
   "save image to deepzoom file
-  
+
   Operation name: `dzsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `dirname` -> `:dirname` (string): Directory name to save to
   - `imagename` -> `:imagename` (string): Image name
@@ -1416,7 +1423,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (dzsave input filename {}))
@@ -1425,22 +1432,22 @@
 
 (defn embed
   "embed an image in a larger image
-  
+
   Operation name: `embed`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `x` -> `:x` (integer): Left edge of input in output
   - `y` -> `:y` (integer): Top edge of input in output
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
   - `background` -> `:background` (seqable of number): Color for background pixels
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input x y width height] (embed input x y width height {}))
@@ -1449,21 +1456,21 @@
 
 (defn extract-area
   "extract an area from an image
-  
+
   Operation name: `extract_area`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:input` (image): Input image
   - `left` -> `:left` (integer): Left edge of extract area
   - `top` -> `:top` (integer): Top edge of extract area
   - `width` -> `:width` (integer): Width of extract area
   - `height` -> `:height` (integer): Height of extract area
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input left top width height]
@@ -1471,18 +1478,18 @@
 
 (defn extract-band
   "extract band from an image
-  
+
   Operation name: `extract_band`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `band` -> `:band` (integer): Band to extract
-  
+
   Optional inputs:
   - `n` -> `:n` (integer): Number of bands to extract
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input band] (extract-band input band {}))
@@ -1491,19 +1498,19 @@
 
 (defn eye
   "make an image showing the eye's spatial response
-  
+
   Operation name: `eye`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `factor` -> `:factor` (float): Maximum spatial frequency
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (eye width height {}))
@@ -1512,17 +1519,17 @@
 
 (defn falsecolour
   "false-color an image
-  
+
   Operation name: `falsecolour`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -1530,18 +1537,18 @@
 
 (defn fastcor
   "fast correlation
-  
+
   Operation name: `fastcor`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `ref` -> `:ref` (image): Input reference image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input ref]
@@ -1549,17 +1556,17 @@
 
 (defn fill-nearest
   "fill image zeros with nearest non-zero pixel
-  
+
   Operation name: `fill_nearest`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Value of nearest non-zero pixel
   - `distance` -> `:distance` (image): Distance to nearest non-zero pixel"
@@ -1568,19 +1575,19 @@
 
 (defn find-trim
   "search an image for non-edge areas
-  
+
   Operation name: `find_trim`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to find_trim
-  
+
   Optional inputs:
   - `threshold` -> `:threshold` (float): Object threshold
   - `background` -> `:background` (seqable of number): Color for background pixels
   - `line-art` -> `:line-art` (boolean): Enable line art mode
-  
+
   Outputs:
   - `left` -> `:left` (integer): Left edge of image
   - `top` -> `:top` (integer): Top edge of extract area
@@ -1592,18 +1599,18 @@
 
 (defn flatten
   "flatten alpha out of an image
-  
+
   Operation name: `flatten`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `background` -> `:background` (seqable of number): Background value
   - `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (flatten input {}))
@@ -1612,18 +1619,18 @@
 
 (defn flip
   "flip an image
-  
+
   Operation name: `flip`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Direction to flip image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input direction]
@@ -1631,17 +1638,17 @@
 
 (defn float2rad
   "transform float RGB to Radiance coding
-  
+
   Operation name: `float2rad`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -1649,19 +1656,19 @@
 
 (defn fractsurf
   "make a fractal surface
-  
+
   Operation name: `fractsurf`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `fractal-dimension` -> `:fractal-dimension` (float): Fractal dimension
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [width height fractal-dimension]
@@ -1669,18 +1676,18 @@
 
 (defn freqmult
   "frequency-domain filtering
-  
+
   Operation name: `freqmult`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `mask` -> `:mask` (image): Input mask image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input mask]
@@ -1688,17 +1695,17 @@
 
 (defn gamma
   "gamma an image
-  
+
   Operation name: `gamma`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `exponent` -> `:exponent` (float): Gamma factor
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (gamma input {}))
@@ -1707,19 +1714,19 @@
 
 (defn gaussblur
   "gaussian blur
-  
+
   Operation name: `gaussblur`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `sigma` -> `:sigma` (float): Sigma of Gaussian
-  
+
   Optional inputs:
   - `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
   - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Convolve with this precision
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input sigma] (gaussblur input sigma {}))
@@ -1728,20 +1735,20 @@
 
 (defn gaussmat
   "make a gaussian image
-  
+
   Operation name: `gaussmat`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `sigma` -> `:sigma` (float): Sigma of Gaussian
   - `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
-  
+
   Optional inputs:
   - `separable` -> `:separable` (boolean): Generate separable Gaussian
   - `integer` -> `:integer` (boolean): Generate integer Gaussian
   - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Generate with this precision
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([sigma min-ampl] (gaussmat sigma min-ampl {}))
@@ -1750,20 +1757,20 @@
 
 (defn gaussnoise
   "make a gaussnoise image
-  
+
   Operation name: `gaussnoise`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `sigma` -> `:sigma` (float): Standard deviation of pixels in generated image
   - `mean` -> `:mean` (float): Mean of pixels in generated image
   - `seed` -> `:seed` (integer): Random number seed
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (gaussnoise width height {}))
@@ -1772,14 +1779,14 @@
 
 (defn gifload
   "load GIF with libnsgif
-  
+
   Operation name: `gifload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `n` -> `:n` (integer): Number of pages to load, -1 for all
   - `page` -> `:page` (integer): First page to load
@@ -1790,7 +1797,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -1800,15 +1807,15 @@
 
 (defn gifsave
   "save as gif
-  
+
   Operation name: `gifsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `dither` -> `:dither` (float): Amount of dithering
   - `effort` -> `:effort` (integer): Quantisation effort
@@ -1824,7 +1831,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (gifsave input filename {}))
@@ -1833,18 +1840,18 @@
 
 (defn globalbalance
   "global balance an image mosaic
-  
+
   Operation name: `globalbalance`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `gamma` -> `:gamma` (float): Image gamma
   - `int-output` -> `:int-output` (boolean): Integer output
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (globalbalance input {}))
@@ -1853,21 +1860,21 @@
 
 (defn gravity
   "place an image within a larger image with a certain gravity
-  
+
   Operation name: `gravity`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `direction` -> `:direction` (keyword, see `ol.vips.enums/compass-direction`): Direction to place image within width/height
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
   - `background` -> `:background` (seqable of number): Color for background pixels
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input direction width height] (gravity input direction width height {}))
@@ -1876,18 +1883,18 @@
 
 (defn grey
   "make a grey ramp image
-  
+
   Operation name: `grey`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (grey width height {}))
@@ -1896,20 +1903,20 @@
 
 (defn grid
   "grid an image
-  
+
   Operation name: `grid`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `tile-height` -> `:tile-height` (integer): Chop into tiles this high
   - `across` -> `:across` (integer): Number of tiles across
   - `down` -> `:down` (integer): Number of tiles down
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input tile-height across down]
@@ -1917,14 +1924,14 @@
 
 (defn heifload
   "load a HEIF image
-  
+
   Operation name: `heifload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `page` -> `:page` (integer): First page to load
   - `n` -> `:n` (integer): Number of pages to load, -1 for all
@@ -1938,7 +1945,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -1948,15 +1955,15 @@
 
 (defn heifsave
   "save image in HEIF format
-  
+
   Operation name: `heifsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `q` -> `:Q` (integer): Q factor
   - `bitdepth` -> `:bitdepth` (integer): Number of bits per pixel
@@ -1966,12 +1973,13 @@
   - `subsample-mode` -> `:subsample-mode` (keyword, see `ol.vips.enums/foreign-subsample`): Select chroma subsample operation mode
   - `speed` -> `:speed` (integer): CPU effort
   - `encoder` -> `:encoder` (keyword, see `ol.vips.enums/foreign-heif-encoder`): Select encoder to use
+  - `tune` -> `:tune` (string): Tuning parameters
   - `keep` -> `:keep` (integer flags): Which metadata to retain
   - `background` -> `:background` (seqable of number): Background value
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (heifsave input filename {}))
@@ -1980,17 +1988,17 @@
 
 (defn hist-cum
   "form cumulative histogram
-  
+
   Operation name: `hist_cum`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -1998,17 +2006,17 @@
 
 (defn hist-entropy
   "estimate image entropy
-  
+
   Operation name: `hist_entropy`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input histogram image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (float): Output value"
   [input]
@@ -2016,17 +2024,17 @@
 
 (defn hist-equal
   "histogram equalisation
-  
+
   Operation name: `hist_equal`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `band` -> `:band` (integer): Equalise with this band
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (hist-equal input {}))
@@ -2035,17 +2043,17 @@
 
 (defn hist-find
   "find image histogram
-  
+
   Operation name: `hist_find`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `band` -> `:band` (integer): Find histogram of band
-  
+
   Outputs:
   - `out` -> `:out` (image): Output histogram"
   ([input] (hist-find input {}))
@@ -2054,18 +2062,18 @@
 
 (defn hist-find-indexed
   "find indexed image histogram
-  
+
   Operation name: `hist_find_indexed`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `index` -> `:index` (image): Index image
-  
+
   Optional inputs:
   - `combine` -> `:combine` (keyword, see `ol.vips.enums/combine`): Combine bins like this
-  
+
   Outputs:
   - `out` -> `:out` (image): Output histogram"
   ([input index] (hist-find-indexed input index {}))
@@ -2074,17 +2082,17 @@
 
 (defn hist-find-ndim
   "find n-dimensional image histogram
-  
+
   Operation name: `hist_find_ndim`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `bins` -> `:bins` (integer): Number of bins in each dimension
-  
+
   Outputs:
   - `out` -> `:out` (image): Output histogram"
   ([input] (hist-find-ndim input {}))
@@ -2093,17 +2101,17 @@
 
 (defn hist-ismonotonic
   "test for monotonicity
-  
+
   Operation name: `hist_ismonotonic`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input histogram image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `monotonic` -> `:monotonic` (boolean): true if in is monotonic"
   [input]
@@ -2111,19 +2119,19 @@
 
 (defn hist-local
   "local histogram equalisation
-  
+
   Operation name: `hist_local`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `width` -> `:width` (integer): Window width in pixels
   - `height` -> `:height` (integer): Window height in pixels
-  
+
   Optional inputs:
   - `max-slope` -> `:max-slope` (integer): Maximum slope (CLAHE)
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input width height] (hist-local input width height {}))
@@ -2132,18 +2140,18 @@
 
 (defn hist-match
   "match two histograms
-  
+
   Operation name: `hist_match`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input histogram
   - `ref` -> `:ref` (image): Reference histogram
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input ref]
@@ -2151,17 +2159,17 @@
 
 (defn hist-norm
   "normalise histogram
-  
+
   Operation name: `hist_norm`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2169,17 +2177,17 @@
 
 (defn hist-plot
   "plot histogram
-  
+
   Operation name: `hist_plot`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2187,19 +2195,19 @@
 
 (defn hough-circle
   "find hough circle transform
-  
+
   Operation name: `hough_circle`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `scale` -> `:scale` (integer): Scale down dimensions by this factor
   - `min-radius` -> `:min-radius` (integer): Smallest radius to search for
   - `max-radius` -> `:max-radius` (integer): Largest radius to search for
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (hough-circle input {}))
@@ -2208,18 +2216,18 @@
 
 (defn hough-line
   "find hough line transform
-  
+
   Operation name: `hough_line`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `width` -> `:width` (integer): Horizontal size of parameter space
   - `height` -> `:height` (integer): Vertical size of parameter space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (hough-line input {}))
@@ -2228,17 +2236,17 @@
 
 (defn hsv2s-rgb
   "transform HSV to sRGB
-  
+
   Operation name: `HSV2sRGB`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2246,21 +2254,21 @@
 
 (defn icc-export
   "output to device with ICC profile
-  
+
   Operation name: `icc_export`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
   - `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
   - `black-point-compensation` -> `:black-point-compensation` (boolean): Enable black point compensation
   - `output-profile` -> `:output-profile` (string): Filename to load output profile from
   - `depth` -> `:depth` (integer): Output device space depth in bits
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (icc-export input {}))
@@ -2269,21 +2277,21 @@
 
 (defn icc-import
   "import from device with ICC profile
-  
+
   Operation name: `icc_import`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
   - `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
   - `black-point-compensation` -> `:black-point-compensation` (boolean): Enable black point compensation
   - `embedded` -> `:embedded` (boolean): Use embedded input profile, if available
   - `input-profile` -> `:input-profile` (string): Filename to load input profile from
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (icc-import input {}))
@@ -2292,15 +2300,15 @@
 
 (defn icc-transform
   "transform between devices with ICC profiles
-  
+
   Operation name: `icc_transform`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `output-profile` -> `:output-profile` (string): Filename to load output profile from
-  
+
   Optional inputs:
   - `pcs` -> `:pcs` (keyword, see `ol.vips.enums/pcs`): Set Profile Connection Space
   - `intent` -> `:intent` (keyword, see `ol.vips.enums/intent`): Rendering intent
@@ -2308,7 +2316,7 @@
   - `embedded` -> `:embedded` (boolean): Use embedded input profile, if available
   - `input-profile` -> `:input-profile` (string): Filename to load input profile from
   - `depth` -> `:depth` (integer): Output device space depth in bits
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input output-profile] (icc-transform input output-profile {}))
@@ -2317,19 +2325,19 @@
 
 (defn identity
   "make a 1D image where pixel values are indexes
-  
+
   Operation name: `identity`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - none
-  
+
   Optional inputs:
   - `bands` -> `:bands` (integer): Number of bands in LUT
   - `ushort` -> `:ushort` (boolean): Create a 16-bit LUT
   - `size` -> `:size` (integer): Size of 16-bit LUT
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([] (identity {}))
@@ -2338,19 +2346,19 @@
 
 (defn ifthenelse
   "ifthenelse an image
-  
+
   Operation name: `ifthenelse`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `cond` -> `:cond` (image): Condition input image
   - `in1` -> `:in1` (image): Source for TRUE pixels
   - `in2` -> `:in2` (image): Source for FALSE pixels
-  
+
   Optional inputs:
   - `blend` -> `:blend` (boolean): Blend smoothly between then and else parts
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([cond in1 in2] (ifthenelse cond in1 in2 {}))
@@ -2359,21 +2367,21 @@
 
 (defn insert
   "insert image @sub into @main at @x, @y
-  
+
   Operation name: `insert`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `main` -> `:main` (image): Main input image
   - `sub` -> `:sub` (image): Sub-image to insert into main image
   - `x` -> `:x` (integer): Left edge of sub in main
   - `y` -> `:y` (integer): Top edge of sub in main
-  
+
   Optional inputs:
   - `expand` -> `:expand` (boolean): Expand output to hold all of both inputs
   - `background` -> `:background` (seqable of number): Color for new pixels
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([main sub x y] (insert main sub x y {}))
@@ -2382,17 +2390,17 @@
 
 (defn invert
   "invert an image
-  
+
   Operation name: `invert`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2400,17 +2408,17 @@
 
 (defn invertlut
   "build an inverted look-up table
-  
+
   Operation name: `invertlut`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Matrix of XY coordinates
-  
+
   Optional inputs:
   - `size` -> `:size` (integer): LUT size to generate
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (invertlut input {}))
@@ -2419,22 +2427,22 @@
 
 (defn join
   "join a pair of images
-  
+
   Operation name: `join`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `in1` -> `:in1` (image): First input image
   - `in2` -> `:in2` (image): Second input image
   - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Join left-right or up-down
-  
+
   Optional inputs:
   - `expand` -> `:expand` (boolean): Expand output to hold all of both inputs
   - `shim` -> `:shim` (integer): Pixels between images
   - `background` -> `:background` (seqable of number): Colour for new pixels
   - `align` -> `:align` (keyword, see `ol.vips.enums/align`): Align on the low, centre or high coordinate edge
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([in1 in2 direction] (join in1 in2 direction {}))
@@ -2443,14 +2451,14 @@
 
 (defn jpegload
   "load jpeg from file
-  
+
   Operation name: `jpegload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `shrink` -> `:shrink` (integer): Shrink factor on load
   - `autorotate` -> `:autorotate` (boolean): Rotate image using exif orientation
@@ -2462,7 +2470,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -2471,16 +2479,16 @@
    (v/call "jpegload" (clojure.core/merge {:filename filename} opts))))
 
 (defn jpegsave
-  "save image to jpeg file
-  
+  "save as jpeg
+
   Operation name: `jpegsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `q` -> `:Q` (integer): Q factor
   - `optimize-coding` -> `:optimize-coding` (boolean): Compute optimal Huffman coding tables
@@ -2497,7 +2505,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (jpegsave input filename {}))
@@ -2506,14 +2514,14 @@
 
 (defn jpegsave-mime
   "save image to jpeg mime
-  
+
   Operation name: `jpegsave_mime`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
-  
+
   Optional inputs:
   - `q` -> `:Q` (integer): Q factor
   - `optimize-coding` -> `:optimize-coding` (boolean): Compute optimal Huffman coding tables
@@ -2530,7 +2538,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input] (jpegsave-mime input {}))
@@ -2539,17 +2547,17 @@
 
 (defn lab-q2-lab
   "unpack a LabQ image to float Lab
-  
+
   Operation name: `LabQ2Lab`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2557,17 +2565,17 @@
 
 (defn lab-q2-lab-s
   "unpack a LabQ image to short Lab
-  
+
   Operation name: `LabQ2LabS`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2575,17 +2583,17 @@
 
 (defn lab-q2s-rgb
   "convert a LabQ image to sRGB
-  
+
   Operation name: `LabQ2sRGB`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2593,17 +2601,17 @@
 
 (defn lab-s2-lab
   "transform signed short Lab to float
-  
+
   Operation name: `LabS2Lab`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2611,17 +2619,17 @@
 
 (defn lab-s2-lab-q
   "transform short Lab to LabQ coding
-  
+
   Operation name: `LabS2LabQ`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2629,17 +2637,17 @@
 
 (defn lab2-lab-q
   "transform float Lab to LabQ coding
-  
+
   Operation name: `Lab2LabQ`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2647,17 +2655,17 @@
 
 (defn lab2-lab-s
   "transform float Lab to signed short
-  
+
   Operation name: `Lab2LabS`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2665,17 +2673,17 @@
 
 (defn lab2-lch
   "transform Lab to LCh
-  
+
   Operation name: `Lab2LCh`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2683,17 +2691,17 @@
 
 (defn lab2-xyz
   "transform CIELAB to XYZ
-  
+
   Operation name: `Lab2XYZ`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `temp` -> `:temp` (seqable of number): Color temperature
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (lab2-xyz input {}))
@@ -2702,17 +2710,17 @@
 
 (defn labelregions
   "label regions in an image
-  
+
   Operation name: `labelregions`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `mask` -> `:mask` (image): Mask of region labels
   - `segments` -> `:segments` (integer): Number of discrete contiguous regions"
@@ -2721,17 +2729,17 @@
 
 (defn lch2-cmc
   "transform LCh to CMC
-  
+
   Operation name: `LCh2CMC`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2739,17 +2747,17 @@
 
 (defn lch2-lab
   "transform LCh to Lab
-  
+
   Operation name: `LCh2Lab`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -2757,19 +2765,19 @@
 
 (defn linear
   "calculate (a * in + b)
-  
+
   Operation name: `linear`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `a` -> `:a` (seqable of number): Multiply by this
   - `b` -> `:b` (seqable of number): Add this
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output should be uchar
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input a b] (linear input a b {}))
@@ -2778,20 +2786,20 @@
 
 (defn linecache
   "cache an image as a set of lines
-  
+
   Operation name: `linecache`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `tile-height` -> `:tile-height` (integer): Tile height in pixels
   - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
   - `threaded` -> `:threaded` (boolean): Allow threaded access
   - `persistent` -> `:persistent` (boolean): Keep cache between evaluations
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (linecache input {}))
@@ -2800,20 +2808,20 @@
 
 (defn logmat
   "make a Laplacian of Gaussian image
-  
+
   Operation name: `logmat`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `sigma` -> `:sigma` (float): Radius of Gaussian
   - `min-ampl` -> `:min-ampl` (float): Minimum amplitude of Gaussian
-  
+
   Optional inputs:
   - `separable` -> `:separable` (boolean): Generate separable Gaussian
   - `integer` -> `:integer` (boolean): Generate integer Gaussian
   - `precision` -> `:precision` (keyword, see `ol.vips.enums/precision`): Generate with this precision
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([sigma min-ampl] (logmat sigma min-ampl {}))
@@ -2822,20 +2830,20 @@
 
 (defn mapim
   "resample with a map image
-  
+
   Operation name: `mapim`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `index` -> `:index` (image): Index pixels with this
-  
+
   Optional inputs:
   - `background` -> `:background` (seqable of number): Background value
   - `premultiplied` -> `:premultiplied` (boolean): Images have premultiplied alpha
   - `extend` -> `:extend` (keyword, see `ol.vips.enums/extend`): How to generate the extra pixels
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input index] (mapim input index {}))
@@ -2844,18 +2852,18 @@
 
 (defn maplut
   "map an image though a lut
-  
+
   Operation name: `maplut`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `lut` -> `:lut` (image): Look-up table image
-  
+
   Optional inputs:
   - `band` -> `:band` (integer): Apply one-band lut to this band of in
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input lut] (maplut input lut {}))
@@ -2864,24 +2872,24 @@
 
 (defn mask-butterworth
   "make a butterworth filter
-  
+
   Operation name: `mask_butterworth`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `order` -> `:order` (float): Filter order
   - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
   - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff amplitude-cutoff] (mask-butterworth width height order frequency-cutoff amplitude-cutoff {}))
@@ -2890,11 +2898,11 @@
 
 (defn mask-butterworth-band
   "make a butterworth_band filter
-  
+
   Operation name: `mask_butterworth_band`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
@@ -2903,13 +2911,13 @@
   - `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
   - `radius` -> `:radius` (float): Radius of circle
   - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff] (mask-butterworth-band width height order frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff {}))
@@ -2918,11 +2926,11 @@
 
 (defn mask-butterworth-ring
   "make a butterworth ring filter
-  
+
   Operation name: `mask_butterworth_ring`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
@@ -2930,13 +2938,13 @@
   - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
   - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
   - `ringwidth` -> `:ringwidth` (float): Ringwidth
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height order frequency-cutoff amplitude-cutoff ringwidth] (mask-butterworth-ring width height order frequency-cutoff amplitude-cutoff ringwidth {}))
@@ -2945,22 +2953,22 @@
 
 (defn mask-fractal
   "make fractal filter
-  
+
   Operation name: `mask_fractal`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `fractal-dimension` -> `:fractal-dimension` (float): Fractal dimension
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height fractal-dimension] (mask-fractal width height fractal-dimension {}))
@@ -2969,23 +2977,23 @@
 
 (defn mask-gaussian
   "make a gaussian filter
-  
+
   Operation name: `mask_gaussian`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
   - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff amplitude-cutoff] (mask-gaussian width height frequency-cutoff amplitude-cutoff {}))
@@ -2994,11 +3002,11 @@
 
 (defn mask-gaussian-band
   "make a gaussian filter
-  
+
   Operation name: `mask_gaussian_band`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
@@ -3006,13 +3014,13 @@
   - `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
   - `radius` -> `:radius` (float): Radius of circle
   - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff] (mask-gaussian-band width height frequency-cutoff-x frequency-cutoff-y radius amplitude-cutoff {}))
@@ -3021,24 +3029,24 @@
 
 (defn mask-gaussian-ring
   "make a gaussian ring filter
-  
+
   Operation name: `mask_gaussian_ring`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
   - `amplitude-cutoff` -> `:amplitude-cutoff` (float): Amplitude cutoff
   - `ringwidth` -> `:ringwidth` (float): Ringwidth
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff amplitude-cutoff ringwidth] (mask-gaussian-ring width height frequency-cutoff amplitude-cutoff ringwidth {}))
@@ -3047,22 +3055,22 @@
 
 (defn mask-ideal
   "make an ideal filter
-  
+
   Operation name: `mask_ideal`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff] (mask-ideal width height frequency-cutoff {}))
@@ -3071,24 +3079,24 @@
 
 (defn mask-ideal-band
   "make an ideal band filter
-  
+
   Operation name: `mask_ideal_band`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `frequency-cutoff-x` -> `:frequency-cutoff-x` (float): Frequency cutoff x
   - `frequency-cutoff-y` -> `:frequency-cutoff-y` (float): Frequency cutoff y
   - `radius` -> `:radius` (float): Radius of circle
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff-x frequency-cutoff-y radius] (mask-ideal-band width height frequency-cutoff-x frequency-cutoff-y radius {}))
@@ -3097,23 +3105,23 @@
 
 (defn mask-ideal-ring
   "make an ideal ring filter
-  
+
   Operation name: `mask_ideal_ring`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `frequency-cutoff` -> `:frequency-cutoff` (float): Frequency cutoff
   - `ringwidth` -> `:ringwidth` (float): Ringwidth
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `nodc` -> `:nodc` (boolean): Remove DC component
   - `reject` -> `:reject` (boolean): Invert the sense of the filter
   - `optical` -> `:optical` (boolean): Rotate quadrants to optical space
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height frequency-cutoff ringwidth] (mask-ideal-ring width height frequency-cutoff ringwidth {}))
@@ -3122,11 +3130,11 @@
 
 (defn match
   "first-order match of two images
-  
+
   Operation name: `match`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `ref` -> `:ref` (image): Reference image
   - `sec` -> `:sec` (image): Secondary image
@@ -3138,12 +3146,12 @@
   - `yr2` -> `:yr2` (integer): Position of second reference tie-point
   - `xs2` -> `:xs2` (integer): Position of second secondary tie-point
   - `ys2` -> `:ys2` (integer): Position of second secondary tie-point
-  
+
   Optional inputs:
   - `hwindow` -> `:hwindow` (integer): Half window size
   - `harea` -> `:harea` (integer): Half area size
   - `search` -> `:search` (boolean): Search to improve tie-points
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2] (match ref sec xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 {}))
@@ -3152,18 +3160,18 @@
 
 (defn math
   "apply a math operation to an image
-  
+
   Operation name: `math`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `math` -> `:math` (keyword, see `ol.vips.enums/operation-math`): Math to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input math]
@@ -3171,19 +3179,19 @@
 
 (defn math2
   "binary math operations
-  
+
   Operation name: `math2`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
   - `math2` -> `:math2` (keyword, see `ol.vips.enums/operation-math2`): Math to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right math2]
@@ -3191,19 +3199,19 @@
 
 (defn math2-const
   "binary math operations with a constant
-  
+
   Operation name: `math2_const`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `math2` -> `:math2` (keyword, see `ol.vips.enums/operation-math2`): Math to perform
   - `c` -> `:c` (seqable of number): Array of constants
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input math2 c]
@@ -3211,17 +3219,17 @@
 
 (defn matrixinvert
   "invert a matrix
-  
+
   Operation name: `matrixinvert`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): An square matrix
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output matrix"
   [input]
@@ -3229,14 +3237,14 @@
 
 (defn matrixload
   "load matrix
-  
+
   Operation name: `matrixload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `memory` -> `:memory` (boolean): Force open via memory
   - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
@@ -3245,7 +3253,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -3255,18 +3263,18 @@
 
 (defn matrixmultiply
   "multiply two matrices
-  
+
   Operation name: `matrixmultiply`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): First matrix to multiply
   - `right` -> `:right` (image): Second matrix to multiply
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output matrix"
   [left right]
@@ -3274,21 +3282,21 @@
 
 (defn matrixprint
   "print matrix
-  
+
   Operation name: `matrixprint`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
-  
+
   Optional inputs:
   - `keep` -> `:keep` (integer flags): Which metadata to retain
   - `background` -> `:background` (seqable of number): Background value
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input] (matrixprint input {}))
@@ -3297,22 +3305,22 @@
 
 (defn matrixsave
   "save image to matrix
-  
+
   Operation name: `matrixsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `keep` -> `:keep` (integer flags): Which metadata to retain
   - `background` -> `:background` (seqable of number): Background value
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (matrixsave input filename {}))
@@ -3321,18 +3329,18 @@
 
 (defn maxpair
   "maximum of a pair of images
-  
+
   Operation name: `maxpair`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -3340,22 +3348,22 @@
 
 (defn measure
   "measure a set of patches on a color chart
-  
+
   Operation name: `measure`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to measure
   - `h` -> `:h` (integer): Number of patches across chart
   - `v` -> `:v` (integer): Number of patches down chart
-  
+
   Optional inputs:
   - `left` -> `:left` (integer): Left edge of extract area
   - `top` -> `:top` (integer): Top edge of extract area
   - `width` -> `:width` (integer): Width of extract area
   - `height` -> `:height` (integer): Height of extract area
-  
+
   Outputs:
   - `out` -> `:out` (image): Output array of statistics"
   ([input h v] (measure input h v {}))
@@ -3364,21 +3372,21 @@
 
 (defn merge
   "merge two images
-  
+
   Operation name: `merge`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `ref` -> `:ref` (image): Reference image
   - `sec` -> `:sec` (image): Secondary image
   - `direction` -> `:direction` (keyword, see `ol.vips.enums/direction`): Horizontal or vertical merge
   - `dx` -> `:dx` (integer): Horizontal displacement from sec to ref
   - `dy` -> `:dy` (integer): Vertical displacement from sec to ref
-  
+
   Optional inputs:
   - `mblend` -> `:mblend` (integer): Maximum blend size
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([ref sec direction dx dy] (merge ref sec direction dx dy {}))
@@ -3387,18 +3395,18 @@
 
 (defn minpair
   "minimum of a pair of images
-  
+
   Operation name: `minpair`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -3406,19 +3414,19 @@
 
 (defn morph
   "morphology operation
-  
+
   Operation name: `morph`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `mask` -> `:mask` (image): Input matrix image
   - `morph` -> `:morph` (keyword, see `ol.vips.enums/operation-morphology`): Morphological operation to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input mask morph]
@@ -3426,11 +3434,11 @@
 
 (defn mosaic
   "mosaic two images
-  
+
   Operation name: `mosaic`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `ref` -> `:ref` (image): Reference image
   - `sec` -> `:sec` (image): Secondary image
@@ -3439,13 +3447,13 @@
   - `yref` -> `:yref` (integer): Position of reference tie-point
   - `xsec` -> `:xsec` (integer): Position of secondary tie-point
   - `ysec` -> `:ysec` (integer): Position of secondary tie-point
-  
+
   Optional inputs:
   - `hwindow` -> `:hwindow` (integer): Half window size
   - `harea` -> `:harea` (integer): Half area size
   - `mblend` -> `:mblend` (integer): Maximum blend size
   - `bandno` -> `:bandno` (integer): Band to search for features on
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `dx0` -> `:dx0` (integer): Detected integer offset
@@ -3460,11 +3468,11 @@
 
 (defn mosaic1
   "first-order mosaic of two images
-  
+
   Operation name: `mosaic1`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `ref` -> `:ref` (image): Reference image
   - `sec` -> `:sec` (image): Secondary image
@@ -3477,14 +3485,14 @@
   - `yr2` -> `:yr2` (integer): Position of second reference tie-point
   - `xs2` -> `:xs2` (integer): Position of second secondary tie-point
   - `ys2` -> `:ys2` (integer): Position of second secondary tie-point
-  
+
   Optional inputs:
   - `hwindow` -> `:hwindow` (integer): Half window size
   - `harea` -> `:harea` (integer): Half area size
   - `search` -> `:search` (boolean): Search to improve tie-points
   - `mblend` -> `:mblend` (integer): Maximum blend size
   - `bandno` -> `:bandno` (integer): Band to search for features on
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2] (mosaic1 ref sec direction xr1 yr1 xs1 ys1 xr2 yr2 xs2 ys2 {}))
@@ -3493,17 +3501,17 @@
 
 (defn msb
   "pick most-significant byte from an image
-  
+
   Operation name: `msb`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `band` -> `:band` (integer): Band to msb
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (msb input {}))
@@ -3512,37 +3520,91 @@
 
 (defn multiply
   "multiply two images
-  
+
   Operation name: `multiply`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
   (v/call "multiply" {:left left, :right right}))
 
+(defn oklab2-oklch
+  "transform Oklab to Oklch
+
+  Operation name: `Oklab2Oklch`.
+
+  Returns an image handle.
+
+  Required inputs:
+  - `input` -> `:in` (image): Input image
+
+  Optional inputs:
+  - none
+
+  Outputs:
+  - `out` -> `:out` (image): Output image"
+  [input]
+  (v/call "Oklab2Oklch" {:in input}))
+
+(defn oklab2-xyz
+  "transform Oklab to XYZ
+
+  Operation name: `Oklab2XYZ`.
+
+  Returns an image handle.
+
+  Required inputs:
+  - `input` -> `:in` (image): Input image
+
+  Optional inputs:
+  - none
+
+  Outputs:
+  - `out` -> `:out` (image): Output image"
+  [input]
+  (v/call "Oklab2XYZ" {:in input}))
+
+(defn oklch2-oklab
+  "transform Oklch to Oklab
+
+  Operation name: `Oklch2Oklab`.
+
+  Returns an image handle.
+
+  Required inputs:
+  - `input` -> `:in` (image): Input image
+
+  Optional inputs:
+  - none
+
+  Outputs:
+  - `out` -> `:out` (image): Output image"
+  [input]
+  (v/call "Oklch2Oklab" {:in input}))
+
 (defn percent
   "find threshold for percent of pixels
-  
+
   Operation name: `percent`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `percent` -> `:percent` (float): Percent of pixels
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `threshold` -> `:threshold` (integer): Threshold above which lie percent of pixels"
   [input percent]
@@ -3550,20 +3612,20 @@
 
 (defn perlin
   "make a perlin noise image
-  
+
   Operation name: `perlin`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `cell-size` -> `:cell-size` (integer): Size of Perlin cells
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `seed` -> `:seed` (integer): Random number seed
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (perlin width height {}))
@@ -3572,18 +3634,18 @@
 
 (defn phasecor
   "calculate phase correlation
-  
+
   Operation name: `phasecor`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `in2` -> `:in2` (image): Second input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input in2]
@@ -3591,14 +3653,14 @@
 
 (defn pngload
   "load png from file
-  
+
   Operation name: `pngload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `unlimited` -> `:unlimited` (boolean): Remove all denial of service limits
   - `memory` -> `:memory` (boolean): Force open via memory
@@ -3608,7 +3670,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -3617,20 +3679,20 @@
    (v/call "pngload" (clojure.core/merge {:filename filename} opts))))
 
 (defn pngsave
-  "save image to file as PNG
-  
+  "save image to file as png
+
   Operation name: `pngsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `compression` -> `:compression` (integer): Compression factor
   - `interlace` -> `:interlace` (boolean): Interlace image
-  - `filter` -> `:filter` (integer flags): libspng row filter flag(s)
+  - `filter` -> `:filter` (integer flags): libpng row filter flag(s)
   - `palette` -> `:palette` (boolean): Quantise to 8bpp palette
   - `colours` -> `:colours` (integer): Max number of palette colours
   - `q` -> `:Q` (integer): Quantisation quality
@@ -3642,7 +3704,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (pngsave input filename {}))
@@ -3651,17 +3713,17 @@
 
 (defn premultiply
   "premultiply image alpha
-  
+
   Operation name: `premultiply`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (premultiply input {}))
@@ -3670,17 +3732,17 @@
 
 (defn prewitt
   "Prewitt edge detector
-  
+
   Operation name: `prewitt`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -3688,17 +3750,17 @@
 
 (defn profile
   "find image profiles
-  
+
   Operation name: `profile`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `columns` -> `:columns` (image): First non-zero pixel in column
   - `rows` -> `:rows` (image): First non-zero pixel in row"
@@ -3707,17 +3769,17 @@
 
 (defn project
   "find image projections
-  
+
   Operation name: `project`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `columns` -> `:columns` (image): Sums of columns
   - `rows` -> `:rows` (image): Sums of rows"
@@ -3726,18 +3788,18 @@
 
 (defn quadratic
   "resample an image with a quadratic transform
-  
+
   Operation name: `quadratic`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `coeff` -> `:coeff` (image): Coefficient matrix
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input coeff]
@@ -3745,17 +3807,17 @@
 
 (defn rad2float
   "unpack Radiance coding to float RGB
-  
+
   Operation name: `rad2float`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -3763,20 +3825,20 @@
 
 (defn rank
   "rank filter
-  
+
   Operation name: `rank`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `width` -> `:width` (integer): Window width in pixels
   - `height` -> `:height` (integer): Window height in pixels
   - `index` -> `:index` (integer): Select pixel at index
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input width height index]
@@ -3784,17 +3846,17 @@
 
 (defn rawload
   "load raw data from a file
-  
+
   Operation name: `rawload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `bands` -> `:bands` (integer): Number of bands in image
-  
+
   Optional inputs:
   - `offset` -> `:offset` (integer): Offset in bytes from start of file
   - `format` -> `:format` (keyword, see `ol.vips.enums/band-format`): Pixel format in image
@@ -3806,7 +3868,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -3816,22 +3878,22 @@
 
 (defn rawsave
   "save image to raw file
-  
+
   Operation name: `rawsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `keep` -> `:keep` (integer flags): Which metadata to retain
   - `background` -> `:background` (seqable of number): Background value
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (rawsave input filename {}))
@@ -3840,18 +3902,18 @@
 
 (defn recomb
   "linear recombination with matrix
-  
+
   Operation name: `recomb`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `m` -> `:m` (image): Matrix of coefficients
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input m]
@@ -3859,23 +3921,23 @@
 
 (defn reduce
   "reduce an image
-  
+
   Operation name: `reduce`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `xshrink` -> `:xshrink` (float): Horizontal shrink factor
   - `hshrink` -> `:hshrink` (float): Horizontal shrink factor
   - `yshrink` -> `:yshrink` (float): Vertical shrink factor
   - `vshrink` -> `:vshrink` (float): Vertical shrink factor
-  
+
   Optional inputs:
   - `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
   - `gap` -> `:gap` (float): Reducing gap
   - `centre` -> `:centre` (boolean): Use centre sampling convention
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink yshrink vshrink] (reduce input xshrink hshrink yshrink vshrink {}))
@@ -3884,21 +3946,21 @@
 
 (defn reduceh
   "shrink an image horizontally
-  
+
   Operation name: `reduceh`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `xshrink` -> `:xshrink` (float): Horizontal shrink factor
   - `hshrink` -> `:hshrink` (float): Horizontal shrink factor
-  
+
   Optional inputs:
   - `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
   - `gap` -> `:gap` (float): Reducing gap
   - `centre` -> `:centre` (boolean): Use centre sampling convention
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink] (reduceh input xshrink hshrink {}))
@@ -3907,21 +3969,21 @@
 
 (defn reducev
   "shrink an image vertically
-  
+
   Operation name: `reducev`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `yshrink` -> `:yshrink` (float): Vertical shrink factor
   - `vshrink` -> `:vshrink` (float): Vertical shrink factor
-  
+
   Optional inputs:
   - `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
   - `gap` -> `:gap` (float): Reducing gap
   - `centre` -> `:centre` (boolean): Use centre sampling convention
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input yshrink vshrink] (reducev input yshrink vshrink {}))
@@ -3930,19 +3992,19 @@
 
 (defn relational
   "relational operation on two images
-  
+
   Operation name: `relational`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
   - `relational` -> `:relational` (keyword, see `ol.vips.enums/operation-relational`): Relational to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right relational]
@@ -3950,19 +4012,19 @@
 
 (defn relational-const
   "relational operations against a constant
-  
+
   Operation name: `relational_const`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `relational` -> `:relational` (keyword, see `ol.vips.enums/operation-relational`): Relational to perform
   - `c` -> `:c` (seqable of number): Array of constants
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input relational c]
@@ -3970,18 +4032,18 @@
 
 (defn remainder
   "remainder after integer division of two images
-  
+
   Operation name: `remainder`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -3989,18 +4051,18 @@
 
 (defn remainder-const
   "remainder after integer division of an image and a constant
-  
+
   Operation name: `remainder_const`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `c` -> `:c` (seqable of number): Array of constants
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input c]
@@ -4008,19 +4070,19 @@
 
 (defn remosaic
   "rebuild an mosaiced image
-  
+
   Operation name: `remosaic`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `old-str` -> `:old-str` (string): Search for this string
   - `new-str` -> `:new-str` (string): And swap for this string
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input old-str new-str]
@@ -4028,19 +4090,19 @@
 
 (defn replicate
   "replicate an image
-  
+
   Operation name: `replicate`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `across` -> `:across` (integer): Repeat this many times horizontally
   - `down` -> `:down` (integer): Repeat this many times vertically
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input across down]
@@ -4048,15 +4110,15 @@
 
 (defn resize
   "resize an image
-  
+
   Operation name: `resize`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `scale` -> `:scale` (float): Scale image by this factor
-  
+
   Optional inputs:
   - `kernel` -> `:kernel` (keyword, see `ol.vips.enums/kernel`): Resampling kernel
   - `gap` -> `:gap` (float): Reducing gap
@@ -4064,7 +4126,7 @@
   - `vscale` -> `:vscale` (float): Vertical scale image by this factor
   - `idx` -> `:idx` (float): Horizontal input displacement
   - `idy` -> `:idy` (float): Vertical input displacement
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input scale] (resize input scale {}))
@@ -4073,18 +4135,18 @@
 
 (defn rot
   "rotate an image
-  
+
   Operation name: `rot`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle`): Angle to rotate image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input angle]
@@ -4092,17 +4154,17 @@
 
 (defn rot45
   "rotate an image
-  
+
   Operation name: `rot45`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `angle` -> `:angle` (keyword, see `ol.vips.enums/angle45`): Angle to rotate image
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (rot45 input {}))
@@ -4111,22 +4173,22 @@
 
 (defn rotate
   "rotate an image by a number of degrees
-  
+
   Operation name: `rotate`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `angle` -> `:angle` (float): Rotate clockwise by this many degrees
-  
+
   Optional inputs:
   - `background` -> `:background` (seqable of number): Background value
   - `odx` -> `:odx` (float): Horizontal output displacement
   - `ody` -> `:ody` (float): Vertical output displacement
   - `idx` -> `:idx` (float): Horizontal input displacement
   - `idy` -> `:idy` (float): Vertical input displacement
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input angle] (rotate input angle {}))
@@ -4135,18 +4197,18 @@
 
 (defn round
   "perform a round function on an image
-  
+
   Operation name: `round`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `round` -> `:round` (keyword, see `ol.vips.enums/operation-round`): Rounding operation to perform
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input round]
@@ -4154,17 +4216,17 @@
 
 (defn s-rgb2-hsv
   "transform sRGB to HSV
-  
+
   Operation name: `sRGB2HSV`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -4172,17 +4234,17 @@
 
 (defn s-rgb2sc-rgb
   "convert an sRGB image to scRGB
-  
+
   Operation name: `sRGB2scRGB`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -4190,17 +4252,17 @@
 
 (defn sc-rgb2-bw
   "convert scRGB to BW
-  
+
   Operation name: `scRGB2BW`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `depth` -> `:depth` (integer): Output device space depth in bits
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (sc-rgb2-bw input {}))
@@ -4209,17 +4271,17 @@
 
 (defn sc-rgb2-xyz
   "transform scRGB to XYZ
-  
+
   Operation name: `scRGB2XYZ`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -4227,17 +4289,17 @@
 
 (defn sc-rgb2s-rgb
   "convert scRGB to sRGB
-  
+
   Operation name: `scRGB2sRGB`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `depth` -> `:depth` (integer): Output device space depth in bits
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (sc-rgb2s-rgb input {}))
@@ -4246,18 +4308,18 @@
 
 (defn scale
   "scale an image to uchar
-  
+
   Operation name: `scale`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `exp` -> `:exp` (float): Exponent for log scale
   - `log` -> `:log` (boolean): Log scale
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (scale input {}))
@@ -4266,17 +4328,17 @@
 
 (defn scharr
   "Scharr edge detector
-  
+
   Operation name: `scharr`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -4284,22 +4346,22 @@
 
 (defn sdf
   "create an SDF image
-  
+
   Operation name: `sdf`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
   - `shape` -> `:shape` (keyword, see `ol.vips.enums/sdf-shape`): SDF shape to create
-  
+
   Optional inputs:
   - `r` -> `:r` (float): Radius
   - `a` -> `:a` (seqable of number): Point a
   - `b` -> `:b` (seqable of number): Point b
   - `corners` -> `:corners` (seqable of number): Corner radii
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height shape] (sdf width height shape {}))
@@ -4308,19 +4370,19 @@
 
 (defn sequential
   "check sequential access
-  
+
   Operation name: `sequential`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `trace` -> `:trace` (boolean): Trace pixel requests
   - `tile-height` -> `:tile-height` (integer): Tile height in pixels
   - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (sequential input {}))
@@ -4329,14 +4391,14 @@
 
 (defn sharpen
   "unsharp masking for print
-  
+
   Operation name: `sharpen`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `radius` -> `:radius` (integer): Radius of Gaussian
   - `sigma` -> `:sigma` (float): Sigma of Gaussian
@@ -4345,7 +4407,7 @@
   - `y3` -> `:y3` (float): Maximum darkening
   - `m1` -> `:m1` (float): Slope for flat areas
   - `m2` -> `:m2` (float): Slope for jaggy areas
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (sharpen input {}))
@@ -4354,21 +4416,21 @@
 
 (defn shrink
   "shrink an image
-  
+
   Operation name: `shrink`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `xshrink` -> `:xshrink` (float): Horizontal shrink factor
   - `hshrink` -> `:hshrink` (float): Horizontal shrink factor
   - `yshrink` -> `:yshrink` (float): Vertical shrink factor
   - `vshrink` -> `:vshrink` (float): Vertical shrink factor
-  
+
   Optional inputs:
   - `ceil` -> `:ceil` (boolean): Round-up output dimensions
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink yshrink vshrink] (shrink input xshrink hshrink yshrink vshrink {}))
@@ -4377,19 +4439,19 @@
 
 (defn shrinkh
   "shrink an image horizontally
-  
+
   Operation name: `shrinkh`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `xshrink` -> `:xshrink` (integer): Horizontal shrink factor
   - `hshrink` -> `:hshrink` (integer): Horizontal shrink factor
-  
+
   Optional inputs:
   - `ceil` -> `:ceil` (boolean): Round-up output dimensions
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input xshrink hshrink] (shrinkh input xshrink hshrink {}))
@@ -4398,19 +4460,19 @@
 
 (defn shrinkv
   "shrink an image vertically
-  
+
   Operation name: `shrinkv`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `yshrink` -> `:yshrink` (integer): Vertical shrink factor
   - `vshrink` -> `:vshrink` (integer): Vertical shrink factor
-  
+
   Optional inputs:
   - `ceil` -> `:ceil` (boolean): Round-up output dimensions
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input yshrink vshrink] (shrinkv input yshrink vshrink {}))
@@ -4419,17 +4481,17 @@
 
 (defn sign
   "unit vector of pixel
-  
+
   Operation name: `sign`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -4437,14 +4499,14 @@
 
 (defn similarity
   "similarity transform of an image
-  
+
   Operation name: `similarity`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
-  
+
   Optional inputs:
   - `scale` -> `:scale` (float): Scale by this factor
   - `angle` -> `:angle` (float): Rotate clockwise by this many degrees
@@ -4453,7 +4515,7 @@
   - `ody` -> `:ody` (float): Vertical output displacement
   - `idx` -> `:idx` (float): Horizontal input displacement
   - `idy` -> `:idy` (float): Vertical input displacement
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (similarity input {}))
@@ -4462,20 +4524,20 @@
 
 (defn sines
   "make a 2D sine wave
-  
+
   Operation name: `sines`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
   - `hfreq` -> `:hfreq` (float): Horizontal spatial frequency
   - `vfreq` -> `:vfreq` (float): Vertical spatial frequency
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (sines width height {}))
@@ -4484,20 +4546,20 @@
 
 (defn smartcrop
   "extract an area from an image
-  
+
   Operation name: `smartcrop`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `input` -> `:input` (image): Input image
   - `width` -> `:width` (integer): Width of extract area
   - `height` -> `:height` (integer): Height of extract area
-  
+
   Optional inputs:
   - `interesting` -> `:interesting` (keyword, see `ol.vips.enums/interesting`): How to measure interestingness
   - `premultiplied` -> `:premultiplied` (boolean): Input image already has premultiplied alpha
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `attention-x` -> `:attention-x` (integer): Horizontal position of attention centre
@@ -4508,17 +4570,17 @@
 
 (defn sobel
   "Sobel edge detector
-  
+
   Operation name: `sobel`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -4526,18 +4588,18 @@
 
 (defn spcor
   "spatial correlation
-  
+
   Operation name: `spcor`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `ref` -> `:ref` (image): Input reference image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input ref]
@@ -4545,17 +4607,17 @@
 
 (defn spectrum
   "make displayable power spectrum
-  
+
   Operation name: `spectrum`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -4563,17 +4625,17 @@
 
 (defn stats
   "find many image stats
-  
+
   Operation name: `stats`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output array of statistics"
   [input]
@@ -4581,22 +4643,22 @@
 
 (defn stdif
   "statistical difference
-  
+
   Operation name: `stdif`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
   - `width` -> `:width` (integer): Window width in pixels
   - `height` -> `:height` (integer): Window height in pixels
-  
+
   Optional inputs:
   - `s0` -> `:s0` (float): New deviation
   - `b` -> `:b` (float): Weight of new deviation
   - `m0` -> `:m0` (float): New mean
   - `a` -> `:a` (float): Weight of new mean
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input width height] (stdif input width height {}))
@@ -4605,19 +4667,19 @@
 
 (defn subsample
   "subsample an image
-  
+
   Operation name: `subsample`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:input` (image): Input image
   - `xfac` -> `:xfac` (integer): Horizontal subsample factor
   - `yfac` -> `:yfac` (integer): Vertical subsample factor
-  
+
   Optional inputs:
   - `point` -> `:point` (boolean): Point sample
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input xfac yfac] (subsample input xfac yfac {}))
@@ -4626,18 +4688,18 @@
 
 (defn subtract
   "subtract two images
-  
+
   Operation name: `subtract`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `left` -> `:left` (image): Left-hand image argument
   - `right` -> `:right` (image): Right-hand image argument
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [left right]
@@ -4645,17 +4707,17 @@
 
 (defn sum
   "sum an array of images
-  
+
   Operation name: `sum`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (seqable of image): Array of input images
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -4663,14 +4725,14 @@
 
 (defn svgload
   "load SVG with rsvg
-  
+
   Operation name: `svgload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `dpi` -> `:dpi` (float): Render at this DPI
   - `scale` -> `:scale` (float): Scale output by this factor
@@ -4684,7 +4746,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -4694,17 +4756,17 @@
 
 (defn switch
   "find the index of the first non-zero pixel in tests
-  
+
   Operation name: `switch`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `tests` -> `:tests` (seqable of image): Table of images to test
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [tests]
@@ -4712,19 +4774,20 @@
 
 (defn system
   "run an external command
-  
+
   Operation name: `system`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `cmd-format` -> `:cmd-format` (string): Command to run
-  
+
   Optional inputs:
   - `input` -> `:in` (seqable of image): Array of input images
-  - `out-format` -> `:out-format` (string): Format for output filename
   - `in-format` -> `:in-format` (string): Format for input filename
-  
+  - `out-format` -> `:out-format` (string): Format for output filename
+  - `cache` -> `:cache` (boolean): Cache this call
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `log` -> `:log` (string): Command log"
@@ -4734,14 +4797,14 @@
 
 (defn text
   "make a text image
-  
+
   Operation name: `text`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `text` -> `:text` (string): Text to render
-  
+
   Optional inputs:
   - `font` -> `:font` (string): Font to render with
   - `width` -> `:width` (integer): Maximum image width in pixels
@@ -4753,7 +4816,7 @@
   - `fontfile` -> `:fontfile` (string): Load this font file
   - `rgba` -> `:rgba` (boolean): Enable RGBA output
   - `wrap` -> `:wrap` (keyword, see `ol.vips.enums/text-wrap`): Wrap lines on word or character boundaries
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `autofit-dpi` -> `:autofit-dpi` (integer): DPI selected by autofit"
@@ -4763,15 +4826,15 @@
 
 (defn thumbnail
   "generate thumbnail from file
-  
+
   Operation name: `thumbnail`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to read from
   - `width` -> `:width` (integer): Size to this width
-  
+
   Optional inputs:
   - `height` -> `:height` (integer): Size to this height
   - `size` -> `:size` (keyword, see `ol.vips.enums/size`): Only upsize, only downsize, or both
@@ -4785,7 +4848,7 @@
   - `auto-rotate` -> `:auto-rotate` (boolean): Use orientation tags to rotate image upright
   - `import-profile` -> `:import-profile` (string): Fallback import profile
   - `export-profile` -> `:export-profile` (string): Fallback export profile
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([filename width] (thumbnail filename width {}))
@@ -4794,17 +4857,17 @@
 
 (defn thumbnail-image
   "generate thumbnail from image
-  
+
   Operation name: `thumbnail_image`.
-  
+
   Avoid for routine thumbnailing. Prefer `thumbnail` when you can start from a filename.For already-loaded images, use normal image operations such as `resize` unless you specifically need this escape hatch.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image argument
   - `width` -> `:width` (integer): Size to this width
-  
+
   Optional inputs:
   - `height` -> `:height` (integer): Size to this height
   - `size` -> `:size` (keyword, see `ol.vips.enums/size`): Only upsize, only downsize, or both
@@ -4818,7 +4881,7 @@
   - `auto-rotate` -> `:auto-rotate` (boolean): Use orientation tags to rotate image upright
   - `import-profile` -> `:import-profile` (string): Fallback import profile
   - `export-profile` -> `:export-profile` (string): Fallback export profile
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input width] (thumbnail-image input width {}))
@@ -4827,14 +4890,14 @@
 
 (defn tiffload
   "load tiff from file
-  
+
   Operation name: `tiffload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `page` -> `:page` (integer): First page to load
   - `n` -> `:n` (integer): Number of pages to load, -1 for all
@@ -4848,7 +4911,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -4858,15 +4921,15 @@
 
 (defn tiffsave
   "save image to tiff file
-  
+
   Operation name: `tiffsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `compression` -> `:compression` (keyword, see `ol.vips.enums/foreign-tiff-compression`): Compression for this file
   - `q` -> `:Q` (integer): Q factor
@@ -4895,7 +4958,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (tiffsave input filename {}))
@@ -4904,14 +4967,14 @@
 
 (defn tilecache
   "cache an image as a set of tiles
-  
+
   Operation name: `tilecache`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `tile-width` -> `:tile-width` (integer): Tile width in pixels
   - `tile-height` -> `:tile-height` (integer): Tile height in pixels
@@ -4919,7 +4982,7 @@
   - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Expected access pattern
   - `threaded` -> `:threaded` (boolean): Allow threaded access
   - `persistent` -> `:persistent` (boolean): Keep cache between evaluations
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (tilecache input {}))
@@ -4928,14 +4991,14 @@
 
 (defn tonelut
   "build a look-up table
-  
+
   Operation name: `tonelut`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - none
-  
+
   Optional inputs:
   - `in-max` -> `:in-max` (integer): Size of LUT to build
   - `out-max` -> `:out-max` (integer): Maximum value in output LUT
@@ -4947,7 +5010,7 @@
   - `s` -> `:S` (float): Adjust shadows by this much
   - `m` -> `:M` (float): Adjust mid-tones by this much
   - `h` -> `:H` (float): Adjust highlights by this much
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([] (tonelut {}))
@@ -4956,37 +5019,108 @@
 
 (defn transpose3d
   "transpose3d an image
-  
+
   Operation name: `transpose3d`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `page-height` -> `:page-height` (integer): Height of each input page
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (transpose3d input {}))
   ([input opts]
    (v/call "transpose3d" (clojure.core/merge {:in input} opts))))
 
-(defn unpremultiply
-  "unpremultiply image alpha
-  
-  Operation name: `unpremultiply`.
-  
+(defn uhdr2sc-rgb
+  "transform uhdr to scRGB
+
+  Operation name: `uhdr2scRGB`.
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
+  Optional inputs:
+  - none
+
+  Outputs:
+  - `out` -> `:out` (image): Output image"
+  [input]
+  (v/call "uhdr2scRGB" {:in input}))
+
+(defn uhdrload
+  "load a UHDR image
+
+  Operation name: `uhdrload`.
+
+  Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
+
+  Required inputs:
+  - `filename` -> `:filename` (string): Filename to load from
+
+  Optional inputs:
+  - `shrink` -> `:shrink` (integer): Shrink factor on load
+  - `memory` -> `:memory` (boolean): Force open via memory
+  - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
+  - `fail-on` -> `:fail-on` (keyword, see `ol.vips.enums/fail-on`): Error level to fail on
+  - `revalidate` -> `:revalidate` (boolean): Don't use a cached result for this operation
+  - `sequential` -> `:sequential` (boolean): Sequential read only
+  - `fail` -> `:fail` (boolean): Fail on first warning
+  - `disc` -> `:disc` (boolean): Open to disc
+
+  Outputs:
+  - `out` -> `:out` (image): Output image
+  - `flags` -> `:flags` (integer flags): Flags for this file"
+  ([filename] (uhdrload filename {}))
+  ([filename opts]
+   (v/call "uhdrload" (clojure.core/merge {:filename filename} opts))))
+
+(defn uhdrsave
+  "save image in UltraHDR format
+
+  Operation name: `uhdrsave`.
+
+  Returns a result map.
+
+  Required inputs:
+  - `input` -> `:in` (image): Image to save
+  - `filename` -> `:filename` (string): Filename to save to
+
+  Optional inputs:
+  - `q` -> `:Q` (integer): Q factor
+  - `gainmap-scale-factor` -> `:gainmap-scale-factor` (integer): The scale factor of base image to gainmap image
+  - `keep` -> `:keep` (integer flags): Which metadata to retain
+  - `background` -> `:background` (seqable of number): Background value
+  - `page-height` -> `:page-height` (integer): Set page height for multipage save
+  - `profile` -> `:profile` (string): Filename of ICC profile to embed
+  - `strip` -> `:strip` (boolean): Strip all metadata from image
+
+  Outputs:
+  - none"
+  ([input filename] (uhdrsave input filename {}))
+  ([input filename opts]
+   (v/call "uhdrsave" (clojure.core/merge {:in input, :filename filename} opts))))
+
+(defn unpremultiply
+  "unpremultiply image alpha
+
+  Operation name: `unpremultiply`.
+
+  Returns an image handle.
+
+  Required inputs:
+  - `input` -> `:in` (image): Input image
+
   Optional inputs:
   - `max-alpha` -> `:max-alpha` (float): Maximum value of alpha channel
   - `alpha-band` -> `:alpha-band` (integer): Unpremultiply with this alpha
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (unpremultiply input {}))
@@ -4995,14 +5129,14 @@
 
 (defn vipsload
   "load vips from file
-  
+
   Operation name: `vipsload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `memory` -> `:memory` (boolean): Force open via memory
   - `access` -> `:access` (keyword, see `ol.vips.enums/access`): Required access pattern for this file
@@ -5011,7 +5145,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -5021,22 +5155,22 @@
 
 (defn vipssave
   "save image to file in vips format
-  
+
   Operation name: `vipssave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `keep` -> `:keep` (integer flags): Which metadata to retain
   - `background` -> `:background` (seqable of number): Background value
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (vipssave input filename {}))
@@ -5045,14 +5179,14 @@
 
 (defn webpload
   "load webp from file
-  
+
   Operation name: `webpload`.
-  
+
   Returns a closeable result map. Pass it anywhere an image is expected, or inspect `:out` and the additional outputs directly.
-  
+
   Required inputs:
   - `filename` -> `:filename` (string): Filename to load from
-  
+
   Optional inputs:
   - `page` -> `:page` (integer): First page to load
   - `n` -> `:n` (integer): Number of pages to load, -1 for all
@@ -5065,7 +5199,7 @@
   - `sequential` -> `:sequential` (boolean): Sequential read only
   - `fail` -> `:fail` (boolean): Fail on first warning
   - `disc` -> `:disc` (boolean): Open to disc
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image
   - `flags` -> `:flags` (integer flags): Flags for this file"
@@ -5075,18 +5209,19 @@
 
 (defn webpsave
   "save as WebP
-  
+
   Operation name: `webpsave`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
   - `filename` -> `:filename` (string): Filename to save to
-  
+
   Optional inputs:
   - `q` -> `:Q` (integer): Q factor
   - `lossless` -> `:lossless` (boolean): Enable lossless compression
+  - `exact` -> `:exact` (boolean): Preserve color values from transparent pixels
   - `preset` -> `:preset` (keyword, see `ol.vips.enums/foreign-webp-preset`): Preset for lossy compression
   - `smart-subsample` -> `:smart-subsample` (boolean): Enable high quality chroma subsampling
   - `near-lossless` -> `:near-lossless` (boolean): Enable preprocessing in lossless mode (uses Q)
@@ -5105,7 +5240,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input filename] (webpsave input filename {}))
@@ -5114,17 +5249,18 @@
 
 (defn webpsave-mime
   "save image to webp mime
-  
+
   Operation name: `webpsave_mime`.
-  
+
   Returns a result map.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Image to save
-  
+
   Optional inputs:
   - `q` -> `:Q` (integer): Q factor
   - `lossless` -> `:lossless` (boolean): Enable lossless compression
+  - `exact` -> `:exact` (boolean): Preserve color values from transparent pixels
   - `preset` -> `:preset` (keyword, see `ol.vips.enums/foreign-webp-preset`): Preset for lossy compression
   - `smart-subsample` -> `:smart-subsample` (boolean): Enable high quality chroma subsampling
   - `near-lossless` -> `:near-lossless` (boolean): Enable preprocessing in lossless mode (uses Q)
@@ -5143,7 +5279,7 @@
   - `page-height` -> `:page-height` (integer): Set page height for multipage save
   - `profile` -> `:profile` (string): Filename of ICC profile to embed
   - `strip` -> `:strip` (boolean): Strip all metadata from image
-  
+
   Outputs:
   - none"
   ([input] (webpsave-mime input {}))
@@ -5152,19 +5288,19 @@
 
 (defn worley
   "make a worley noise image
-  
+
   Operation name: `worley`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `cell-size` -> `:cell-size` (integer): Size of Worley cells
   - `seed` -> `:seed` (integer): Random number seed
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (worley width height {}))
@@ -5173,18 +5309,18 @@
 
 (defn wrap
   "wrap image origin
-  
+
   Operation name: `wrap`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `x` -> `:x` (integer): Left edge of input in output
   - `y` -> `:y` (integer): Top edge of input in output
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (wrap input {}))
@@ -5193,20 +5329,20 @@
 
 (defn xyz
   "make an image where pixel values are coordinates
-  
+
   Operation name: `xyz`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `csize` -> `:csize` (integer): Size of third dimension
   - `dsize` -> `:dsize` (integer): Size of fourth dimension
   - `esize` -> `:esize` (integer): Size of fifth dimension
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (xyz width height {}))
@@ -5215,17 +5351,17 @@
 
 (defn xyz2-cmyk
   "transform XYZ to CMYK
-  
+
   Operation name: `XYZ2CMYK`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -5233,36 +5369,54 @@
 
 (defn xyz2-lab
   "transform XYZ to Lab
-  
+
   Operation name: `XYZ2Lab`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - `temp` -> `:temp` (seqable of number): Colour temperature
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([input] (xyz2-lab input {}))
   ([input opts]
    (v/call "XYZ2Lab" (clojure.core/merge {:in input} opts))))
 
-(defn xyz2-yxy
-  "transform XYZ to Yxy
-  
-  Operation name: `XYZ2Yxy`.
-  
+(defn xyz2-oklab
+  "transform XYZ to Oklab
+
+  Operation name: `XYZ2Oklab`.
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
+  Outputs:
+  - `out` -> `:out` (image): Output image"
+  [input]
+  (v/call "XYZ2Oklab" {:in input}))
+
+(defn xyz2-yxy
+  "transform XYZ to Yxy
+
+  Operation name: `XYZ2Yxy`.
+
+  Returns an image handle.
+
+  Required inputs:
+  - `input` -> `:in` (image): Input image
+
+  Optional inputs:
+  - none
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -5270,17 +5424,17 @@
 
 (defn xyz2sc-rgb
   "transform XYZ to scRGB
-  
+
   Operation name: `XYZ2scRGB`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -5288,17 +5442,17 @@
 
 (defn yxy2-xyz
   "transform Yxy to XYZ
-  
+
   Operation name: `Yxy2XYZ`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:in` (image): Input image
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input]
@@ -5306,18 +5460,18 @@
 
 (defn zone
   "make a zone plate
-  
+
   Operation name: `zone`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `width` -> `:width` (integer): Image width in pixels
   - `height` -> `:height` (integer): Image height in pixels
-  
+
   Optional inputs:
   - `uchar` -> `:uchar` (boolean): Output an unsigned char image
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   ([width height] (zone width height {}))
@@ -5326,19 +5480,19 @@
 
 (defn zoom
   "zoom an image
-  
+
   Operation name: `zoom`.
-  
+
   Returns an image handle.
-  
+
   Required inputs:
   - `input` -> `:input` (image): Input image
   - `xfac` -> `:xfac` (integer): Horizontal zoom factor
   - `yfac` -> `:yfac` (integer): Vertical zoom factor
-  
+
   Optional inputs:
   - none
-  
+
   Outputs:
   - `out` -> `:out` (image): Output image"
   [input xfac yfac]

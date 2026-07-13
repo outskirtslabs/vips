@@ -15,7 +15,10 @@
     (is (= "VipsDirection" (:type-name enums/direction)))
     (is (= :horizontal
            (v/decode-enum "VipsDirection"
-                          (v/encode-enum "VipsDirection" :horizontal)))))
+                          (v/encode-enum "VipsDirection" :horizontal))))
+    (is (= :oklab
+           (v/decode-enum "VipsInterpretation"
+                          (v/encode-enum "VipsInterpretation" :oklab)))))
   (testing "generated namespaces expose basic namespace docstrings"
     (is (re-find #"Generated enum descriptors"
                  (:doc (meta (find-ns 'ol.vips.enums)))))
@@ -28,6 +31,10 @@
                  (:doc (meta #'enums/direction))))))
 
 (deftest generated-enum-source-formatting
+  (testing "generated source has no trailing whitespace"
+    (doseq [path ["src/ol/vips/enums.clj"
+                  "src/ol/vips/operations.clj"]]
+      (is (not (re-find #"(?m)[ \t]+$" (slurp path))) path)))
   (testing "generated namespace header keeps ns name on the same line and docstring indented"
     (let [source (slurp "src/ol/vips/enums.clj")]
       (is (re-find #"\(ns ol\.vips\.enums\n  \"Generated enum descriptors for normalized libvips enum ids\." source))
@@ -69,6 +76,49 @@
                    (:doc (meta #'ops/thumbnail-image))))
       (is (not (re-find #"gdouble|VipsImage|gint"
                         (:doc (meta #'ops/rotate))))))))
+
+(deftest libvips-8-18-generated-surface
+  (testing "generated wrappers expose operations and options from the bundled 8.18 release"
+    (let [option-names (fn [operation-id]
+                         (->> (get-in ops/registry [operation-id :optional-inputs])
+                              (map :name)
+                              set))]
+      (is (= {:operations    #{:oklab2-xyz
+                               :xyz2-oklab
+                               :oklab2-oklch
+                               :oklch2-oklab
+                               :uhdr2sc-rgb
+                               :uhdrload
+                               :uhdrsave}
+              :system-cache? true
+              :webp-exact?   true
+              :heif-tune?    true}
+             {:operations    (set (filter ops/registry
+                                          [:oklab2-xyz
+                                           :xyz2-oklab
+                                           :oklab2-oklch
+                                           :oklch2-oklab
+                                           :uhdr2sc-rgb
+                                           :uhdrload
+                                           :uhdrsave]))
+              :system-cache? (contains? (option-names :system) "cache")
+              :webp-exact?   (contains? (option-names :webpsave) "exact")
+              :heif-tune?    (contains? (option-names :heifsave) "tune")})))))
+
+(deftest oklab-colourspace-roundtrip
+  (testing "the bundled runtime converts images through the new Oklab interpretation"
+    (with-open [image     (ops/black 3 2 {:bands 3})
+                srgb      (ops/copy image {:interpretation :srgb})
+                oklab     (ops/colourspace srgb :oklab)
+                roundtrip (ops/colourspace oklab :srgb)]
+      (is (= {:oklab-shape          [3 2 3]
+              :oklab-interpretation "((VipsInterpretation) VIPS_INTERPRETATION_OKLAB)"
+              :roundtrip-shape      [3 2 3]
+              :roundtrip            "((VipsInterpretation) VIPS_INTERPRETATION_sRGB)"}
+             {:oklab-shape          (v/shape oklab)
+              :oklab-interpretation (v/field-as-string oklab "interpretation")
+              :roundtrip-shape      (v/shape roundtrip)
+              :roundtrip            (v/field-as-string roundtrip "interpretation")})))))
 
 (deftest generated-operations-return-images-or-output-maps
   (testing "single-image wrappers return image handles directly"

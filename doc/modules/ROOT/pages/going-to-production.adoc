@@ -2,7 +2,7 @@
 
 This page adapts the upstream libvips production checklist to `ol.vips`.
 The original reference is the libvips
-https://www.libvips.org/API/8.17/developer-checklist.html[Checklist for programmers using libvips].
+https://www.libvips.org/API/8.18/developer-checklist.html[Checklist for programmers using libvips].
 
 Use this page as guidance for application design and deployment. It is not a
 hard rulebook, but these defaults are a good starting point for long-running
@@ -45,7 +45,7 @@ When you know you will read the source once in loader order, pass
 improve throughput.
 
 For background on why this matters, see the upstream libvips
-https://www.libvips.org/API/8.17/how-it-opens-files.html["How it opens files"
+https://www.libvips.org/API/8.18/how-it-opens-files.html["How it opens files"
 chapter].
 
 [source,clojure]

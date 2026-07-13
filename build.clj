@@ -23,8 +23,14 @@
 (def license-id (-> project :license :id))
 (def license-file (or (-> project :license :file) "LICENSE"))
 (def description (:description project))
+(def libvips-version (:libvips-version project))
 (def sharp-vips-version (:sharp-vips-version project))
 (def native-version-revision (:native-version-revision project))
+(def native-build-deps
+  (-> (edn/read-string (slurp "deps.edn"))
+      (get-in [:aliases :build :deps])
+      (select-keys ['io.github.clojure/tools.build
+                    'slipset/deps-deploy])))
 
 (def default-native-root "native")
 (def ^:dynamic *native-root* default-native-root)
@@ -58,6 +64,7 @@
 (assert version ":version must be set in deps.edn under the :neil alias")
 (assert description ":description must be set in deps.edn under the :neil alias")
 (assert license-id "[:license :id] must be set in deps.edn under the :neil alias")
+(assert libvips-version "[:libvips-version] must be set in deps.edn under the :neil alias")
 (assert sharp-vips-version "[:sharp-vips-version] must be set in deps.edn under the :neil alias")
 (assert (some? native-version-revision) "[:native-version-revision] must be set in deps.edn under the :neil alias")
 (assert rev "Either GIT_REV must be set or git rev-parse HEAD must succeed")
@@ -260,6 +267,20 @@
          sort
          vec)))
 
+(defn- validate-vips-version!
+  [platform source actual]
+  (when-not (= libvips-version actual)
+    (throw (ex-info (format "Unexpected libvips version for %s in %s: expected %s, got %s"
+                            (name (:platform-id platform))
+                            (name source)
+                            libvips-version
+                            actual)
+                    {:platform-id (:platform-id platform)
+                     :source      source
+                     :expected    libvips-version
+                     :actual      actual})))
+  actual)
+
 (defn- validate-upstream-package!
   [platform package-dir versions-data library-files]
   (let [required-paths [(str (io/file package-dir "lib"))
@@ -276,6 +297,9 @@
                       {:platform-id   (:platform-id platform)
                        :package-dir   package-dir
                        :versions-data versions-data})))
+    (validate-vips-version! platform
+                            :upstream/versions.json
+                            (get versions-data "vips"))
     (when-not (seq library-files)
       (throw (ex-info "No native libraries found in sharp-libvips archive"
                       {:platform-id (:platform-id platform)
@@ -334,6 +358,7 @@
    :artifact-name artifact-name
    :sharp-package sharp-package
    :sharp-version sharp-version
+   :vips-version  libvips-version
    :libc          libc
    :os            os
    :arch          arch
@@ -347,6 +372,14 @@
       (let [manifest (-> manifest-path* slurp edn/read-string)]
         (when (and (= expected (select-keys manifest (keys expected)))
                    (staged-native-files-present? platform manifest))
+          (validate-vips-version! platform :manifest.edn (:vips-version manifest))
+          (validate-vips-version!
+           platform
+           :upstream/versions.json
+           (-> (io/file (platform-resource-root platform) "upstream" "versions.json")
+               slurp
+               json/read-str
+               (get "vips")))
           manifest)))))
 
 (defn- validate-staged-platform!
@@ -361,6 +394,36 @@
         (throw (ex-info "Missing staged native resource"
                         {:platform-id (:platform-id platform)
                          :path        path}))))))
+
+(defn validate-native-resources
+  "Validates staged native resources against the configured libvips version.
+
+  Options:
+
+  | key | description |
+  | --- | --- |
+  | `:native-root` | Native workspace root; defaults to `native` |
+  | `:platforms` | Platform ids to validate; defaults to every supported platform |
+
+  Returns the expected libvips version and validated platform ids."
+  [{:keys [native-root platforms]}]
+  (let [target-native-root (or native-root *native-root*)
+        targets            (selected-platforms platforms)]
+    (binding [*native-root* target-native-root]
+      (doseq [platform targets]
+        (let [manifest      (-> (manifest-file platform) slurp edn/read-string)
+              versions-data (-> (io/file (platform-resource-root platform)
+                                          "upstream"
+                                          "versions.json")
+                                slurp
+                                json/read-str)]
+          (validate-vips-version! platform :manifest.edn (:vips-version manifest))
+          (validate-vips-version! platform
+                                  :upstream/versions.json
+                                  (get versions-data "vips"))
+          (validate-staged-platform! platform manifest))))
+    {:vips-version libvips-version
+     :platforms    (mapv :platform-id targets)}))
 
 (defn- stage-platform!
   [platform sharp-version]
@@ -409,8 +472,7 @@
 (defn- native-deps-data
   [platform companion-version]
   {:paths   ["resources"]
-   :aliases {:build {:deps       '{io.github.clojure/tools.build {:mvn/version "0.10.13"}
-                                   slipset/deps-deploy           {:mvn/version "0.2.2"}}
+   :aliases {:build {:deps       native-build-deps
                      :ns-default 'build}
              :neil  {:project {:name        (symbol (:artifact-name platform))
                                :description (str "Platform-native bundle for "
