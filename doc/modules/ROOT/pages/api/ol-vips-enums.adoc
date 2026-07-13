@@ -15,7 +15,7 @@ Use <<registry,`registry`>> or the generated enum vars to inspect enum metadata.
 Generated registry of libvips enum descriptors keyed by normalized enum id.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L11-L54[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L11-L54[source,window=_blank]
 
 '''
 
@@ -36,7 +36,7 @@ Known values:
 - `:sequential-unbuffered`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L56-L65[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L56-L65[source,window=_blank]
 
 '''
 
@@ -57,7 +57,7 @@ Known values:
 - `:low`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L67-L76[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L67-L76[source,window=_blank]
 
 '''
 
@@ -79,7 +79,7 @@ Known values:
 - `:d90`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L78-L88[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L78-L88[source,window=_blank]
 
 '''
 
@@ -105,7 +105,7 @@ Known values:
 - `:d90`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L90-L104[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L90-L104[source,window=_blank]
 
 '''
 
@@ -134,7 +134,7 @@ Known values:
 - `:ushort`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L106-L123[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L106-L123[source,window=_blank]
 
 '''
 
@@ -177,7 +177,7 @@ Known values:
 - `:xor`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L125-L156[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L125-L156[source,window=_blank]
 
 '''
 
@@ -199,7 +199,7 @@ Known values:
 - `:rad`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L158-L168[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L158-L168[source,window=_blank]
 
 '''
 
@@ -220,7 +220,7 @@ Known values:
 - `:sum`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L170-L179[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L170-L179[source,window=_blank]
 
 '''
 
@@ -240,7 +240,7 @@ Known values:
 - `:set`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L181-L189[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L181-L189[source,window=_blank]
 
 '''
 
@@ -267,7 +267,7 @@ Known values:
 - `:west`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L191-L206[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L191-L206[source,window=_blank]
 
 '''
 
@@ -287,7 +287,7 @@ Known values:
 - `:vertical`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L208-L216[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L208-L216[source,window=_blank]
 
 '''
 
@@ -311,7 +311,7 @@ Known values:
 - `:white`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L218-L230[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L218-L230[source,window=_blank]
 
 '''
 
@@ -333,7 +333,7 @@ Known values:
 - `:warning`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L232-L242[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L232-L242[source,window=_blank]
 
 '''
 
@@ -354,7 +354,7 @@ Known values:
 - `:zip`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L244-L253[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L244-L253[source,window=_blank]
 
 '''
 
@@ -375,7 +375,7 @@ Known values:
 - `:onetile`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L255-L264[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L255-L264[source,window=_blank]
 
 '''
 
@@ -398,7 +398,7 @@ Known values:
 - `:zoomify`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L266-L277[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L266-L277[source,window=_blank]
 
 '''
 
@@ -420,7 +420,7 @@ Known values:
 - `:jpeg`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L279-L289[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L279-L289[source,window=_blank]
 
 '''
 
@@ -443,7 +443,7 @@ Known values:
 - `:x265`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L291-L302[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L291-L302[source,window=_blank]
 
 '''
 
@@ -464,7 +464,7 @@ Known values:
 - `:on`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L304-L313[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L304-L313[source,window=_blank]
 
 '''
 
@@ -491,7 +491,7 @@ Known values:
 - `:zstd`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L315-L330[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L315-L330[source,window=_blank]
 
 '''
 
@@ -512,7 +512,7 @@ Known values:
 - `:none`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L332-L341[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L332-L341[source,window=_blank]
 
 '''
 
@@ -532,7 +532,7 @@ Known values:
 - `:inch`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L343-L351[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L343-L351[source,window=_blank]
 
 '''
 
@@ -556,7 +556,7 @@ Known values:
 - `:text`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L353-L365[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L353-L365[source,window=_blank]
 
 '''
 
@@ -579,7 +579,7 @@ Known values:
 - `:saturation`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L367-L378[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L367-L378[source,window=_blank]
 
 '''
 
@@ -604,7 +604,7 @@ Known values:
 - `:none`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L380-L393[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L380-L393[source,window=_blank]
 
 '''
 
@@ -644,7 +644,7 @@ Known values:
 - `:yxy`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L395-L423[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L395-L423[source,window=_blank]
 
 '''
 
@@ -670,7 +670,7 @@ Known values:
 - `:nearest`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L425-L439[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L425-L439[source,window=_blank]
 
 '''
 
@@ -693,7 +693,7 @@ Known values:
 - `:rshift`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L441-L452[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L441-L452[source,window=_blank]
 
 '''
 
@@ -714,7 +714,7 @@ Known values:
 - `:rect`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L454-L463[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L454-L463[source,window=_blank]
 
 '''
 
@@ -733,7 +733,7 @@ Known values:
 - `:cross-phase`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L465-L472[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L465-L472[source,window=_blank]
 
 '''
 
@@ -753,7 +753,7 @@ Known values:
 - `:real`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L474-L482[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L474-L482[source,window=_blank]
 
 '''
 
@@ -787,7 +787,7 @@ Known values:
 - `:tanh`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L484-L506[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L484-L506[source,window=_blank]
 
 '''
 
@@ -808,7 +808,7 @@ Known values:
 - `:wop`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L508-L517[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L508-L517[source,window=_blank]
 
 '''
 
@@ -828,7 +828,7 @@ Known values:
 - `:erode`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L519-L527[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L519-L527[source,window=_blank]
 
 '''
 
@@ -852,7 +852,7 @@ Known values:
 - `:noteq`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L529-L541[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L529-L541[source,window=_blank]
 
 '''
 
@@ -873,7 +873,7 @@ Known values:
 - `:rint`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L543-L552[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L543-L552[source,window=_blank]
 
 '''
 
@@ -893,7 +893,7 @@ Known values:
 - `:xyz`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L554-L562[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L554-L562[source,window=_blank]
 
 '''
 
@@ -914,7 +914,7 @@ Known values:
 - `:integer`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L564-L573[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L564-L573[source,window=_blank]
 
 '''
 
@@ -938,7 +938,7 @@ Known values:
 - `:nearest`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L575-L587[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L575-L587[source,window=_blank]
 
 '''
 
@@ -960,7 +960,7 @@ Known values:
 - `:rounded-box`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L589-L599[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L589-L599[source,window=_blank]
 
 '''
 
@@ -982,7 +982,7 @@ Known values:
 - `:up`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L601-L611[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L601-L611[source,window=_blank]
 
 '''
 
@@ -1004,7 +1004,7 @@ Known values:
 - `:word-char`
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L613-L623[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L613-L623[source,window=_blank]
 
 '''
 
@@ -1022,4 +1022,4 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L613-
 Lists the generated libvips enum ids.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/enums.clj#L625-L625[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/enums.clj#L625-L625[source,window=_blank]

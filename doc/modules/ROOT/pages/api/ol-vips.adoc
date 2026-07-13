@@ -65,7 +65,7 @@ libvips operations marked as untrusted. See
 Returns the shared runtime state map, which should be considered an opaque handle and is not public API.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L47-L60[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L47-L60[source,window=_blank]
 
 '''
 
@@ -89,7 +89,7 @@ libvips has marked as untrusted. Pass `false` to allow them to run.
 Returns the current runtime state map.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L62-L71[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L62-L71[source,window=_blank]
 
 '''
 
@@ -127,7 +127,7 @@ That blocks all loaders except the JPEG loader family.
 Returns `{:name <string> :blocked? <boolean>}`.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L73-L95[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L73-L95[source,window=_blank]
 
 '''
 
@@ -151,7 +151,7 @@ previous result again.
 Returns `{:max <int> :size <int> :max-mem <bytes> :max-files <int>}`.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L97-L106[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L97-L106[source,window=_blank]
 
 '''
 
@@ -173,7 +173,7 @@ Reducing this limit may trim cached operations immediately.
 Returns the current cache settings map. See <<operation-cache-settings,`operation-cache-settings`>>.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L108-L115[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L108-L115[source,window=_blank]
 
 '''
 
@@ -197,7 +197,7 @@ libraries is not included.
 Returns the current cache settings map. See <<operation-cache-settings,`operation-cache-settings`>>.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L117-L126[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L117-L126[source,window=_blank]
 
 '''
 
@@ -221,7 +221,7 @@ external libraries are not included.
 Returns the current cache settings map. See <<operation-cache-settings,`operation-cache-settings`>>.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L128-L137[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L128-L137[source,window=_blank]
 
 '''
 
@@ -245,7 +245,7 @@ different images.
 Returns the current cache settings map. See <<set-operation-cache-max-BANG-,`set-operation-cache-max!`>>.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L139-L148[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L139-L148[source,window=_blank]
 
 '''
 
@@ -277,7 +277,7 @@ operations. The returned map has these keys:
 These counters only include resources libvips tracks itself.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L150-L165[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L150-L165[source,window=_blank]
 
 '''
 
@@ -298,7 +298,7 @@ These are the names accepted by <<call,`call`>> and by <<operation-info,`operati
 `"flip"`, `"rotate"`, or `"thumbnail_image"`.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L167-L173[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L167-L173[source,window=_blank]
 
 '''
 
@@ -320,7 +320,7 @@ Returns a map with the operation `:name`, a short `:description`, and an
 is an input, output, or required argument.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L175-L182[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L175-L182[source,window=_blank]
 
 '''
 
@@ -341,7 +341,7 @@ Encodes a Clojure enum value for a libvips enum type.
 Pass a keyword like `:horizontal` or a valid enum integer value.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L184-L190[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L184-L190[source,window=_blank]
 
 '''
 
@@ -368,7 +368,7 @@ Decodes a libvips enum integer to a normalized Clojure keyword.
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L192-L203[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L192-L203[source,window=_blank]
 
 '''
 
@@ -410,7 +410,7 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L205-L231[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L205-L231[source,window=_blank]
 
 '''
 
@@ -445,7 +445,7 @@ or xref:api/ol-vips-enums.adoc#describe[`ol.vips.enums/describe`].
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L233-L253[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L233-L253[source,window=_blank]
 
 '''
 
@@ -478,7 +478,7 @@ xref:api/ol-vips-enums.adoc[`ol.vips.enums`].
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L255-L273[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L255-L273[source,window=_blank]
 
 '''
 
@@ -504,7 +504,7 @@ bytes. See xref:api/ol-vips-operations.adoc[`ol.vips.operations`] for the genera
 xref:api/ol-vips-enums.adoc[`ol.vips.enums`] for enum value sets.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L275-L287[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L275-L287[source,window=_blank]
 
 '''
 
@@ -534,7 +534,7 @@ See xref:api/ol-vips-operations.adoc[`ol.vips.operations`] for the generated loa
 xref:api/ol-vips-enums.adoc#access[`ol.vips.enums/access`] for valid `:access` values.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L289-L305[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L289-L305[source,window=_blank]
 
 '''
 
@@ -561,7 +561,7 @@ xref:api/ol-vips-operations.adoc[`ol.vips.operations`], for example xref:api/ol-
 xref:api/ol-vips-operations.adoc#jpegsave[`ol.vips.operations/jpegsave`].
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L307-L320[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L307-L320[source,window=_blank]
 
 '''
 
@@ -590,7 +590,7 @@ xref:api/ol-vips-operations.adoc[`ol.vips.operations`], for example xref:api/ol-
 xref:api/ol-vips-operations.adoc#jpegsave[`ol.vips.operations/jpegsave`].
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L322-L337[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L322-L337[source,window=_blank]
 
 '''
 
@@ -617,7 +617,7 @@ For raw header and metadata access by libvips field name, see <<field,`field`>>,
 <<field-names,`field-names`>>, and <<headers,`headers`>>.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L339-L351[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L339-L351[source,window=_blank]
 
 '''
 
@@ -643,7 +643,7 @@ Arity 2 returns `nil` for missing fields. Arity 3 returns `not-found`
 instead.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L353-L365[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L353-L365[source,window=_blank]
 
 '''
 
@@ -666,7 +666,7 @@ display and debugging. Arity 3 returns `not-found` when the field is
 absent.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L367-L376[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L367-L376[source,window=_blank]
 
 '''
 
@@ -686,7 +686,7 @@ Returns the libvips field names attached to `image`.
 This includes both core header fields and attached metadata field names.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L378-L383[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L378-L383[source,window=_blank]
 
 '''
 
@@ -707,7 +707,7 @@ Keys are the original libvips field names as strings. Prefer <<metadata,`metadat
 when you want the higher-level normalized public view.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L385-L391[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L385-L391[source,window=_blank]
 
 '''
 
@@ -725,7 +725,7 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L385-L391[s
 Returns `true` if `image` has the libvips field named by `field-name`.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L393-L396[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L393-L396[source,window=_blank]
 
 '''
 
@@ -743,7 +743,7 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L393-L396[s
 Returns the image width in pixels.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L398-L401[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L398-L401[source,window=_blank]
 
 '''
 
@@ -761,7 +761,7 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L398-L401[s
 Returns the image height in pixels.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L403-L406[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L403-L406[source,window=_blank]
 
 '''
 
@@ -781,7 +781,7 @@ Returns the number of image bands as an integer.
 libvips images have three dimensions: width, height, and bands.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L408-L413[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L408-L413[source,window=_blank]
 
 '''
 
@@ -799,7 +799,7 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L408-L413[s
 Returns `true` if `image` has an alpha band.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L415-L418[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L415-L418[source,window=_blank]
 
 '''
 
@@ -817,7 +817,7 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L415-L418[s
 Returns `[width height bands]` for `image`.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L420-L425[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L420-L425[source,window=_blank]
 
 '''
 
@@ -872,7 +872,7 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L427-L466[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L427-L466[source,window=_blank]
 
 '''
 
@@ -921,7 +921,7 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L468-L500[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L468-L500[source,window=_blank]
 
 '''
 
@@ -954,7 +954,7 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L502-L519[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L502-L519[source,window=_blank]
 
 '''
 
@@ -987,7 +987,7 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L521-L538[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L521-L538[source,window=_blank]
 
 '''
 
@@ -1008,7 +1008,7 @@ This reads the libvips `"n-pages"` field directly. For ordinary single-page
 images that field is usually missing, so `pages` commonly returns `nil`.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L540-L546[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L540-L546[source,window=_blank]
 
 '''
 
@@ -1029,7 +1029,7 @@ libvips stores animated images as frames stacked vertically in one image.
 `page-height` is the height of each logical frame.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L548-L554[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L548-L554[source,window=_blank]
 
 '''
 
@@ -1049,7 +1049,7 @@ Returns the animated frame delay vector from `image`, or `nil` when it is absent
 Delay values are returned as integers in the same order as the frames.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L556-L561[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L556-L561[source,window=_blank]
 
 '''
 
@@ -1070,7 +1070,7 @@ A loop count of `0` means loop forever when the target format supports that
 convention.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L563-L569[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L563-L569[source,window=_blank]
 
 '''
 
@@ -1091,7 +1091,7 @@ Returns a new image with animated page count metadata set to `page-count`.
 `"n-pages"` field on a copied image header and leaves `image` unchanged.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L571-L577[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L571-L577[source,window=_blank]
 
 '''
 
@@ -1113,7 +1113,7 @@ Returns a new image with animated frame height metadata set to `frame-height`.
 unchanged.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L579-L586[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L579-L586[source,window=_blank]
 
 '''
 
@@ -1137,7 +1137,7 @@ This writes the libvips `"delay"` field with the correct array type and
 leaves `image` unchanged.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L588-L597[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L588-L597[source,window=_blank]
 
 '''
 
@@ -1158,7 +1158,7 @@ Returns a new image with animated loop count metadata set to `loop-value`.
 formats that use that convention. This leaves `image` unchanged.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L599-L605[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L599-L605[source,window=_blank]
 
 '''
 
@@ -1190,7 +1190,7 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L607-L623[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L607-L623[source,window=_blank]
 
 '''
 
@@ -1235,7 +1235,7 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L625-L653[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L625-L653[source,window=_blank]
 
 '''
 
@@ -1261,7 +1261,7 @@ libvips `rot` operation.
 such as `:d90`, `:d180`, or `:d270`.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L655-L666[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L655-L666[source,window=_blank]
 
 '''
 
@@ -1309,4 +1309,4 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips.clj#L668-L699[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips.clj#L668-L699[source,window=_blank]

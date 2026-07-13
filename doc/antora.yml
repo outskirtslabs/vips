@@ -1,7 +1,6 @@
 ---
 name: ol.vips
 title: ol.vips
-version: next
-prerelease: true
+version: '0.0.1'
 nav:
   - modules/ROOT/nav.adoc

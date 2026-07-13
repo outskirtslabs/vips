@@ -5,7 +5,7 @@ Clojure bindings for https://github.com/libvips/libvips[libvips] image
 processing library
 ____
 
-image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https://docs.outskirtslabs.com/ol.vips/next/]
+image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https://docs.outskirtslabs.com/ol.vips/0.0.1/]
 image:https://img.shields.io/badge/status-experimental-orange.svg[status: experimental,link=https://docs.outskirtslabs.com/open-source-vital-signs#experimental]
 image:https://ci.outskirtslabs.com/repos/github/outskirtslabs/vips/badge.svg[alt=nixbot,link=https://ci.outskirtslabs.com/repos/github/outskirtslabs/vips]
 

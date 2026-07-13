@@ -59,7 +59,7 @@ Example:
 ----
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L441-L481[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/codegen.clj#L441-L481[source,window=_blank]
 
 '''
 
@@ -77,4 +77,4 @@ link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L44
 Runs <<generate-BANG-,`generate!`>> and prints a short CLI summary.
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/codegen.clj#L483-L490[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/codegen.clj#L483-L490[source,window=_blank]

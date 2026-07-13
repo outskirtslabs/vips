@@ -11,7 +11,7 @@
  :docs
  {:component "ol.vips",
   :title "ol.vips",
-  :version "next",
-  :prerelease true,
+  :version "0.0.1",
+  :prerelease false,
   :start-path "doc"},
  :repo {:url "https://github.com/outskirtslabs/vips"}}

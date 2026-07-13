@@ -14,7 +14,7 @@ Inspect <<registry,`registry`>> directly for generated operation metadata, then 
 
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L12-L252[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L12-L252[source,window=_blank]
 
 '''
 
@@ -45,7 +45,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L254-L270[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L254-L270[source,window=_blank]
 
 '''
 
@@ -77,7 +77,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L272-L289[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L272-L289[source,window=_blank]
 
 '''
 
@@ -108,7 +108,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L291-L307[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L291-L307[source,window=_blank]
 
 '''
 
@@ -147,7 +147,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L309-L333[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L309-L333[source,window=_blank]
 
 '''
 
@@ -185,7 +185,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L335-L358[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L335-L358[source,window=_blank]
 
 '''
 
@@ -218,7 +218,7 @@ Outputs:
 - `flip` -> `:flip` (boolean): Whether the image was flipped or not
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L360-L378[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L360-L378[source,window=_blank]
 
 '''
 
@@ -249,7 +249,7 @@ Outputs:
 - `out` -> `:out` (float): Output value
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L380-L396[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L380-L396[source,window=_blank]
 
 '''
 
@@ -281,7 +281,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L398-L415[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L398-L415[source,window=_blank]
 
 '''
 
@@ -313,7 +313,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L417-L434[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L417-L434[source,window=_blank]
 
 '''
 
@@ -344,7 +344,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L436-L452[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L436-L452[source,window=_blank]
 
 '''
 
@@ -376,7 +376,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L454-L471[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L454-L471[source,window=_blank]
 
 '''
 
@@ -407,7 +407,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L473-L489[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L473-L489[source,window=_blank]
 
 '''
 
@@ -439,7 +439,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L491-L508[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L491-L508[source,window=_blank]
 
 '''
 
@@ -471,7 +471,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L510-L527[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L510-L527[source,window=_blank]
 
 '''
 
@@ -504,7 +504,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L529-L547[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L529-L547[source,window=_blank]
 
 '''
 
@@ -537,7 +537,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L549-L567[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L549-L567[source,window=_blank]
 
 '''
 
@@ -570,7 +570,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L569-L587[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L569-L587[source,window=_blank]
 
 '''
 
@@ -601,7 +601,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L589-L605[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L589-L605[source,window=_blank]
 
 '''
 
@@ -632,7 +632,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L607-L623[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L607-L623[source,window=_blank]
 
 '''
 
@@ -666,7 +666,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L625-L644[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L625-L644[source,window=_blank]
 
 '''
 
@@ -699,7 +699,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L646-L664[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L646-L664[source,window=_blank]
 
 '''
 
@@ -731,7 +731,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L666-L683[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L666-L683[source,window=_blank]
 
 '''
 
@@ -764,7 +764,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L685-L703[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L685-L703[source,window=_blank]
 
 '''
 
@@ -797,7 +797,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L705-L723[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L705-L723[source,window=_blank]
 
 '''
 
@@ -828,7 +828,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L725-L741[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L725-L741[source,window=_blank]
 
 '''
 
@@ -859,7 +859,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L743-L759[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L743-L759[source,window=_blank]
 
 '''
 
@@ -892,7 +892,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L761-L779[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L761-L779[source,window=_blank]
 
 '''
 
@@ -930,7 +930,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L781-L804[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L781-L804[source,window=_blank]
 
 '''
 
@@ -962,7 +962,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L806-L823[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L806-L823[source,window=_blank]
 
 '''
 
@@ -995,7 +995,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L825-L843[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L825-L843[source,window=_blank]
 
 '''
 
@@ -1027,7 +1027,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L845-L862[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L845-L862[source,window=_blank]
 
 '''
 
@@ -1059,7 +1059,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L864-L881[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L864-L881[source,window=_blank]
 
 '''
 
@@ -1096,7 +1096,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L883-L905[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L883-L905[source,window=_blank]
 
 '''
 
@@ -1131,7 +1131,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L907-L927[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L907-L927[source,window=_blank]
 
 '''
 
@@ -1165,7 +1165,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L929-L948[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L929-L948[source,window=_blank]
 
 '''
 
@@ -1198,7 +1198,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L950-L968[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L950-L968[source,window=_blank]
 
 '''
 
@@ -1230,7 +1230,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L970-L987[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L970-L987[source,window=_blank]
 
 '''
 
@@ -1262,7 +1262,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L989-L1006[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L989-L1006[source,window=_blank]
 
 '''
 
@@ -1297,7 +1297,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1008-L1028[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1008-L1028[source,window=_blank]
 
 '''
 
@@ -1339,7 +1339,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1030-L1057[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1030-L1057[source,window=_blank]
 
 '''
 
@@ -1371,7 +1371,7 @@ Outputs:
 - `nolines` -> `:nolines` (float): Number of lines
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1059-L1076[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1059-L1076[source,window=_blank]
 
 '''
 
@@ -1414,7 +1414,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1078-L1106[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1078-L1106[source,window=_blank]
 
 '''
 
@@ -1452,7 +1452,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1108-L1131[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1108-L1131[source,window=_blank]
 
 '''
 
@@ -1484,7 +1484,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1133-L1150[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1133-L1150[source,window=_blank]
 
 '''
 
@@ -1516,7 +1516,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1152-L1169[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1152-L1169[source,window=_blank]
 
 '''
 
@@ -1548,7 +1548,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1171-L1188[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1171-L1188[source,window=_blank]
 
 '''
 
@@ -1579,7 +1579,7 @@ Outputs:
 - `out` -> `:out` (float): Output value
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1190-L1206[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1190-L1206[source,window=_blank]
 
 '''
 
@@ -1611,7 +1611,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1208-L1225[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1208-L1225[source,window=_blank]
 
 '''
 
@@ -1647,7 +1647,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1227-L1248[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1227-L1248[source,window=_blank]
 
 '''
 
@@ -1686,7 +1686,7 @@ Outputs:
 - `height` -> `:height` (integer): Height of modified area
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1250-L1274[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1250-L1274[source,window=_blank]
 
 '''
 
@@ -1721,7 +1721,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1276-L1296[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1276-L1296[source,window=_blank]
 
 '''
 
@@ -1757,7 +1757,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1298-L1319[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1298-L1319[source,window=_blank]
 
 '''
 
@@ -1792,7 +1792,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1321-L1341[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1321-L1341[source,window=_blank]
 
 '''
 
@@ -1829,7 +1829,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1343-L1365[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1343-L1365[source,window=_blank]
 
 '''
 
@@ -1864,7 +1864,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1367-L1387[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1367-L1387[source,window=_blank]
 
 '''
 
@@ -1921,7 +1921,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1389-L1431[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1389-L1431[source,window=_blank]
 
 '''
 
@@ -1958,7 +1958,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1433-L1455[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1433-L1455[source,window=_blank]
 
 '''
 
@@ -1993,7 +1993,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1457-L1477[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1457-L1477[source,window=_blank]
 
 '''
 
@@ -2026,7 +2026,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1479-L1497[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1479-L1497[source,window=_blank]
 
 '''
 
@@ -2060,7 +2060,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1499-L1518[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1499-L1518[source,window=_blank]
 
 '''
 
@@ -2091,7 +2091,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1520-L1536[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1520-L1536[source,window=_blank]
 
 '''
 
@@ -2123,7 +2123,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1538-L1555[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1538-L1555[source,window=_blank]
 
 '''
 
@@ -2155,7 +2155,7 @@ Outputs:
 - `distance` -> `:distance` (image): Distance to nearest non-zero pixel
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1557-L1574[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1557-L1574[source,window=_blank]
 
 '''
 
@@ -2192,7 +2192,7 @@ Outputs:
 - `height` -> `:height` (integer): Height of extract area
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1576-L1598[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1576-L1598[source,window=_blank]
 
 '''
 
@@ -2225,7 +2225,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1600-L1618[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1600-L1618[source,window=_blank]
 
 '''
 
@@ -2257,7 +2257,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1620-L1637[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1620-L1637[source,window=_blank]
 
 '''
 
@@ -2288,7 +2288,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1639-L1655[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1639-L1655[source,window=_blank]
 
 '''
 
@@ -2321,7 +2321,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1657-L1675[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1657-L1675[source,window=_blank]
 
 '''
 
@@ -2353,7 +2353,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1677-L1694[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1677-L1694[source,window=_blank]
 
 '''
 
@@ -2385,7 +2385,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1696-L1713[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1696-L1713[source,window=_blank]
 
 '''
 
@@ -2419,7 +2419,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1715-L1734[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1715-L1734[source,window=_blank]
 
 '''
 
@@ -2454,7 +2454,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1736-L1756[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1736-L1756[source,window=_blank]
 
 '''
 
@@ -2489,7 +2489,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1758-L1778[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1758-L1778[source,window=_blank]
 
 '''
 
@@ -2530,7 +2530,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1780-L1806[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1780-L1806[source,window=_blank]
 
 '''
 
@@ -2576,7 +2576,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1808-L1839[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1808-L1839[source,window=_blank]
 
 '''
 
@@ -2609,7 +2609,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1841-L1859[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1841-L1859[source,window=_blank]
 
 '''
 
@@ -2645,7 +2645,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1861-L1882[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1861-L1882[source,window=_blank]
 
 '''
 
@@ -2678,7 +2678,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1884-L1902[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1884-L1902[source,window=_blank]
 
 '''
 
@@ -2712,7 +2712,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1904-L1923[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1904-L1923[source,window=_blank]
 
 '''
 
@@ -2756,7 +2756,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1925-L1954[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1925-L1954[source,window=_blank]
 
 '''
 
@@ -2802,7 +2802,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1956-L1987[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1956-L1987[source,window=_blank]
 
 '''
 
@@ -2833,7 +2833,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L1989-L2005[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L1989-L2005[source,window=_blank]
 
 '''
 
@@ -2864,7 +2864,7 @@ Outputs:
 - `out` -> `:out` (float): Output value
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2007-L2023[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2007-L2023[source,window=_blank]
 
 '''
 
@@ -2896,7 +2896,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2025-L2042[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2025-L2042[source,window=_blank]
 
 '''
 
@@ -2928,7 +2928,7 @@ Outputs:
 - `out` -> `:out` (image): Output histogram
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2044-L2061[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2044-L2061[source,window=_blank]
 
 '''
 
@@ -2961,7 +2961,7 @@ Outputs:
 - `out` -> `:out` (image): Output histogram
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2063-L2081[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2063-L2081[source,window=_blank]
 
 '''
 
@@ -2993,7 +2993,7 @@ Outputs:
 - `out` -> `:out` (image): Output histogram
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2083-L2100[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2083-L2100[source,window=_blank]
 
 '''
 
@@ -3024,7 +3024,7 @@ Outputs:
 - `monotonic` -> `:monotonic` (boolean): true if in is monotonic
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2102-L2118[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2102-L2118[source,window=_blank]
 
 '''
 
@@ -3058,7 +3058,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2120-L2139[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2120-L2139[source,window=_blank]
 
 '''
 
@@ -3090,7 +3090,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2141-L2158[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2141-L2158[source,window=_blank]
 
 '''
 
@@ -3121,7 +3121,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2160-L2176[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2160-L2176[source,window=_blank]
 
 '''
 
@@ -3152,7 +3152,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2178-L2194[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2178-L2194[source,window=_blank]
 
 '''
 
@@ -3186,7 +3186,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2196-L2215[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2196-L2215[source,window=_blank]
 
 '''
 
@@ -3219,7 +3219,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2217-L2235[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2217-L2235[source,window=_blank]
 
 '''
 
@@ -3250,7 +3250,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2237-L2253[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2237-L2253[source,window=_blank]
 
 '''
 
@@ -3286,7 +3286,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2255-L2276[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2255-L2276[source,window=_blank]
 
 '''
 
@@ -3322,7 +3322,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2278-L2299[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2278-L2299[source,window=_blank]
 
 '''
 
@@ -3360,7 +3360,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2301-L2324[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2301-L2324[source,window=_blank]
 
 '''
 
@@ -3394,7 +3394,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2326-L2345[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2326-L2345[source,window=_blank]
 
 '''
 
@@ -3428,7 +3428,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2347-L2366[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2347-L2366[source,window=_blank]
 
 '''
 
@@ -3464,7 +3464,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2368-L2389[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2368-L2389[source,window=_blank]
 
 '''
 
@@ -3495,7 +3495,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2391-L2407[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2391-L2407[source,window=_blank]
 
 '''
 
@@ -3527,7 +3527,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2409-L2426[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2409-L2426[source,window=_blank]
 
 '''
 
@@ -3564,7 +3564,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2428-L2450[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2428-L2450[source,window=_blank]
 
 '''
 
@@ -3606,7 +3606,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2452-L2479[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2452-L2479[source,window=_blank]
 
 '''
 
@@ -3653,7 +3653,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2481-L2513[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2481-L2513[source,window=_blank]
 
 '''
 
@@ -3699,7 +3699,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2515-L2546[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2515-L2546[source,window=_blank]
 
 '''
 
@@ -3730,7 +3730,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2548-L2564[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2548-L2564[source,window=_blank]
 
 '''
 
@@ -3761,7 +3761,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2566-L2582[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2566-L2582[source,window=_blank]
 
 '''
 
@@ -3792,7 +3792,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2584-L2600[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2584-L2600[source,window=_blank]
 
 '''
 
@@ -3823,7 +3823,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2602-L2618[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2602-L2618[source,window=_blank]
 
 '''
 
@@ -3854,7 +3854,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2620-L2636[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2620-L2636[source,window=_blank]
 
 '''
 
@@ -3885,7 +3885,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2638-L2654[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2638-L2654[source,window=_blank]
 
 '''
 
@@ -3916,7 +3916,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2656-L2672[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2656-L2672[source,window=_blank]
 
 '''
 
@@ -3947,7 +3947,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2674-L2690[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2674-L2690[source,window=_blank]
 
 '''
 
@@ -3979,7 +3979,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2692-L2709[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2692-L2709[source,window=_blank]
 
 '''
 
@@ -4011,7 +4011,7 @@ Outputs:
 - `segments` -> `:segments` (integer): Number of discrete contiguous regions
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2711-L2728[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2711-L2728[source,window=_blank]
 
 '''
 
@@ -4042,7 +4042,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2730-L2746[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2730-L2746[source,window=_blank]
 
 '''
 
@@ -4073,7 +4073,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2748-L2764[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2748-L2764[source,window=_blank]
 
 '''
 
@@ -4107,7 +4107,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2766-L2785[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2766-L2785[source,window=_blank]
 
 '''
 
@@ -4142,7 +4142,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2787-L2807[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2787-L2807[source,window=_blank]
 
 '''
 
@@ -4177,7 +4177,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2809-L2829[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2809-L2829[source,window=_blank]
 
 '''
 
@@ -4212,7 +4212,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2831-L2851[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2831-L2851[source,window=_blank]
 
 '''
 
@@ -4245,7 +4245,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2853-L2871[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2853-L2871[source,window=_blank]
 
 '''
 
@@ -4284,7 +4284,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2873-L2897[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2873-L2897[source,window=_blank]
 
 '''
 
@@ -4325,7 +4325,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2899-L2925[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2899-L2925[source,window=_blank]
 
 '''
 
@@ -4365,7 +4365,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2927-L2952[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2927-L2952[source,window=_blank]
 
 '''
 
@@ -4402,7 +4402,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2954-L2976[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2954-L2976[source,window=_blank]
 
 '''
 
@@ -4440,7 +4440,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L2978-L3001[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L2978-L3001[source,window=_blank]
 
 '''
 
@@ -4480,7 +4480,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3003-L3028[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3003-L3028[source,window=_blank]
 
 '''
 
@@ -4519,7 +4519,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3030-L3054[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3030-L3054[source,window=_blank]
 
 '''
 
@@ -4556,7 +4556,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3056-L3078[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3056-L3078[source,window=_blank]
 
 '''
 
@@ -4595,7 +4595,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3080-L3104[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3080-L3104[source,window=_blank]
 
 '''
 
@@ -4633,7 +4633,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3106-L3129[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3106-L3129[source,window=_blank]
 
 '''
 
@@ -4676,7 +4676,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3131-L3159[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3131-L3159[source,window=_blank]
 
 '''
 
@@ -4708,7 +4708,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3161-L3178[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3161-L3178[source,window=_blank]
 
 '''
 
@@ -4741,7 +4741,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3180-L3198[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3180-L3198[source,window=_blank]
 
 '''
 
@@ -4774,7 +4774,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3200-L3218[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3200-L3218[source,window=_blank]
 
 '''
 
@@ -4805,7 +4805,7 @@ Outputs:
 - `out` -> `:out` (image): Output matrix
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3220-L3236[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3220-L3236[source,window=_blank]
 
 '''
 
@@ -4844,7 +4844,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3238-L3262[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3238-L3262[source,window=_blank]
 
 '''
 
@@ -4876,7 +4876,7 @@ Outputs:
 - `out` -> `:out` (image): Output matrix
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3264-L3281[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3264-L3281[source,window=_blank]
 
 '''
 
@@ -4912,7 +4912,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3283-L3304[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3283-L3304[source,window=_blank]
 
 '''
 
@@ -4949,7 +4949,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3306-L3328[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3306-L3328[source,window=_blank]
 
 '''
 
@@ -4981,7 +4981,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3330-L3347[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3330-L3347[source,window=_blank]
 
 '''
 
@@ -5018,7 +5018,7 @@ Outputs:
 - `out` -> `:out` (image): Output array of statistics
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3349-L3371[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3349-L3371[source,window=_blank]
 
 '''
 
@@ -5054,7 +5054,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3373-L3394[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3373-L3394[source,window=_blank]
 
 '''
 
@@ -5086,7 +5086,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3396-L3413[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3396-L3413[source,window=_blank]
 
 '''
 
@@ -5119,7 +5119,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3415-L3433[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3415-L3433[source,window=_blank]
 
 '''
 
@@ -5166,7 +5166,7 @@ Outputs:
 - `dx1` -> `:dx1` (float): Detected first-order displacement
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3435-L3467[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3435-L3467[source,window=_blank]
 
 '''
 
@@ -5212,7 +5212,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3469-L3500[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3469-L3500[source,window=_blank]
 
 '''
 
@@ -5244,7 +5244,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3502-L3519[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3502-L3519[source,window=_blank]
 
 '''
 
@@ -5276,7 +5276,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3521-L3538[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3521-L3538[source,window=_blank]
 
 '''
 
@@ -5307,7 +5307,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3540-L3556[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3540-L3556[source,window=_blank]
 
 '''
 
@@ -5338,7 +5338,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3558-L3574[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3558-L3574[source,window=_blank]
 
 '''
 
@@ -5369,7 +5369,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3576-L3592[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3576-L3592[source,window=_blank]
 
 '''
 
@@ -5401,7 +5401,7 @@ Outputs:
 - `threshold` -> `:threshold` (integer): Threshold above which lie percent of pixels
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3594-L3611[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3594-L3611[source,window=_blank]
 
 '''
 
@@ -5436,7 +5436,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3613-L3633[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3613-L3633[source,window=_blank]
 
 '''
 
@@ -5468,7 +5468,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3635-L3652[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3635-L3652[source,window=_blank]
 
 '''
 
@@ -5508,7 +5508,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3654-L3679[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3654-L3679[source,window=_blank]
 
 '''
 
@@ -5554,7 +5554,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3681-L3712[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3681-L3712[source,window=_blank]
 
 '''
 
@@ -5586,7 +5586,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3714-L3731[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3714-L3731[source,window=_blank]
 
 '''
 
@@ -5617,7 +5617,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3733-L3749[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3733-L3749[source,window=_blank]
 
 '''
 
@@ -5649,7 +5649,7 @@ Outputs:
 - `rows` -> `:rows` (image): First non-zero pixel in row
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3751-L3768[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3751-L3768[source,window=_blank]
 
 '''
 
@@ -5681,7 +5681,7 @@ Outputs:
 - `rows` -> `:rows` (image): Sums of rows
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3770-L3787[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3770-L3787[source,window=_blank]
 
 '''
 
@@ -5713,7 +5713,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3789-L3806[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3789-L3806[source,window=_blank]
 
 '''
 
@@ -5744,7 +5744,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3808-L3824[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3808-L3824[source,window=_blank]
 
 '''
 
@@ -5778,7 +5778,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3826-L3845[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3826-L3845[source,window=_blank]
 
 '''
 
@@ -5823,7 +5823,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3847-L3877[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3847-L3877[source,window=_blank]
 
 '''
 
@@ -5860,7 +5860,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3879-L3901[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3879-L3901[source,window=_blank]
 
 '''
 
@@ -5892,7 +5892,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3903-L3920[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3903-L3920[source,window=_blank]
 
 '''
 
@@ -5930,7 +5930,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3922-L3945[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3922-L3945[source,window=_blank]
 
 '''
 
@@ -5966,7 +5966,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3947-L3968[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3947-L3968[source,window=_blank]
 
 '''
 
@@ -6002,7 +6002,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3970-L3991[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3970-L3991[source,window=_blank]
 
 '''
 
@@ -6035,7 +6035,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L3993-L4011[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L3993-L4011[source,window=_blank]
 
 '''
 
@@ -6068,7 +6068,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4013-L4031[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4013-L4031[source,window=_blank]
 
 '''
 
@@ -6100,7 +6100,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4033-L4050[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4033-L4050[source,window=_blank]
 
 '''
 
@@ -6132,7 +6132,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4052-L4069[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4052-L4069[source,window=_blank]
 
 '''
 
@@ -6165,7 +6165,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4071-L4089[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4071-L4089[source,window=_blank]
 
 '''
 
@@ -6198,7 +6198,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4091-L4109[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4091-L4109[source,window=_blank]
 
 '''
 
@@ -6236,7 +6236,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4111-L4134[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4111-L4134[source,window=_blank]
 
 '''
 
@@ -6268,7 +6268,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4136-L4153[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4136-L4153[source,window=_blank]
 
 '''
 
@@ -6300,7 +6300,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4155-L4172[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4155-L4172[source,window=_blank]
 
 '''
 
@@ -6337,7 +6337,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4174-L4196[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4174-L4196[source,window=_blank]
 
 '''
 
@@ -6369,7 +6369,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4198-L4215[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4198-L4215[source,window=_blank]
 
 '''
 
@@ -6400,7 +6400,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4217-L4233[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4217-L4233[source,window=_blank]
 
 '''
 
@@ -6431,7 +6431,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4235-L4251[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4235-L4251[source,window=_blank]
 
 '''
 
@@ -6463,7 +6463,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4253-L4270[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4253-L4270[source,window=_blank]
 
 '''
 
@@ -6494,7 +6494,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4272-L4288[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4272-L4288[source,window=_blank]
 
 '''
 
@@ -6526,7 +6526,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4290-L4307[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4290-L4307[source,window=_blank]
 
 '''
 
@@ -6559,7 +6559,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4309-L4327[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4309-L4327[source,window=_blank]
 
 '''
 
@@ -6590,7 +6590,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4329-L4345[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4329-L4345[source,window=_blank]
 
 '''
 
@@ -6627,7 +6627,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4347-L4369[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4347-L4369[source,window=_blank]
 
 '''
 
@@ -6661,7 +6661,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4371-L4390[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4371-L4390[source,window=_blank]
 
 '''
 
@@ -6699,7 +6699,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4392-L4415[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4392-L4415[source,window=_blank]
 
 '''
 
@@ -6735,7 +6735,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4417-L4438[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4417-L4438[source,window=_blank]
 
 '''
 
@@ -6769,7 +6769,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4440-L4459[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4440-L4459[source,window=_blank]
 
 '''
 
@@ -6803,7 +6803,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4461-L4480[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4461-L4480[source,window=_blank]
 
 '''
 
@@ -6834,7 +6834,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4482-L4498[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4482-L4498[source,window=_blank]
 
 '''
 
@@ -6872,7 +6872,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4500-L4523[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4500-L4523[source,window=_blank]
 
 '''
 
@@ -6907,7 +6907,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4525-L4545[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4525-L4545[source,window=_blank]
 
 '''
 
@@ -6944,7 +6944,7 @@ Outputs:
 - `attention-y` -> `:attention-y` (integer): Vertical position of attention centre
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4547-L4569[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4547-L4569[source,window=_blank]
 
 '''
 
@@ -6975,7 +6975,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4571-L4587[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4571-L4587[source,window=_blank]
 
 '''
 
@@ -7007,7 +7007,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4589-L4606[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4589-L4606[source,window=_blank]
 
 '''
 
@@ -7038,7 +7038,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4608-L4624[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4608-L4624[source,window=_blank]
 
 '''
 
@@ -7069,7 +7069,7 @@ Outputs:
 - `out` -> `:out` (image): Output array of statistics
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4626-L4642[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4626-L4642[source,window=_blank]
 
 '''
 
@@ -7106,7 +7106,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4644-L4666[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4644-L4666[source,window=_blank]
 
 '''
 
@@ -7140,7 +7140,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4668-L4687[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4668-L4687[source,window=_blank]
 
 '''
 
@@ -7172,7 +7172,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4689-L4706[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4689-L4706[source,window=_blank]
 
 '''
 
@@ -7203,7 +7203,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4708-L4724[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4708-L4724[source,window=_blank]
 
 '''
 
@@ -7247,7 +7247,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4726-L4755[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4726-L4755[source,window=_blank]
 
 '''
 
@@ -7278,7 +7278,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4757-L4773[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4757-L4773[source,window=_blank]
 
 '''
 
@@ -7314,7 +7314,7 @@ Outputs:
 - `log` -> `:log` (string): Command log
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4775-L4796[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4775-L4796[source,window=_blank]
 
 '''
 
@@ -7356,7 +7356,7 @@ Outputs:
 - `autofit-dpi` -> `:autofit-dpi` (integer): DPI selected by autofit
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4798-L4825[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4798-L4825[source,window=_blank]
 
 '''
 
@@ -7400,7 +7400,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4827-L4856[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4827-L4856[source,window=_blank]
 
 '''
 
@@ -7446,7 +7446,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4858-L4889[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4858-L4889[source,window=_blank]
 
 '''
 
@@ -7490,7 +7490,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4891-L4920[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4891-L4920[source,window=_blank]
 
 '''
 
@@ -7549,7 +7549,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4922-L4966[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4922-L4966[source,window=_blank]
 
 '''
 
@@ -7586,7 +7586,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4968-L4990[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4968-L4990[source,window=_blank]
 
 '''
 
@@ -7627,7 +7627,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L4992-L5018[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L4992-L5018[source,window=_blank]
 
 '''
 
@@ -7659,7 +7659,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5020-L5037[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5020-L5037[source,window=_blank]
 
 '''
 
@@ -7690,7 +7690,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5039-L5055[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5039-L5055[source,window=_blank]
 
 '''
 
@@ -7730,7 +7730,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5057-L5082[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5057-L5082[source,window=_blank]
 
 '''
 
@@ -7769,7 +7769,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5084-L5108[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5084-L5108[source,window=_blank]
 
 '''
 
@@ -7802,7 +7802,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5110-L5128[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5110-L5128[source,window=_blank]
 
 '''
 
@@ -7841,7 +7841,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5130-L5154[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5130-L5154[source,window=_blank]
 
 '''
 
@@ -7878,7 +7878,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5156-L5178[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5156-L5178[source,window=_blank]
 
 '''
 
@@ -7921,7 +7921,7 @@ Outputs:
 - `flags` -> `:flags` (integer flags): Flags for this file
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5180-L5208[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5180-L5208[source,window=_blank]
 
 '''
 
@@ -7974,7 +7974,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5210-L5248[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5210-L5248[source,window=_blank]
 
 '''
 
@@ -8026,7 +8026,7 @@ Outputs:
 - none
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5250-L5287[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5250-L5287[source,window=_blank]
 
 '''
 
@@ -8060,7 +8060,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5289-L5308[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5289-L5308[source,window=_blank]
 
 '''
 
@@ -8093,7 +8093,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5310-L5328[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5310-L5328[source,window=_blank]
 
 '''
 
@@ -8128,7 +8128,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5330-L5350[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5330-L5350[source,window=_blank]
 
 '''
 
@@ -8159,7 +8159,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5352-L5368[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5352-L5368[source,window=_blank]
 
 '''
 
@@ -8191,7 +8191,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5370-L5387[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5370-L5387[source,window=_blank]
 
 '''
 
@@ -8222,7 +8222,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5389-L5405[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5389-L5405[source,window=_blank]
 
 '''
 
@@ -8253,7 +8253,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5407-L5423[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5407-L5423[source,window=_blank]
 
 '''
 
@@ -8284,7 +8284,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5425-L5441[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5425-L5441[source,window=_blank]
 
 '''
 
@@ -8315,7 +8315,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5443-L5459[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5443-L5459[source,window=_blank]
 
 '''
 
@@ -8348,7 +8348,7 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5461-L5479[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5461-L5479[source,window=_blank]
 
 '''
 
@@ -8381,4 +8381,4 @@ Outputs:
 - `out` -> `:out` (image): Output image
 
 [.api-source]
-link:https://github.com/outskirtslabs/vips/blob/main/src/ol/vips/operations.clj#L5481-L5499[source,window=_blank]
+link:https://github.com/outskirtslabs/vips/blob/heads/v0.0.1/src/ol/vips/operations.clj#L5481-L5499[source,window=_blank]
