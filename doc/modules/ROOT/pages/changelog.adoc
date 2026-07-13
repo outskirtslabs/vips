@@ -6,15 +6,19 @@ This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 
 == UNRELEASED
 
-* Update every native companion jar to `sharp-libvips` 1.3.2, which bundles
+== `v0.0.1` (2026-07-13)
+
+* Released the first public version of the `ol.vips` main library.
+* Added a Clojure-owned FFI/FFM layer with generated operation and enum
+  wrappers, image I/O for files, byte arrays, and streams, metadata helpers,
+  and multipage and animated-image operations.
+* Published native companion jars for Linux on x86-64 and AArch64 with glibc
+  or musl, macOS on x86-64 and Apple silicon, and Windows on x86-64.
+* Updated every native companion jar to `sharp-libvips` 1.3.2, which bundles
   libvips 8.18.3.
-* Regenerate the operation and enum bindings for libvips 8.18.3, including
+* Regenerated the operation and enum bindings for libvips 8.18.3, including
   Oklab, Oklch, and UltraHDR support exposed by the upstream binaries.
-* Validate every staged native bundle against the project's declared libvips
-  version before publication.
-
-== `v0.0.1` (2026-XX-XX)
-
-We haven't quite got here yet..
+* Added publication checks that validate every staged native bundle against
+  the project's declared libvips version.
 
 Please report any problems and let me know if anything is unclear or inconvenient. Thank you.

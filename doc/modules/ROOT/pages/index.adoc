@@ -37,14 +37,10 @@ target platform.
 [source,clojure]
 ----
 ;; deps.edn
-{:deps {com.outskirtslabs/vips {:git/url "https://github.com/outskirtslabs/vips.git"
-                                :git/sha "59188d82ddf3250c75208709c9416417bfe5b503"}
+{:deps {com.outskirtslabs/vips {:mvn/version "0.0.1"}
         ;; change the following based on your runtime platform
         com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.3.2-1"}}}
 ----
-
-Don't forget to run `clojure -X:deps prep` before first use if using the
-git coord.
 
 https://clojars.org/search?q=group-id%3Acom.outskirtslabs+AND+artifact-id%3Avips-native*[Choose
 one or more native artifacts] (only the appropriate one for the runtime
