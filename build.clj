@@ -535,6 +535,7 @@
                             targets)})))
 
 (defn jar [_]
+  (b/delete {:path class-dir})
   (b/write-pom {:class-dir class-dir
                 :lib       lib
                 :version   version
@@ -549,12 +550,6 @@
                             (conj (url->scm repo-url-prefix) [:tag rev])]})
   (b/copy-dir {:src-dirs   (existing-paths ["src" "resources"])
                :target-dir class-dir})
-  ;; Maven cannot resolve Git coordinates. Bundle the pinned FFI runtime.
-  (let [ffi-dep (get-in @basis_ [:libs 'babashka/ffi])]
-    (b/copy-dir {:src-dirs   (:paths ffi-dep)
-                 :target-dir class-dir})
-    (copy-file! (str (io/file (:deps/root ffi-dep) "LICENSE"))
-                (str (io/file class-dir "META-INF/licenses/babashka-ffi/LICENSE"))))
   (b/jar {:class-dir class-dir
           :jar-file  jar-file}))
 
