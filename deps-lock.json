@@ -1,5 +1,11 @@
 {
   "git": {
+    "babashka/ffi/062a653a743a1f1dcb05f3545d22d27011edfc3d": {
+      "common_dir": "https/github.com/babashka/ffi",
+      "rev": "062a653a743a1f1dcb05f3545d22d27011edfc3d",
+      "sha256": "0wdi4hzfj48zg6p6y2sqpkan9bgmsnf24nw40b0g4jyh2nn2gh5x",
+      "url": "https://github.com/babashka/ffi"
+    },
     "outskirtslabs/bb-tasks/e868e28b18a0496ec4d39878f0307cb1df17da22": {
       "common_dir": "https/github.com/outskirtslabs/bb-tasks",
       "rev": "e868e28b18a0496ec4d39878f0307cb1df17da22",
@@ -382,12 +388,6 @@
     },
     "http-kit/http-kit/2.7.0/http-kit-2.7.0.pom": {
       "sha256": "ca0c586615be5e77dab77eecad68624d4a9255ca16bed8e8c056c9ce07f6cf50"
-    },
-    "insn/insn/0.5.4/insn-0.5.4.jar": {
-      "sha256": "dac8061f18d55c4b58840fa34e4e152e4c819c58331a7790be17b55297fa0018"
-    },
-    "insn/insn/0.5.4/insn-0.5.4.pom": {
-      "sha256": "aa4115c29a089e1410ae01ca323dcc653f7f7558a21059436c0ae32ae80b1538"
     },
     "io/github/clojure/tools.build/0.10.14/tools.build-0.10.14.jar": {
       "sha256": "e95329eee72a2f2ff22c1ac41ac699709ecf860b8aa0709fadb2331751a9d74c"
@@ -1043,12 +1043,6 @@
     "org/msgpack/msgpack/0.6.12/msgpack-0.6.12.pom": {
       "sha256": "94497d8f02f8de8159a5b7d5136e010f57f5d9ac65886112eced8695c5056dee"
     },
-    "org/ow2/asm/asm/9.3/asm-9.3.jar": {
-      "sha256": "1263369b59e29c943918de11d6d6152e2ec6085ce63e5710516f8c67d368e4bc"
-    },
-    "org/ow2/asm/asm/9.3/asm-9.3.pom": {
-      "sha256": "8eac07e29f8aea83a8156d7b29fa368f6ebf3becfb209c9a1ac36abd906123e0"
-    },
     "org/ow2/asm/asm/9.9.1/asm-9.9.1.jar": {
       "sha256": "6f3828a215c920059a5efa2fb55c233d6c54ec5cadca99ce1b1bdd10077c7ddd"
     },
@@ -1057,9 +1051,6 @@
     },
     "org/ow2/ow2/1.5.1/ow2-1.5.1.pom": {
       "sha256": "321ddbb7ee6fe4f53dea6b4cd6db74154d6bfa42391c1f763b361b9f485acf05"
-    },
-    "org/ow2/ow2/1.5/ow2-1.5.pom": {
-      "sha256": "0f8a1b116e760b8fe6389c51b84e4b07a70fc11082d4f936e453b583dd50b43b"
     },
     "org/slf4j/jcl-over-slf4j/1.7.36/jcl-over-slf4j-1.7.36.jar": {
       "sha256": "ab57ca8fd223772c17365d121f59e94ecbf0ae59d08c03a3cb5b81071c019195"
@@ -1117,12 +1108,6 @@
     },
     "org/springframework/build/aws-maven/4.8.0.RELEASE/aws-maven-4.8.0.RELEASE.pom": {
       "sha256": "004f4f2a7910871e788b6fc3a0a94063a0a6649f510c90cef266ef92ecc217f3"
-    },
-    "org/suskalo/coffi/1.0.615/coffi-1.0.615.jar": {
-      "sha256": "b05e068f15cd98717a8a202f6399ce0c86c3d146f9c99ef598ac350dc55295de"
-    },
-    "org/suskalo/coffi/1.0.615/coffi-1.0.615.pom": {
-      "sha256": "69d109fe077b6ad9773fef001537299823ad8808ffc202b7ac5617ad0f1675c2"
     },
     "org/tcrawley/dynapath/1.1.0/dynapath-1.1.0.jar": {
       "sha256": "9fc7aa3be6385da3ad22a06526f15a5d335d9e89d40f39bf2f9a00e0bbbd8ae8"

@@ -1,5 +1,6 @@
 {:paths   ["src"]
- :deps    {org.suskalo/coffi {:mvn/version "1.0.615"}}
+ :deps    {babashka/ffi {:git/url "https://github.com/babashka/ffi"
+                       :git/sha "062a653a743a1f1dcb05f3545d22d27011edfc3d"}}
  :aliases {:kaocha {:extra-paths ["test"]
                     :extra-deps  {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
                     :main-opts   ["-m" "kaocha.runner"]}

@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "brepl-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1770564310,
+        "narHash": "sha256-eTQS5LvAOLvx46YS6V/2+bYkWSELTTwZ1ir77eLk99M=",
+        "owner": "licht1stein",
+        "repo": "brepl",
+        "rev": "7c81a1b4cc03dda8e3997c73a47d98e91f368b1a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "licht1stein",
+        "ref": "v2.7.0",
+        "repo": "brepl",
+        "type": "github"
+      }
+    },
     "clj-helpers": {
       "inputs": {
         "clojure-nix-locker": "clojure-nix-locker",
@@ -211,6 +228,7 @@
     },
     "root": {
       "inputs": {
+        "brepl-src": "brepl-src",
         "clj-helpers": "clj-helpers",
         "devenv": "devenv",
         "devshell": "devshell_2",

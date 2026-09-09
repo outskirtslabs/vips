@@ -22,8 +22,8 @@ generated wrappers for the full libvips operation surface, and
 platform-native jars so you can use libvips from the JVM without
 building the native integration yourself.
 
-`ol.vips` uses https://github.com/IGJoshua/coffi[coffi] and requires Java
-22{plus} for FFI/FFM (Project Panama).
+`ol.vips` uses https://github.com/babashka/ffi[babashka/ffi] and requires Java
+25{plus} for FFI/FFM (Project Panama).
 
 Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#experimental[Experimental]*.
 
@@ -57,7 +57,7 @@ platform will be used):
 The native companion jars bundle libvips 8.18.3 from `sharp-libvips` 1.3.2.
 The test suite runs against that bundle.
 
-`ol.vips` requires Java 22{plus} and native access enabled for the JVM
+`ol.vips` requires Java 25{plus} and native access enabled for the JVM
 process:
 
 [source,clojure]

@@ -1,9 +1,9 @@
 (ns ^:no-doc ol.vips.impl.loader
   (:require
+   [babashka.ffi :as ffi]
    [clojure.edn :as edn]
    [clojure.java.io :as io]
-   [clojure.string :as str]
-   [coffi.ffi :as ffi])
+   [clojure.string :as str])
   (:import
    [java.io InputStream PushbackReader RandomAccessFile]
    [java.lang.foreign Arena SymbolLookup]
@@ -341,6 +341,19 @@
     (System/setProperty "ol.vips.native.primary-library-path" primary-library-path))
   state)
 
+(defn- load-system-library!
+  [lib]
+  (let [library-name (System/mapLibraryName lib)
+        paths        (str/split (System/getProperty "java.library.path" "")
+                                (re-pattern (java.util.regex.Pattern/quote java.io.File/pathSeparator)))
+        library-file (some (fn [path]
+                             (let [file (io/file path library-name)]
+                               (when (.isFile file) file)))
+                           paths)]
+    (if library-file
+      (ffi/load-library (.getAbsolutePath ^java.io.File library-file))
+      (ffi/load-system-library lib))))
+
 (defn- load-system-libraries!
   []
   (let [attempts
@@ -349,7 +362,7 @@
         {:keys [loaded failures]}
         (reduce (fn [{:keys [loaded failures] :as acc} lib]
                   (try
-                    (ffi/load-system-library lib)
+                    (load-system-library! lib)
                     (assoc acc :loaded (conj loaded lib))
                     (catch Throwable t
                       (assoc acc :failures (conj failures {:library lib

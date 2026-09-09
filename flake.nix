@@ -8,6 +8,10 @@
     devenv.inputs.nixpkgs.follows = "nixpkgs";
     clj-helpers.url = "github:outskirtslabs/clojure-nix-locker-helpers";
     clj-helpers.inputs.nixpkgs.follows = "nixpkgs";
+    brepl-src = {
+      url = "github:licht1stein/brepl/v2.7.0";
+      flake = false;
+    };
   };
   outputs =
     inputs@{
@@ -45,6 +49,10 @@
       withOverlays = [
         devshell.overlays.default
         devenv.overlays.default
+        # Avoid brepl's fetched-derivation import during cross-system evaluation.
+        (final: _prev: {
+          brepl = final.callPackage (inputs.brepl-src + "/package.nix") { };
+        })
       ];
       packages = {
         default = package;
