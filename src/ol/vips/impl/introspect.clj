@@ -1,6 +1,6 @@
 (ns ^:no-doc ol.vips.impl.introspect
   (:require
-   [coffi.mem :as mem]
+   [babashka.ffi :as ffi]
    [ol.vips.impl.api :as runtime]))
 
 (set! *warn-on-reflection* true)
@@ -14,17 +14,20 @@
 (defn- operation-nicknames
   []
   (or @operation-cache*
-      (let [type-map-all (runtime/bindings :type-map-all)
-            nicknames    (volatile! [])]
-        (type-map-all (:operation (runtime/gtypes))
-                      (fn [gtype _]
-                        (when-let [nickname ((runtime/bindings :nickname-find) gtype)]
-                          (vswap! nicknames conj nickname))
-                        mem/null)
-                      mem/null)
-        (let [result (->> @nicknames distinct sort vec)]
-          (reset! operation-cache* result)
-          result))))
+      (with-open [arena (ffi/confined-arena)]
+        (let [type-map-all (runtime/bindings :type-map-all)
+              nicknames    (volatile! [])
+              callback     (ffi/callback arena
+                                         (fn [gtype _]
+                                           (when-let [nickname ((runtime/bindings :nickname-find) gtype)]
+                                             (vswap! nicknames conj nickname))
+                                           ffi/null)
+                                         [:long :pointer]
+                                         :pointer)]
+          (type-map-all (:operation (runtime/gtypes)) callback ffi/null)
+          (let [result (->> @nicknames distinct sort vec)]
+            (reset! operation-cache* result)
+            result)))))
 
 (defn list-operations
   []
@@ -57,16 +60,14 @@
 (defn- encode-array-image
   [native images gvalue]
   (let [images        (vec images)
-        pointer-size  (mem/size-of ::mem/pointer)
-        pointer-align (mem/align-of ::mem/pointer)]
-    (with-open [arena (mem/confined-arena)]
-      (let [image-ptrs (mem/alloc (* (count images) pointer-size) pointer-align arena)]
+        pointer-size  (ffi/sizeof :pointer)
+        pointer-align (ffi/alignof :pointer)]
+    (with-open [arena (ffi/confined-arena)]
+      (let [image-ptrs (ffi/alloc arena (* (count images) pointer-size) pointer-align)]
         (doseq [[index image] (map-indexed vector images)]
-          (mem/write-address image-ptrs
-                             (* index pointer-size)
-                             (runtime/pointer (runtime/image-handle image))))
+          (ffi/write image-ptrs :pointer (runtime/pointer (runtime/image-handle image)) (* index pointer-size)))
         (let [boxed ((:array-image-new native) image-ptrs (count images))]
-          (when (mem/null? boxed)
+          (when (ffi/null? boxed)
             (throw (ex-info "Failed to encode boxed image array"
                             {:kind       :boxed
                              :value-type "VipsArrayImage"
@@ -91,14 +92,13 @@
 (defn- encode-array-double
   [native numbers gvalue]
   (let [numbers (mapv #(runtime/require-finite-number % "boxed double array value") numbers)]
-    (with-open [arena (mem/confined-arena)]
+    (with-open [arena (ffi/confined-arena)]
       (let [values (double-array (map double numbers))
-            data   (mem/alloc (* (count numbers) (mem/size-of ::mem/double))
-                              (mem/align-of ::mem/double)
-                              arena)]
-        (mem/write-doubles data (count numbers) values)
+            data   (ffi/alloc arena (* (count numbers) (ffi/sizeof :double)) (ffi/alignof :double))]
+        (when (seq numbers)
+          (ffi/write-array data :double values))
         (let [boxed ((:array-double-new native) data (count numbers))]
-          (when (mem/null? boxed)
+          (when (ffi/null? boxed)
             (throw (ex-info "Failed to encode boxed double array"
                             {:kind       :boxed
                              :value-type "VipsArrayDouble"
@@ -171,7 +171,7 @@
   [native {:keys [kind value-type gtype]} gvalue]
   (case kind
     :object (let [ptr ((:g-value-get-object native) gvalue)]
-              (when-not (mem/null? ptr)
+              (when-not (ffi/null? ptr)
                 ((:g-object-ref native) ptr)
                 (runtime/adopt-image ptr)))
     :string ((:g-value-get-string native) gvalue)
@@ -209,12 +209,12 @@
                 (encode-value (runtime/bindings) arg v gvalue)
                 ((runtime/bindings :g-object-set-property) operation arg-name gvalue)))))
         (let [built ((runtime/bindings :cache-operation-build) operation)]
-          (when (mem/null? built)
+          (when (ffi/null? built)
             (throw (ex-info "Failed to build operation"
                             {:operation operation-name
                              :error     ((runtime/bindings :vips-error-buffer))})))
           ((runtime/bindings :g-object-unref) operation)
-          (vreset! open-op mem/null)
+          (vreset! open-op ffi/null)
           (try
             (runtime/operation-result
              (into {}
@@ -229,6 +229,6 @@
               ((runtime/bindings :object-unref-outputs) built)
               ((runtime/bindings :g-object-unref) built)))))
       (catch Throwable t
-        (when-not (mem/null? @open-op)
+        (when-not (ffi/null? @open-op)
           ((runtime/bindings :g-object-unref) @open-op))
         (throw t)))))

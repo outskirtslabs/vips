@@ -1,9 +1,7 @@
 (ns ^:no-doc ol.vips.impl.api
   (:require
+   [babashka.ffi :as ffi]
    [clojure.string :as str]
-   [coffi.ffi :as ffi]
-   [coffi.layout :as layout]
-   [coffi.mem :as mem]
    [ol.vips.impl.loader :as loader])
   (:import
    [java.io File InputStream OutputStream]
@@ -128,247 +126,222 @@
                        :expected [:string :keyword :symbol]
                        :value    value}))))
 
-(mem/defalias ::g-type ::mem/long)
-(mem/defalias ::size-t ::mem/long)
+(def g-value [:struct
+              [[:g-type :long]
+               [:data [:array :long 2]]]])
 
-(mem/defalias ::g-value
-  (layout/with-c-layout
-    [::mem/struct
-     [[:g-type ::mem/long]
-      [:data [::mem/array ::mem/long 2]]]]))
+(def g-type-instance [:struct
+                      [[:g-class :pointer]]])
 
-(mem/defalias ::g-type-instance
-  (layout/with-c-layout
-    [::mem/struct
-     [[:g-class ::mem/pointer]]]))
+(def g-param-spec [:struct
+                   [[:g-type-instance g-type-instance]
+                    [:name :pointer]
+                    [:flags :int]
+                    [:value-type :long]
+                    [:owner-type :long]
+                    [:nick :pointer]
+                    [:blurb :pointer]
+                    [:qdata :pointer]
+                    [:ref-count :int]
+                    [:param-id :int]]])
 
-(mem/defalias ::g-param-spec
-  (layout/with-c-layout
-    [::mem/struct
-     [[:g-type-instance ::g-type-instance]
-      [:name ::mem/pointer]
-      [:flags ::mem/int]
-      [:value-type ::g-type]
-      [:owner-type ::g-type]
-      [:nick ::mem/pointer]
-      [:blurb ::mem/pointer]
-      [:qdata ::mem/pointer]
-      [:ref-count ::mem/int]
-      [:param-id ::mem/int]]]))
+(def g-param-spec-int [:struct
+                       [[:parent-instance g-param-spec]
+                        [:minimum :int]
+                        [:maximum :int]
+                        [:default-value :int]]])
 
-(mem/defalias ::g-param-spec-int
-  (layout/with-c-layout
-    [::mem/struct
-     [[:parent-instance ::g-param-spec]
-      [:minimum ::mem/int]
-      [:maximum ::mem/int]
-      [:default-value ::mem/int]]]))
+(def g-enum-value [:struct
+                   [[:value :int]
+                    [:value-name :string]
+                    [:value-nick :string]]])
 
-(mem/defalias ::g-enum-value
-  (layout/with-c-layout
-    [::mem/struct
-     [[:value ::mem/int]
-      [:value-name ::mem/c-string]
-      [:value-nick ::mem/c-string]]]))
+(def g-enum-class [:struct
+                   [[:g-type-class :pointer]
+                    [:minimum :int]
+                    [:maximum :int]
+                    [:n-values :int]
+                    [:values :pointer]]])
 
-(mem/defalias ::g-enum-class
-  (layout/with-c-layout
-    [::mem/struct
-     [[:g-type-class ::mem/pointer]
-      [:minimum ::mem/int]
-      [:maximum ::mem/int]
-      [:n-values ::mem/int]
-      [:values ::mem/pointer]]]))
+(def g-flags-value [:struct
+                    [[:value :int]
+                     [:value-name :string]
+                     [:value-nick :string]]])
 
-(mem/defalias ::g-flags-value
-  (layout/with-c-layout
-    [::mem/struct
-     [[:value ::mem/int]
-      [:value-name ::mem/c-string]
-      [:value-nick ::mem/c-string]]]))
-
-(mem/defalias ::g-flags-class
-  (layout/with-c-layout
-    [::mem/struct
-     [[:g-type-class ::mem/pointer]
-      [:mask ::mem/int]
-      [:n-values ::mem/int]
-      [:values ::mem/pointer]]]))
+(def g-flags-class [:struct
+                    [[:g-type-class :pointer]
+                     [:mask :int]
+                     [:n-values :int]
+                     [:values :pointer]]])
 
 (def ^:private source-read-callback-type
-  [::ffi/fn [::mem/pointer ::mem/pointer ::mem/long ::mem/pointer] ::mem/long :raw-fn? true])
+  [[:pointer :pointer :long :pointer] :long])
 
 (def ^:private target-write-callback-type
-  [::ffi/fn [::mem/pointer ::mem/pointer ::mem/long ::mem/pointer] ::mem/long :raw-fn? true])
+  [[:pointer :pointer :long :pointer] :long])
 
 (def ^:private target-end-callback-type
-  [::ffi/fn [::mem/pointer ::mem/pointer] ::mem/int :raw-fn? true])
+  [[:pointer :pointer] :int])
 
 (def ^:private native-symbol-specs
-  {:g-free                         ["g_free" [::mem/pointer] ::mem/void]
-   :g-strfreev                     ["g_strfreev" [::mem/pointer] ::mem/void]
+  {:g-free                         ["g_free" [:pointer] :void]
+   :g-strfreev                     ["g_strfreev" [:pointer] :void]
    :g-signal-connect-data          ["g_signal_connect_data"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer ::mem/int]
-                                    ::mem/long]
-   :g-object-ref                   ["g_object_ref" [::mem/pointer] ::mem/pointer]
-   :g-object-unref                 ["g_object_unref" [::mem/pointer] ::mem/void]
+                                    [:pointer :string :pointer :pointer :pointer :int]
+                                    :long]
+   :g-object-ref                   ["g_object_ref" [:pointer] :pointer]
+   :g-object-unref                 ["g_object_unref" [:pointer] :void]
    :g-object-get-property          ["g_object_get_property"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer]
-                                    ::mem/void]
+                                    [:pointer :string :pointer]
+                                    :void]
    :g-object-set-property          ["g_object_set_property"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer]
-                                    ::mem/void]
-   :g-type-children                ["g_type_children" [::g-type ::mem/pointer] ::mem/pointer]
-   :g-type-class-ref               ["g_type_class_ref" [::g-type] ::mem/pointer]
-   :g-type-class-unref             ["g_type_class_unref" [::mem/pointer] ::mem/void]
-   :g-type-fundamental             ["g_type_fundamental" [::g-type] ::g-type]
-   :g-type-from-name               ["g_type_from_name" [::mem/c-string] ::g-type]
-   :g-type-name                    ["g_type_name" [::g-type] ::mem/c-string]
-   :param-spec-get-blurb           ["g_param_spec_get_blurb" [::mem/pointer] ::mem/c-string]
-   :param-spec-get-name            ["g_param_spec_get_name" [::mem/pointer] ::mem/c-string]
-   :nickname-find                  ["vips_nickname_find" [::g-type] ::mem/c-string]
+                                    [:pointer :string :pointer]
+                                    :void]
+   :g-type-children                ["g_type_children" [:long :pointer] :pointer]
+   :g-type-class-ref               ["g_type_class_ref" [:long] :pointer]
+   :g-type-class-unref             ["g_type_class_unref" [:pointer] :void]
+   :g-type-fundamental             ["g_type_fundamental" [:long] :long]
+   :g-type-from-name               ["g_type_from_name" [:string] :long]
+   :g-type-name                    ["g_type_name" [:long] :string]
+   :param-spec-get-blurb           ["g_param_spec_get_blurb" [:pointer] :string]
+   :param-spec-get-name            ["g_param_spec_get_name" [:pointer] :string]
+   :nickname-find                  ["vips_nickname_find" [:long] :string]
    :argument-map                   ["vips_argument_map"
-                                    [::mem/pointer
-                                     [::ffi/fn [::mem/pointer
-                                                ::mem/pointer
-                                                ::mem/pointer
-                                                ::mem/pointer
-                                                ::mem/pointer
-                                                ::mem/pointer]
-                                      ::mem/pointer]
-                                     ::mem/pointer
-                                     ::mem/pointer]
-                                    ::mem/pointer]
+                                    [:pointer
+                                     :pointer
+                                     :pointer
+                                     :pointer]
+                                    :pointer]
    :type-map-all                   ["vips_type_map_all"
-                                    [::g-type
-                                     [::ffi/fn [::g-type ::mem/pointer] ::mem/pointer]
-                                     ::mem/pointer]
-                                    ::mem/pointer]
-   :g-value-get-boolean            ["g_value_get_boolean" [::mem/pointer] ::mem/int]
-   :g-value-get-double             ["g_value_get_double" [::mem/pointer] ::mem/double]
-   :g-value-get-enum               ["g_value_get_enum" [::mem/pointer] ::mem/int]
-   :g-value-get-flags              ["g_value_get_flags" [::mem/pointer] ::mem/int]
-   :g-value-get-int                ["g_value_get_int" [::mem/pointer] ::mem/int]
-   :g-value-get-int64              ["g_value_get_int64" [::mem/pointer] ::mem/long]
-   :g-value-get-object             ["g_value_get_object" [::mem/pointer] ::mem/pointer]
-   :g-value-get-string             ["g_value_get_string" [::mem/pointer] ::mem/c-string]
-   :g-value-get-uint               ["g_value_get_uint" [::mem/pointer] ::mem/int]
-   :g-value-get-uint64             ["g_value_get_uint64" [::mem/pointer] ::mem/long]
-   :g-value-init                   ["g_value_init" [::mem/pointer ::g-type] ::mem/pointer]
-   :g-value-set-boolean            ["g_value_set_boolean" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-boxed              ["g_value_set_boxed" [::mem/pointer ::mem/pointer] ::mem/void]
-   :g-value-set-double             ["g_value_set_double" [::mem/pointer ::mem/double] ::mem/void]
-   :g-value-set-enum               ["g_value_set_enum" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-flags              ["g_value_set_flags" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-int                ["g_value_set_int" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-int64              ["g_value_set_int64" [::mem/pointer ::mem/long] ::mem/void]
-   :g-value-set-long               ["g_value_set_long" [::mem/pointer ::mem/long] ::mem/void]
-   :g-value-set-object             ["g_value_set_object" [::mem/pointer ::mem/pointer] ::mem/void]
-   :g-value-set-string             ["g_value_set_string" [::mem/pointer ::mem/c-string] ::mem/void]
-   :g-value-set-uint               ["g_value_set_uint" [::mem/pointer ::mem/int] ::mem/void]
-   :g-value-set-uint64             ["g_value_set_uint64" [::mem/pointer ::mem/long] ::mem/void]
-   :g-value-unset                  ["g_value_unset" [::mem/pointer] ::mem/void]
-   :image-get-height               ["vips_image_get_height" [::mem/pointer] ::mem/int]
-   :image-get-bands                ["vips_image_get_bands" [::mem/pointer] ::mem/int]
-   :image-get                      ["vips_image_get" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/int]
+                                    [:long
+                                     :pointer
+                                     :pointer]
+                                    :pointer]
+   :g-value-get-boolean            ["g_value_get_boolean" [:pointer] :int]
+   :g-value-get-double             ["g_value_get_double" [:pointer] :double]
+   :g-value-get-enum               ["g_value_get_enum" [:pointer] :int]
+   :g-value-get-flags              ["g_value_get_flags" [:pointer] :int]
+   :g-value-get-int                ["g_value_get_int" [:pointer] :int]
+   :g-value-get-int64              ["g_value_get_int64" [:pointer] :long]
+   :g-value-get-object             ["g_value_get_object" [:pointer] :pointer]
+   :g-value-get-string             ["g_value_get_string" [:pointer] :string]
+   :g-value-get-uint               ["g_value_get_uint" [:pointer] :int]
+   :g-value-get-uint64             ["g_value_get_uint64" [:pointer] :long]
+   :g-value-init                   ["g_value_init" [:pointer :long] :pointer]
+   :g-value-set-boolean            ["g_value_set_boolean" [:pointer :int] :void]
+   :g-value-set-boxed              ["g_value_set_boxed" [:pointer :pointer] :void]
+   :g-value-set-double             ["g_value_set_double" [:pointer :double] :void]
+   :g-value-set-enum               ["g_value_set_enum" [:pointer :int] :void]
+   :g-value-set-flags              ["g_value_set_flags" [:pointer :int] :void]
+   :g-value-set-int                ["g_value_set_int" [:pointer :int] :void]
+   :g-value-set-int64              ["g_value_set_int64" [:pointer :long] :void]
+   :g-value-set-long               ["g_value_set_long" [:pointer :long] :void]
+   :g-value-set-object             ["g_value_set_object" [:pointer :pointer] :void]
+   :g-value-set-string             ["g_value_set_string" [:pointer :string] :void]
+   :g-value-set-uint               ["g_value_set_uint" [:pointer :int] :void]
+   :g-value-set-uint64             ["g_value_set_uint64" [:pointer :long] :void]
+   :g-value-unset                  ["g_value_unset" [:pointer] :void]
+   :image-get-height               ["vips_image_get_height" [:pointer] :int]
+   :image-get-bands                ["vips_image_get_bands" [:pointer] :int]
+   :image-get                      ["vips_image_get" [:pointer :string :pointer] :int]
    :image-get-array-double         ["vips_image_get_array_double"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
-                                    ::mem/int]
+                                    [:pointer :string :pointer :pointer]
+                                    :int]
    :image-get-array-int            ["vips_image_get_array_int"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
-                                    ::mem/int]
+                                    [:pointer :string :pointer :pointer]
+                                    :int]
    :image-get-as-string            ["vips_image_get_as_string"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer]
-                                    ::mem/int]
+                                    [:pointer :string :pointer]
+                                    :int]
    :image-get-blob                 ["vips_image_get_blob"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
-                                    ::mem/int]
+                                    [:pointer :string :pointer :pointer]
+                                    :int]
    :image-get-double               ["vips_image_get_double"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer]
-                                    ::mem/int]
-   :image-get-fields               ["vips_image_get_fields" [::mem/pointer] ::mem/pointer]
+                                    [:pointer :string :pointer]
+                                    :int]
+   :image-get-fields               ["vips_image_get_fields" [:pointer] :pointer]
    :image-get-int                  ["vips_image_get_int"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer]
-                                    ::mem/int]
+                                    [:pointer :string :pointer]
+                                    :int]
    :image-get-string               ["vips_image_get_string"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer]
-                                    ::mem/int]
-   :image-get-type                 ["vips_image_get_type" [] ::g-type]
-   :image-get-typeof               ["vips_image_get_typeof" [::mem/pointer ::mem/c-string] ::g-type]
-   :image-get-width                ["vips_image_get_width" [::mem/pointer] ::mem/int]
-   :image-has-alpha                ["vips_image_hasalpha" [::mem/pointer] ::mem/int]
+                                    [:pointer :string :pointer]
+                                    :int]
+   :image-get-type                 ["vips_image_get_type" [] :long]
+   :image-get-typeof               ["vips_image_get_typeof" [:pointer :string] :long]
+   :image-get-width                ["vips_image_get_width" [:pointer] :int]
+   :image-has-alpha                ["vips_image_hasalpha" [:pointer] :int]
    :image-new-from-buffer          ["vips_image_new_from_buffer"
-                                    [::mem/pointer ::size-t ::mem/c-string ::mem/pointer]
-                                    ::mem/pointer]
+                                    [:pointer :size_t :string :& :pointer]
+                                    :pointer]
    :image-new-from-file            ["vips_image_new_from_file"
-                                    [::mem/c-string ::mem/pointer]
-                                    ::mem/pointer]
+                                    [:string :& :pointer]
+                                    :pointer]
    :image-new-from-source          ["vips_image_new_from_source"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer]
-                                    ::mem/pointer]
-   :foreign-find-load              ["vips_foreign_find_load" [::mem/c-string] ::mem/c-string]
-   :foreign-find-load-buffer       ["vips_foreign_find_load_buffer" [::mem/pointer ::size-t] ::mem/c-string]
-   :foreign-find-load-source       ["vips_foreign_find_load_source" [::mem/pointer] ::mem/c-string]
-   :foreign-find-save              ["vips_foreign_find_save" [::mem/c-string] ::mem/c-string]
-   :foreign-find-save-buffer       ["vips_foreign_find_save_buffer" [::mem/c-string] ::mem/c-string]
-   :foreign-find-save-target       ["vips_foreign_find_save_target" [::mem/c-string] ::mem/c-string]
-   :image-copy-memory              ["vips_image_copy_memory" [::mem/pointer] ::mem/pointer]
+                                    [:pointer :string :& :pointer]
+                                    :pointer]
+   :foreign-find-load              ["vips_foreign_find_load" [:string] :string]
+   :foreign-find-load-buffer       ["vips_foreign_find_load_buffer" [:pointer :size_t] :string]
+   :foreign-find-load-source       ["vips_foreign_find_load_source" [:pointer] :string]
+   :foreign-find-save              ["vips_foreign_find_save" [:string] :string]
+   :foreign-find-save-buffer       ["vips_foreign_find_save_buffer" [:string] :string]
+   :foreign-find-save-target       ["vips_foreign_find_save_target" [:string] :string]
+   :image-copy-memory              ["vips_image_copy_memory" [:pointer] :pointer]
    :image-write-to-buffer          ["vips_image_write_to_buffer"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer ::mem/pointer]
-                                    ::mem/int]
+                                    [:pointer :string :pointer :pointer :& :pointer]
+                                    :int]
    :image-write-to-file            ["vips_image_write_to_file"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer]
-                                    ::mem/int]
-   :image-remove                   ["vips_image_remove" [::mem/pointer ::mem/c-string] ::mem/int]
-   :image-set                      ["vips_image_set" [::mem/pointer ::mem/c-string ::mem/pointer] ::mem/void]
+                                    [:pointer :string :& :pointer]
+                                    :int]
+   :image-remove                   ["vips_image_remove" [:pointer :string] :int]
+   :image-set                      ["vips_image_set" [:pointer :string :pointer] :void]
    :image-set-array-double         ["vips_image_set_array_double"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/int]
-                                    ::mem/void]
+                                    [:pointer :string :pointer :int]
+                                    :void]
    :image-set-array-int            ["vips_image_set_array_int"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/int]
-                                    ::mem/void]
+                                    [:pointer :string :pointer :int]
+                                    :void]
    :image-set-blob-copy            ["vips_image_set_blob_copy"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::size-t]
-                                    ::mem/void]
-   :image-set-double               ["vips_image_set_double" [::mem/pointer ::mem/c-string ::mem/double] ::mem/void]
-   :image-set-int                  ["vips_image_set_int" [::mem/pointer ::mem/c-string ::mem/int] ::mem/void]
-   :image-set-string               ["vips_image_set_string" [::mem/pointer ::mem/c-string ::mem/c-string] ::mem/void]
+                                    [:pointer :string :pointer :size_t]
+                                    :void]
+   :image-set-double               ["vips_image_set_double" [:pointer :string :double] :void]
+   :image-set-int                  ["vips_image_set_int" [:pointer :string :int] :void]
+   :image-set-string               ["vips_image_set_string" [:pointer :string :string] :void]
    :image-write-to-target          ["vips_image_write_to_target"
-                                    [::mem/pointer ::mem/c-string ::mem/pointer ::mem/pointer]
-                                    ::mem/int]
-   :operation-get-type             ["vips_operation_get_type" [] ::g-type]
-   :operation-new                  ["vips_operation_new" [::mem/c-string] ::mem/pointer]
-   :array-image-get-type           ["vips_array_image_get_type" [] ::g-type]
-   :array-double-get-type          ["vips_array_double_get_type" [] ::g-type]
-   :array-image-new                ["vips_array_image_new" [::mem/pointer ::mem/int] ::mem/pointer]
-   :array-double-new               ["vips_array_double_new" [::mem/pointer ::mem/int] ::mem/pointer]
-   :area-unref                     ["vips_area_unref" [::mem/pointer] ::mem/void]
-   :object-get-description         ["vips_object_get_description" [::mem/pointer] ::mem/c-string]
-   :object-get-arg-flags           ["vips_object_get_argument_flags" [::mem/pointer ::mem/c-string] ::mem/int]
-   :object-get-arg-priority        ["vips_object_get_argument_priority" [::mem/pointer ::mem/c-string] ::mem/int]
-   :object-unref-outputs           ["vips_object_unref_outputs" [::mem/pointer] ::mem/void]
-   :cache-operation-build          ["vips_cache_operation_build" [::mem/pointer] ::mem/pointer]
-   :vips-cache-set-max             ["vips_cache_set_max" [::mem/int] ::mem/void]
-   :vips-cache-set-max-mem         ["vips_cache_set_max_mem" [::size-t] ::mem/void]
-   :vips-cache-get-max             ["vips_cache_get_max" [] ::mem/int]
-   :vips-cache-get-size            ["vips_cache_get_size" [] ::mem/int]
-   :vips-cache-get-max-mem         ["vips_cache_get_max_mem" [] ::size-t]
-   :vips-cache-get-max-files       ["vips_cache_get_max_files" [] ::mem/int]
-   :vips-cache-set-max-files       ["vips_cache_set_max_files" [::mem/int] ::mem/void]
-   :vips-tracked-get-mem           ["vips_tracked_get_mem" [] ::size-t]
-   :vips-tracked-get-mem-highwater ["vips_tracked_get_mem_highwater" [] ::size-t]
-   :vips-tracked-get-allocs        ["vips_tracked_get_allocs" [] ::mem/int]
-   :vips-tracked-get-files         ["vips_tracked_get_files" [] ::mem/int]
-   :source-custom-new              ["vips_source_custom_new" [] ::mem/pointer]
-   :target-custom-new              ["vips_target_custom_new" [] ::mem/pointer]
-   :vips-error-buffer              ["vips_error_buffer" [] ::mem/c-string]
-   :vips-error-clear               ["vips_error_clear" [] ::mem/void]
-   :vips-operation-block-set       ["vips_operation_block_set" [::mem/c-string ::mem/int] ::mem/void]
-   :vips-block-untrusted-set       ["vips_block_untrusted_set" [::mem/int] ::mem/void]
-   :vips-init                      ["vips_init" [::mem/c-string] ::mem/int]
-   :vips-shutdown                  ["vips_shutdown" [] ::mem/void]
-   :vips-version                   ["vips_version" [::mem/int] ::mem/int]
-   :vips-version-string            ["vips_version_string" [] ::mem/c-string]})
+                                    [:pointer :string :pointer :& :pointer]
+                                    :int]
+   :operation-get-type             ["vips_operation_get_type" [] :long]
+   :operation-new                  ["vips_operation_new" [:string] :pointer]
+   :array-image-get-type           ["vips_array_image_get_type" [] :long]
+   :array-double-get-type          ["vips_array_double_get_type" [] :long]
+   :array-image-new                ["vips_array_image_new" [:pointer :int] :pointer]
+   :array-double-new               ["vips_array_double_new" [:pointer :int] :pointer]
+   :area-unref                     ["vips_area_unref" [:pointer] :void]
+   :object-get-description         ["vips_object_get_description" [:pointer] :string]
+   :object-get-arg-flags           ["vips_object_get_argument_flags" [:pointer :string] :int]
+   :object-get-arg-priority        ["vips_object_get_argument_priority" [:pointer :string] :int]
+   :object-unref-outputs           ["vips_object_unref_outputs" [:pointer] :void]
+   :cache-operation-build          ["vips_cache_operation_build" [:pointer] :pointer]
+   :vips-cache-set-max             ["vips_cache_set_max" [:int] :void]
+   :vips-cache-set-max-mem         ["vips_cache_set_max_mem" [:size_t] :void]
+   :vips-cache-get-max             ["vips_cache_get_max" [] :int]
+   :vips-cache-get-size            ["vips_cache_get_size" [] :int]
+   :vips-cache-get-max-mem         ["vips_cache_get_max_mem" [] :size_t]
+   :vips-cache-get-max-files       ["vips_cache_get_max_files" [] :int]
+   :vips-cache-set-max-files       ["vips_cache_set_max_files" [:int] :void]
+   :vips-tracked-get-mem           ["vips_tracked_get_mem" [] :size_t]
+   :vips-tracked-get-mem-highwater ["vips_tracked_get_mem_highwater" [] :size_t]
+   :vips-tracked-get-allocs        ["vips_tracked_get_allocs" [] :int]
+   :vips-tracked-get-files         ["vips_tracked_get_files" [] :int]
+   :source-custom-new              ["vips_source_custom_new" [] :pointer]
+   :target-custom-new              ["vips_target_custom_new" [] :pointer]
+   :vips-error-buffer              ["vips_error_buffer" [] :string]
+   :vips-error-clear               ["vips_error_clear" [] :void]
+   :vips-operation-block-set       ["vips_operation_block_set" [:string :int] :void]
+   :vips-block-untrusted-set       ["vips_block_untrusted_set" [:int] :void]
+   :vips-init                      ["vips_init" [:string] :int]
+   :vips-shutdown                  ["vips_shutdown" [] :void]
+   :vips-version                   ["vips_version" [:int] :int]
+   :vips-version-string            ["vips_version_string" [] :string]})
 
 (defonce ^:private state* (atom nil))
 (defonce ^:private type-value-cache* (atom nil))
@@ -519,13 +492,13 @@
 
 (defn- deserialize-struct
   [ptr type]
-  (mem/deserialize (mem/reinterpret ptr (mem/size-of type)) type))
+  (ffi/read (ffi/reinterpret ptr (ffi/sizeof type)) type))
 
 (defn- describe-argument
   [native op name pspec-ptr]
   (let [flags      ((:object-get-arg-flags native) op name)
         priority   ((:object-get-arg-priority native) op name)
-        value-type (:value-type (deserialize-struct pspec-ptr ::g-param-spec))
+        value-type (:value-type (deserialize-struct pspec-ptr g-param-spec))
         kind       (classify-gtype value-type)]
     (cond-> {:name       name
              :blurb      ((:param-spec-get-blurb native) pspec-ptr)
@@ -538,14 +511,14 @@
              :output?    (bit-set? flags vips-argument-output)
              :required?  (bit-set? flags vips-argument-required)}
       (= :int kind)
-      (merge (select-keys (deserialize-struct pspec-ptr ::g-param-spec-int)
+      (merge (select-keys (deserialize-struct pspec-ptr g-param-spec-int)
                           [:minimum :maximum])))))
 
 (defn open-operation
   [operation-name]
   (let [operation-name (require-java-string operation-name "operation name")
         op             ((bindings :operation-new) operation-name)]
-    (when (mem/null? op)
+    (when (ffi/null? op)
       (throw (ex-info "Unknown libvips operation"
                       {:operation operation-name})))
     op))
@@ -556,17 +529,19 @@
   (let [argument-map (bindings :argument-map)
         op           (open-operation operation-name)]
     (try
-      (let [args (volatile! [])]
-        (argument-map op
-                      (fn [_object pspec-ptr _arg-class-ptr _instance _user-data _extra]
-                        (let [name ((bindings :param-spec-get-name) pspec-ptr)]
-                          (vswap! args conj (describe-argument (bindings) op name pspec-ptr)))
-                        mem/null)
-                      mem/null
-                      mem/null)
-        (->> @args
-             (sort-by (juxt (complement :required?) :priority))
-             vec))
+      (with-open [arena (ffi/confined-arena)]
+        (let [args     (volatile! [])
+              callback (ffi/callback arena
+                                     (fn [_object pspec-ptr _arg-class-ptr _instance _user-data _extra]
+                                       (let [name ((bindings :param-spec-get-name) pspec-ptr)]
+                                         (vswap! args conj (describe-argument (bindings) op name pspec-ptr)))
+                                       ffi/null)
+                                     [:pointer :pointer :pointer :pointer :pointer :pointer]
+                                     :pointer)]
+          (argument-map op callback ffi/null ffi/null)
+          (->> @args
+               (sort-by (juxt (complement :required?) :priority))
+               vec)))
       (finally
         ((bindings :g-object-unref) op)))))
 
@@ -586,31 +561,31 @@
   (ensure-initialized!)
   (let [enum-type  (:enum (gtypes))
         flags-type (:flags (gtypes))]
-    (with-open [arena (mem/confined-arena)]
-      (let [slot-size (mem/size-of ::g-type)
+    (with-open [arena (ffi/confined-arena)]
+      (let [slot-size (ffi/sizeof :long)
             discover-children
             (fn [fundamental class-type value-type build-entry]
-              (let [count-ptr (mem/alloc-instance ::mem/int arena)
+              (let [count-ptr (ffi/alloc arena :int)
                     children  ((bindings :g-type-children) fundamental count-ptr)
-                    count     (mem/read-int count-ptr)
-                    children* (mem/reinterpret children (* count slot-size))]
+                    count     (ffi/read count-ptr :int)
+                    children* (ffi/reinterpret children (* count slot-size))]
                 (into {}
                       (for [index (range count)
                             :let  [offset     (* index slot-size)
-                                   child-type (mem/read-long (mem/slice children* offset slot-size))
+                                   child-type (ffi/read (ffi/slice children* offset slot-size) :long)
                                    type-name   (type-name child-type)
                                    class-ptr   ((bindings :g-type-class-ref) child-type)]
-                            :when (and type-name (not (mem/null? class-ptr)))]
+                            :when (and type-name (not (ffi/null? class-ptr)))]
                         (try
-                          (let [class*      (mem/reinterpret class-ptr (mem/size-of class-type))
-                                value-class (mem/deserialize class* class-type)
+                          (let [class*      (ffi/reinterpret class-ptr (ffi/sizeof class-type))
+                                value-class (ffi/read class* class-type)
                                 n-values    (:n-values value-class)
-                                value-size  (mem/size-of value-type)
-                                values*     (mem/reinterpret (:values value-class) (* n-values value-size))
+                                value-size  (ffi/sizeof value-type)
+                                values*     (ffi/reinterpret (:values value-class) (* n-values value-size))
                                 entries     (into {}
                                                   (for [i     (range n-values)
-                                                        :let  [entry (mem/deserialize
-                                                                      (mem/slice values* (* i value-size) value-size)
+                                                        :let  [entry (ffi/read
+                                                                      (ffi/slice values* (* i value-size) value-size)
                                                                       value-type)
                                                                keyword (enum-keyword (:value-nick entry)
                                                                                      (:value-name entry))]
@@ -621,16 +596,16 @@
                             ((bindings :g-type-class-unref) class-ptr)))))))]
         (merge
          (discover-children enum-type
-                            ::g-enum-class
-                            ::g-enum-value
+                            g-enum-class
+                            g-enum-value
                             (fn [type-name _ entries]
                               {:type-name      type-name
                                :kind           :enum
                                :keyword->value entries
                                :value->keyword (into {} (map (fn [[k v]] [v k]) entries))}))
          (discover-children flags-type
-                            ::g-flags-class
-                            ::g-flags-value
+                            g-flags-class
+                            g-flags-value
                             (fn [type-name flags-class entries]
                               {:type-name      type-name
                                :kind           :flags
@@ -1015,7 +990,7 @@
 
 (defn connect-signal!
   [ptr signal callback callback-type arena]
-  (let [stub      (mem/serialize callback callback-type arena)
+  (let [stub      (ffi/callback arena callback (first callback-type) (second callback-type))
         signal-id ((bindings :g-signal-connect-data) ptr signal stub nil nil 0)]
     (when (zero? signal-id)
       (throw-vips-error (bindings)
@@ -1033,7 +1008,7 @@
   (let [arena       (Arena/ofShared)
         failure-ref (AtomicReference. nil)
         ptr         ((bindings :source-custom-new))]
-    (when (mem/null? ptr)
+    (when (ffi/null? ptr)
       (.close arena)
       (throw-vips-error (bindings)
                         "Failed to create custom stream source"
@@ -1048,7 +1023,7 @@
                                     chunk     (.readNBytes stream requested)
                                     read-size (alength ^bytes chunk)]
                                 (when (pos? read-size)
-                                  (mem/write-bytes (mem/reinterpret data requested) read-size chunk))
+                                  (ffi/write-array (ffi/reinterpret data requested) :byte chunk))
                                 (long read-size))
                               (catch Throwable t
                                 (remember-stream-failure! failure-ref t)
@@ -1117,7 +1092,7 @@
   (let [arena       (Arena/ofShared)
         failure-ref (AtomicReference. nil)
         ptr         ((bindings :target-custom-new))]
-    (when (mem/null? ptr)
+    (when (ffi/null? ptr)
       (.close arena)
       (throw-vips-error (bindings)
                         "Failed to create custom stream target"
@@ -1130,7 +1105,7 @@
                                                  {:length length})))
                                (let [write-size (Math/toIntExact length)]
                                  (when (pos? write-size)
-                                   (let [chunk (mem/read-bytes (mem/reinterpret data length) write-size)]
+                                   (let [chunk (ffi/read-array (ffi/reinterpret data length) :byte write-size)]
                                      (.write ^OutputStream stream ^bytes chunk (int 0) (int write-size))))
                                  (long write-size))
                                (catch Throwable t
@@ -1158,7 +1133,7 @@
   ([ptr]
    (wrap-image ptr nil))
   ([ptr keeper]
-   (when-not (mem/null? ptr)
+   (when-not (ffi/null? ptr)
      (ImageHandle. ptr (AtomicBoolean. false) keeper))))
 
 (defn adopt-image
@@ -1197,8 +1172,8 @@
 
 (defn with-gvalue
   [gtype f]
-  (with-open [arena (mem/confined-arena)]
-    (let [value (mem/alloc-instance ::g-value arena)]
+  (with-open [arena (ffi/confined-arena)]
+    (let [value (ffi/alloc arena g-value)]
       ((bindings :g-value-init) value gtype)
       (try
         (f value)
@@ -1209,7 +1184,7 @@
   ([source]
    (let [path  (require-java-string source "from-file source")
          image ((bindings :image-new-from-file) path nil)]
-     (when (mem/null? image)
+     (when (ffi/null? image)
        (throw-vips-error (bindings)
                          "Failed to open image"
                          {:source path}))
@@ -1218,7 +1193,7 @@
    (validate-helper-target-options! maybe-find-load-operation-name source "from-file source" opts)
    (let [path  (append-options source opts)
          image ((bindings :image-new-from-file) path nil)]
-     (when (mem/null? image)
+     (when (ffi/null? image)
        (throw-vips-error (bindings)
                          "Failed to open image"
                          {:source path}))
@@ -1257,10 +1232,10 @@
   [source]
   (let [native (bindings)
         data   (->byte-array source "from-buffer source")]
-    (with-open [arena (mem/confined-arena)]
+    (with-open [arena (ffi/confined-arena)]
       (let [size   (alength ^bytes data)
-            buffer (mem/alloc size 1 arena)]
-        (mem/write-bytes buffer size data)
+            buffer (ffi/alloc arena (max 1 size) 1)]
+        (ffi/write-array buffer :byte data)
         (let [operation-name ((:foreign-find-load-buffer native) buffer size)]
           (when-not operation-name
             (clear-error! native))
@@ -1271,11 +1246,11 @@
   (let [data   (->byte-array source "from-buffer source")
         arena  (Arena/ofShared)
         size   (alength ^bytes data)
-        buffer (mem/alloc size 1 arena)
+        buffer (ffi/alloc arena (max 1 size) 1)
         image  (do
-                 (mem/write-bytes buffer size data)
+                 (ffi/write-array buffer :byte data)
                  ((bindings :image-new-from-buffer) buffer size option-string nil))]
-    (when (mem/null? image)
+    (when (ffi/null? image)
       (.close arena)
       (throw-vips-error (bindings)
                         "Failed to open image from buffer"
@@ -1295,7 +1270,7 @@
   (let [stream (require-instance InputStream source "from-stream source")
         bridge (new-source-bridge stream)
         image  ((bindings :image-new-from-source) (pointer bridge) (or option-string "") nil)]
-    (when (mem/null? image)
+    (when (ffi/null? image)
       (.close ^java.lang.AutoCloseable bridge)
       (throw-stream-error "Failed to open image from stream"
                           {}
@@ -1312,7 +1287,7 @@
 (defn copy-image-to-memory
   [image]
   (let [copied ((bindings :image-copy-memory) (pointer (image-handle image)))]
-    (when (mem/null? copied)
+    (when (ffi/null? copied)
       (throw-vips-error (bindings)
                         "Failed to copy image to memory"
                         {}))
@@ -1339,10 +1314,10 @@
 
 (defn write-image-to-buffer
   ([image suffix]
-   (with-open [arena (mem/confined-arena)]
+   (with-open [arena (ffi/confined-arena)]
      (let [suffix     (require-java-string suffix "write-to-buffer suffix")
-           buffer-ptr (mem/alloc-instance ::mem/pointer arena)
-           size-ptr   (mem/alloc-instance ::size-t arena)
+           buffer-ptr (ffi/alloc arena :pointer)
+           size-ptr   (ffi/alloc arena :size_t)
            code       ((bindings :image-write-to-buffer)
                        (pointer (image-handle image))
                        suffix
@@ -1353,18 +1328,18 @@
          (throw-vips-error (bindings)
                            "Failed to write image to buffer"
                            {:suffix suffix}))
-       (let [output-ptr  (mem/read-address buffer-ptr)
-             output-size (mem/read-long size-ptr)]
+       (let [output-ptr  (ffi/read buffer-ptr :pointer)
+             output-size (ffi/read size-ptr :long)]
          (try
-           (mem/read-bytes (mem/reinterpret output-ptr output-size) output-size)
+           (ffi/read-array (ffi/reinterpret output-ptr output-size) :byte output-size)
            (finally
              ((bindings :g-free) output-ptr)))))))
   ([image suffix opts]
    (validate-helper-target-options! maybe-find-save-buffer-operation-name suffix "write-to-buffer suffix" opts)
-   (with-open [arena (mem/confined-arena)]
+   (with-open [arena (ffi/confined-arena)]
      (let [suffix     (append-options suffix opts)
-           buffer-ptr (mem/alloc-instance ::mem/pointer arena)
-           size-ptr   (mem/alloc-instance ::size-t arena)
+           buffer-ptr (ffi/alloc arena :pointer)
+           size-ptr   (ffi/alloc arena :size_t)
            code       ((bindings :image-write-to-buffer)
                        (pointer (image-handle image))
                        suffix
@@ -1375,10 +1350,10 @@
          (throw-vips-error (bindings)
                            "Failed to write image to buffer"
                            {:suffix suffix}))
-       (let [output-ptr  (mem/read-address buffer-ptr)
-             output-size (mem/read-long size-ptr)]
+       (let [output-ptr  (ffi/read buffer-ptr :pointer)
+             output-size (ffi/read size-ptr :long)]
          (try
-           (mem/read-bytes (mem/reinterpret output-ptr output-size) output-size)
+           (ffi/read-array (ffi/reinterpret output-ptr output-size) :byte output-size)
            (finally
              ((bindings :g-free) output-ptr))))))))
 
@@ -1454,9 +1429,9 @@
 (defn image-field-names
   [image]
   (let [raw-fields ((bindings :image-get-fields) (pointer (image-handle image)))]
-    (if (mem/null? raw-fields)
+    (if (ffi/null? raw-fields)
       []
-      (let [slot-size  (mem/size-of ::mem/pointer)
+      (let [slot-size  (ffi/sizeof :pointer)
             max-fields 1024
             fields-ptr (.reinterpret ^java.lang.foreign.MemorySegment raw-fields
                                      (* max-fields slot-size))]
@@ -1466,7 +1441,7 @@
             (let [field-ptr (.getAtIndex ^java.lang.foreign.MemorySegment fields-ptr
                                          java.lang.foreign.ValueLayout/ADDRESS
                                          idx)]
-              (if (mem/null? field-ptr)
+              (if (ffi/null? field-ptr)
                 acc
                 (recur (inc idx) (conj acc (read-c-string field-ptr))))))
           (finally
@@ -1479,8 +1454,8 @@
    (let [field-name (require-field-name field-name)]
      (if-not (image-has-field? image field-name)
        (if (identical? not-found missing-field-sentinel) nil not-found)
-       (with-open [arena (mem/confined-arena)]
-         (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+       (with-open [arena (ffi/confined-arena)]
+         (let [out-ptr (ffi/alloc arena :pointer)
                code    ((bindings :image-get-as-string)
                         (pointer (image-handle image))
                         field-name
@@ -1489,7 +1464,7 @@
              (throw-vips-error (bindings)
                                "Failed to read image metadata field as string"
                                {:field field-name}))
-           (let [value-ptr (mem/read-address out-ptr)]
+           (let [value-ptr (ffi/read out-ptr :pointer)]
              (try
                (read-c-string value-ptr)
                (finally
@@ -1498,8 +1473,8 @@
 (defn image-int-field
   [image field-name]
   (let [field-name (require-field-name field-name)]
-    (with-open [arena (mem/confined-arena)]
-      (let [out-ptr (mem/alloc-instance ::mem/int arena)
+    (with-open [arena (ffi/confined-arena)]
+      (let [out-ptr (ffi/alloc arena :int)
             code    ((bindings :image-get-int)
                      (pointer (image-handle image))
                      field-name
@@ -1508,13 +1483,13 @@
           (throw-vips-error (bindings)
                             "Failed to read integer image metadata field"
                             {:field field-name}))
-        (mem/read-int out-ptr)))))
+        (ffi/read out-ptr :int)))))
 
 (defn image-double-field
   [image field-name]
   (let [field-name (require-field-name field-name)]
-    (with-open [arena (mem/confined-arena)]
-      (let [out-ptr (mem/alloc-instance ::mem/double arena)
+    (with-open [arena (ffi/confined-arena)]
+      (let [out-ptr (ffi/alloc arena :double)
             code    ((bindings :image-get-double)
                      (pointer (image-handle image))
                      field-name
@@ -1523,13 +1498,13 @@
           (throw-vips-error (bindings)
                             "Failed to read double image metadata field"
                             {:field field-name}))
-        (mem/read-double out-ptr)))))
+        (ffi/read out-ptr :double)))))
 
 (defn image-string-field
   [image field-name]
   (let [field-name (require-field-name field-name)]
-    (with-open [arena (mem/confined-arena)]
-      (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
+    (with-open [arena (ffi/confined-arena)]
+      (let [out-ptr (ffi/alloc arena :pointer)
             code    ((bindings :image-get-string)
                      (pointer (image-handle image))
                      field-name
@@ -1538,14 +1513,14 @@
           (throw-vips-error (bindings)
                             "Failed to read string image metadata field"
                             {:field field-name}))
-        (read-c-string (mem/read-address out-ptr))))))
+        (read-c-string (ffi/read out-ptr :pointer))))))
 
 (defn image-array-int-field
   [image field-name]
   (let [field-name (require-field-name field-name)]
-    (with-open [arena (mem/confined-arena)]
-      (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
-            n-ptr   (mem/alloc-instance ::mem/int arena)
+    (with-open [arena (ffi/confined-arena)]
+      (let [out-ptr (ffi/alloc arena :pointer)
+            n-ptr   (ffi/alloc arena :int)
             code    ((bindings :image-get-array-int)
                      (pointer (image-handle image))
                      field-name
@@ -1555,11 +1530,11 @@
           (throw-vips-error (bindings)
                             "Failed to read integer-array image metadata field"
                             {:field field-name}))
-        (let [count     (mem/read-int n-ptr)
+        (let [count     (ffi/read n-ptr :int)
               data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
-                         (mem/read-address out-ptr)
-                                      (* count (mem/size-of ::mem/int)))
-              slot-size (mem/size-of ::mem/int)]
+                         (ffi/read out-ptr :pointer)
+                                      (* count (ffi/sizeof :int)))
+              slot-size (ffi/sizeof :int)]
           (mapv (fn [idx]
                   (.get ^java.lang.foreign.MemorySegment
                    data-ptr
@@ -1570,9 +1545,9 @@
 (defn image-array-double-field
   [image field-name]
   (let [field-name (require-field-name field-name)]
-    (with-open [arena (mem/confined-arena)]
-      (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
-            n-ptr   (mem/alloc-instance ::mem/int arena)
+    (with-open [arena (ffi/confined-arena)]
+      (let [out-ptr (ffi/alloc arena :pointer)
+            n-ptr   (ffi/alloc arena :int)
             code    ((bindings :image-get-array-double)
                      (pointer (image-handle image))
                      field-name
@@ -1582,11 +1557,11 @@
           (throw-vips-error (bindings)
                             "Failed to read double-array image metadata field"
                             {:field field-name}))
-        (let [count     (mem/read-int n-ptr)
+        (let [count     (ffi/read n-ptr :int)
               data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
-                         (mem/read-address out-ptr)
-                                      (* count (mem/size-of ::mem/double)))
-              slot-size (mem/size-of ::mem/double)]
+                         (ffi/read out-ptr :pointer)
+                                      (* count (ffi/sizeof :double)))
+              slot-size (ffi/sizeof :double)]
           (mapv (fn [idx]
                   (.get ^java.lang.foreign.MemorySegment
                    data-ptr
@@ -1597,9 +1572,9 @@
 (defn image-blob-field
   [image field-name]
   (let [field-name (require-field-name field-name)]
-    (with-open [arena (mem/confined-arena)]
-      (let [out-ptr (mem/alloc-instance ::mem/pointer arena)
-            len-ptr (mem/alloc-instance ::size-t arena)
+    (with-open [arena (ffi/confined-arena)]
+      (let [out-ptr (ffi/alloc arena :pointer)
+            len-ptr (ffi/alloc arena :size_t)
             code    ((bindings :image-get-blob)
                      (pointer (image-handle image))
                      field-name
@@ -1609,9 +1584,11 @@
           (throw-vips-error (bindings)
                             "Failed to read blob image metadata field"
                             {:field field-name}))
-        (let [data-ptr (mem/read-address out-ptr)
-              length   (mem/read-long len-ptr)]
-          (mem/read-bytes (mem/reinterpret data-ptr length) length))))))
+        (let [data-ptr (ffi/read out-ptr :pointer)
+              length   (ffi/read len-ptr :long)]
+          (if (zero? length)
+            (byte-array 0)
+            (ffi/read-array (ffi/reinterpret data-ptr length) :byte length)))))))
 
 (defn image-field
   ([image field-name]
@@ -1662,32 +1639,24 @@
        :string ((bindings :image-set-string) image-ptr field-name (require-java-string value "image field value"))
        :blob (let [data (->byte-array value "image field value")
                    size (alength ^bytes data)]
-               (with-open [arena (mem/confined-arena)]
-                 (let [buffer (mem/alloc (max 1 size) 1 arena)]
+               (with-open [arena (ffi/confined-arena)]
+                 (let [buffer (ffi/alloc arena (max 1 size) 1)]
                    (when (pos? size)
-                     (mem/write-bytes buffer size data))
+                     (ffi/write-array buffer :byte data))
                    ((bindings :image-set-blob-copy) image-ptr field-name buffer size))))
        :array-int (let [values (vec value)
                         count  (count values)]
-                    (with-open [arena (mem/confined-arena)]
-                      (let [data (mem/alloc (* count (mem/size-of ::mem/int))
-                                            (mem/align-of ::mem/int)
-                                            arena)]
+                    (with-open [arena (ffi/confined-arena)]
+                      (let [data (ffi/alloc arena (* count (ffi/sizeof :int)) (ffi/alignof :int))]
                         (doseq [[idx item] (map-indexed vector values)]
-                          (mem/write-int data
-                                         (* idx (mem/size-of ::mem/int))
-                                         (int (require-int32 item "image field value"))))
+                          (ffi/write data :int (int (require-int32 item "image field value")) (* idx (ffi/sizeof :int))))
                         ((bindings :image-set-array-int) image-ptr field-name data count))))
        :array-double (let [values (vec value)
                            count  (count values)]
-                       (with-open [arena (mem/confined-arena)]
-                         (let [data (mem/alloc (* count (mem/size-of ::mem/double))
-                                               (mem/align-of ::mem/double)
-                                               arena)]
+                       (with-open [arena (ffi/confined-arena)]
+                         (let [data (ffi/alloc arena (* count (ffi/sizeof :double)) (ffi/alignof :double))]
                            (doseq [[idx item] (map-indexed vector values)]
-                             (mem/write-double data
-                                               (* idx (mem/size-of ::mem/double))
-                                               (double (require-finite-number item "image field value"))))
+                             (ffi/write data :double (double (require-finite-number item "image field value")) (* idx (ffi/sizeof :double))))
                            ((bindings :image-set-array-double) image-ptr field-name data count))))
        (throw (ex-info "Unsupported image metadata type"
                        {:field field-name

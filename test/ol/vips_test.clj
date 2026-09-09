@@ -305,6 +305,12 @@
       (is (= (+ (v/height image) 40) (v/height bordered)))
       (is (> (:out (v/call "avg" {:in sample})) 100.0)))))
 
+(deftest empty-buffers-preserve-native-errors
+  (doseq [open [v/from-buffer #(v/from-buffer % {})]]
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                          #"Failed to open image from buffer"
+                          (open (byte-array 0))))))
+
 (deftest load-save-options
   (testing "from-file supports option maps and suffix options"
     (with-open [img1 (v/from-file puppies-path)
@@ -823,6 +829,12 @@
                                           :valign :centre})]
       (is (= {:width 4990 :height 6178 :has-alpha? false}
              (select-keys (v/metadata grid) [:width :height :has-alpha?]))))))
+
+(deftest empty-blob-metadata-roundtrips
+  (with-open [image  (ops/black 2 2)
+              tagged (v/assoc-field image "empty-blob" (byte-array 0))]
+    (is (= [] (vec (v/field tagged "empty-blob"))))
+    (is (false? (v/has-field? image "empty-blob")))))
 
 (deftest metadata-api
   (testing "generic field helpers expose typed metadata values and discovery"
