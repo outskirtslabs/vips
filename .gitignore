@@ -15,6 +15,7 @@ extra/
 result
 .env
 prompts/
+.scratch-org/
 *.md
 !README.md
 examples/square_flask_http_stream.png
@@ -25,4 +26,3 @@ target/native-cache/
 examples/sicp*png
 examples/funcgeo*png
 .pi
-.ralph
