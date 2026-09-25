@@ -39,7 +39,7 @@
           ops   (set (v/operations))
           flip  (v/operation-info "flip")]
       (is (identical? state (v/init!)))
-      (is (= "8.18.3" (:version-string state)))
+      (is (= "8.18.6" (:version-string state)))
       (is (contains? ops "rotate"))
       (is (contains? ops "arrayjoin"))
       (is (= :horizontal

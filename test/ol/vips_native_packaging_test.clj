@@ -278,7 +278,7 @@
         (is (zero? exit) err)
         (let [project (get-in (edn/read-string (slurp deps-path))
                               [:aliases :neil :project])]
-          (is (= "1.3.2-1" (:version project)))
+          (is (= "1.3.3-1" (:version project)))
           (is (= "LGPL-3.0-or-later" (get-in project [:license :id])))))
       (finally
         (when (.exists (io/file temp-native-root))
@@ -292,9 +292,9 @@
           expected (into {}
                          (map (fn [{:keys [platform-id]}]
                                 [platform-id
-                                 {:vips-version     "8.18.3"
-                                  :sharp-version    "1.3.2"
-                                  :artifact-version "1.3.2-1"
+                                 {:vips-version     "8.18.6"
+                                  :sharp-version    "1.3.3"
+                                  :artifact-version "1.3.3-1"
                                   :missing-files    []}]))
                          staged)]
       (is (= expected actual)))))
@@ -313,7 +313,7 @@
                                 (pr-str native-root)))]
     (try
       (testing "the configured libvips version is accepted"
-        (write-native-fixture! native-root "8.18.3")
+        (write-native-fixture! native-root "8.18.6")
         (let [{:keys [exit err]} (validate!)]
           (is (zero? exit) err)))
       (testing "older and unreleased libvips versions are rejected"
@@ -323,7 +323,7 @@
             (is (and (not (zero? exit))
                      (str/includes? err "Unexpected libvips version")
                      (str/includes? err version)
-                     (str/includes? err "8.18.3"))
+                     (str/includes? err "8.18.6"))
                 err))))
       (finally
         (when (.exists (io/file native-root))
@@ -336,17 +336,17 @@
                           (make-array java.nio.file.attribute.FileAttribute 0)))]
     (try
       (testing "a stale manifest is never accepted as current"
-        (write-native-fixture! native-root "8.18.2" "8.18.3")
+        (write-native-fixture! native-root "8.18.2" "8.18.6")
         (let [{:keys [exit out err]} (cached-native-fixture-current? native-root)]
           (is (zero? exit) err)
           (is (= "false" (last (str/split-lines out))))))
       (testing "cached upstream metadata must match the configured libvips version"
-        (write-native-fixture! native-root "8.18.3" "8.18.2")
+        (write-native-fixture! native-root "8.18.6" "8.18.2")
         (let [{:keys [exit err]} (cached-native-fixture-current? native-root)]
           (is (and (not (zero? exit))
                    (str/includes? err "Unexpected libvips version")
                    (str/includes? err "8.18.2")
-                   (str/includes? err "8.18.3"))
+                   (str/includes? err "8.18.6"))
               err)))
       (finally
         (when (.exists (io/file native-root))

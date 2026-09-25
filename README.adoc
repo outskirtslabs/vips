@@ -39,7 +39,7 @@ target platform.
 ;; deps.edn
 {:deps {com.outskirtslabs/vips {:mvn/version "0.0.1"}
         ;; change the following based on your runtime platform
-        com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.3.2-1"}}}
+        com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.3.3-1"}}}
 ----
 
 https://clojars.org/search?q=group-id%3Acom.outskirtslabs+AND+artifact-id%3Avips-native*[Choose
@@ -54,7 +54,7 @@ platform will be used):
 * `com.outskirtslabs/vips-native-macos-aarch64`
 * `com.outskirtslabs/vips-native-win32-x86-64`
 
-The native companion jars bundle libvips 8.18.3 from `sharp-libvips` 1.3.2.
+The native companion jars bundle libvips 8.18.6 from `sharp-libvips` 1.3.3.
 The test suite runs against that bundle.
 
 `ol.vips` requires Java 25{plus} and native access enabled for the JVM

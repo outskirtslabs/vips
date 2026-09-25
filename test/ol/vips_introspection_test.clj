@@ -15,7 +15,7 @@
 (deftest runtime-initialization
   (testing "the runtime can initialize the packaged libvips bundle"
     (let [state runtime-state]
-      (is (= "8.18.3" (:version-string state)))
+      (is (= "8.18.6" (:version-string state)))
       (is (seq (:library-paths state)))
       (is (string? (:primary-library-path state))))))
 
