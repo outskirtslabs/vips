@@ -6,6 +6,7 @@
    [clojure.test :refer [deftest is testing]]
    [ol.vips :as v]
    [ol.vips.impl.api :as api]
+   [ol.vips.impl.handles :as handles]
    [ol.vips.operations :as ops])
   (:import
    [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]
@@ -545,7 +546,7 @@
                                        ([k] (get fake-bindings k))
                                        ([k not-found] (get fake-bindings k not-found)))
                     api/image-handle (fn [_]
-                                       (reify api/PointerBacked
+                                       (reify handles/PointerBacked
                                          (pointer [_] MemorySegment/NULL)))]
         (try
           (api/copy-image-to-memory ::image)

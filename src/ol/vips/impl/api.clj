@@ -2,6 +2,7 @@
   (:require
    [babashka.ffi :as ffi]
    [clojure.string :as str]
+   [ol.vips.impl.handles :as handles :refer [PointerBacked pointer]]
    [ol.vips.impl.loader :as loader])
   (:import
    [java.io File InputStream OutputStream]
@@ -856,105 +857,6 @@
       (when-let [operation-name (find-operation target)]
         (validate-helper-option-values! operation-name opts)))))
 
-(defprotocol PointerBacked
-  (pointer ^java.lang.foreign.MemorySegment [this]))
-
-(deftype OperationResult [result-map ^AtomicBoolean closed?]
-  clojure.lang.ILookup
-  (valAt [_ key]
-    (get result-map key))
-  (valAt [_ key not-found]
-    (get result-map key not-found))
-
-  clojure.lang.Associative
-  (assoc [_ key value]
-    (assoc result-map key value))
-  (containsKey [_ key]
-    (contains? result-map key))
-  (entryAt [_ key]
-    (find result-map key))
-
-  clojure.lang.IPersistentMap
-  (without [_ key]
-    (dissoc result-map key))
-
-  clojure.lang.Seqable
-  (seq [_]
-    (seq result-map))
-
-  clojure.lang.Counted
-  (count [_]
-    (count result-map))
-
-  clojure.lang.IPersistentCollection
-  (cons [_ entry]
-    (cons entry result-map))
-  (empty [_]
-    {})
-  (equiv [_ other]
-    (= result-map other))
-
-  java.lang.Iterable
-  (iterator [_]
-    (.iterator ^Iterable result-map))
-
-  java.lang.AutoCloseable
-  (close [_]
-    (when (.compareAndSet closed? false true)
-      (doseq [value (vals result-map)]
-        (when (instance? java.lang.AutoCloseable value)
-          (.close ^java.lang.AutoCloseable value)))))
-
-  Object
-  (equals [_ other]
-    (= result-map other))
-  (hashCode [_]
-    (hash result-map))
-  (toString [_]
-    (str result-map)))
-
-(defn- throw-closed-image-handle
-  []
-  (throw (ex-info "Cannot use closed image handle"
-                  {:type :ol.vips/closed-image-handle})))
-
-(deftype ImageHandle [ptr ^AtomicBoolean closed? keeper]
-  PointerBacked
-  (pointer [_]
-    (if (.get closed?)
-      (throw-closed-image-handle)
-      ptr))
-
-  java.lang.AutoCloseable
-  (close [_]
-    (when (.compareAndSet closed? false true)
-      ((bindings :g-object-unref) ptr)
-      (when keeper
-        (.close ^java.lang.AutoCloseable keeper))))
-
-  Object
-  (toString [_]
-    (str "#<ol.vips.impl.api.ImageHandle " ptr ">")))
-
-(deftype StreamBridge [ptr ^Arena arena stream callbacks ^AtomicReference failure-ref close-stream! ^AtomicBoolean closed?]
-  PointerBacked
-  (pointer [_] ptr)
-
-  java.lang.AutoCloseable
-  (close [_]
-    (when (.compareAndSet closed? false true)
-      (try
-        ((bindings :g-object-unref) ptr)
-        (finally
-          (try
-            (close-stream!)
-            (finally
-              (.close arena)))))))
-
-  Object
-  (toString [_]
-    (str "#<ol.vips.impl.api.StreamBridge " ptr ">")))
-
 (defn throw-stream-error
   [message data ^AtomicReference failure-ref]
   (let [native          (bindings)
@@ -999,10 +901,6 @@
     {:callback callback
      :stub     stub}))
 
-(defn stream-failure-ref
-  [^StreamBridge bridge]
-  (.failure-ref bridge))
-
 (defn- new-source-bridge*
   [^InputStream stream close-stream!]
   (let [arena       (Arena/ofShared)
@@ -1029,13 +927,14 @@
                                 (remember-stream-failure! failure-ref t)
                                 -1)))
             read-signal   (connect-signal! ptr "read" read-callback source-read-callback-type arena)]
-        (StreamBridge. ptr
-                       arena
-                       stream
-                       [(:callback read-signal) (:stub read-signal)]
-                       failure-ref
-                       close-stream!
-                       (AtomicBoolean. false)))
+        (handles/->StreamBridge ptr
+                                arena
+                                stream
+                                [(:callback read-signal) (:stub read-signal)]
+                                failure-ref
+                                close-stream!
+                                (AtomicBoolean. false)
+                                (bindings :g-object-unref)))
       (catch Throwable t
         ((bindings :g-object-unref) ptr)
         (.close arena)
@@ -1061,7 +960,7 @@
   (let [native (bindings)]
     (.mark source stream-validation-mark-limit)
     (try
-      (let [operation-name (with-open [^StreamBridge bridge (new-source-bridge* source (fn []))]
+      (let [operation-name (with-open [^java.lang.AutoCloseable bridge (new-source-bridge* source (fn []))]
                              ((:foreign-find-load-source native) (pointer bridge)))]
         (when-not operation-name
           (clear-error! native))
@@ -1115,14 +1014,15 @@
                              (finish-output-stream! stream failure-ref))
             write-signal   (connect-signal! ptr "write" write-callback target-write-callback-type arena)
             end-signal     (connect-signal! ptr "end" end-callback target-end-callback-type arena)]
-        (StreamBridge. ptr
-                       arena
-                       stream
-                       [(:callback write-signal) (:stub write-signal)
-                        (:callback end-signal) (:stub end-signal)]
-                       failure-ref
-                       #(close-quietly stream)
-                       (AtomicBoolean. false)))
+        (handles/->StreamBridge ptr
+                                arena
+                                stream
+                                [(:callback write-signal) (:stub write-signal)
+                                 (:callback end-signal) (:stub end-signal)]
+                                failure-ref
+                                #(close-quietly stream)
+                                (AtomicBoolean. false)
+                                (bindings :g-object-unref)))
       (catch Throwable t
         ((bindings :g-object-unref) ptr)
         (.close arena)
@@ -1134,7 +1034,7 @@
    (wrap-image ptr nil))
   ([ptr keeper]
    (when-not (ffi/null? ptr)
-     (ImageHandle. ptr (AtomicBoolean. false) keeper))))
+     (handles/->ImageHandle ptr (AtomicBoolean. false) keeper (bindings :g-object-unref)))))
 
 (defn adopt-image
   [ptr]
@@ -1148,7 +1048,7 @@
     (:out result-map)
 
     (contains? result-map :out)
-    (OperationResult. result-map (AtomicBoolean. false))
+    (handles/->OperationResult result-map (AtomicBoolean. false))
 
     :else
     result-map))
@@ -1274,7 +1174,7 @@
       (.close ^java.lang.AutoCloseable bridge)
       (throw-stream-error "Failed to open image from stream"
                           {}
-                          (stream-failure-ref bridge)))
+                          (handles/stream-failure-ref bridge)))
     (wrap-image image bridge)))
 
 (defn open-image-from-stream
@@ -1360,7 +1260,7 @@
 (defn write-image-to-stream
   ([image sink suffix]
    (let [stream (require-instance OutputStream sink "write-to-stream sink")]
-     (with-open [^StreamBridge bridge (new-target-bridge stream)]
+     (with-open [^java.lang.AutoCloseable bridge (new-target-bridge stream)]
        (let [suffix (require-java-string suffix "write-to-stream suffix")
              code   ((bindings :image-write-to-target)
                      (pointer (image-handle image))
@@ -1370,12 +1270,12 @@
          (when-not (zero? code)
            (throw-stream-error "Failed to write image to stream"
                                {:suffix suffix}
-                               (stream-failure-ref bridge)))
+                               (handles/stream-failure-ref bridge)))
          image))))
   ([image sink suffix opts]
    (validate-helper-target-options! maybe-find-save-target-operation-name suffix "write-to-stream suffix" opts)
    (let [stream (require-instance OutputStream sink "write-to-stream sink")]
-     (with-open [^StreamBridge bridge (new-target-bridge stream)]
+     (with-open [^java.lang.AutoCloseable bridge (new-target-bridge stream)]
        (let [suffix (append-options suffix opts)
              code   ((bindings :image-write-to-target)
                      (pointer (image-handle image))
@@ -1385,7 +1285,7 @@
          (when-not (zero? code)
            (throw-stream-error "Failed to write image to stream"
                                {:suffix suffix}
-                               (stream-failure-ref bridge)))
+                               (handles/stream-failure-ref bridge)))
          image)))))
 
 (defn image-width

@@ -1,7 +1,8 @@
 (ns ^:no-doc ol.vips.impl.introspect
   (:require
    [babashka.ffi :as ffi]
-   [ol.vips.impl.api :as runtime]))
+   [ol.vips.impl.api :as runtime]
+   [ol.vips.impl.handles :as handles]))
 
 (set! *warn-on-reflection* true)
 
@@ -65,7 +66,7 @@
     (with-open [arena (ffi/confined-arena)]
       (let [image-ptrs (ffi/alloc arena (* (count images) pointer-size) pointer-align)]
         (doseq [[index image] (map-indexed vector images)]
-          (ffi/write image-ptrs :pointer (runtime/pointer (runtime/image-handle image)) (* index pointer-size)))
+          (ffi/write image-ptrs :pointer (handles/pointer (runtime/image-handle image)) (* index pointer-size)))
         (let [boxed ((:array-image-new native) image-ptrs (count images))]
           (when (ffi/null? boxed)
             (throw (ex-info "Failed to encode boxed image array"
@@ -132,7 +133,7 @@
 (defn- encode-value
   [native {:keys [kind value-type name minimum maximum] :as arg} value gvalue]
   (case kind
-    :object ((:g-value-set-object native) gvalue (runtime/pointer (runtime/image-handle value)))
+    :object ((:g-value-set-object native) gvalue (handles/pointer (runtime/image-handle value)))
     :boxed (encode-boxed-value native value-type value gvalue)
     :string ((:g-value-set-string native)
              gvalue
