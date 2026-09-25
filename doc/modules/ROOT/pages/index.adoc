@@ -6,7 +6,7 @@ processing library
 ____
 
 image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https://docs.outskirtslabs.com/ol.vips/next/]
-image:https://img.shields.io/badge/status-experimental-orange.svg[status: experimental,link=https://docs.outskirtslabs.com/open-source-vital-signs#experimental]
+image:https://img.shields.io/badge/status-maturing-blue.svg[status: maturing,link=https://docs.outskirtslabs.com/open-source-vital-signs#maturing]
 image:https://ci.outskirtslabs.com/repos/github/outskirtslabs/vips/badge.svg[alt=nixbot,link=https://ci.outskirtslabs.com/repos/github/outskirtslabs/vips]
 
 `ol.vips` is a Clojure library for loading, transforming, and saving
@@ -24,7 +24,7 @@ building the native integration yourself.
 
 `ol.vips` requires Java 25{plus} or GraalVM Native Image 25{plus}.
 
-Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#experimental[Experimental]*.
+Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#maturing[Maturing]*.
 
 It is used in production, but needs more exercise and feedback from the community before I commit to a stable version.
 

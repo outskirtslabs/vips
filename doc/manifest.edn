@@ -5,7 +5,7 @@
   :description "Clojure bindings for libvips image processing library",
   :license "EUPL-1.2",
   :platforms [:clj],
-  :status :experimental,
+  :status :maturing,
   :created "2025-05-29",
   :version "0.1.0"},
  :docs
