@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 
-== `v0.1.0` (unreleased)
+== `v0.1.0` (2026-09-25)
 
 This release requires Java 25 or newer. This is a breaking runtime change.
 The public image API remains unchanged.
