@@ -13,8 +13,8 @@
 
          :init
          (do
-           (def paths ["src" "test" "examples" "native"])
-           (def lint-paths ["src" "test" "native" "examples"])
+           (def paths ["src" "test" "test-native" "script" "examples" "native"])
+           (def lint-paths ["src" "test" "test-native" "script" "native" "examples"])
            (defn native-dirs []
              (->> (fs/list-dir "native")
                   (filter fs/directory?)
@@ -101,6 +101,10 @@
 
          gen       {:doc     "Generate docs and code"
                     :depends [codegen gen-docs]}
+
+         native-image:test
+         {:doc "Build and run the GraalVM smoke test: <platform-id> <ffi-git-checkout>"
+          :task (apply shell "bb" "script/native_image.clj" *command-line-args*)}
 
          native:update
          {:doc  "Download and stage native resources for the selected platforms"

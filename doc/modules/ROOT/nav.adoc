@@ -2,6 +2,7 @@
 * xref:introduction.adoc[Introduction]
 * xref:examples.adoc[Examples]
 * xref:going-to-production.adoc[Going to Production]
+* xref:native-image.adoc[GraalVM Native Image]
 * xref:multipage-and-animated-images.adoc[Multipage and Animated Images]
 * xref:changelog.adoc[Changelog]
 * xref:security.adoc[Security Policy]

@@ -22,8 +22,7 @@ generated wrappers for the full libvips operation surface, and
 platform-native jars so you can use libvips from the JVM without
 building the native integration yourself.
 
-`ol.vips` uses https://github.com/babashka/ffi[babashka/ffi] and requires Java
-25{plus} for FFI/FFM (Project Panama).
+`ol.vips` requires Java 25{plus} or GraalVM Native Image 25{plus}.
 
 Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#experimental[Experimental]*.
 
@@ -96,6 +95,7 @@ generated wrappers for libvips operations.
 * https://docs.outskirtslabs.com/ol.vips/next/introduction/[Introduction]
 * https://docs.outskirtslabs.com/ol.vips/next/examples/[Examples]
 * https://docs.outskirtslabs.com/ol.vips/next/going-to-production/[Going to Production]
+* https://docs.outskirtslabs.com/ol.vips/next/native-image/[GraalVM Native Image]
 * https://docs.outskirtslabs.com/ol.vips/next/multipage-and-animated-images/[Multipage and Animated Images]
 * https://docs.outskirtslabs.com/ol.vips/next/api/ol-vips[API Reference]
 * https://docs.outskirtslabs.com/ol.vips/next/changelog/[Changelog]

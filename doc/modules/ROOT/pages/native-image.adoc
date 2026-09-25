@@ -1,0 +1,26 @@
+= GraalVM Native Image
+
+`ol.vips` supports Oracle GraalVM Native Image 25 or newer.
+
+== Build requirements
+
+* Include the native companion jar for the target platform.
+* Follow the https://github.com/babashka/ffi/blob/v0.1.2/doc/guide.md#build-your-own-native-image[babashka.ffi Native Image requirements],
+  including libffi support. `ol.vips` needs libffi for C functions with variable
+  argument lists.
+* In addition to those options, enable `-H:+SharedArenaSupport` for stream I/O.
+
+The `ol.vips` jar includes the resource and reflection metadata needed by
+Native Image. No additional metadata is required for the bundled native
+libraries or for closing image handles.
+
+== Initialization and runtime
+
+Initialize the Clojure namespaces at build time, as described in the
+`babashka.ffi` guide. Call `v/init!` and other image functions only after the
+executable starts, not at the top level of a namespace during compilation.
+
+The bundled native libraries are extracted at runtime. The extraction directory
+must be writable; set `-Dol.vips.native.cache-root=/path` to choose it.
+The executable still needs the operating system's shared libraries and, unless
+linked statically, libffi.

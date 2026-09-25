@@ -16,6 +16,8 @@ minor-version bump. The public image API remains unchanged.
   which bundles libvips 8.18.6.
 * Fixed ARM Nix development-shell evaluation.
 * Fixed an error that prevented use of open images after a namespace reload.
+* Added GraalVM Native Image support, tested on Linux x86-64 with glibc.
+  See https://docs.outskirtslabs.com/ol.vips/next/native-image/[GraalVM Native Image].
 
 === Bundled native dependencies
 

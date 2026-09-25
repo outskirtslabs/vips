@@ -17,7 +17,8 @@
       (testing "the jar contains the library and its Maven metadata"
         (doseq [entry ["ol/vips.clj"
                        "META-INF/maven/com.outskirtslabs/vips/pom.xml"
-                       "META-INF/maven/com.outskirtslabs/vips/pom.properties"]]
+                       "META-INF/maven/com.outskirtslabs/vips/pom.properties"
+                       "META-INF/native-image/com.outskirtslabs/vips/reachability-metadata.json"]]
           (is (some? (.getJarEntry jar entry)) entry)))
       (testing "the jar cannot shadow a separately resolved FFI dependency"
         (is (= []

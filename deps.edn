@@ -1,4 +1,4 @@
-{:paths   ["src"]
+{:paths   ["src" "resources"]
  :deps    {org.babashka/ffi {:mvn/version "0.1.2"}}
  :aliases {:kaocha {:extra-paths ["test"]
                     :extra-deps  {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
@@ -18,6 +18,10 @@
                                   io.github.tonsky/clj-reload                      {:mvn/version "1.0.0"}
                                   djblue/portal                                    {:mvn/version "0.63.1"}
                                   com.clojure-goes-fast/clj-async-profiler         {:mvn/version "1.7.0"}}}
+           :native-image {:extra-paths ["test-native"]
+                          :extra-deps {org.graalvm.sdk/nativeimage {:mvn/version "25.0.2"}
+                                       com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}}
+                          :jvm-opts ["--enable-native-access=ALL-UNNAMED"]}
            :build  {:extra-paths ["src"]
                     :deps        {io.github.clojure/tools.build {:mvn/version "0.10.14"}
                                   org.clojure/data.json         {:mvn/version "2.5.2"}

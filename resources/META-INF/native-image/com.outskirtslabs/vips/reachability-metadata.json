@@ -1,0 +1,20 @@
+{
+  "reflection": [
+    {
+      "type": "ol.vips.impl.handles.ImageHandle",
+      "methods": [{ "name": "close", "parameterTypes": [] }]
+    },
+    {
+      "type": "ol.vips.impl.handles.OperationResult",
+      "methods": [{ "name": "close", "parameterTypes": [] }]
+    },
+    {
+      "type": "ol.vips.impl.handles.StreamBridge",
+      "methods": [{ "name": "close", "parameterTypes": [] }]
+    }
+  ],
+  "resources": [
+    { "glob": "ol/vips/impl/platforms.edn" },
+    { "glob": "ol/vips/native/**" }
+  ]
+}
