@@ -36,7 +36,7 @@ target platform.
 [source,clojure]
 ----
 ;; deps.edn
-{:deps {com.outskirtslabs/vips {:mvn/version "0.0.1"}
+{:deps {com.outskirtslabs/vips {:mvn/version "0.1.0"}
         ;; change the following based on your runtime platform
         com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.3.3-1"}}}
 ----

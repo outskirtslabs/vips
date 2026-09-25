@@ -4,16 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 
-== UNRELEASED
+== `v0.1.0` (unreleased)
 
-The Java 25 minimum is a breaking runtime requirement that will require a
-minor-version bump. The public image API remains unchanged.
+This release requires Java 25 or newer. This is a breaking runtime change.
+The public image API remains unchanged.
 
 * Replaced Coffi with `babashka/ffi` as an external dependency, without bundling
   its runtime in the main jar.
 * Requires Java 25 or newer with native access enabled.
 * Updated native companion jars to `1.3.3-1` from `sharp-libvips` 1.3.3,
   which bundles libvips 8.18.6.
+* Removed the Clojure dependency from native companion jars.
 * Fixed ARM Nix development-shell evaluation.
 * Fixed an error that prevented use of open images after a namespace reload.
 * Added GraalVM Native Image support, tested on Linux x86-64 with glibc.

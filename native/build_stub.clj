@@ -40,27 +40,8 @@
 (assert rev "Either GIT_REV must be set or git rev-parse HEAD must succeed")
 
 (def class-dir "target/classes")
-(def basis (delay (b/create-basis {:project "deps.edn"})))
+(def basis (delay (b/create-basis {:root nil :project "deps.edn"})))
 (def jar-file (format "target/%s-%s.jar" (name lib) version))
-
-(defn- file-mtime [path]
-  (.lastModified (java.io.File. path)))
-
-(defn- resources-inputs []
-  (let [resources-dir (java.io.File. "resources")]
-    (cond-> ["build.clj" "deps.edn" "../build_stub.clj" "../../deps.edn"]
-      (.exists resources-dir)
-      (into (->> (file-seq resources-dir)
-                 (filter #(.isFile ^java.io.File %))
-                 (map #(.getPath ^java.io.File %)))))))
-
-(defn- jar-up-to-date? []
-  (let [jar-path    (java.io.File. jar-file)
-        input-paths (resources-inputs)]
-    (and (.exists jar-path)
-         (every? #(.exists (java.io.File. %)) input-paths)
-         (>= (file-mtime jar-file)
-             (apply max (map file-mtime input-paths))))))
 
 (defn clean [_]
   (b/delete {:path "target"}))
@@ -69,32 +50,29 @@
   (str repo-url-prefix "/blob/" rev "/" subpath))
 
 (defn jar [_]
-  (if (jar-up-to-date?)
-    (println "native jar up-to-date for" cwd)
-    (do
-      (clean nil)
-      (b/write-pom {:class-dir class-dir
-                    :lib       lib
-                    :version   version
-                    :basis     @basis
-                    :src-dirs  ["resources"]
-                    :pom-data  (cond-> [[:description description]
-                                        [:url (permalink (str "native/" cwd))]
-                                        [:licenses
-                                         [:license
-                                          [:name license-id]
-                                          [:url license-url]]]
-                                        [:scm
-                                         [:url repo-url-prefix]
-                                         [:connection (str "scm:git:" repo-url-prefix)]
-                                         [:tag rev]]]
-                                 notice-file
-                                 (conj [:properties
-                                        [:thirdPartyNotice (permalink notice-file)]]))})
-      (b/copy-dir {:src-dirs   ["resources"]
-                   :target-dir class-dir})
-      (b/jar {:class-dir class-dir
-              :jar-file  jar-file}))))
+  (clean nil)
+  (b/write-pom {:class-dir class-dir
+                :lib       lib
+                :version   version
+                :basis     @basis
+                :src-dirs  ["resources"]
+                :pom-data  (cond-> [[:description description]
+                                    [:url (permalink (str "native/" cwd))]
+                                    [:licenses
+                                     [:license
+                                      [:name license-id]
+                                      [:url license-url]]]
+                                    [:scm
+                                     [:url repo-url-prefix]
+                                     [:connection (str "scm:git:" repo-url-prefix)]
+                                     [:tag rev]]]
+                             notice-file
+                             (conj [:properties
+                                    [:thirdPartyNotice (permalink notice-file)]]))})
+  (b/copy-dir {:src-dirs   ["resources"]
+               :target-dir class-dir})
+  (b/jar {:class-dir class-dir
+          :jar-file  jar-file}))
 
 (defn install [_]
   (jar {})

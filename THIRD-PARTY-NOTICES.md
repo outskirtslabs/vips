@@ -15,7 +15,7 @@ Those redistributed binaries contain third-party libraries used under the terms 
 | fribidi       | LGPLv3                                                                                                    |
 | glib          | LGPLv3                                                                                                    |
 | harfbuzz      | MIT Licence                                                                                               |
-| highway       | Apache-2.0 License, BSD 3-Clause                                                                          |
+| highway       | BSD 3-Clause                                                                                              |
 | lcms          | MIT Licence                                                                                               |
 | libarchive    | BSD 2-Clause                                                                                              |
 | libexif       | LGPLv3                                                                                                    |
@@ -26,7 +26,7 @@ Those redistributed binaries contain third-party libraries used under the terms 
 | libpng        | [libpng License](https://github.com/pnggroup/libpng/blob/master/LICENSE)                                  |
 | librsvg       | LGPLv3                                                                                                    |
 | libtiff       | [libtiff License](https://gitlab.com/libtiff/libtiff/blob/master/LICENSE.md) (BSD-like)                   |
-| libultrahdr   | Apache-2.0 License                                                                                        |
+| libultrahdr   | MIT Licence                                                                                               |
 | libvips       | LGPLv3                                                                                                    |
 | libwebp       | New BSD License                                                                                           |
 | libxml2       | MIT Licence                                                                                               |
