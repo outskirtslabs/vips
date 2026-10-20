@@ -6,6 +6,12 @@ This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 
 == UNRELEASED
 
+* Preparing for Babashka support
+* Replaced variadic image I/O calls with the shared typed operation executor,
+  preserving native loader and saver fallbacks without requiring libffi.
+* Keep buffer data and stream callbacks valid while derived images or cached
+  operations still reference them. Input streams close on final native source release.
+
 == `v0.1.0` (2026-09-25)
 
 This release requires Java 25 or newer. This is a breaking runtime change.

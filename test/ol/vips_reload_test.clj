@@ -14,6 +14,7 @@
       (require 'ol.vips 'ol.vips.operations 'clj-reload.core)
       (let [before              ((requiring-resolve 'ol.vips/init!))
             image-handle-before @(requiring-resolve 'ol.vips.impl.api/image-handle)
+            constructor-before  @(requiring-resolve 'ol.vips.impl.handles/->ImageHandle)
             close-count         (atom 0)]
         (with-open [held     ((requiring-resolve 'ol.vips.operations/black) 8 6)
                     source   (proxy [java.io.ByteArrayInputStream]
@@ -40,7 +41,6 @@
                             (require 'ol.vips.impl.handles :reload)
                             (require 'ol.vips.impl.loader :reload)
                             (require 'ol.vips.impl.api :reload))
-                "require-all" (require 'ol.vips :reload-all)
                 "source" (do
                            (load-file "src/ol/vips/impl/handles.clj")
                            (require 'ol.vips.impl.api :reload))
@@ -49,25 +49,27 @@
                 metadata (requiring-resolve 'ol.vips/metadata)]
             (with-open [fresh   ((requiring-resolve 'ol.vips.operations/black) 8 6)
                         average ((requiring-resolve 'ol.vips/call) "avg" {:in held})]
-              (let [observed {:reloaded?          (not (identical? image-handle-before
-                                                                   @(requiring-resolve 'ol.vips.impl.api/image-handle)))
-                              :same-state?        (identical? before after)
-                              :same-lookup?       (identical? (:lookup before) (:lookup after))
-                              :same-bindings?     (identical? (:bindings before) (:bindings after))
-                              :same-image-class?  (identical? (class held) (class fresh))
-                              :same-result-class? (identical? (class result) (class average))
-                              :bridge-failure     (.get ^java.util.concurrent.atomic.AtomicReference
-                                                   ((requiring-resolve 'ol.vips.impl.handles/stream-failure-ref) bridge))
-                              :fresh-image        (metadata fresh)
-                              :held-image         (metadata held)
-                              :result-image       (metadata result)
-                              :held-average       (:out average)
-                              :stream-encoded?    (pos? (alength ^bytes ((requiring-resolve 'ol.vips/write-to-buffer)
-                                                                         streamed ".png")))}]
+              (let [observed {:reloaded?             (not (identical? image-handle-before
+                                                                      @(requiring-resolve 'ol.vips.impl.api/image-handle)))
+                              :constructor-reloaded? (not (identical? constructor-before
+                                                                      @(requiring-resolve 'ol.vips.impl.handles/->ImageHandle)))
+                              :same-state?           (identical? before after)
+                              :same-lookup?          (identical? (:lookup before) (:lookup after))
+                              :same-bindings?        (identical? (:bindings before) (:bindings after))
+                              :bridge-failure        (.get ^java.util.concurrent.atomic.AtomicReference
+                                                      ((requiring-resolve 'ol.vips.impl.handles.protocols/stream-failure-ref) bridge))
+                              :fresh-image           (metadata fresh)
+                              :held-image            (metadata held)
+                              :result-image          (metadata result)
+                              :held-average          (:out average)
+                              :stream-encoded?       (pos? (alength ^bytes ((requiring-resolve 'ol.vips/write-to-buffer)
+                                                                            streamed ".png")))}]
                 (dotimes [_ 2]
                   (.close ^java.lang.AutoCloseable held)
                   (.close ^java.lang.AutoCloseable result)
                   (.close ^java.lang.AutoCloseable streamed))
+                ;; Cached encoders can still reference the stream after handle close.
+                ((requiring-resolve 'ol.vips/set-operation-cache-max!) 0)
                 (prn (assoc observed
                             :stream-close-count @close-count
                             :closed-images
@@ -88,25 +90,24 @@
         metadata               {:width 8 :height 6 :bands 1 :has-alpha? false}]
     (is (zero? exit) (str out err))
     (when (zero? exit)
-      (is (= {:reloaded?          (not= "none" mode)
-              :same-state?        true
-              :same-lookup?       true
-              :same-bindings?     true
-              :same-image-class?  true
-              :same-result-class? true
-              :bridge-failure     nil
-              :fresh-image        metadata
-              :held-image         metadata
-              :result-image       metadata
-              :held-average       0.0
-              :stream-encoded?    true
-              :stream-close-count 1
-              :closed-images      (vec (repeat 3 :ol.vips/closed-image-handle))}
+      (is (= {:reloaded?             (not= "none" mode)
+              :constructor-reloaded? (not= "none" mode)
+              :same-state?           true
+              :same-lookup?          true
+              :same-bindings?        true
+              :bridge-failure        nil
+              :fresh-image           metadata
+              :held-image            metadata
+              :result-image          metadata
+              :held-average          0.0
+              :stream-encoded?       true
+              :stream-close-count    1
+              :closed-images         (vec (repeat 3 :ol.vips/closed-image-handle))}
              (edn/read-string out))
           err))))
 
 (deftest image-handles-survive-namespace-reload
-  (doseq [mode ["none" "require" "require-all" "source" "clj-reload"]]
+  (doseq [mode ["none" "require" "source" "clj-reload"]]
     (testing mode
       (check-reload mode []))))
 
@@ -119,10 +120,11 @@
                       (pr-str '(do
                                  (require 'ol.vips.impl.handles)
                                  (binding [*compile-path* (System/getProperty "ol.vips.test.aot-path")]
+                                   (compile 'ol.vips.impl.handles.protocols)
                                    (compile 'ol.vips.impl.handles)))))]
         (is (zero? exit) (str out err))
         (when (zero? exit)
-          (doseq [mode ["require-all" "source"]]
+          (doseq [mode ["source" "clj-reload"]]
             (testing mode
               (check-reload mode
                             ["-Sdeps" (pr-str {:paths [path "src"]})

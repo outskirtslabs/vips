@@ -6,7 +6,6 @@
    [clojure.string :as str])
   (:import
    [java.io InputStream PushbackReader RandomAccessFile]
-   [java.lang.foreign Arena SymbolLookup]
    [java.net URL]
    [java.nio.channels FileChannel]
    [java.nio.file CopyOption Files OpenOption Path Paths StandardCopyOption
@@ -51,23 +50,9 @@
   ^String [pathish]
   (str (absolute-path pathish)))
 
-(defn- path->lookup
-  ^SymbolLookup [^String library-path ^Arena arena]
-  (SymbolLookup/libraryLookup (absolute-path library-path)
-                              arena))
-
-(defn- library-lookup
-  [library-paths]
-  (let [arena   (Arena/ofShared)
-        lookups (mapv #(path->lookup % arena) library-paths)]
-    {:arena  arena
-     :lookup (reduce (fn [^SymbolLookup acc ^SymbolLookup lookup]
-                       (.or acc lookup))
-                     lookups)}))
-
 (defn- lookup-symbol
-  [^SymbolLookup lookup symbol-name]
-  (or (.orElse (.find lookup symbol-name) nil)
+  [libraries symbol-name]
+  (or (some #(ffi/find-symbol % symbol-name) libraries)
       (throw (ex-info "Native symbol not found in loaded ol.vips libraries"
                       {:symbol symbol-name}))))
 
@@ -381,20 +366,20 @@
 
 (defn- load-packaged-native-state
   []
-  (let [manifest               (read-manifest)
-        extracted              (extract-libraries! (default-cache-root) manifest)
-        load-paths             (vec (concat (preload-library-paths) (:library-paths extracted)))
-        _                      (doseq [path load-paths]
-                                 (ffi/load-library path))
-        {:keys [arena lookup]} (library-lookup load-paths)
-        exposed                (expose-paths! extracted)]
+  (let [manifest   (read-manifest)
+        extracted  (extract-libraries! (default-cache-root) manifest)
+        load-paths (vec (concat (preload-library-paths) (:library-paths extracted)))
+        ;; FFI owns the process-lifetime library lookups. Keep their order and
+        ;; resolve only against these libraries, never the global symbol search.
+        libraries  (mapv ffi/load-library load-paths)
+        exposed    (expose-paths! extracted)]
     (merge exposed
-           {:lookup               lookup
-            :lookup-arena         arena
+           {:lookup               libraries
+            :lookup-arena         nil
             :manifest             manifest
             :primary-library-path (first (:library-paths extracted))
             :native-load-source   :packaged
-            :resolve-symbol       #(lookup-symbol lookup %)})))
+            :resolve-symbol       #(lookup-symbol libraries %)})))
 
 (defn- load-system-native-state
   [cause]

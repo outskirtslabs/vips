@@ -39,6 +39,7 @@
   ```"
   (:require
    [ol.vips.impl.api :as api]
+   [ol.vips.impl.io :as image-io]
    [ol.vips.impl.image :as image]
    [ol.vips.impl.introspect :as introspect]))
 
@@ -248,9 +249,9 @@
                               :shrink 2})
   ```"
   ([path]
-   (api/open-image path))
+   (image-io/open-image path))
   ([path opts]
-   (api/open-image path opts)))
+   (image-io/open-image path opts)))
 
 (defn write-to-file
   "Writes `image` to `path` and returns `image`.
@@ -268,9 +269,9 @@
   (v/write-to-file image \"output.png\" {:compression 9})
   ```"
   ([image path]
-   (api/write-image! image path))
+   (image-io/write-image! image path))
   ([image path opts]
-   (api/write-image! image path opts)))
+   (image-io/write-image! image path opts)))
 
 (defn from-buffer
   "Opens an image from in-memory bytes and returns a closeable image handle.
@@ -282,16 +283,19 @@
   bytes. See [[ol.vips.operations]] for the generated loader wrappers and
   [[ol.vips.enums]] for enum value sets."
   ([source]
-   (api/open-image-from-buffer source))
+   (image-io/open-image-from-buffer source))
   ([source opts]
-   (api/open-image-from-buffer source opts)))
+   (image-io/open-image-from-buffer source opts)))
 
 (defn from-stream
   "Opens an image from an `InputStream` and returns a closeable image handle.
 
-  The stream is bridged to a libvips source and is closed when the returned
-  image handle is closed. Arity 2 passes `opts` as a libvips option string for
-  the loader.
+  The stream closes when libvips releases its source. Derived images and cached
+  operations can delay closure beyond the original image handle's lifetime.
+  Close every image handle with `with-open`; do not close the input stream
+  while a derived image can still read from it.
+
+  Arity 2 passes `opts` as a libvips option string for the loader.
 
   This is useful for streaming or non-file inputs, especially together with
   loader hints like `:access :sequential`.
@@ -300,9 +304,9 @@
   See [[ol.vips.operations]] for the generated loader wrappers and
   [[ol.vips.enums/access]] for valid `:access` values."
   ([is]
-   (api/open-image-from-stream is))
+   (image-io/open-image-from-stream is))
   ([is opts]
-   (api/open-image-from-stream is opts)))
+   (image-io/open-image-from-stream is opts)))
 
 (defn write-to-buffer
   "Encodes `image` and returns the result as a byte array.
@@ -315,9 +319,9 @@
   [[ol.vips.operations]], for example [[ol.vips.operations/pngsave]] or
   [[ol.vips.operations/jpegsave]]."
   ([image suffix]
-   (api/write-image-to-buffer image suffix))
+   (image-io/write-image-to-buffer image suffix))
   ([image suffix opts]
-   (api/write-image-to-buffer image suffix opts)))
+   (image-io/write-image-to-buffer image suffix opts)))
 
 (defn write-to-stream
   "Encodes `image` to an `OutputStream` and returns `image`.
@@ -332,9 +336,9 @@
   [[ol.vips.operations]], for example [[ol.vips.operations/pngsave]] or
   [[ol.vips.operations/jpegsave]]."
   ([image os suffix]
-   (api/write-image-to-stream image os suffix))
+   (image-io/write-image-to-stream image os suffix))
   ([image os suffix opts]
-   (api/write-image-to-stream image os suffix opts)))
+   (image-io/write-image-to-stream image os suffix opts)))
 
 (defn metadata
   "Returns a curated metadata map for `image`.

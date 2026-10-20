@@ -1,16 +1,16 @@
 (ns ol.vips-test
   (:require
+   [babashka.ffi :as ffi]
    [babashka.fs :as fs]
    [clojure.java.shell :as shell]
    [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
    [ol.vips :as v]
    [ol.vips.impl.api :as api]
-   [ol.vips.impl.handles :as handles]
+   [ol.vips.impl.handles.protocols :as handle-protocols]
    [ol.vips.operations :as ops])
   (:import
-   [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]
-   [java.lang.foreign MemorySegment]))
+   [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]))
 
 (def fixture-path
   (str (fs/path "dev" "rabbit.jpg")))
@@ -32,7 +32,15 @@
 
 (defn- fatal-criticals-child
   [expr]
-  (shell/sh "env" "G_DEBUG=fatal-criticals" "clojure" "-M:dev" "-e" expr))
+  (apply shell/sh
+         (concat ["env" "G_DEBUG=fatal-criticals"]
+                 (if (System/getProperty "babashka.version")
+                   (concat ["bb"]
+                           (when-let [config (System/getProperty "babashka.config")]
+                             ["--config" config])
+                           ["--classpath" ((requiring-resolve 'babashka.classpath/get-classpath))])
+                   ["clojure" "-M:dev"])
+                 ["-e" expr])))
 
 (deftest public-operation-surface
   (testing "the public namespace exposes the minimal low-level API"
@@ -229,10 +237,20 @@
     (let [fixture-bytes (java.nio.file.Files/readAllBytes
                          (java.nio.file.Path/of fixture-path (make-array String 0)))
           closed?       (atom false)
-          stream        (proxy [ByteArrayInputStream] [fixture-bytes]
+          input         (ByteArrayInputStream. fixture-bytes)
+          stream        (proxy [InputStream] []
+                          (read
+                            ([] (.read input))
+                            ([buffer] (.read input ^bytes buffer))
+                            ([buffer offset length] (.read input ^bytes buffer offset length)))
+                          (available [] (.available input))
+                          (markSupported [] true)
+                          (mark [limit] (.mark input limit))
+                          (reset [] (.reset input))
+                          (skip [n] (.skip input n))
                           (close []
                             (reset! closed? true)
-                            (proxy-super close)))]
+                            (.close input)))]
       (is (false? @closed?))
       (with-open [image (v/from-stream stream)]
         (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
@@ -242,18 +260,25 @@
   (testing "write-to-stream writes through the target callback path and closes the stream"
     (let [flushed? (atom false)
           closed?  (atom false)
-          out      (proxy [ByteArrayOutputStream] []
+          buffer   (ByteArrayOutputStream.)
+          out      (proxy [OutputStream] []
+                     (write
+                       ([value]
+                        (if (integer? value)
+                          (.write buffer (int value))
+                          (.write buffer ^bytes value)))
+                       ([bytes offset length] (.write buffer ^bytes bytes offset length)))
                      (flush []
                        (reset! flushed? true)
-                       (proxy-super flush))
+                       (.flush buffer))
                      (close []
                        (reset! closed? true)
-                       (proxy-super close)))]
+                       (.close buffer)))]
       (with-open [image (v/from-file fixture-path)]
         (v/write-to-stream image out ".png"))
       (is (true? @flushed?))
       (is (true? @closed?))
-      (with-open [roundtrip (v/from-buffer (.toByteArray ^ByteArrayOutputStream out))]
+      (with-open [roundtrip (v/from-buffer (.toByteArray ^ByteArrayOutputStream buffer))]
         (is (= {:width 2490 :height 3084 :bands 3 :has-alpha? false}
                (select-keys (v/metadata roundtrip) [:width :height :bands :has-alpha?])))))))
 
@@ -536,7 +561,7 @@
   (testing "copy-memory surfaces libvips native failures"
     (let [calls         (atom [])
           fake-bindings {:image-copy-memory (fn [_]
-                                              MemorySegment/NULL)
+                                              ffi/null)
                          :vips-error-buffer (fn []
                                               "copy failed")
                          :vips-error-clear  (fn []
@@ -546,8 +571,8 @@
                                        ([k] (get fake-bindings k))
                                        ([k not-found] (get fake-bindings k not-found)))
                     api/image-handle (fn [_]
-                                       (reify handles/PointerBacked
-                                         (pointer [_] MemorySegment/NULL)))]
+                                       (reify handle-protocols/PointerBacked
+                                         (pointer [_] ffi/null)))]
         (try
           (api/copy-image-to-memory ::image)
           (is false "Expected copy-image-to-memory to throw when libvips returns NULL")

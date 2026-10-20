@@ -1,0 +1,47 @@
+= Run image scripts with Babashka
+
+Save this as `resize.bb`. The native dependency below targets Linux x86-64
+glibc; choose the native artifact for your platform.
+
+[source,clojure]
+----
+(require '[babashka.deps :as deps])
+
+(deps/add-deps
+ '{:deps {com.outskirtslabs/vips {:mvn/version "0.1.0"}
+          com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.3.3-1"}}})
+
+(require '[ol.vips :as v]
+         '[ol.vips.operations :as ops])
+
+(with-open [image (ops/thumbnail "input.jpg" 320)]
+  (v/write-to-file image "output.jpg"))
+----
+
+Run it with:
+
+[source,shell]
+----
+bb resize.bb
+----
+
+== Run from the checkout
+
+For Linux x86-64 glibc, stage the native resources and include them on the
+classpath:
+
+[source,shell]
+----
+bb native:update linux-x86-64-gnu
+bb --classpath src:resources:native/linux-x86-64-gnu/resources \
+  examples/resize_vips.bb input.jpg output.jpg 320
+----
+
+Choose an output file different from the input file. Its extension selects
+the encoder. The output fits within 320 by 320 pixels.
+
+== Run tests
+
+`bb test:bb` runs the shared behavior suite in Babashka.
+`bb test:bb:artifacts "$MAIN_JAR" "$NATIVE_JAR"` checks built jars in a fresh
+process outside the checkout with a fresh native extraction directory.

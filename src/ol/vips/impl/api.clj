@@ -2,13 +2,13 @@
   (:require
    [babashka.ffi :as ffi]
    [clojure.string :as str]
-   [ol.vips.impl.handles :as handles :refer [PointerBacked pointer]]
+   [ol.vips.impl.handles :as handles]
+   [ol.vips.impl.handles.protocols :refer [PointerBacked pointer]]
    [ol.vips.impl.loader :as loader])
   (:import
    [java.io File InputStream OutputStream]
-   [java.lang.foreign Arena]
    [java.nio.file Path]
-   [java.util.concurrent.atomic AtomicBoolean AtomicReference]))
+   [java.util.concurrent.atomic AtomicReference]))
 
 (set! *warn-on-reflection* true)
 
@@ -231,6 +231,22 @@
    :g-value-init                   ["g_value_init" [:pointer :long] :pointer]
    :g-value-set-boolean            ["g_value_set_boolean" [:pointer :int] :void]
    :g-value-set-boxed              ["g_value_set_boxed" [:pointer :pointer] :void]
+   :g-object-weak-ref              ["g_object_weak_ref" [:pointer :pointer :pointer] :void]
+   :g-value-get-boxed              ["g_value_get_boxed" [:pointer] :pointer]
+   :g-type-check-instance-is-a     ["g_type_check_instance_is_a" [:pointer :long] :int]
+   :blob-copy                      ["vips_blob_copy" [:pointer :size_t] :pointer]
+   :blob-get                       ["vips_blob_get" [:pointer :pointer] :pointer]
+   :blob-get-type                  ["vips_blob_get_type" [] :long]
+   :filename-get-filename          ["vips_filename_get_filename" [:string] :pointer]
+   :filename-get-options           ["vips_filename_get_options" [:string] :pointer]
+   :object-set-from-string         ["vips_object_set_from_string" [:pointer :string] :int]
+   :target-new-to-file             ["vips_target_new_to_file" [:string] :pointer]
+   :target-new-to-memory           ["vips_target_new_to_memory" [] :pointer]
+   :connection-filename            ["vips_connection_filename" [:pointer] :string]
+   :source-is-mappable             ["vips_source_is_mappable" [:pointer] :int]
+   :source-map-blob                ["vips_source_map_blob" [:pointer] :pointer]
+   :vips-error-freeze              ["vips_error_freeze" [] :void]
+   :vips-error-thaw                ["vips_error_thaw" [] :void]
    :g-value-set-double             ["g_value_set_double" [:pointer :double] :void]
    :g-value-set-enum               ["g_value_set_enum" [:pointer :int] :void]
    :g-value-set-flags              ["g_value_set_flags" [:pointer :int] :void]
@@ -271,15 +287,6 @@
    :image-get-typeof               ["vips_image_get_typeof" [:pointer :string] :long]
    :image-get-width                ["vips_image_get_width" [:pointer] :int]
    :image-has-alpha                ["vips_image_hasalpha" [:pointer] :int]
-   :image-new-from-buffer          ["vips_image_new_from_buffer"
-                                    [:pointer :size_t :string :& :pointer]
-                                    :pointer]
-   :image-new-from-file            ["vips_image_new_from_file"
-                                    [:string :& :pointer]
-                                    :pointer]
-   :image-new-from-source          ["vips_image_new_from_source"
-                                    [:pointer :string :& :pointer]
-                                    :pointer]
    :foreign-find-load              ["vips_foreign_find_load" [:string] :string]
    :foreign-find-load-buffer       ["vips_foreign_find_load_buffer" [:pointer :size_t] :string]
    :foreign-find-load-source       ["vips_foreign_find_load_source" [:pointer] :string]
@@ -287,12 +294,6 @@
    :foreign-find-save-buffer       ["vips_foreign_find_save_buffer" [:string] :string]
    :foreign-find-save-target       ["vips_foreign_find_save_target" [:string] :string]
    :image-copy-memory              ["vips_image_copy_memory" [:pointer] :pointer]
-   :image-write-to-buffer          ["vips_image_write_to_buffer"
-                                    [:pointer :string :pointer :pointer :& :pointer]
-                                    :int]
-   :image-write-to-file            ["vips_image_write_to_file"
-                                    [:pointer :string :& :pointer]
-                                    :int]
    :image-remove                   ["vips_image_remove" [:pointer :string] :int]
    :image-set                      ["vips_image_set" [:pointer :string :pointer] :void]
    :image-set-array-double         ["vips_image_set_array_double"
@@ -307,9 +308,6 @@
    :image-set-double               ["vips_image_set_double" [:pointer :string :double] :void]
    :image-set-int                  ["vips_image_set_int" [:pointer :string :int] :void]
    :image-set-string               ["vips_image_set_string" [:pointer :string :string] :void]
-   :image-write-to-target          ["vips_image_write_to_target"
-                                    [:pointer :string :pointer :& :pointer]
-                                    :int]
    :operation-get-type             ["vips_operation_get_type" [] :long]
    :operation-new                  ["vips_operation_new" [:string] :pointer]
    :array-image-get-type           ["vips_array_image_get_type" [] :long]
@@ -775,42 +773,6 @@
              (subs option-string 1))
         (str value option-string)))))
 
-(defn maybe-find-load-operation-name
-  [source]
-  (let [native         (bindings)
-        source         (require-java-string source "from-file source")
-        operation-name ((:foreign-find-load native) source)]
-    (when-not operation-name
-      (clear-error! native))
-    operation-name))
-
-(defn maybe-find-save-operation-name
-  [path]
-  (let [native         (bindings)
-        path           (require-java-string path "write-to-file path")
-        operation-name ((:foreign-find-save native) path)]
-    (when-not operation-name
-      (clear-error! native))
-    operation-name))
-
-(defn maybe-find-save-buffer-operation-name
-  [suffix]
-  (let [native         (bindings)
-        suffix         (require-java-string suffix "write-to-buffer suffix")
-        operation-name ((:foreign-find-save-buffer native) suffix)]
-    (when-not operation-name
-      (clear-error! native))
-    operation-name))
-
-(defn maybe-find-save-target-operation-name
-  [suffix]
-  (let [native         (bindings)
-        suffix         (require-java-string suffix "write-to-stream suffix")
-        operation-name ((:foreign-find-save-target native) suffix)]
-    (when-not operation-name
-      (clear-error! native))
-    operation-name))
-
 (def ^:private helper-option-integer-pattern
   #"^[+-]?\d+$")
 
@@ -850,26 +812,6 @@
           :flags (encode-flags (:value-type arg) value)
           nil)))))
 
-(defn validate-helper-target-options!
-  [find-operation target label opts]
-  (when (seq opts)
-    (let [target (require-java-string target label)]
-      (when-let [operation-name (find-operation target)]
-        (validate-helper-option-values! operation-name opts)))))
-
-(defn throw-stream-error
-  [message data ^AtomicReference failure-ref]
-  (let [native          (bindings)
-        callback-error  (.get failure-ref)
-        libvips-message (last-error-message native)]
-    (clear-error! native)
-    (throw (ex-info message
-                    (cond-> data
-                      libvips-message (assoc :vips/error libvips-message)
-                      callback-error  (assoc :stream/error       (.getMessage ^Throwable callback-error)
-                                             :stream/error-class (.getName (class callback-error))))
-                    callback-error))))
-
 (defn require-instance
   [^Class expected value label]
   (when-not (instance? expected value)
@@ -901,9 +843,67 @@
     {:callback callback
      :stub     stub}))
 
+;; One process-lifetime stub runs outside every stream arena. Native finalization,
+;; not handle close, releases callbacks reachable through lazy images or the cache.
+(defonce native-stream-resources (atom {}))
+;; Delay native allocations until registration, not Native Image build time.
+(defonce native-finalizer-arena (delay (ffi/shared-arena)))
+(defonce native-stream-finalizer
+  (delay
+    (ffi/callback @native-finalizer-arena
+                  (fn [_ ptr]
+                    (let [key                           (ffi/address ptr)
+                          {:keys [arena close-stream!]} (get @native-stream-resources key)]
+                      (swap! native-stream-resources dissoc key)
+                      (try
+                        (when close-stream! (close-stream!))
+                        (catch Throwable _)
+                        (finally (close-quietly arena)))))
+                  [:pointer :pointer] :void)))
+
+(defn retain-stream-resources!
+  [ptr arena callbacks close-stream! failure-ref]
+  (let [stub @native-stream-finalizer]
+    (swap! native-stream-resources assoc (ffi/address ptr)
+           {:failure-refs [failure-ref] :arena arena :callbacks callbacks :close-stream! close-stream!})
+    ((bindings :g-object-weak-ref) ptr stub ffi/null)))
+
+(defn native-failure-refs
+  [value]
+  (cond
+    (satisfies? PointerBacked value)
+    (:failure-refs (get @native-stream-resources (ffi/address (pointer value))))
+    (and (map? value) (contains? value :out)) (native-failure-refs (:out value))
+    (sequential? value) (mapcat native-failure-refs value)
+    :else nil))
+
+(defn throw-with-stream-failure
+  [^Throwable throwable failure-refs]
+  (if-let [failure (some (fn [^AtomicReference ref] (.get ref)) failure-refs)]
+    (throw (ex-info (.getMessage throwable)
+                    (assoc (ex-data throwable)
+                           :stream/error (.getMessage ^Throwable failure)
+                           :stream/error-class (.getName (class failure)))
+                    failure))
+    (throw throwable)))
+
+(defn retain-failure-refs!
+  [value failure-refs]
+  (when (and (seq failure-refs) (satisfies? PointerBacked value))
+    (let [stub @native-stream-finalizer
+          ptr  (pointer value)
+          key  (ffi/address ptr)]
+      (locking native-stream-resources
+        (let [registered? (contains? @native-stream-resources key)]
+          (swap! native-stream-resources update-in [key :failure-refs]
+                 (fn [refs] (vec (distinct (concat refs failure-refs)))))
+          (when-not registered?
+            ((bindings :g-object-weak-ref) ptr stub ffi/null))))))
+  value)
+
 (defn- new-source-bridge*
   [^InputStream stream close-stream!]
-  (let [arena       (Arena/ofShared)
+  (let [arena       (ffi/shared-arena)
         failure-ref (AtomicReference. nil)
         ptr         ((bindings :source-custom-new))]
     (when (ffi/null? ptr)
@@ -927,70 +927,42 @@
                                 (remember-stream-failure! failure-ref t)
                                 -1)))
             read-signal   (connect-signal! ptr "read" read-callback source-read-callback-type arena)]
+        (retain-stream-resources! ptr arena [read-signal] close-stream! failure-ref)
         (handles/->StreamBridge ptr
-                                arena
-                                stream
-                                [(:callback read-signal) (:stub read-signal)]
                                 failure-ref
-                                close-stream!
-                                (AtomicBoolean. false)
                                 (bindings :g-object-unref)))
       (catch Throwable t
-        ((bindings :g-object-unref) ptr)
-        (.close arena)
-        (close-stream!)
+        (let [registered? (contains? @native-stream-resources (ffi/address ptr))]
+          ((bindings :g-object-unref) ptr)
+          (when-not registered?
+            (close-quietly arena)
+            (try (close-stream!) (catch Throwable _))))
         (throw t)))))
 
 (defn new-source-bridge
   [^InputStream stream]
   (new-source-bridge* stream #(close-quietly stream)))
 
-(def ^:private stream-validation-mark-limit
-  Integer/MAX_VALUE)
-
-(defn rewindable-input-stream
-  [source]
-  (let [stream (require-instance InputStream source "from-stream source")]
-    (if (.markSupported ^InputStream stream)
-      stream
-      (java.io.BufferedInputStream. stream))))
-
-(defn maybe-find-load-source-operation-name
-  [^InputStream source]
-  (let [native (bindings)]
-    (.mark source stream-validation-mark-limit)
-    (try
-      (let [operation-name (with-open [^java.lang.AutoCloseable bridge (new-source-bridge* source (fn []))]
-                             ((:foreign-find-load-source native) (pointer bridge)))]
-        (when-not operation-name
-          (clear-error! native))
-        operation-name)
-      (finally
-        (.reset source)))))
-
-(defn validated-stream-source
-  [source opts]
-  (let [stream (rewindable-input-stream source)]
-    (when-let [operation-name (maybe-find-load-source-operation-name stream)]
-      (validate-helper-option-values! operation-name opts))
-    stream))
-
 (defn finish-output-stream!
-  [^OutputStream stream ^AtomicReference failure-ref]
+  [^OutputStream stream ^AtomicReference failure-ref close-stream!]
   (try
     (.flush stream)
-    (.close stream)
+    (close-stream!)
     (int 0)
     (catch Throwable t
       (remember-stream-failure! failure-ref t)
-      (close-quietly stream)
+      (try (close-stream!) (catch Throwable _))
       (int -1))))
 
 (defn new-target-bridge
   [^OutputStream stream]
-  (let [arena       (Arena/ofShared)
-        failure-ref (AtomicReference. nil)
-        ptr         ((bindings :target-custom-new))]
+  (let [arena          (ffi/shared-arena)
+        failure-ref    (AtomicReference. nil)
+        stream-closed? (atom false)
+        close-stream!  (fn []
+                         (when (compare-and-set! stream-closed? false true)
+                           (.close stream)))
+        ptr            ((bindings :target-custom-new))]
     (when (ffi/null? ptr)
       (.close arena)
       (throw-vips-error (bindings)
@@ -1011,22 +983,19 @@
                                  (remember-stream-failure! failure-ref t)
                                  -1)))
             end-callback   (fn [_target _handle]
-                             (finish-output-stream! stream failure-ref))
+                             (finish-output-stream! stream failure-ref close-stream!))
             write-signal   (connect-signal! ptr "write" write-callback target-write-callback-type arena)
             end-signal     (connect-signal! ptr "end" end-callback target-end-callback-type arena)]
+        (retain-stream-resources! ptr arena [write-signal end-signal] close-stream! failure-ref)
         (handles/->StreamBridge ptr
-                                arena
-                                stream
-                                [(:callback write-signal) (:stub write-signal)
-                                 (:callback end-signal) (:stub end-signal)]
                                 failure-ref
-                                #(close-quietly stream)
-                                (AtomicBoolean. false)
                                 (bindings :g-object-unref)))
       (catch Throwable t
-        ((bindings :g-object-unref) ptr)
-        (.close arena)
-        (close-quietly stream)
+        (let [registered? (contains? @native-stream-resources (ffi/address ptr))]
+          ((bindings :g-object-unref) ptr)
+          (when-not registered?
+            (close-quietly arena)
+            (try (close-stream!) (catch Throwable _))))
         (throw t)))))
 
 (defn wrap-image
@@ -1034,7 +1003,7 @@
    (wrap-image ptr nil))
   ([ptr keeper]
    (when-not (ffi/null? ptr)
-     (handles/->ImageHandle ptr (AtomicBoolean. false) keeper (bindings :g-object-unref)))))
+     (handles/->ImageHandle ptr keeper (bindings :g-object-unref)))))
 
 (defn adopt-image
   [ptr]
@@ -1048,27 +1017,19 @@
     (:out result-map)
 
     (contains? result-map :out)
-    (handles/->OperationResult result-map (AtomicBoolean. false))
+    (handles/->OperationResult result-map)
 
     :else
     result-map))
 
 (defn image-handle
   [value]
-  (cond
-    (satisfies? PointerBacked value)
-    value
-
-    (and (map? value) (contains? value :out))
-    (let [image (:out value)]
-      (if (satisfies? PointerBacked image)
-        image
-        (throw (ex-info "Operation result map does not contain an image at :out"
-                        {:value value}))))
-
-    :else
-    (throw (ex-info "Expected an image handle or operation result map"
-                    {:value value}))))
+  (let [image (if (and (map? value) (contains? value :out)) (:out value) value)]
+    (when-not (satisfies? PointerBacked image)
+      (throw (ex-info "Expected an image handle or operation result map" {:value value})))
+    (when (zero? ((bindings :g-type-check-instance-is-a) (pointer image) (:image (gtypes))))
+      (throw (ex-info "Expected a VipsImage handle" {:value value})))
+    image))
 
 (defn with-gvalue
   [gtype f]
@@ -1079,25 +1040,6 @@
         (f value)
         (finally
           ((bindings :g-value-unset) value))))))
-
-(defn open-image
-  ([source]
-   (let [path  (require-java-string source "from-file source")
-         image ((bindings :image-new-from-file) path nil)]
-     (when (ffi/null? image)
-       (throw-vips-error (bindings)
-                         "Failed to open image"
-                         {:source path}))
-     (wrap-image image)))
-  ([source opts]
-   (validate-helper-target-options! maybe-find-load-operation-name source "from-file source" opts)
-   (let [path  (append-options source opts)
-         image ((bindings :image-new-from-file) path nil)]
-     (when (ffi/null? image)
-       (throw-vips-error (bindings)
-                         "Failed to open image"
-                         {:source path}))
-     (wrap-image image))))
 
 (def ^:private byte-array-class
   (class (byte-array 0)))
@@ -1128,165 +1070,17 @@
                            {:label label
                             :value value})))))
 
-(defn maybe-find-load-buffer-operation-name
-  [source]
-  (let [native (bindings)
-        data   (->byte-array source "from-buffer source")]
-    (with-open [arena (ffi/confined-arena)]
-      (let [size   (alength ^bytes data)
-            buffer (ffi/alloc arena (max 1 size) 1)]
-        (ffi/write-array buffer :byte data)
-        (let [operation-name ((:foreign-find-load-buffer native) buffer size)]
-          (when-not operation-name
-            (clear-error! native))
-          operation-name)))))
-
-(defn- open-image-from-buffer*
-  [source option-string]
-  (let [data   (->byte-array source "from-buffer source")
-        arena  (Arena/ofShared)
-        size   (alength ^bytes data)
-        buffer (ffi/alloc arena (max 1 size) 1)
-        image  (do
-                 (ffi/write-array buffer :byte data)
-                 ((bindings :image-new-from-buffer) buffer size option-string nil))]
-    (when (ffi/null? image)
-      (.close arena)
-      (throw-vips-error (bindings)
-                        "Failed to open image from buffer"
-                        {:byte-count size}))
-    (wrap-image image arena)))
-
-(defn open-image-from-buffer
-  ([source]
-   (open-image-from-buffer* source ""))
-  ([source opts]
-   (when-let [operation-name (maybe-find-load-buffer-operation-name source)]
-     (validate-helper-option-values! operation-name opts))
-   (open-image-from-buffer* source (append-options "" opts))))
-
-(defn- open-image-from-stream*
-  [source option-string]
-  (let [stream (require-instance InputStream source "from-stream source")
-        bridge (new-source-bridge stream)
-        image  ((bindings :image-new-from-source) (pointer bridge) (or option-string "") nil)]
-    (when (ffi/null? image)
-      (.close ^java.lang.AutoCloseable bridge)
-      (throw-stream-error "Failed to open image from stream"
-                          {}
-                          (handles/stream-failure-ref bridge)))
-    (wrap-image image bridge)))
-
-(defn open-image-from-stream
-  ([source]
-   (open-image-from-stream* source ""))
-  ([source opts]
-   (open-image-from-stream* (validated-stream-source source opts)
-                            (append-options "" opts))))
-
 (defn copy-image-to-memory
   [image]
-  (let [copied ((bindings :image-copy-memory) (pointer (image-handle image)))]
-    (when (ffi/null? copied)
-      (throw-vips-error (bindings)
-                        "Failed to copy image to memory"
-                        {}))
-    (wrap-image copied)))
-
-(defn write-image!
-  ([image path]
-   (let [path (require-java-string path "write-to-file path")
-         code ((bindings :image-write-to-file) (pointer (image-handle image)) path nil)]
-     (when-not (zero? code)
-       (throw-vips-error (bindings)
-                         "Failed to write image"
-                         {:path path}))
-     image))
-  ([image path opts]
-   (validate-helper-target-options! maybe-find-save-operation-name path "write-to-file path" opts)
-   (let [path (append-options path opts)
-         code ((bindings :image-write-to-file) (pointer (image-handle image)) path nil)]
-     (when-not (zero? code)
-       (throw-vips-error (bindings)
-                         "Failed to write image"
-                         {:path path}))
-     image)))
-
-(defn write-image-to-buffer
-  ([image suffix]
-   (with-open [arena (ffi/confined-arena)]
-     (let [suffix     (require-java-string suffix "write-to-buffer suffix")
-           buffer-ptr (ffi/alloc arena :pointer)
-           size-ptr   (ffi/alloc arena :size_t)
-           code       ((bindings :image-write-to-buffer)
-                       (pointer (image-handle image))
-                       suffix
-                       buffer-ptr
-                       size-ptr
-                       nil)]
-       (when-not (zero? code)
-         (throw-vips-error (bindings)
-                           "Failed to write image to buffer"
-                           {:suffix suffix}))
-       (let [output-ptr  (ffi/read buffer-ptr :pointer)
-             output-size (ffi/read size-ptr :long)]
-         (try
-           (ffi/read-array (ffi/reinterpret output-ptr output-size) :byte output-size)
-           (finally
-             ((bindings :g-free) output-ptr)))))))
-  ([image suffix opts]
-   (validate-helper-target-options! maybe-find-save-buffer-operation-name suffix "write-to-buffer suffix" opts)
-   (with-open [arena (ffi/confined-arena)]
-     (let [suffix     (append-options suffix opts)
-           buffer-ptr (ffi/alloc arena :pointer)
-           size-ptr   (ffi/alloc arena :size_t)
-           code       ((bindings :image-write-to-buffer)
-                       (pointer (image-handle image))
-                       suffix
-                       buffer-ptr
-                       size-ptr
-                       nil)]
-       (when-not (zero? code)
-         (throw-vips-error (bindings)
-                           "Failed to write image to buffer"
-                           {:suffix suffix}))
-       (let [output-ptr  (ffi/read buffer-ptr :pointer)
-             output-size (ffi/read size-ptr :long)]
-         (try
-           (ffi/read-array (ffi/reinterpret output-ptr output-size) :byte output-size)
-           (finally
-             ((bindings :g-free) output-ptr))))))))
-
-(defn write-image-to-stream
-  ([image sink suffix]
-   (let [stream (require-instance OutputStream sink "write-to-stream sink")]
-     (with-open [^java.lang.AutoCloseable bridge (new-target-bridge stream)]
-       (let [suffix (require-java-string suffix "write-to-stream suffix")
-             code   ((bindings :image-write-to-target)
-                     (pointer (image-handle image))
-                     suffix
-                     (pointer bridge)
-                     nil)]
-         (when-not (zero? code)
-           (throw-stream-error "Failed to write image to stream"
-                               {:suffix suffix}
-                               (handles/stream-failure-ref bridge)))
-         image))))
-  ([image sink suffix opts]
-   (validate-helper-target-options! maybe-find-save-target-operation-name suffix "write-to-stream suffix" opts)
-   (let [stream (require-instance OutputStream sink "write-to-stream sink")]
-     (with-open [^java.lang.AutoCloseable bridge (new-target-bridge stream)]
-       (let [suffix (append-options suffix opts)
-             code   ((bindings :image-write-to-target)
-                     (pointer (image-handle image))
-                     suffix
-                     (pointer bridge)
-                     nil)]
-         (when-not (zero? code)
-           (throw-stream-error "Failed to write image to stream"
-                               {:suffix suffix}
-                               (handles/stream-failure-ref bridge)))
-         image)))))
+  (let [handle       (image-handle image)
+        failure-refs (native-failure-refs handle)]
+    (try
+      (let [copied ((bindings :image-copy-memory) (pointer handle))]
+        (when (ffi/null? copied)
+          (throw-vips-error (bindings) "Failed to copy image to memory" {}))
+        (wrap-image copied))
+      (catch Throwable t
+        (throw-with-stream-failure t failure-refs)))))
 
 (defn image-width
   [image]
@@ -1322,9 +1116,7 @@
 
 (defn read-c-string
   [ptr]
-  (.getString ^java.lang.foreign.MemorySegment
-   (.reinterpret ^java.lang.foreign.MemorySegment ptr c-string-max-bytes)
-              0))
+  (ffi/ptr->string ptr c-string-max-bytes))
 
 (defn image-field-names
   [image]
@@ -1333,14 +1125,11 @@
       []
       (let [slot-size  (ffi/sizeof :pointer)
             max-fields 1024
-            fields-ptr (.reinterpret ^java.lang.foreign.MemorySegment raw-fields
-                                     (* max-fields slot-size))]
+            fields-ptr (ffi/reinterpret raw-fields (* max-fields slot-size))]
         (try
           (loop [idx 0
                  acc []]
-            (let [field-ptr (.getAtIndex ^java.lang.foreign.MemorySegment fields-ptr
-                                         java.lang.foreign.ValueLayout/ADDRESS
-                                         idx)]
+            (let [field-ptr (ffi/read fields-ptr :pointer (* idx slot-size))]
               (if (ffi/null? field-ptr)
                 acc
                 (recur (inc idx) (conj acc (read-c-string field-ptr))))))
@@ -1430,17 +1219,10 @@
           (throw-vips-error (bindings)
                             "Failed to read integer-array image metadata field"
                             {:field field-name}))
-        (let [count     (ffi/read n-ptr :int)
-              data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
-                         (ffi/read out-ptr :pointer)
-                                      (* count (ffi/sizeof :int)))
-              slot-size (ffi/sizeof :int)]
-          (mapv (fn [idx]
-                  (.get ^java.lang.foreign.MemorySegment
-                   data-ptr
-                        java.lang.foreign.ValueLayout/JAVA_INT
-                        (long (* idx slot-size))))
-                (range count)))))))
+        (let [count    (ffi/read n-ptr :int)
+              data-ptr (ffi/reinterpret (ffi/read out-ptr :pointer)
+                                        (* count (ffi/sizeof :int)))]
+          (vec (ffi/read-array data-ptr :int count)))))))
 
 (defn image-array-double-field
   [image field-name]
@@ -1457,17 +1239,10 @@
           (throw-vips-error (bindings)
                             "Failed to read double-array image metadata field"
                             {:field field-name}))
-        (let [count     (ffi/read n-ptr :int)
-              data-ptr  (.reinterpret ^java.lang.foreign.MemorySegment
-                         (ffi/read out-ptr :pointer)
-                                      (* count (ffi/sizeof :double)))
-              slot-size (ffi/sizeof :double)]
-          (mapv (fn [idx]
-                  (.get ^java.lang.foreign.MemorySegment
-                   data-ptr
-                        java.lang.foreign.ValueLayout/JAVA_DOUBLE
-                        (long (* idx slot-size))))
-                (range count)))))))
+        (let [count    (ffi/read n-ptr :int)
+              data-ptr (ffi/reinterpret (ffi/read out-ptr :pointer)
+                                        (* count (ffi/sizeof :double)))]
+          (vec (ffi/read-array data-ptr :double count)))))))
 
 (defn image-blob-field
   [image field-name]

@@ -56,7 +56,7 @@ platform will be used):
 The native companion jars bundle libvips 8.18.6 from `sharp-libvips` 1.3.3.
 The test suite runs against that bundle.
 
-`ol.vips` requires Java 25{plus} and native access enabled for the JVM
+On the JVM, `ol.vips` requires Java 25{plus} and native access enabled for the JVM
 process:
 
 [source,clojure]
@@ -96,6 +96,7 @@ generated wrappers for libvips operations.
 * https://docs.outskirtslabs.com/ol.vips/next/examples/[Examples]
 * https://docs.outskirtslabs.com/ol.vips/next/going-to-production/[Going to Production]
 * https://docs.outskirtslabs.com/ol.vips/next/native-image/[GraalVM Native Image]
+* https://docs.outskirtslabs.com/ol.vips/next/babashka/[Babashka]
 * https://docs.outskirtslabs.com/ol.vips/next/multipage-and-animated-images/[Multipage and Animated Images]
 * https://docs.outskirtslabs.com/ol.vips/next/api/ol-vips[API Reference]
 * https://docs.outskirtslabs.com/ol.vips/next/changelog/[Changelog]

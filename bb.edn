@@ -63,6 +63,18 @@
          {:doc  "Run all tests or specific test suites"
           :task (apply clojure "-M:dev:kaocha" *command-line-args*)}
 
+         test:bb
+         {:doc  "Run shared tests in Babashka; optional arguments are test namespace names"
+          :task (apply shell "bb" "--classpath"
+                       (str/join fs/path-separator
+                                 (concat ["src" "resources" "test"]
+                                         (map (fn [dir] (str (fs/path dir "resources"))) (native-dirs))))
+                       "script/test_runtime.clj" *command-line-args*)}
+
+         test:bb:artifacts
+         {:doc  "Test built jars in Babashka outside the checkout: <main-jar> <native-jar>"
+          :task (apply shell "bb" "script/smoke_bb.clj" *command-line-args*)}
+
          fmt
          {:doc  "Format code with cljfmt"
           :task (apply shell "cljfmt --quiet -v fix" (if (seq *command-line-args*) *command-line-args* paths))}
@@ -137,11 +149,11 @@
                   (build-native-jars! dirs))}
 
          qa
-         {:doc     "Run full quality assurance: format, lint, and test"
+         {:doc     "Run full quality assurance: format, lint, JVM tests"
           :depends [fmt lint test]}
 
          ci
-         {:doc     "Run CI checks: test, format check, and lint"
+         {:doc     "Run CI checks: JVM tests, format check, and lint"
           :depends [test fmt:check lint]}
 
          jar       {:override-builtin true

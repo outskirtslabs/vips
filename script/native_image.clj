@@ -35,7 +35,7 @@
     (p/shell "clojure" "-Scp" cp "-J--enable-native-access=ALL-UNNAMED"
              "-M" "-e" (pr-str (list 'binding ['*compile-path* (str classes)]
                                      '(compile 'ol.vips.native-image-smoke))))
-    (p/shell {:extra-env {"BABASHKA_FEATURE_LIBFFI" "true"}}
+    (p/shell {:extra-env {"BABASHKA_FEATURE_LIBFFI" "false"}}
              (str (fs/path graalvm "bin" "native-image"))
              "-cp" cp
              "--features=clj_easy.graal_build_time.InitClojureClasses"
@@ -45,7 +45,6 @@
              "--enable-native-access=ALL-UNNAMED"
              "--no-fallback"
              "-EBABASHKA_FEATURE_LIBFFI"
-             (str "-H:NativeLinkerOption=" (or (System/getenv "BABASHKA_LIBFFI") "-lffi"))
              "-J-Xmx6g" "--parallelism=2" "-O1"
              "-o" (str image) "ol.vips.native_image_smoke"))
   (let [run-dir    (fs/create-temp-dir {:prefix "ol-vips-native-run-"})
