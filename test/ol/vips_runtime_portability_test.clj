@@ -5,7 +5,6 @@
    [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
    [ol.vips.impl.handles :as handles]
-   [ol.vips.impl.handles.protocols :as handle-protocols]
    [ol.vips.impl.loader :as loader])
   (:import
    [java.lang AutoCloseable]
@@ -43,12 +42,11 @@
   (with-open [arena (ffi/confined-arena)]
     (let [ptr      (ffi/alloc arena :int)
           released (atom [])
-          image    (handles/->ImageHandle ptr nil
-                                          #(swap! released conj %))
+          image    (handles/->NativeHandle ptr [] identity #(swap! released conj %))
           values   {:out image :width 42}
           result   (handles/->OperationResult values)]
       (with-open [^AutoCloseable result result]
-        (is (= ptr (handle-protocols/pointer (:out result))))
+        (handles/with-pointer (:out result) #(is (= ptr %)))
         (is (= [true image :missing true [:width 42] 2 values
                 (assoc values :height 7) {:width 42} {} true]
                [(map? result) (:out result) (get result :missing :missing)
@@ -58,32 +56,32 @@
       (is (= (conj values [:height 7]) (conj result [:height 7])))
       (.close ^AutoCloseable result)
       (.close ^AutoCloseable image)
-      (is (= [ptr] @released))
+      (is (= [ptr ptr] @released))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo #"closed image handle"
-                            (handle-protocols/pointer image))))))
+                            (handles/with-pointer image (constantly nil)))))))
 
 (deftest portable-stream-failure-access
   (with-open [arena (ffi/confined-arena)]
     (let [ptr      (ffi/alloc arena :int)
           failure  (AtomicReference. (ex-info "stream failure" {}))
           released (atom [])
-          bridge   (handles/->StreamBridge ptr failure #(swap! released conj %))]
-      (is (identical? failure (handle-protocols/stream-failure-ref bridge)))
-      (is (= ptr (handle-protocols/pointer bridge)))
+          bridge   (handles/->NativeHandle ptr [failure] identity #(swap! released conj %))]
+      (is (identical? failure (first (:failure-refs @bridge))))
+      (handles/with-pointer bridge #(is (= ptr %)))
       (.close ^AutoCloseable bridge)
       (.close ^AutoCloseable bridge)
-      (is (= [ptr] @released))
-      (is (identical? failure (handle-protocols/stream-failure-ref bridge))))))
+      (is (= [ptr ptr] @released))
+      (is (identical? failure (first (:failure-refs @bridge)))))))
 
 (deftest concurrent-close-releases-once
   (with-open [arena (ffi/confined-arena)]
     (let [ptr      (ffi/alloc arena :int)
           released (atom [])
-          image    (handles/->ImageHandle ptr nil #(swap! released conj %))
+          image    (handles/->NativeHandle ptr [] identity #(swap! released conj %))
           start    (promise)
           workers  (mapv (fn [_] (future @start (.close ^AutoCloseable image))) (range 8))]
       (deliver start true)
       (doseq [worker workers] @worker)
       (is (= [ptr] @released))
       (is (thrown-with-msg? clojure.lang.ExceptionInfo #"closed image handle"
-                            (handle-protocols/pointer image))))))
+                            (handles/with-pointer image (constantly nil)))))))

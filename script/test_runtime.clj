@@ -7,6 +7,7 @@
     ol.vips-generated-api-test
     ol.vips-introspection-test
     ol.vips-io-test
+    ol.vips-handle-lifetime-test
     ol.vips-runtime-portability-test])
 
 (defn -main

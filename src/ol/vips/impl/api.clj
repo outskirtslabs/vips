@@ -3,7 +3,7 @@
    [babashka.ffi :as ffi]
    [clojure.string :as str]
    [ol.vips.impl.handles :as handles]
-   [ol.vips.impl.handles.protocols :refer [PointerBacked pointer]]
+   [ol.vips.impl.handles.protocols :refer [PointerBacked]]
    [ol.vips.impl.loader :as loader])
   (:import
    [java.io File InputStream OutputStream]
@@ -862,44 +862,38 @@
                   [:pointer :pointer] :void)))
 
 (defn retain-stream-resources!
-  [ptr arena callbacks close-stream! failure-ref]
+  [ptr arena callbacks close-stream!]
   (let [stub @native-stream-finalizer]
     (swap! native-stream-resources assoc (ffi/address ptr)
-           {:failure-refs [failure-ref] :arena arena :callbacks callbacks :close-stream! close-stream!})
+           {:arena arena :callbacks callbacks :close-stream! close-stream!})
     ((bindings :g-object-weak-ref) ptr stub ffi/null)))
 
 (defn native-failure-refs
   [value]
   (cond
     (satisfies? PointerBacked value)
-    (:failure-refs (get @native-stream-resources (ffi/address (pointer value))))
+    (:failure-refs @value)
     (and (map? value) (contains? value :out)) (native-failure-refs (:out value))
     (sequential? value) (mapcat native-failure-refs value)
     :else nil))
 
 (defn throw-with-stream-failure
-  [^Throwable throwable failure-refs]
-  (if-let [failure (some (fn [^AtomicReference ref] (.get ref)) failure-refs)]
-    (throw (ex-info (.getMessage throwable)
-                    (assoc (ex-data throwable)
-                           :stream/error (.getMessage ^Throwable failure)
-                           :stream/error-class (.getName (class failure)))
-                    failure))
-    (throw throwable)))
+  ([^Throwable throwable failure-refs]
+   (throw-with-stream-failure throwable failure-refs (.getMessage throwable)))
+  ([^Throwable throwable failure-refs message]
+   (if-let [failure (some (fn [^AtomicReference ref] (.get ref)) failure-refs)]
+     (throw (ex-info message
+                     (assoc (ex-data throwable)
+                            :stream/error (.getMessage ^Throwable failure)
+                            :stream/error-class (.getName (class failure)))
+                     failure))
+     (throw throwable))))
 
-(defn retain-failure-refs!
-  [value failure-refs]
-  (when (and (seq failure-refs) (satisfies? PointerBacked value))
-    (let [stub @native-stream-finalizer
-          ptr  (pointer value)
-          key  (ffi/address ptr)]
-      (locking native-stream-resources
-        (let [registered? (contains? @native-stream-resources key)]
-          (swap! native-stream-resources update-in [key :failure-refs]
-                 (fn [refs] (vec (distinct (concat refs failure-refs)))))
-          (when-not registered?
-            ((bindings :g-object-weak-ref) ptr stub ffi/null))))))
-  value)
+(defn native-handle
+  ([ptr] (native-handle ptr []))
+  ([ptr failure-refs]
+   (when-not (ffi/null? ptr)
+     (handles/->NativeHandle ptr failure-refs (bindings :g-object-ref) (bindings :g-object-unref)))))
 
 (defn- new-source-bridge*
   [^InputStream stream close-stream!]
@@ -927,10 +921,8 @@
                                 (remember-stream-failure! failure-ref t)
                                 -1)))
             read-signal   (connect-signal! ptr "read" read-callback source-read-callback-type arena)]
-        (retain-stream-resources! ptr arena [read-signal] close-stream! failure-ref)
-        (handles/->StreamBridge ptr
-                                failure-ref
-                                (bindings :g-object-unref)))
+        (retain-stream-resources! ptr arena [read-signal] close-stream!)
+        (native-handle ptr [failure-ref]))
       (catch Throwable t
         (let [registered? (contains? @native-stream-resources (ffi/address ptr))]
           ((bindings :g-object-unref) ptr)
@@ -986,10 +978,8 @@
                              (finish-output-stream! stream failure-ref close-stream!))
             write-signal   (connect-signal! ptr "write" write-callback target-write-callback-type arena)
             end-signal     (connect-signal! ptr "end" end-callback target-end-callback-type arena)]
-        (retain-stream-resources! ptr arena [write-signal end-signal] close-stream! failure-ref)
-        (handles/->StreamBridge ptr
-                                failure-ref
-                                (bindings :g-object-unref)))
+        (retain-stream-resources! ptr arena [write-signal end-signal] close-stream!)
+        (native-handle ptr [failure-ref]))
       (catch Throwable t
         (let [registered? (contains? @native-stream-resources (ffi/address ptr))]
           ((bindings :g-object-unref) ptr)
@@ -997,17 +987,6 @@
             (close-quietly arena)
             (try (close-stream!) (catch Throwable _))))
         (throw t)))))
-
-(defn wrap-image
-  ([ptr]
-   (wrap-image ptr nil))
-  ([ptr keeper]
-   (when-not (ffi/null? ptr)
-     (handles/->ImageHandle ptr keeper (bindings :g-object-unref)))))
-
-(defn adopt-image
-  [ptr]
-  (wrap-image ptr))
 
 (defn operation-result
   [result-map]
@@ -1027,9 +1006,15 @@
   (let [image (if (and (map? value) (contains? value :out)) (:out value) value)]
     (when-not (satisfies? PointerBacked image)
       (throw (ex-info "Expected an image handle or operation result map" {:value value})))
-    (when (zero? ((bindings :g-type-check-instance-is-a) (pointer image) (:image (gtypes))))
-      (throw (ex-info "Expected a VipsImage handle" {:value value})))
     image))
+
+(defn with-image-pointer
+  [image f]
+  (handles/with-pointer (image-handle image)
+    (fn [ptr]
+      (when (zero? ((bindings :g-type-check-instance-is-a) ptr (:image (gtypes))))
+        (throw (ex-info "Expected a VipsImage handle" {:value image})))
+      (f ptr))))
 
 (defn with-gvalue
   [gtype f]
@@ -1043,9 +1028,6 @@
 
 (def ^:private byte-array-class
   (class (byte-array 0)))
-
-(def ^:private missing-field-sentinel
-  (Object.))
 
 (def ^:private c-string-max-bytes
   65536)
@@ -1072,222 +1054,144 @@
 
 (defn copy-image-to-memory
   [image]
-  (let [handle       (image-handle image)
-        failure-refs (native-failure-refs handle)]
-    (try
-      (let [copied ((bindings :image-copy-memory) (pointer handle))]
-        (when (ffi/null? copied)
-          (throw-vips-error (bindings) "Failed to copy image to memory" {}))
-        (wrap-image copied))
-      (catch Throwable t
-        (throw-with-stream-failure t failure-refs)))))
+  (let [failure-refs (native-failure-refs image)]
+    (with-image-pointer image
+      (fn [ptr]
+        (try
+          (let [copied ((bindings :image-copy-memory) ptr)]
+            (when (ffi/null? copied)
+              (throw-vips-error (bindings) "Failed to copy image to memory" {}))
+            (native-handle copied))
+          (catch Throwable t
+            (throw-with-stream-failure t failure-refs)))))))
 
-(defn image-width
-  [image]
-  ((bindings :image-get-width) (pointer (image-handle image))))
+(defn image-width [image]
+  (with-image-pointer image (bindings :image-get-width)))
 
-(defn image-height
-  [image]
-  ((bindings :image-get-height) (pointer (image-handle image))))
+(defn image-height [image]
+  (with-image-pointer image (bindings :image-get-height)))
 
-(defn image-bands
-  [image]
-  ((bindings :image-get-bands) (pointer (image-handle image))))
+(defn image-bands [image]
+  (with-image-pointer image (bindings :image-get-bands)))
 
-(defn image-has-alpha?
-  [image]
-  (not (zero? ((bindings :image-has-alpha) (pointer (image-handle image))))))
+(defn image-has-alpha? [image]
+  (with-image-pointer image #(not (zero? ((bindings :image-has-alpha) %)))))
 
 (defn image-info
   [image]
-  {:width      (image-width image)
-   :height     (image-height image)
-   :bands      (image-bands image)
-   :has-alpha? (image-has-alpha? image)})
+  (with-image-pointer image
+    (fn [ptr]
+      {:width      ((bindings :image-get-width) ptr)
+       :height     ((bindings :image-get-height) ptr)
+       :bands      ((bindings :image-get-bands) ptr)
+       :has-alpha? (not (zero? ((bindings :image-has-alpha) ptr)))})))
 
 (defn image-field-type
   [image field-name]
-  (let [field-name (require-field-name field-name)]
-    ((bindings :image-get-typeof) (pointer (image-handle image)) field-name)))
+  (with-image-pointer image
+    #((bindings :image-get-typeof) % (require-field-name field-name))))
 
-(defn image-has-field?
-  [image field-name]
+(defn image-has-field? [image field-name]
   (not (zero? (image-field-type image field-name))))
 
-(defn read-c-string
-  [ptr]
+(defn read-c-string [ptr]
   (ffi/ptr->string ptr c-string-max-bytes))
 
-(defn image-field-names
-  [image]
-  (let [raw-fields ((bindings :image-get-fields) (pointer (image-handle image)))]
+(defn- field-names
+  [ptr]
+  (let [raw-fields ((bindings :image-get-fields) ptr)]
     (if (ffi/null? raw-fields)
       []
       (let [slot-size  (ffi/sizeof :pointer)
-            max-fields 1024
-            fields-ptr (ffi/reinterpret raw-fields (* max-fields slot-size))]
+            fields-ptr (ffi/reinterpret raw-fields (* 1024 slot-size))]
         (try
-          (loop [idx 0
-                 acc []]
+          (loop [idx 0 acc []]
             (let [field-ptr (ffi/read fields-ptr :pointer (* idx slot-size))]
               (if (ffi/null? field-ptr)
                 acc
                 (recur (inc idx) (conj acc (read-c-string field-ptr))))))
-          (finally
-            ((bindings :g-strfreev) raw-fields)))))))
+          (finally ((bindings :g-strfreev) raw-fields)))))))
+
+(defn image-field-names [image]
+  (with-image-pointer image field-names))
+
+(defn- scalar-field
+  [ptr field-name kind]
+  (let [field-name (require-field-name field-name)
+        [binding value-type label]
+        (case kind
+          :int [:image-get-int :int "integer"]
+          :double [:image-get-double :double "double"]
+          :string [:image-get-string :pointer "string"]
+          :as-string [:image-get-as-string :pointer nil])]
+    (with-open [arena (ffi/confined-arena)]
+      (let [out (ffi/alloc arena value-type)]
+        (when-not (zero? ((bindings binding) ptr field-name out))
+          (throw-vips-error (bindings)
+                            (if label (str "Failed to read " label " image metadata field")
+                                "Failed to read image metadata field as string")
+                            {:field field-name}))
+        (let [value (ffi/read out value-type)]
+          (if (= :pointer value-type)
+            (try (read-c-string value)
+                 (finally (when (= :as-string kind) ((bindings :g-free) value))))
+            value))))))
+
+(defn- sized-field
+  [ptr field-name kind]
+  (let [field-name (require-field-name field-name)
+        [binding item-type count-type label]
+        (case kind
+          :array-int [:image-get-array-int :int :int "integer-array"]
+          :array-double [:image-get-array-double :double :int "double-array"]
+          :blob [:image-get-blob :byte :size_t "blob"])]
+    (with-open [arena (ffi/confined-arena)]
+      (let [out  (ffi/alloc arena :pointer)
+            size (ffi/alloc arena count-type)]
+        (when-not (zero? ((bindings binding) ptr field-name out size))
+          (throw-vips-error (bindings) (str "Failed to read " label " image metadata field")
+                            {:field field-name}))
+        (let [n      (ffi/read size count-type)
+              values (if (zero? n) (byte-array 0)
+                         (ffi/read-array (ffi/reinterpret (ffi/read out :pointer)
+                                                          (* n (ffi/sizeof item-type))) item-type n))]
+          (if (= :blob kind) values (vec values)))))))
 
 (defn image-field-as-string
-  ([image field-name]
-   (image-field-as-string image field-name missing-field-sentinel))
+  ([image field-name] (image-field-as-string image field-name nil))
   ([image field-name not-found]
-   (let [field-name (require-field-name field-name)]
-     (if-not (image-has-field? image field-name)
-       (if (identical? not-found missing-field-sentinel) nil not-found)
-       (with-open [arena (ffi/confined-arena)]
-         (let [out-ptr (ffi/alloc arena :pointer)
-               code    ((bindings :image-get-as-string)
-                        (pointer (image-handle image))
-                        field-name
-                        out-ptr)]
-           (when-not (zero? code)
-             (throw-vips-error (bindings)
-                               "Failed to read image metadata field as string"
-                               {:field field-name}))
-           (let [value-ptr (ffi/read out-ptr :pointer)]
-             (try
-               (read-c-string value-ptr)
-               (finally
-                 ((bindings :g-free) value-ptr))))))))))
+   (with-image-pointer image
+     (fn [ptr]
+       (let [field-name (require-field-name field-name)]
+         (if (zero? ((bindings :image-get-typeof) ptr field-name))
+           not-found
+           (scalar-field ptr field-name :as-string)))))))
 
-(defn image-int-field
-  [image field-name]
-  (let [field-name (require-field-name field-name)]
-    (with-open [arena (ffi/confined-arena)]
-      (let [out-ptr (ffi/alloc arena :int)
-            code    ((bindings :image-get-int)
-                     (pointer (image-handle image))
-                     field-name
-                     out-ptr)]
-        (when-not (zero? code)
-          (throw-vips-error (bindings)
-                            "Failed to read integer image metadata field"
-                            {:field field-name}))
-        (ffi/read out-ptr :int)))))
-
-(defn image-double-field
-  [image field-name]
-  (let [field-name (require-field-name field-name)]
-    (with-open [arena (ffi/confined-arena)]
-      (let [out-ptr (ffi/alloc arena :double)
-            code    ((bindings :image-get-double)
-                     (pointer (image-handle image))
-                     field-name
-                     out-ptr)]
-        (when-not (zero? code)
-          (throw-vips-error (bindings)
-                            "Failed to read double image metadata field"
-                            {:field field-name}))
-        (ffi/read out-ptr :double)))))
-
-(defn image-string-field
-  [image field-name]
-  (let [field-name (require-field-name field-name)]
-    (with-open [arena (ffi/confined-arena)]
-      (let [out-ptr (ffi/alloc arena :pointer)
-            code    ((bindings :image-get-string)
-                     (pointer (image-handle image))
-                     field-name
-                     out-ptr)]
-        (when-not (zero? code)
-          (throw-vips-error (bindings)
-                            "Failed to read string image metadata field"
-                            {:field field-name}))
-        (read-c-string (ffi/read out-ptr :pointer))))))
-
-(defn image-array-int-field
-  [image field-name]
-  (let [field-name (require-field-name field-name)]
-    (with-open [arena (ffi/confined-arena)]
-      (let [out-ptr (ffi/alloc arena :pointer)
-            n-ptr   (ffi/alloc arena :int)
-            code    ((bindings :image-get-array-int)
-                     (pointer (image-handle image))
-                     field-name
-                     out-ptr
-                     n-ptr)]
-        (when-not (zero? code)
-          (throw-vips-error (bindings)
-                            "Failed to read integer-array image metadata field"
-                            {:field field-name}))
-        (let [count    (ffi/read n-ptr :int)
-              data-ptr (ffi/reinterpret (ffi/read out-ptr :pointer)
-                                        (* count (ffi/sizeof :int)))]
-          (vec (ffi/read-array data-ptr :int count)))))))
-
-(defn image-array-double-field
-  [image field-name]
-  (let [field-name (require-field-name field-name)]
-    (with-open [arena (ffi/confined-arena)]
-      (let [out-ptr (ffi/alloc arena :pointer)
-            n-ptr   (ffi/alloc arena :int)
-            code    ((bindings :image-get-array-double)
-                     (pointer (image-handle image))
-                     field-name
-                     out-ptr
-                     n-ptr)]
-        (when-not (zero? code)
-          (throw-vips-error (bindings)
-                            "Failed to read double-array image metadata field"
-                            {:field field-name}))
-        (let [count    (ffi/read n-ptr :int)
-              data-ptr (ffi/reinterpret (ffi/read out-ptr :pointer)
-                                        (* count (ffi/sizeof :double)))]
-          (vec (ffi/read-array data-ptr :double count)))))))
-
-(defn image-blob-field
-  [image field-name]
-  (let [field-name (require-field-name field-name)]
-    (with-open [arena (ffi/confined-arena)]
-      (let [out-ptr (ffi/alloc arena :pointer)
-            len-ptr (ffi/alloc arena :size_t)
-            code    ((bindings :image-get-blob)
-                     (pointer (image-handle image))
-                     field-name
-                     out-ptr
-                     len-ptr)]
-        (when-not (zero? code)
-          (throw-vips-error (bindings)
-                            "Failed to read blob image metadata field"
-                            {:field field-name}))
-        (let [data-ptr (ffi/read out-ptr :pointer)
-              length   (ffi/read len-ptr :long)]
-          (if (zero? length)
-            (byte-array 0)
-            (ffi/read-array (ffi/reinterpret data-ptr length) :byte length)))))))
+(defn- field-value
+  [ptr field-name not-found]
+  (let [gtype ((bindings :image-get-typeof) ptr field-name)]
+    (if (zero? gtype)
+      not-found
+      (case (type-name gtype)
+        ("gint" "guint") (scalar-field ptr field-name :int)
+        "gdouble" (scalar-field ptr field-name :double)
+        ("gchararray" "VipsRefString") (scalar-field ptr field-name :string)
+        "VipsArrayInt" (sized-field ptr field-name :array-int)
+        "VipsArrayDouble" (sized-field ptr field-name :array-double)
+        "VipsBlob" (sized-field ptr field-name :blob)
+        (scalar-field ptr field-name :as-string)))))
 
 (defn image-field
-  ([image field-name]
-   (image-field image field-name missing-field-sentinel))
+  ([image field-name] (image-field image field-name nil))
   ([image field-name not-found]
-   (let [gtype (image-field-type image field-name)]
-     (if (zero? gtype)
-       (if (identical? not-found missing-field-sentinel) nil not-found)
-       (let [field-type-name (type-name gtype)]
-         (case field-type-name
-           ("gint" "guint") (image-int-field image field-name)
-           ("gdouble") (image-double-field image field-name)
-           ("gchararray" "VipsRefString") (image-string-field image field-name)
-           ("VipsArrayInt") (image-array-int-field image field-name)
-           ("VipsArrayDouble") (image-array-double-field image field-name)
-           ("VipsBlob") (image-blob-field image field-name)
-           (image-field-as-string image field-name)))))))
+   (with-image-pointer image #(field-value % (require-field-name field-name) not-found))))
 
 (defn image-metadata
   [image]
-  (into {}
-        (map (fn [field-name]
-               [field-name (image-field image field-name)]))
-        (image-field-names image)))
+  (with-image-pointer image
+    (fn [ptr]
+      (into {} (map (fn [field-name] [field-name (field-value ptr field-name nil)]))
+            (field-names ptr)))))
 
 (defn infer-field-type
   [value]
@@ -1298,48 +1202,44 @@
     (number? value) :double
     (and (sequential? value) (every? integer? value)) :array-int
     (and (sequential? value) (every? number? value)) :array-double
-    :else (throw (ex-info "Unsupported image metadata value"
-                          {:value value}))))
+    :else (throw (ex-info "Unsupported image metadata value" {:value value}))))
 
 (defn image-assoc-field!
-  ([image field-name value]
-   (image-assoc-field! image field-name value {}))
+  ([image field-name value] (image-assoc-field! image field-name value {}))
   ([image field-name value {:keys [type]}]
    (let [field-name (require-field-name field-name)
-         type       (or type (infer-field-type value))
-         image-ptr  (pointer (image-handle image))]
-     (case type
-       :int ((bindings :image-set-int) image-ptr field-name (int (require-int32 value "image field value")))
-       :double ((bindings :image-set-double) image-ptr field-name (double (require-finite-number value "image field value")))
-       :string ((bindings :image-set-string) image-ptr field-name (require-java-string value "image field value"))
-       :blob (let [data (->byte-array value "image field value")
-                   size (alength ^bytes data)]
-               (with-open [arena (ffi/confined-arena)]
-                 (let [buffer (ffi/alloc arena (max 1 size) 1)]
-                   (when (pos? size)
-                     (ffi/write-array buffer :byte data))
-                   ((bindings :image-set-blob-copy) image-ptr field-name buffer size))))
-       :array-int (let [values (vec value)
-                        count  (count values)]
-                    (with-open [arena (ffi/confined-arena)]
-                      (let [data (ffi/alloc arena (* count (ffi/sizeof :int)) (ffi/alignof :int))]
-                        (doseq [[idx item] (map-indexed vector values)]
-                          (ffi/write data :int (int (require-int32 item "image field value")) (* idx (ffi/sizeof :int))))
-                        ((bindings :image-set-array-int) image-ptr field-name data count))))
-       :array-double (let [values (vec value)
-                           count  (count values)]
-                       (with-open [arena (ffi/confined-arena)]
-                         (let [data (ffi/alloc arena (* count (ffi/sizeof :double)) (ffi/alignof :double))]
-                           (doseq [[idx item] (map-indexed vector values)]
-                             (ffi/write data :double (double (require-finite-number item "image field value")) (* idx (ffi/sizeof :double))))
-                           ((bindings :image-set-array-double) image-ptr field-name data count))))
-       (throw (ex-info "Unsupported image metadata type"
-                       {:field field-name
-                        :type  type
-                        :value value})))
-     image)))
+         type       (or type (infer-field-type value))]
+     (with-image-pointer image
+       (fn [ptr]
+         (case type
+           :int ((bindings :image-set-int) ptr field-name (int (require-int32 value "image field value")))
+           :double ((bindings :image-set-double) ptr field-name (double (require-finite-number value "image field value")))
+           :string ((bindings :image-set-string) ptr field-name (require-java-string value "image field value"))
+           :blob (let [data (->byte-array value "image field value")
+                       size (alength ^bytes data)]
+                   (with-open [arena (ffi/confined-arena)]
+                     (let [buffer (ffi/alloc arena (max 1 size) 1)]
+                       (when (pos? size) (ffi/write-array buffer :byte data))
+                       ((bindings :image-set-blob-copy) ptr field-name buffer size))))
+           (:array-int :array-double)
+           (let [[item-type binding] (if (= :array-int type)
+                                       [:int :image-set-array-int] [:double :image-set-array-double])
+                 values              (vec value)
+                 slot-size           (ffi/sizeof item-type)]
+             (with-open [arena (ffi/confined-arena)]
+               (let [data (ffi/alloc arena (* (count values) slot-size) (ffi/alignof item-type))]
+                 (doseq [[idx item] (map-indexed vector values)]
+                   (ffi/write data item-type
+                              (if (= :array-int type) (int (require-int32 item "image field value"))
+                                  (double (require-finite-number item "image field value")))
+                              (* idx slot-size)))
+                 ((bindings binding) ptr field-name data (count values)))))
+           (throw (ex-info "Unsupported image metadata type" {:field field-name :type type :value value})))
+         image)))))
 
 (defn image-dissoc-field!
   [image field-name]
-  ((bindings :image-remove) (pointer (image-handle image)) (require-field-name field-name))
-  image)
+  (with-image-pointer image
+    (fn [ptr]
+      ((bindings :image-remove) ptr (require-field-name field-name))
+      image)))

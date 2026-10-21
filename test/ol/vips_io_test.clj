@@ -121,10 +121,10 @@
   (let [decode   @#'introspect/decode-value
         acquired (atom nil)]
     (with-redefs-fn {#'introspect/decode-value
-                     (fn [native arg value]
+                     (fn [native arg value failure-refs]
                        (if (= :flags (:kind arg))
                          (throw (ex-info "decode failure" {}))
-                         (let [result (decode native arg value)]
+                         (let [result (decode native arg value failure-refs)]
                            (when (= :object (:kind arg)) (reset! acquired result))
                            result)))}
       (fn []

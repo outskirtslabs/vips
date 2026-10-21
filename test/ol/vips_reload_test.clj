@@ -14,7 +14,7 @@
       (require 'ol.vips 'ol.vips.operations 'clj-reload.core)
       (let [before              ((requiring-resolve 'ol.vips/init!))
             image-handle-before @(requiring-resolve 'ol.vips.impl.api/image-handle)
-            constructor-before  @(requiring-resolve 'ol.vips.impl.handles/->ImageHandle)
+            constructor-before  @(requiring-resolve 'ol.vips.impl.handles/->NativeHandle)
             close-count         (atom 0)]
         (with-open [held     ((requiring-resolve 'ol.vips.operations/black) 8 6)
                     source   (proxy [java.io.ByteArrayInputStream]
@@ -52,12 +52,12 @@
               (let [observed {:reloaded?             (not (identical? image-handle-before
                                                                       @(requiring-resolve 'ol.vips.impl.api/image-handle)))
                               :constructor-reloaded? (not (identical? constructor-before
-                                                                      @(requiring-resolve 'ol.vips.impl.handles/->ImageHandle)))
+                                                                      @(requiring-resolve 'ol.vips.impl.handles/->NativeHandle)))
                               :same-state?           (identical? before after)
                               :same-lookup?          (identical? (:lookup before) (:lookup after))
                               :same-bindings?        (identical? (:bindings before) (:bindings after))
                               :bridge-failure        (.get ^java.util.concurrent.atomic.AtomicReference
-                                                      ((requiring-resolve 'ol.vips.impl.handles.protocols/stream-failure-ref) bridge))
+                                                      (first (:failure-refs @bridge)))
                               :fresh-image           (metadata fresh)
                               :held-image            (metadata held)
                               :result-image          (metadata result)

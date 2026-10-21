@@ -118,6 +118,15 @@ or keep in an application cache for later reuse.
 This can trade CPU time for higher memory use, so it is best reserved for
 intermediates you know are reused often enough to justify the retained pixels.
 
+== Close handles after use
+
+Use `with-open` for image handles, including intermediate results.
+Finish all work that uses a shared handle before closing it.
+Do not modify an image or its metadata while another thread uses it.
+
+Closing a handle releases its reference, but derived images and cached
+operations can keep native resources alive longer.
+
 == Put large resizes early in the pipeline
 
 If a pipeline includes a large resize, do it near the start. After that, apply

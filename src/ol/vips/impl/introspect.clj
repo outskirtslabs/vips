@@ -2,6 +2,7 @@
   (:require
    [babashka.ffi :as ffi]
    [ol.vips.impl.api :as runtime]
+   [ol.vips.impl.handles :as handles]
    [ol.vips.impl.handles.protocols :as handle-protocols]))
 
 (set! *warn-on-reflection* true)
@@ -60,24 +61,31 @@
 
 (defn- encode-array-image
   [native images gvalue]
-  (let [images        (vec images)
-        pointer-size  (ffi/sizeof :pointer)
-        pointer-align (ffi/alignof :pointer)]
-    (with-open [arena (ffi/confined-arena)]
-      (let [image-ptrs (ffi/alloc arena (* (count images) pointer-size) pointer-align)]
-        (doseq [[index image] (map-indexed vector images)]
-          (ffi/write image-ptrs :pointer (handle-protocols/pointer (runtime/image-handle image)) (* index pointer-size)))
-        (let [boxed ((:array-image-new native) image-ptrs (count images))]
-          (when (ffi/null? boxed)
-            (throw (ex-info "Failed to encode boxed image array"
-                            {:kind       :boxed
-                             :value-type "VipsArrayImage"
-                             :value      images
-                             :error      ((:vips-error-buffer native))})))
-          (try
-            ((:g-value-set-boxed native) gvalue boxed)
-            (finally
-              ((:area-unref native) boxed))))))))
+  (let [images       (mapv runtime/image-handle images)
+        retained     (object-array (count images))
+        pointer-size (ffi/sizeof :pointer)]
+    (try
+      ;; Keep every input alive until the boxed array owns its references.
+      (doseq [[index image] (map-indexed vector images)]
+        (let [ptr (handle-protocols/retain-pointer image)]
+          (aset retained index ptr)
+          (when (zero? ((:g-type-check-instance-is-a native) ptr (:image (runtime/gtypes))))
+            (throw (ex-info "Expected a VipsImage handle" {:value image})))))
+      (with-open [arena (ffi/confined-arena)]
+        (let [image-ptrs (ffi/alloc arena (* (count images) pointer-size) (ffi/alignof :pointer))]
+          (doseq [[index ptr] (map-indexed vector retained)]
+            (ffi/write image-ptrs :pointer ptr (* index pointer-size)))
+          (let [boxed ((:array-image-new native) image-ptrs (count images))]
+            (when (ffi/null? boxed)
+              (throw (ex-info "Failed to encode boxed image array"
+                              {:kind  :boxed :value-type "VipsArrayImage"
+                               :value images :error      ((:vips-error-buffer native))})))
+            (try
+              ((:g-value-set-boxed native) gvalue boxed)
+              (finally ((:area-unref native) boxed))))))
+      (finally
+        (doseq [ptr retained :when ptr]
+          ((:g-object-unref native) ptr))))))
 
 (defn- finite-numeric-seq?
   [value]
@@ -151,15 +159,16 @@
             size     (ffi/read size-ptr :size_t)]
         (ffi/read-array (ffi/reinterpret data size) :byte size)))))
 
-(defn- object-pointer
-  [{:keys [value-type gtype]} value]
+(defn- encode-object
+  [native {:keys [value-type gtype]} value gvalue]
   (let [handle (if (= value-type "VipsImage") (runtime/image-handle value) value)]
     (when-not (satisfies? handle-protocols/PointerBacked handle)
       (throw (ex-info "Expected a typed native object handle" {:value-type value-type})))
-    (let [ptr (handle-protocols/pointer handle)]
-      (when (zero? ((runtime/bindings :g-type-check-instance-is-a) ptr gtype))
-        (throw (ex-info "Native object has the wrong type" {:value-type value-type})))
-      ptr)))
+    (handles/with-pointer handle
+      (fn [ptr]
+        (when (zero? ((:g-type-check-instance-is-a native) ptr gtype))
+          (throw (ex-info "Native object has the wrong type" {:value-type value-type})))
+        ((:g-value-set-object native) gvalue ptr)))))
 
 (defn- encode-boxed-value
   [native value-type value gvalue]
@@ -185,7 +194,7 @@
 (defn- encode-value
   [native {:keys [kind value-type name minimum maximum] :as arg} value gvalue]
   (case kind
-    :object ((:g-value-set-object native) gvalue (object-pointer arg value))
+    :object (encode-object native arg value gvalue)
     :boxed (encode-boxed-value native value-type value gvalue)
     :string ((:g-value-set-string native)
              gvalue
@@ -221,13 +230,17 @@
                      :value      value}))))
 
 (defn- decode-value
-  [native {:keys [kind value-type gtype]} gvalue]
+  [native {:keys [kind value-type gtype]} gvalue failure-refs]
   (case kind
     :object (if (= value-type "VipsImage")
               (let [ptr ((:g-value-get-object native) gvalue)]
                 (when-not (ffi/null? ptr)
                   ((:g-object-ref native) ptr)
-                  (runtime/adopt-image ptr)))
+                  (try
+                    (runtime/native-handle ptr failure-refs)
+                    (catch Throwable t
+                      ((:g-object-unref native) ptr)
+                      (throw t)))))
               (throw (ex-info "Unsupported object output" {:value-type value-type})))
     :boxed (if (= value-type "VipsBlob")
              (blob-bytes ((:g-value-get-boxed native) gvalue))
@@ -252,7 +265,7 @@
    (call-operation operation-name opts nil))
   ([operation-name opts option-string]
    (runtime/ensure-initialized!)
-   (let [failure-refs (vec (mapcat runtime/native-failure-refs (vals opts)))
+   (let [failure-refs (vec (distinct (mapcat runtime/native-failure-refs (vals opts))))
          operation    (runtime/open-operation operation-name)
          open-op      (volatile! operation)
          outputs      (volatile! {})]
@@ -284,9 +297,8 @@
                (let [value (runtime/with-gvalue (:gtype arg)
                              (fn [gvalue]
                                ((runtime/bindings :g-object-get-property) built (:name arg) gvalue)
-                               (decode-value (runtime/bindings) arg gvalue)))]
-                 (vswap! outputs assoc (keyword (:name arg)) value)
-                 (runtime/retain-failure-refs! value failure-refs)))
+                               (decode-value (runtime/bindings) arg gvalue failure-refs)))]
+                 (vswap! outputs assoc (keyword (:name arg)) value)))
              (runtime/operation-result @outputs)
              (finally
                ((runtime/bindings :object-unref-outputs) built)

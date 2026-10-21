@@ -7,7 +7,6 @@
    [clojure.test :refer [deftest is testing]]
    [ol.vips :as v]
    [ol.vips.impl.api :as api]
-   [ol.vips.impl.handles.protocols :as handle-protocols]
    [ol.vips.operations :as ops])
   (:import
    [java.io ByteArrayInputStream ByteArrayOutputStream IOException InputStream OutputStream]))
@@ -559,27 +558,23 @@
 
 (deftest copy-memory-helper
   (testing "copy-memory surfaces libvips native failures"
-    (let [calls         (atom [])
-          fake-bindings {:image-copy-memory (fn [_]
-                                              ffi/null)
-                         :vips-error-buffer (fn []
-                                              "copy failed")
-                         :vips-error-clear  (fn []
-                                              (swap! calls conj :cleared))}]
-      (with-redefs [api/bindings     (fn
-                                       ([] fake-bindings)
-                                       ([k] (get fake-bindings k))
-                                       ([k not-found] (get fake-bindings k not-found)))
-                    api/image-handle (fn [_]
-                                       (reify handle-protocols/PointerBacked
-                                         (pointer [_] ffi/null)))]
-        (try
-          (api/copy-image-to-memory ::image)
-          (is false "Expected copy-image-to-memory to throw when libvips returns NULL")
-          (catch clojure.lang.ExceptionInfo ex
-            (is (= "Failed to copy image to memory" (.getMessage ex)))
-            (is (= "copy failed" (:vips/error (ex-data ex))))
-            (is (= [:cleared] @calls)))))))
+    (with-open [image (ops/black 2 2)]
+      (let [calls         (atom [])
+            fake-bindings (assoc (api/bindings)
+                                 :image-copy-memory (fn [_] ffi/null)
+                                 :vips-error-buffer (fn [] "copy failed")
+                                 :vips-error-clear (fn [] (swap! calls conj :cleared)))]
+        (with-redefs [api/bindings (fn
+                                     ([] fake-bindings)
+                                     ([k] (get fake-bindings k))
+                                     ([k not-found] (get fake-bindings k not-found)))]
+          (try
+            (api/copy-image-to-memory image)
+            (is false "Expected copy-image-to-memory to throw when libvips returns NULL")
+            (catch clojure.lang.ExceptionInfo ex
+              (is (= "Failed to copy image to memory" (.getMessage ex)))
+              (is (= "copy failed" (:vips/error (ex-data ex))))
+              (is (= [:cleared] @calls))))))))
   (testing "copy-memory exposes a public helper that makes a private reusable image"
     (let [copy-memory (ns-resolve 'ol.vips 'copy-memory)]
       (is (some? copy-memory))

@@ -1,7 +1,7 @@
 = Introduction
 
 `ol.vips` wraps libvips's image graph in
-https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/Closeable.html[Closeable]
+https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/AutoCloseable.html[AutoCloseable]
 Clojure values. Loader functions such as `v/from-file`, `v/from-buffer`,
 and `v/from-stream` return image handles, and operations such as
 `ops/resize`, `ops/colourspace`, and `v/call` return new handles rather

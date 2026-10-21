@@ -2,10 +2,8 @@
   (:require [babashka.ffi :as ffi]
             [ol.vips.impl.api :as runtime]
             [ol.vips.impl.handles :as handles]
-            [ol.vips.impl.handles.protocols :as handle-protocols]
             [ol.vips.impl.introspect :as introspect])
-  (:import [java.io InputStream OutputStream]
-           [java.util.concurrent.atomic AtomicReference]))
+  (:import [java.io InputStream OutputStream]))
 
 (defn split-options
   [value]
@@ -73,12 +71,12 @@
   [ptr]
   (when (ffi/null? ptr)
     (runtime/throw-vips-error (runtime/bindings) "Failed to create image target" {}))
-  (handles/->StreamBridge ptr (AtomicReference. nil) (runtime/bindings :g-object-unref)))
+  (runtime/native-handle ptr))
 
 (defn write-image!
   ([image path] (write-image! image path nil))
   ([image path opts]
-   (handle-protocols/pointer (runtime/image-handle image))
+   (runtime/with-image-pointer image (constantly nil))
    (let [[filename options] (split-options (runtime/append-options path opts))]
      (if-let [operation (speculative-discover :foreign-find-save-target filename)]
        (with-open [^java.lang.AutoCloseable target (connection-handle ((runtime/bindings :target-new-to-file) filename))]
@@ -89,42 +87,35 @@
 (defn write-image-to-buffer
   ([image suffix] (write-image-to-buffer image suffix nil))
   ([image suffix opts]
-   (handle-protocols/pointer (runtime/image-handle image))
+   (runtime/with-image-pointer image (constantly nil))
    (let [[filename options] (split-options (runtime/append-options suffix opts))]
      (if-let [operation (speculative-discover :foreign-find-save-target filename)]
        (with-open [^java.lang.AutoCloseable target (connection-handle ((runtime/bindings :target-new-to-memory)))]
          (execute operation {:in image :target target} options opts)
-         (runtime/with-gvalue ((runtime/bindings :blob-get-type))
-           (fn [value]
-             ((runtime/bindings :g-object-get-property) (handle-protocols/pointer target) "blob" value)
-             (introspect/blob-bytes ((runtime/bindings :g-value-get-boxed) value)))))
+         (handles/with-pointer target
+           (fn [ptr]
+             (runtime/with-gvalue ((runtime/bindings :blob-get-type))
+               (fn [value]
+                 ((runtime/bindings :g-object-get-property) ptr "blob" value)
+                 (introspect/blob-bytes ((runtime/bindings :g-value-get-boxed) value)))))))
        (:buffer (execute (discover :foreign-find-save-buffer filename) {:in image} options opts))))))
 
 (defn open-source
   [source options opts]
-  (let [ptr (handle-protocols/pointer source)]
-    (if-let [operation (speculative-discover :foreign-find-load-source ptr)]
-      (execute-load operation {:source source} options opts)
-      (if-let [filename ((runtime/bindings :connection-filename) ptr)]
-        (execute-load (discover :foreign-find-load filename) {:filename filename} options opts)
-        (if (pos? ((runtime/bindings :source-is-mappable) ptr))
-          (let [blob ((runtime/bindings :source-map-blob) ptr)]
-            (when (ffi/null? blob)
-              (runtime/throw-vips-error (runtime/bindings) "Failed to map image source" {}))
-            (try
-              (open-buffer (introspect/blob-bytes blob) options opts)
-              (finally ((runtime/bindings :area-unref) blob))))
-          (runtime/throw-vips-error (runtime/bindings) "Unable to load image source" {}))))))
-
-(defn throw-stream-failure
-  [message throwable bridge]
-  (if-let [failure (.get ^AtomicReference (handle-protocols/stream-failure-ref bridge))]
-    (throw (ex-info message
-                    (assoc (ex-data throwable)
-                           :stream/error (.getMessage ^Throwable failure)
-                           :stream/error-class (.getName (class failure)))
-                    failure))
-    (throw throwable)))
+  (handles/with-pointer source
+    (fn [ptr]
+      (if-let [operation (speculative-discover :foreign-find-load-source ptr)]
+        (execute-load operation {:source source} options opts)
+        (if-let [filename ((runtime/bindings :connection-filename) ptr)]
+          (execute-load (discover :foreign-find-load filename) {:filename filename} options opts)
+          (if (pos? ((runtime/bindings :source-is-mappable) ptr))
+            (let [blob ((runtime/bindings :source-map-blob) ptr)]
+              (when (ffi/null? blob)
+                (runtime/throw-vips-error (runtime/bindings) "Failed to map image source" {}))
+              (try
+                (open-buffer (introspect/blob-bytes blob) options opts)
+                (finally ((runtime/bindings :area-unref) blob))))
+            (runtime/throw-vips-error (runtime/bindings) "Unable to load image source" {})))))))
 
 (defn open-image-from-stream
   ([source] (open-image-from-stream source nil))
@@ -134,7 +125,7 @@
        (try
          (open-source bridge (runtime/append-options "" opts) opts)
          (catch Throwable t
-           (throw-stream-failure "Failed to open image from stream" t bridge)))))))
+           (runtime/throw-with-stream-failure t (:failure-refs @bridge) "Failed to open image from stream")))))))
 
 (defn write-image-to-stream
   ([image sink suffix] (write-image-to-stream image sink suffix nil))
@@ -147,4 +138,4 @@
                   {:in image :target bridge} options opts)
          image
          (catch Throwable t
-           (throw-stream-failure "Failed to write image to stream" t bridge)))))))
+           (runtime/throw-with-stream-failure t (:failure-refs @bridge) "Failed to write image to stream")))))))

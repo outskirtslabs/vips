@@ -1,6 +1,6 @@
 (ns ^:no-doc ol.vips.impl.handles
   (:require
-   [ol.vips.impl.handles.protocols :refer [PointerBacked StreamFailureBacked]]))
+   [ol.vips.impl.handles.protocols :refer [PointerBacked retain-pointer]]))
 
 (set! *warn-on-reflection* true)
 
@@ -25,35 +25,33 @@
             (when (instance? java.lang.AutoCloseable value)
               (.close ^java.lang.AutoCloseable value))))))))
 
-(defn ->ImageHandle
-  [ptr keeper unref!]
-  (let [closed? (atom false)]
+(defn ->NativeHandle
+  [ptr failure-refs ref! unref!]
+  (let [pointer (atom ptr)
+        state   {:pointer pointer :failure-refs failure-refs :unref! unref!}]
     (reify
+      clojure.lang.IDeref
+      (deref [_] state)
       PointerBacked
-      (pointer [_]
-        (if @closed?
-          (throw (ex-info "Cannot use closed image handle"
-                          {:type :ol.vips/closed-image-handle}))
-          ptr))
+      (retain-pointer [_]
+        (locking pointer
+          (ref! (or @pointer
+                    (throw (ex-info "Cannot use closed image handle"
+                                    {:type :ol.vips/closed-image-handle}))))))
       java.lang.AutoCloseable
       (close [_]
-        (when (compare-and-set! closed? false true)
-          (unref! ptr)
-          (when keeper
-            (.close ^java.lang.AutoCloseable keeper)))))))
+        (let [[ptr _] (locking pointer (reset-vals! pointer nil))]
+          ;; Native finalization can call user code; never run it under the lock.
+          (when ptr (unref! ptr)))))))
 
-(defn ->StreamBridge
-  [ptr failure-ref unref!]
-  (let [closed? (atom false)]
-    (reify
-      PointerBacked
-      (pointer [_] ptr)
-      StreamFailureBacked
-      (stream-failure-ref [_] failure-ref)
-      java.lang.AutoCloseable
-      (close [_]
-        (when (compare-and-set! closed? false true)
-          (unref! ptr))))))
+(defn with-pointer
+  "Calls `f` with a retained pointer and releases it on return or exception.
+  The pointer and any borrowed native data must not escape `f`."
+  [handle f]
+  (let [unref! (:unref! @handle)
+        ptr    (retain-pointer handle)]
+    (try (f ptr)
+         (finally (unref! ptr)))))
 
 ;; Reify class names vary with compilation order; register the actual close methods.
 (when (= "buildtime" (System/getProperty "org.graalvm.nativeimage.imagecode"))
@@ -61,8 +59,7 @@
                              (map (fn [handle]
                                     (.getMethod (class handle) "close" (make-array Class 0)))
                                   [(->OperationResult {})
-                                   (->ImageHandle nil nil identity)
-                                   (->StreamBridge nil nil identity)]))
+                                   (->NativeHandle nil [] identity identity)]))
         register (.getMethod (Class/forName "org.graalvm.nativeimage.hosted.RuntimeReflection")
                              "register" (into-array Class [(class methods)]))]
     (.invoke register nil (object-array [methods]))))
