@@ -1231,18 +1231,17 @@
                        (when (pos? size) (ffi/write-array buffer :byte data))
                        ((bindings :image-set-blob-copy) ptr field-name buffer size))))
            (:array-int :array-double)
-           (let [[item-type binding] (if (= :array-int type)
-                                       [:int :image-set-array-int] [:double :image-set-array-double])
-                 values              (vec value)
-                 slot-size           (ffi/sizeof item-type)]
+           (let [[item-type binding values]
+                 (if (= :array-int type)
+                   [:int :image-set-array-int
+                    (int-array (map #(require-int32 % "image field value") value))]
+                   [:double :image-set-array-double
+                    (double-array (map #(require-finite-number % "image field value") value))])
+                 n (count values)]
              (with-open [arena (ffi/confined-arena)]
-               (let [data (ffi/alloc arena (* (count values) slot-size) (ffi/alignof item-type))]
-                 (doseq [[idx item] (map-indexed vector values)]
-                   (ffi/write data item-type
-                              (if (= :array-int type) (int (require-int32 item "image field value"))
-                                  (double (require-finite-number item "image field value")))
-                              (* idx slot-size)))
-                 ((bindings binding) ptr field-name data (count values)))))
+               (let [data (ffi/alloc arena (* n (ffi/sizeof item-type)) (ffi/alignof item-type))]
+                 (when (pos? n) (ffi/write-array data item-type values))
+                 ((bindings binding) ptr field-name data n))))
            (throw (ex-info "Unsupported image metadata type" {:field field-name :type type :value value})))
          image)))))
 

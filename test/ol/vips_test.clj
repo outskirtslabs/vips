@@ -857,6 +857,12 @@
     (is (= [] (vec (v/field tagged "empty-blob"))))
     (is (false? (v/has-field? image "empty-blob")))))
 
+(deftest empty-array-metadata-roundtrips
+  (doseq [type [:array-int :array-double]]
+    (with-open [image  (ops/black 2 2)
+                tagged (v/assoc-field image "empty-array" [] {:type type})]
+      (is (= [] (v/field tagged "empty-array"))))))
+
 (deftest field-names-lists-every-field
   (with-open [black (ops/black 1 1)
               image (v/copy-memory black)]
