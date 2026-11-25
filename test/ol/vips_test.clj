@@ -857,6 +857,14 @@
     (is (= [] (vec (v/field tagged "empty-blob"))))
     (is (false? (v/has-field? image "empty-blob")))))
 
+(deftest field-names-lists-every-field
+  (with-open [black (ops/black 1 1)
+              image (v/copy-memory black)]
+    (let [names (map #(str "custom-" %) (range 1100))]
+      (doseq [field-name names]
+        (api/image-assoc-field! image field-name 1))
+      (is (every? (set (v/field-names image)) names)))))
+
 (deftest metadata-api
   (testing "generic field helpers expose typed metadata values and discovery"
     (with-open [img (ops/gifload animated-gif-path {:n -1})]

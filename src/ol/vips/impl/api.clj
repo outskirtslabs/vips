@@ -187,6 +187,7 @@
 (def ^:private native-symbol-specs
   {:g-free                         ["g_free" [:pointer] :void]
    :g-strfreev                     ["g_strfreev" [:pointer] :void]
+   :g-strv-length                  ["g_strv_length" [:pointer] :uint]
    :g-signal-connect-data          ["g_signal_connect_data"
                                     [:pointer :string :pointer :pointer :pointer :int]
                                     :long]
@@ -1113,15 +1114,12 @@
   (let [raw-fields ((bindings :image-get-fields) ptr)]
     (if (ffi/null? raw-fields)
       []
-      (let [slot-size  (ffi/sizeof :pointer)
-            fields-ptr (ffi/reinterpret raw-fields (* 1024 slot-size))]
-        (try
-          (loop [idx 0 acc []]
-            (let [field-ptr (ffi/read fields-ptr :pointer (* idx slot-size))]
-              (if (ffi/null? field-ptr)
-                acc
-                (recur (inc idx) (conj acc (read-c-string field-ptr))))))
-          (finally ((bindings :g-strfreev) raw-fields)))))))
+      (try
+        (let [slot-size  (ffi/sizeof :pointer)
+              n          ((bindings :g-strv-length) raw-fields)
+              fields-ptr (ffi/reinterpret raw-fields (* n slot-size))]
+          (mapv #(read-c-string (ffi/read fields-ptr :pointer (* % slot-size))) (range n)))
+        (finally ((bindings :g-strfreev) raw-fields))))))
 
 (defn image-field-names [image]
   (with-image-pointer image field-names))
