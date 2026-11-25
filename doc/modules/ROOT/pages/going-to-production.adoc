@@ -127,20 +127,18 @@ Do not modify an image or its metadata while another thread uses it.
 Closing a handle releases its reference, but derived images and cached
 operations can keep native resources alive longer.
 
-== Break up chains of several hundred images
+== Break up long chains of images
 
-libvips releases a chain of lazy images recursively. Each image in the chain
-uses about 2.4 KB of native stack. On Linux x86-64, a JVM thread has a 1 MB
-stack by default, so releasing a chain of a few hundred images can crash the JVM
-with a segmentation fault. In testing with the operation cache disabled, a chain
-of 300 operations crashed. The crash happens when you close the last handle, or
-inside a later operation call when the operation cache drops the last reference.
+Each operation, and each call to
+xref:api/ol-vips.adoc#assoc-field[`v/assoc-field`], returns an image that
+depends on the image before it. A loop that does this hundreds of times builds
+a long chain. Releasing a long chain can overflow the thread stack and crash
+the JVM. This is a known libvips limit, described in
+https://github.com/libvips/libvips/issues/628[libvips issue 628].
 
-A loop that calls xref:api/ol-vips.adoc#assoc-field[`v/assoc-field`] or an
-operation once per step builds such a chain. If the loop can run for hundreds
-of steps, call xref:api/ol-vips.adoc#copy-memory[`v/copy-memory`] at intervals.
-The copy renders the pixels and starts a new chain. This example copies every
-200 steps, and it closed a 1,000-image chain in testing.
+To keep chains short, call xref:api/ol-vips.adoc#copy-memory[`v/copy-memory`]
+at regular intervals. The copy renders the pixels and starts a new chain. This
+example copies every 200 steps:
 
 [source,clojure]
 ----
@@ -154,8 +152,12 @@ The copy renders the pixels and starts a new chain. This example copies every
         (map-indexed vector field-names))
 ----
 
-You can also start the JVM with a larger thread stack. With `-Xss8m`, the same
-1,000-image chain closed without the copies.
+If you join many images, use
+xref:api/ol-vips-operations.adoc#arrayjoin[`ops/arrayjoin`] instead of a loop.
+It takes all the images in one call, so it does not build a chain.
+
+If you cannot shorten the chain, run the work on a thread with a larger stack,
+for example by starting the JVM with `-Xss8m`.
 
 == Put large resizes early in the pipeline
 
