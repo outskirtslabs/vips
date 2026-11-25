@@ -311,6 +311,13 @@
                               (v/write-to-stream image out ".png"))))
       (is (true? @closed?)))))
 
+(deftest empty-double-array-args-reach-libvips
+  (with-open [image (ops/black 2 2)]
+    (doseq [args [{:a [] :b [1.0]} {:a [1.0] :b []}]]
+      (let [data (try (with-open [_ (:out (v/call "linear" (assoc args :in image)))] {})
+                      (catch clojure.lang.ExceptionInfo e (ex-data e)))]
+        (is (string? (:vips/error data)) (pr-str args))))))
+
 (deftest boxed-double-array-operation-args
   (testing "operations accept boxed VipsArrayDouble inputs such as embed background colors"
     (with-open [image    (v/from-file alpha-band-path)
