@@ -26,3 +26,4 @@ target/native-cache/
 examples/sicp*png
 examples/funcgeo*png
 .pi
+examples/alpha_band.jpg

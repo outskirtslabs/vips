@@ -4,6 +4,7 @@ The snippets below show the main API shapes inline. For runnable
 end-to-end scripts, see the examples in https://github.com/outskirtslabs/vips/tree/main/examples[`examples/`]:
 
 * https://github.com/outskirtslabs/vips/blob/main/examples/create_thumbnail.clj[`examples/create_thumbnail.clj`] creates a thumbnail from a local file and writes it back out.
+* https://github.com/outskirtslabs/vips/blob/main/examples/convert_format.clj[`examples/convert_format.clj`] converts a PNG to a JPEG.
 * https://github.com/outskirtslabs/vips/blob/main/examples/chain_transforms.clj[`examples/chain_transforms.clj`] chains several image operations together with the threading style API.
 * https://github.com/outskirtslabs/vips/blob/main/examples/compose_images.clj[`examples/compose_images.clj`] joins two images and builds a small grid with `join` and `arrayjoin`.
 * https://github.com/outskirtslabs/vips/blob/main/examples/bytes_and_streams.clj[`examples/bytes_and_streams.clj`] reads image bytes into memory, streams them through libvips, and writes the result back out.
