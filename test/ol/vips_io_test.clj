@@ -45,6 +45,10 @@
         (is (= 1 @closed))
         (finally ((api/bindings :vips-cache-set-max) maximum))))))
 
+(deftest empty-input-streams-fail-to-load
+  (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Unable to load image source"
+                        (v/from-stream (ByteArrayInputStream. (byte-array 0))))))
+
 (deftest legacy-saver-fallbacks
   ;; PNG supports targets here. Only discovery is controlled; both legacy
   ;; operations still encode real images through the native operation cache.
