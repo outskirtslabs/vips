@@ -127,6 +127,36 @@ Do not modify an image or its metadata while another thread uses it.
 Closing a handle releases its reference, but derived images and cached
 operations can keep native resources alive longer.
 
+== Break up chains of several hundred images
+
+libvips releases a chain of lazy images recursively. Each image in the chain
+uses about 2.4 KB of native stack. On Linux x86-64, a JVM thread has a 1 MB
+stack by default, so releasing a chain of a few hundred images can crash the JVM
+with a segmentation fault. In testing with the operation cache disabled, a chain
+of 300 operations crashed. The crash happens when you close the last handle, or
+inside a later operation call when the operation cache drops the last reference.
+
+A loop that calls xref:api/ol-vips.adoc#assoc-field[`v/assoc-field`] or an
+operation once per step builds such a chain. If the loop can run for hundreds
+of steps, call xref:api/ol-vips.adoc#copy-memory[`v/copy-memory`] at intervals.
+The copy renders the pixels and starts a new chain. This example copies every
+200 steps, and it closed a 1,000-image chain in testing.
+
+[source,clojure]
+----
+(reduce (fn [image [i field-name]]
+          (with-open [image image]
+            (let [tagged (v/assoc-field image field-name 1)]
+              (if (zero? (mod (inc i) 200))
+                (with-open [tagged tagged] (v/copy-memory tagged))
+                tagged))))
+        (v/from-file "input.jpg")
+        (map-indexed vector field-names))
+----
+
+You can also start the JVM with a larger thread stack. With `-Xss8m`, the same
+1,000-image chain closed without the copies.
+
 == Put large resizes early in the pipeline
 
 If a pipeline includes a large resize, do it near the start. After that, apply
