@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 
+== UNRELEASED
+
 == `v0.3.0` (2026-11-25)
 
 * Minor breaking change: Babashka support now requires Babashka 1.13.230 or newer.
