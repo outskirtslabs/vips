@@ -23,7 +23,7 @@ platform-native jars so you can use libvips from the JVM without
 building the native integration yourself.
 
 `ol.vips` requires Java 25{plus}, GraalVM Native Image 25{plus}, or Babashka
-1.13.227 or newer.
+1.13.230 or newer.
 
 Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#maturing[Maturing]*.
 
@@ -67,7 +67,7 @@ process:
  {:dev {:jvm-opts ["--enable-native-access=ALL-UNNAMED"]}}}
 ----
 
-In Babashka, `ol.vips` requires Babashka 1.13.227 or newer. See
+In Babashka, `ol.vips` requires Babashka 1.13.230 or newer. See
 https://docs.outskirtslabs.com/ol.vips/next/babashka/[Babashka].
 
 To use your own libvips build, see

@@ -6,6 +6,9 @@ This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 
 == UNRELEASED
 
+* Minor breaking change: Babashka support now requires Babashka 1.13.230 or newer.
+  Its babashka.ffi accepts zero-length array reads and writes, so empty `VipsBlob`
+  outputs no longer throw in Babashka.
 * Operation calls no longer rediscover their argument list on every call.
   A small operation call takes about two thirds less time on the JVM.
 * `field-names` and `headers` no longer throw for images with more than 1024 fields.

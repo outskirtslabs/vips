@@ -1,6 +1,6 @@
 = Run image scripts with Babashka
 
-`ol.vips` requires Babashka 1.13.227 or newer.
+`ol.vips` requires Babashka 1.13.230 or newer.
 
 Save this as `resize.bb`. The native dependency below targets Linux x86-64
 glibc; choose the native artifact for your platform.
