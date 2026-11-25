@@ -864,6 +864,14 @@
     (is (= [] (vec (v/field tagged "empty-blob"))))
     (is (false? (v/has-field? image "empty-blob")))))
 
+(deftest empty-blob-outputs-are-empty-byte-arrays
+  (let [path (fs/create-temp-file {:suffix ".icc"})]
+    (try
+      (let [profile (:profile (v/call "profile_load" {:name (str path)}))]
+        (is (bytes? profile))
+        (is (zero? (alength ^bytes profile))))
+      (finally (fs/delete path)))))
+
 (deftest empty-array-metadata-roundtrips
   (doseq [type [:array-int :array-double]]
     (with-open [image  (ops/black 2 2)
