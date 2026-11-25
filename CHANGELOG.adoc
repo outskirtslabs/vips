@@ -6,6 +6,12 @@ This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 
 == UNRELEASED
 
+* Operation calls no longer rediscover their argument list on every call.
+  A small operation call takes about two thirds less time on the JVM.
+* `field-names` and `headers` no longer throw for images with more than 1024 fields.
+* Unsigned integer operation outputs of 2^31^ and above no longer come back negative.
+* Updated `org.babashka/ffi` to 0.1.3.
+
 == `v0.2.0` (2026-11-25)
 
 * Added Babashka support. Requires Babashka 1.13.227 or newer.
