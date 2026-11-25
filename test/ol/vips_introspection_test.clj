@@ -86,6 +86,14 @@
       (is (integer? cmyk))
       (is (= :cmyk (introspect/decode-enum "VipsInterpretation" cmyk))))))
 
+(deftest uint-values-keep-their-high-bit
+  (let [arg {:kind :uint :name "value"}]
+    (is (= 0xFFFFFFFF
+           (runtime/with-gvalue (:uint (runtime/gtypes))
+             (fn [gvalue]
+               (#'introspect/encode-value (runtime/bindings) arg 0xFFFFFFFF gvalue)
+               (#'introspect/decode-value (runtime/bindings) arg gvalue nil)))))))
+
 (deftest generic-image-operation-call
   (testing "generic operation calls can drive simple image transforms"
     (with-open [image   (v/from-file fixture-path)

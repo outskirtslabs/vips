@@ -210,7 +210,7 @@
            ((:g-value-set-int native) gvalue (int value)))
     :uint ((:g-value-set-uint native)
            gvalue
-           (unchecked-int (runtime/require-uint32 value (str "Operation argument `" name "`"))))
+           (runtime/require-uint32 value (str "Operation argument `" name "`")))
     :long ((:g-value-set-long native) gvalue (long (runtime/require-int64 value (str "Operation argument `" name "`"))))
     :int64 ((:g-value-set-int64 native) gvalue (long (runtime/require-int64 value (str "Operation argument `" name "`"))))
     :uint64 ((:g-value-set-uint64 native)
@@ -223,7 +223,7 @@
                                        (str "Operation argument `" name "`"))))
     :flags ((:g-value-set-flags native)
             gvalue
-            (unchecked-int (runtime/encode-flags value-type value)))
+            (runtime/encode-flags value-type value))
     (throw (ex-info "Unsupported operation argument type"
                     {:kind       kind
                      :value-type value-type
