@@ -926,8 +926,7 @@
                               (let [requested (int (min length Integer/MAX_VALUE))
                                     chunk     (.readNBytes stream requested)
                                     read-size (alength ^bytes chunk)]
-                                (when (pos? read-size)
-                                  (ffi/write-array (ffi/reinterpret data requested) :byte chunk))
+                                (ffi/write-array (ffi/reinterpret data requested) :byte chunk)
                                 (long read-size))
                               (catch Throwable t
                                 (remember-stream-failure! failure-ref t)
@@ -978,10 +977,9 @@
                                (when (neg? length)
                                  (throw (ex-info "Custom stream target received a negative write length"
                                                  {:length length})))
-                               (let [write-size (Math/toIntExact length)]
-                                 (when (pos? write-size)
-                                   (let [chunk (ffi/read-array (ffi/reinterpret data length) :byte write-size)]
-                                     (.write ^OutputStream stream ^bytes chunk (int 0) (int write-size))))
+                               (let [write-size (Math/toIntExact length)
+                                     chunk      (ffi/read-array (ffi/reinterpret data length) :byte write-size)]
+                                 (.write ^OutputStream stream ^bytes chunk (int 0) (int write-size))
                                  (long write-size))
                                (catch Throwable t
                                  (remember-stream-failure! failure-ref t)
@@ -1161,9 +1159,8 @@
           (throw-vips-error (bindings) (str "Failed to read " label " image metadata field")
                             {:field field-name}))
         (let [n      (ffi/read size count-type)
-              values (if (zero? n) (byte-array 0)
-                         (ffi/read-array (ffi/reinterpret (ffi/read out :pointer)
-                                                          (* n (ffi/sizeof item-type))) item-type n))]
+              values (ffi/read-array (ffi/reinterpret (ffi/read out :pointer) (* n (ffi/sizeof item-type)))
+                                     item-type n)]
           (if (= :blob kind) values (vec values)))))))
 
 (defn image-field-as-string
@@ -1227,8 +1224,8 @@
            :blob (let [data (->byte-array value "image field value")
                        size (alength ^bytes data)]
                    (with-open [arena (ffi/confined-arena)]
-                     (let [buffer (ffi/alloc arena (max 1 size) 1)]
-                       (when (pos? size) (ffi/write-array buffer :byte data))
+                     (let [buffer (ffi/alloc arena size 1)]
+                       (ffi/write-array buffer :byte data)
                        ((bindings :image-set-blob-copy) ptr field-name buffer size))))
            (:array-int :array-double)
            (let [[item-type binding values]
@@ -1240,7 +1237,7 @@
                  n (count values)]
              (with-open [arena (ffi/confined-arena)]
                (let [data (ffi/alloc arena (* n (ffi/sizeof item-type)) (ffi/alignof item-type))]
-                 (when (pos? n) (ffi/write-array data item-type values))
+                 (ffi/write-array data item-type values)
                  ((bindings binding) ptr field-name data n))))
            (throw (ex-info "Unsupported image metadata type" {:field field-name :type type :value value})))
          image)))))

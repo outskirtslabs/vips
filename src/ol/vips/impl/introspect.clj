@@ -104,8 +104,7 @@
     (with-open [arena (ffi/confined-arena)]
       (let [values (double-array (map double numbers))
             data   (ffi/alloc arena (* (count numbers) (ffi/sizeof :double)) (ffi/alignof :double))]
-        (when (seq numbers)
-          (ffi/write-array data :double values))
+        (ffi/write-array data :double values)
         (let [boxed ((:array-double-new native) data (count numbers))]
           (when (ffi/null? boxed)
             (throw (ex-info "Failed to encode boxed double array"
@@ -135,7 +134,7 @@
   (let [data (runtime/->byte-array value "blob input")
         size (alength ^bytes data)]
     (with-open [arena (ffi/confined-arena)]
-      (let [buffer (ffi/alloc arena (max 1 size) 1)]
+      (let [buffer (ffi/alloc arena size 1)]
         (ffi/write-array buffer :byte data)
         (with-blob-input ((runtime/bindings :blob-copy) buffer size) f)))))
 
