@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 
-== UNRELEASED
+== `v0.3.0` (2026-11-25)
 
 * Minor breaking change: Babashka support now requires Babashka 1.13.230 or newer.
   Its babashka.ffi accepts zero-length array reads and writes, so empty `VipsBlob`
@@ -14,6 +14,47 @@ This project uses https://www.taoensso.com/break-versioning[*Break Versioning*].
 * `field-names` and `headers` no longer throw for images with more than 1024 fields.
 * Unsigned integer operation outputs of 2^31^ and above no longer come back negative.
 * Updated `org.babashka/ffi` to 0.1.3.
+* Documented how to avoid a JVM crash when releasing a long chain of lazy images.
+  See https://docs.outskirtslabs.com/ol.vips/next/going-to-production#break_up_long_chains_of_images[Break up long chains of images].
+* Native companion jars are unchanged at `1.3.4-1` from `sharp-libvips` 1.3.4,
+  which bundles libvips 8.18.7.
+
+=== Bundled native dependencies
+
+Versions reported in the https://github.com/lovell/sharp-libvips/releases/tag/v1.3.4[sharp-libvips 1.3.4 release notes]:
+
+[cols="1,1",options="header"]
+|===
+|Dependency |Version
+|aom |3.15.1
+|archive |3.8.9
+|cairo |1.18.6
+|cgif |0.5.4
+|exif |0.6.26
+|expat |2.8.5
+|ffi |3.8.0
+|fontconfig |2.18.3
+|freetype |2.14.3
+|fribidi |1.0.17
+|glib |2.90.0
+|harfbuzz |14.5.0
+|heif |1.23.5
+|highway |1.4.0
+|imagequant |2.4.1
+|lcms |2.19.1
+|mozjpeg |0826579
+|pango |1.58.2
+|pixman |0.46.4
+|png |1.6.58
+|proxy-libintl |0.5
+|rsvg |2.63.2
+|tiff |4.7.2
+|uhdr |2.0.2
+|vips |8.18.7
+|webp |1.6.0
+|xml2 |2.15.4
+|zlib-ng |2.3.3
+|===
 
 == `v0.2.0` (2026-11-25)
 

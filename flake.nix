@@ -27,7 +27,7 @@
         clj-helpers.lib.mkCljLib {
           inherit pkgs;
           name = "ol-vips";
-          version = "0.2.0";
+          version = "0.3.0";
           src = ./.;
           prepAliases = [
             "dev"
