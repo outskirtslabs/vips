@@ -1,7 +1,7 @@
 {
   description = "dev env";
   inputs = {
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # tracks nixpkgs unstable branch
+    nixpkgs.url = "github:ramblurr/nixpkgs/channel/personal-unstable";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     devenv.url = "github:ramblurr/nix-devenv";
