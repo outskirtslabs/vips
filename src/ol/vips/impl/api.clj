@@ -576,17 +576,17 @@
       (let [slot-size (ffi/sizeof :long)
             discover-children
             (fn [fundamental class-type value-type build-entry]
-              (let [count-ptr (ffi/alloc arena :int)
-                    children  ((bindings :g-type-children) fundamental count-ptr)
-                    count     (ffi/read count-ptr :int)
-                    children* (ffi/reinterpret children (* count slot-size))]
+              (let [count-ptr   (ffi/alloc arena :int)
+                    children    ((bindings :g-type-children) fundamental count-ptr)
+                    count       (ffi/read count-ptr :int)
+                    child-types (try
+                                  (ffi/read-array (ffi/reinterpret children (* count slot-size)) :long count)
+                                  (finally ((bindings :g-free) children)))]
                 (into {}
-                      (for [index (range count)
-                            :let  [offset     (* index slot-size)
-                                   child-type (ffi/read (ffi/slice children* offset slot-size) :long)
-                                   type-name   (type-name child-type)
-                                   class-ptr   ((bindings :g-type-class-ref) child-type)]
-                            :when (and type-name (not (ffi/null? class-ptr)))]
+                      (for [child-type child-types
+                            :let       [type-name   (type-name child-type)
+                                        class-ptr   ((bindings :g-type-class-ref) child-type)]
+                            :when      (and type-name (not (ffi/null? class-ptr)))]
                         (try
                           (let [class*      (ffi/reinterpret class-ptr (ffi/sizeof class-type))
                                 value-class (ffi/read class* class-type)
