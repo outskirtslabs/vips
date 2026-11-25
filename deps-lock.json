@@ -806,11 +806,11 @@
     "org/apache/maven/wagon/wagon/3.5.3/wagon-3.5.3.pom": {
       "sha256": "7c10b8bac59268fe7957f2ab2b50965d90069ebf850c756bb55ea807ce440f0b"
     },
-    "org/babashka/ffi/0.1.2/ffi-0.1.2.jar": {
-      "sha256": "6fd03b7872773520db6d3e7924f3007e016f69232f7149a83de36aa53a9bdeab"
+    "org/babashka/ffi/0.1.3/ffi-0.1.3.jar": {
+      "sha256": "f18976ee1ac74c0c9fbb322ffe0521799e0f4f87c8ae9a0c6f344558ec8e0610"
     },
-    "org/babashka/ffi/0.1.2/ffi-0.1.2.pom": {
-      "sha256": "4ba1a5c3244322841c99c63d5a5ac6e042f152a57de8195061ee4230929d7056"
+    "org/babashka/ffi/0.1.3/ffi-0.1.3.pom": {
+      "sha256": "459e7500c3ba5ecd1da2399a54ef60e4bfde38ac364726d80f837d333e61c3f7"
     },
     "org/babashka/http-client/0.4.23/http-client-0.4.23.jar": {
       "sha256": "471872b2989b74e38088dad080f6e68e94e4eb9ce42ebeb3da01e95c7f9ec95f"
