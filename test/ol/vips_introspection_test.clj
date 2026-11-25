@@ -34,6 +34,10 @@
                   "uhdrsave_buffer"]]
         (is (contains? ops-set op) (str "Missing operation nickname " op))))))
 
+(deftest operation-names-with-nul-are-unknown
+  (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Unknown libvips operation"
+                        (runtime/operation-arguments "black\u0000suffix"))))
+
 (deftest operation-description
   (testing "operation descriptions include enough type data to drive wrappers"
     (let [rotate      (introspect/describe-operation "rotate")

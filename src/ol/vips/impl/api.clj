@@ -344,6 +344,7 @@
 
 (defonce ^:private state* (atom nil))
 (defonce ^:private type-value-cache* (atom nil))
+(defonce ^:private operation-arguments-cache* (atom {}))
 
 (def ^:private vips-argument-required 1)
 (def ^:private vips-argument-input 16)
@@ -516,15 +517,16 @@
 (defn open-operation
   [operation-name]
   (let [operation-name (require-java-string operation-name "operation name")
-        op             ((bindings :operation-new) operation-name)]
+        op             (if (str/includes? operation-name "\u0000")
+                         ffi/null
+                         ((bindings :operation-new) operation-name))]
     (when (ffi/null? op)
       (throw (ex-info "Unknown libvips operation"
                       {:operation operation-name})))
     op))
 
-(defn operation-arguments
+(defn- discover-operation-arguments
   [operation-name]
-  (ensure-initialized!)
   (let [argument-map (bindings :argument-map)
         op           (open-operation operation-name)]
     (try
@@ -543,6 +545,15 @@
                vec)))
       (finally
         ((bindings :g-object-unref) op)))))
+
+(defn operation-arguments
+  [operation-name]
+  (ensure-initialized!)
+  (let [operation-name (require-java-string operation-name "operation name")]
+    (or (get @operation-arguments-cache* operation-name)
+        (let [args (discover-operation-arguments operation-name)]
+          (swap! operation-arguments-cache* assoc operation-name args)
+          args))))
 
 (defn operation-info
   [operation-name]
