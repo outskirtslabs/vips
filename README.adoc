@@ -22,7 +22,8 @@ generated wrappers for the full libvips operation surface, and
 platform-native jars so you can use libvips from the JVM without
 building the native integration yourself.
 
-`ol.vips` requires Java 25{plus} or GraalVM Native Image 25{plus}.
+`ol.vips` requires Java 25{plus}, GraalVM Native Image 25{plus}, or Babashka
+1.13.227 or newer.
 
 Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#maturing[Maturing]*.
 
@@ -36,9 +37,9 @@ target platform.
 [source,clojure]
 ----
 ;; deps.edn
-{:deps {com.outskirtslabs/vips {:mvn/version "0.1.0"}
+{:deps {com.outskirtslabs/vips {:mvn/version "0.2.0"}
         ;; change the following based on your runtime platform
-        com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.3.3-1"}}}
+        com.outskirtslabs/vips-native-linux-x86-64-gnu {:mvn/version "1.3.4-1"}}}
 ----
 
 https://clojars.org/search?q=group-id%3Acom.outskirtslabs+AND+artifact-id%3Avips-native*[Choose
@@ -53,7 +54,7 @@ platform will be used):
 * `com.outskirtslabs/vips-native-macos-aarch64`
 * `com.outskirtslabs/vips-native-win32-x86-64`
 
-The native companion jars bundle libvips 8.18.6 from `sharp-libvips` 1.3.3.
+The native companion jars bundle libvips 8.18.7 from `sharp-libvips` 1.3.4.
 The test suite runs against that bundle.
 
 On the JVM, `ol.vips` requires Java 25{plus} and native access enabled for the JVM
@@ -65,6 +66,9 @@ process:
 {:aliases
  {:dev {:jvm-opts ["--enable-native-access=ALL-UNNAMED"]}}}
 ----
+
+In Babashka, `ol.vips` requires Babashka 1.13.227 or newer. See
+https://docs.outskirtslabs.com/ol.vips/next/babashka/[Babashka].
 
 To use your own libvips build, see
 https://docs.outskirtslabs.com/ol.vips/next/introduction#loading_the_native_library[Loading the native library].

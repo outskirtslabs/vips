@@ -7,7 +7,7 @@ Those redistributed binaries contain third-party libraries used under the terms 
 | Library       | Used under the terms of                                                                                   |
 |---------------|-----------------------------------------------------------------------------------------------------------|
 | aom           | BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)  |
-| cairo         | Mozilla Public License 2.0                                                                                |
+| cairo         | Mozilla Public License 1.1                                                                                |
 | cgif          | MIT Licence                                                                                               |
 | expat         | MIT Licence                                                                                               |
 | fontconfig    | [fontconfig Licence](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/main/COPYING) (BSD-like)   |

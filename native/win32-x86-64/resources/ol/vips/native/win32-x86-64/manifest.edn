@@ -1,11 +1,11 @@
-{:vips-version "8.18.6",
+{:vips-version "8.18.7",
  :bundle-sha256
- "5fb6ad9b27af941fdc407afc3ec074c9a8cda3a3b0d6fef9f1f292c1c0b985c3",
+ "ea81bcd7b20ff8c0291dd0f2334cef7ea35336c6a50e4089927e6a744359e88a",
  :arch :x86-64,
  :source-url
- "https://registry.npmjs.org/@img/sharp-libvips-win32-x64/-/sharp-libvips-win32-x64-1.3.3.tgz",
+ "https://registry.npmjs.org/@img/sharp-libvips-win32-x64/-/sharp-libvips-win32-x64-1.3.4.tgz",
  :libc nil,
- :sharp-version "1.3.3",
+ :sharp-version "1.3.4",
  :library-files ["lib/libvips-42.dll"],
  :os :windows,
  :platform-id :win32-x86-64,
